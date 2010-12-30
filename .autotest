@@ -1,6 +1,8 @@
 Autotest.add_hook :initialize do |at|
 	# Ignore version control
 	at.add_exception %r%^\./\.git%
+	# Ignore Mac directory files
+	at.add_exception '.DS_Store'
 	# Ignore files in coverage/
 	at.add_exception %r%^\./coverage%
 	# Ignore files in doc/
