@@ -1,3 +1,7 @@
+require 'autotest/fsevent'
+require 'autotest/growl'
+require 'autotest/timestamp'
+
 Autotest.add_hook :initialize do |at|
 	# Ignore version control
 	at.add_exception %r%^\./\.git%
