@@ -1,0 +1,18 @@
+Autotest.add_hook :initialize do |at|
+	# Ignore version control
+	at.add_exception %r%^\./\.git%
+	# Ignore files in coverage/
+	at.add_exception %r%^\./coverage%
+	# Ignore files in doc/
+	at.add_exception %r%^\./doc%
+	# Ignore files in log/
+	at.add_exception %r%^\./log%
+	# Ignore files in public/
+	at.add_exception %r%^\./public%
+	# Ignore files in tmp/
+	at.add_exception %r%^\./tmp%
+	# Ignore rerun.txt
+	at.add_exception %r%rerun.txt%
+	# Ignore files in directories that are wrapped in brackets
+	at.add_exception %r%^\./\(.*\)%
+end

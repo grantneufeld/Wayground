@@ -15,6 +15,8 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'ruby-debug19'
 
 group :development, :test do
+gem 'autotest', '4.4.6'
+gem 'autotest-rails', '4.1.0'
 	gem 'rspec', '2.3.0' # core testing framework
 	gem 'rspec-rails', '2.3.1'
 	gem 'ruby-debug'
