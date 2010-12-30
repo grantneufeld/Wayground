@@ -20,6 +20,7 @@ group :development, :test do
 	gem 'autotest-rails' #, '4.1.0'
 	gem 'cucumber-rails' #, '0.3.2'
 	gem 'database_cleaner' #, '0.6.0'
+	gem 'pickle' #, '0.4.4' # additions for Cucumber
 	gem 'rspec' #, '2.3.0' # core testing framework
 	gem 'rspec-rails' #, '2.3.1'
 	gem 'ruby-debug'
