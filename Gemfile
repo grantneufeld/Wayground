@@ -21,6 +21,7 @@ group :development, :test do
 	gem 'cucumber-rails' #, '0.3.2'
 	gem 'database_cleaner' #, '0.6.0'
 	gem 'pickle' #, '0.4.4' # additions for Cucumber
+	gem 'relevance-rcov' #, '0.9.2.1' # code coverage
 	gem 'rspec' #, '2.4.0' # core testing framework
 	gem 'rspec-rails' #, '2.4.1'
 	gem 'ruby-debug'
