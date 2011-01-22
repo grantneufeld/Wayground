@@ -5,7 +5,7 @@ gem 'rails', '3.0.3'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'sqlite3' #, '1.3.3'
 
 # Deploy with Capistrano
 # gem 'capistrano'
@@ -21,9 +21,9 @@ group :development, :test do
 	gem 'cucumber-rails' #, '0.3.2'
 	gem 'database_cleaner' #, '0.6.0'
 	gem 'pickle' #, '0.4.4' # additions for Cucumber
-	gem 'rspec' #, '2.3.0' # core testing framework
-	gem 'rspec-rails' #, '2.3.1'
+	gem 'rspec' #, '2.4.0' # core testing framework
+	gem 'rspec-rails' #, '2.4.1'
 	gem 'ruby-debug'
-	gem 'webrat' #, '0.7.2' # web interface testing; parses html, etc., issues http requests
+	gem 'webrat' #, '0.7.3' # web interface testing; parses html, etc., issues http requests
 	gem 'ZenTest' #, '4.4.2'
 end
