@@ -15,9 +15,6 @@ gem 'sqlite3' #, '1.3.3'
 # gem 'ruby-debug19'
 
 group :development, :test do
-	gem 'autotest-fsevent' #, '0.2.4'
-	gem 'autotest-growl' #, '0.2.9'
-	gem 'autotest-rails' #, '4.1.0'
 	gem 'cucumber-rails' #, '0.3.2'
 	gem 'database_cleaner' #, '0.6.0'
 	gem 'pickle' #, '0.4.4' # additions for Cucumber
@@ -25,6 +22,15 @@ group :development, :test do
 	gem 'rspec' #, '2.4.0' # core testing framework
 	gem 'rspec-rails' #, '2.4.1'
 	gem 'ruby-debug'
-	gem 'webrat' #, '0.7.3' # web interface testing; parses html, etc., issues http requests
 	gem 'ZenTest' #, '4.4.2'
+end
+
+group :test do
+	gem 'autotest-fsevent' #, '0.2.4'
+	gem 'autotest-growl' #, '0.2.9'
+	gem 'autotest-rails' #, '4.1.0'
+	gem 'factory_girl' #, '1.3.3'
+	gem 'factory_girl_rails' #, '1.0.1'
+	gem 'timecop' #, '0.3.5'
+	gem 'webrat' #, '0.7.3' # web interface testing; parses html, etc., issues http requests
 end
