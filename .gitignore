@@ -16,6 +16,7 @@ log/*.log
 public/cache/**/*
 public/**/all.*
 tmp/**/*
+rails_best_practices_output.html
 rerun.txt
 tmp/*
 webrat-*.html

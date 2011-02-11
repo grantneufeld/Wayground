@@ -45,9 +45,11 @@ To run the unit tests:
 == Code Quality Testing
 
 The rails-best-practices gem can be used to try to spot some sub-optimal coding.
-> sudo gem install rails_best_practices
 
-Then run it within the project directory:
-> rails_best_practices .
+To generate the html report (with editor links if you’re using TextMate):
+> rails_best_practices -f html --with-textmate --spec --features
+
+To generate a text report in the terminal:
+> rails_best_practices --spec --features
 
 More info: http://rails-bestpractices.com
