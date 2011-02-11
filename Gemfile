@@ -18,11 +18,11 @@ group :development, :test do
 	gem 'cucumber-rails' #, '0.3.2'
 	gem 'database_cleaner' #, '0.6.2'
 	gem 'pickle' #, '0.4.4' # additions for Cucumber
-	# Sadly, rcov isn’t working with ruby 1.9.2, apparently.
-	#gem 'relevance-rcov' #, '0.9.2.1' # code coverage
 	gem 'rspec' #, '2.5.0' # core testing framework
 	gem 'rspec-rails' #, '2.5.0'
 	gem 'ruby-debug19'
+	gem 'simplecov', '>= 0.3.8', :require => false
+	gem 'simplecov-html', :require => false
 	gem 'ZenTest' #, '4.4.2'
 end
 

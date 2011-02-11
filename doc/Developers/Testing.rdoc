@@ -7,6 +7,13 @@ Rspec is being used for unit tests. Cucumber for behavioural/feature tests. The 
 I am not using Rspec or TestUnit based integration testing, because that functionality is effectively covered using Cucumber feature testing.
 
 
+== Code Coverage
+
+I’m using SimpleCov for code coverage analysis. In the current setup, the coverage reports are automatically updated when the test suites are run. See coverage/index.html for the report.
+
+https://github.com/colszowka/simplecov
+
+
 == Autotest
 
 While working on the code, you can have autotest continuously running in a terminal to alert you when a change you make causes a test to fail.
@@ -16,7 +23,7 @@ While working on the code, you can have autotest continuously running in a termi
 
 == Cucumber
 
-The Cucumber features are the most critical piece of testing; code should not be written without being fully covered by Cucumber feature scripts (always run “rake cucumber:rcov” before committing code to ensure 100% code coverage).
+The Cucumber features are the most critical piece of testing; code should not be written without being fully covered by Cucumber feature scripts (run the tests and then review coverage/index.html before doing a check-in).
 
 To run the cucumber feature scenarios:
 > rake cucumber
@@ -25,22 +32,6 @@ There are two special tags to be used when writing feature scenarios. Tags are p
 * ‘@future’: Have the scenario(s) ignored completely when running cucumber. This allows for using the feature files to describe future features in context (a sort of “to-do” list).
 * ‘@wip’: Work in progress. These are for the scenarios you are currently working on (in general, there should be no more than 3 of these active at a time). These scenarios will not run during the normal cucumber execution, since they are expected to fail (being incomplete). You can run just the @wip scenarios while your work is in progress:
 > rake cucumber:wip
-
-
-== Rcov
-
-These are the rake commands available for running rcov testing (use rake instead of calling rcov directly):
-
-Complete coverage:
-> rake rcov
-
-Coverage provided by just the Cucumber features:
-> rake cucumber:rcov
-
-Coverage provided by just the Rspec specs:
-> rake spec:rcov
-
-Coverage reports can be reviewed in coverage/index.html
 
 
 == Unit Testing With Rspec
