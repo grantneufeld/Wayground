@@ -7,13 +7,6 @@ Rspec is being used for unit tests. Cucumber for behavioural/feature tests. The 
 I am not using Rspec or TestUnit based integration testing, because that functionality is effectively covered using Cucumber feature testing.
 
 
-== Code Coverage
-
-I’m using SimpleCov for code coverage analysis. In the current setup, the coverage reports are automatically updated when the test suites are run. See coverage/index.html for the report.
-
-https://github.com/colszowka/simplecov
-
-
 == Autotest
 
 While working on the code, you can have autotest continuously running in a terminal to alert you when a change you make causes a test to fail.
@@ -42,7 +35,21 @@ To run the unit tests:
 > rake spec
 
 
-== Code Quality Testing
+== Metrics
+
+=== Code Coverage
+
+I’m using SimpleCov for code coverage analysis. In the current setup, the coverage reports are automatically updated when the test suites are run. See coverage/index.html for the report.
+
+https://github.com/colszowka/simplecov
+
+Note that you’ll want to run both:
+> rake spec
+and
+> rake cucumber
+before viewing the reports to get the combined results.
+
+=== Code Quality Testing
 
 The rails-best-practices gem can be used to try to spot some sub-optimal coding.
 
@@ -53,3 +60,11 @@ To generate a text report in the terminal:
 > rails_best_practices --spec --features
 
 More info: http://rails-bestpractices.com
+
+=== Metrical
+
+Metrical generates a bunch of different reports and provides a common interface to them all.
+
+To generate the metrical reports:
+> metrical
+That should automatically open up the reports index in your default web browser. If not, the index should be at ‘tmp/metric_fu/output/index.html’.
