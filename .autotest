@@ -18,8 +18,14 @@ Autotest.add_hook :initialize do |at|
 	at.add_exception %r%^\./public%
 	# Ignore files in tmp/
 	at.add_exception %r%^\./tmp%
+	# Ignore rails_best_practices report
+	at.add_exception 'rails_best_practices_output.html'
 	# Ignore rerun.txt
-	at.add_exception %r%rerun.txt%
+	at.add_exception 'rerun.txt'
+	# Ignore webrat files
+	at.add_exception %r%webrat-%
+	# Ignore TextMate projects
+	at.add_exception %r%.*\.tmproj$%
 	# Ignore files in directories that are wrapped in brackets
 	at.add_exception %r%^\./\(.*\)%
 end
