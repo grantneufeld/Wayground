@@ -1,0 +1,38 @@
+= Before Committing Code Changes
+
+
+== Code quality review
+
+Generate and review the metrical reports:
+> metrical
+
+If there are no problems, or the “problems” identified in the report are acceptable, proceed to the next stage. Otherwise, go back and make appropriate changes to the code.
+
+
+== Tests pass, maintaining 100% code coverage
+
+Turn off autotest if it’s running.
+
+Clear the coverage cache.
+> rm coverage/resultset.yml
+
+Run the test suites:
+> rake spec
+> rake cucumber
+
+If you have less than 100% coverage,
+review the coverage report:
+> open coverage/index.html
+then edit your tests and code until you’re back to 100% coverage,
+then start the commit process over again.
+
+
+== Commit changes to git
+
+Add any files to be updated to the git queue. E.g.:
+> git add .
+
+Make the commit:
+> git commit
+
+Please make your commit description detailed, identifying the reasons for the new or modified code. Also include any links to documentation or other references that were used for making the change.
