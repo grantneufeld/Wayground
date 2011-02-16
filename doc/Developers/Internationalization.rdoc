@@ -1,0 +1,15 @@
+= Internationalization
+
+Core reference: http://guides.rubyonrails.org/i18n.html
+http://ruby-i18n.org/
+
+
+All text to be displayed to the user, other than dynamic text stored in data tables or from remote sources, should be entered into the ‘config/locales/en.yml’ file, rather than as strings in code/view files.
+
+If we ever get other languages set up, then any new text will need appropriate corresponding translations in the appropriate locale files.
+
+== Accessing alternate languages
+
+I’ve chosen to separate language translations by subdomain (with the absence of a subdomain indicating the default language, which is English, by default).
+
+So, if you wanted to setup a French translation, you would have a domain like fr.domain.tld with the translation strings found in ‘config/locales/fr.yml’. Either en.domain.tld or just domain.tld will work for English.

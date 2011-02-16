@@ -1,0 +1,12 @@
+<ul id="language_menu">
+<%
+# 
+[	{:lang => 'en', :name => 'English', :domain => 'wayground.ca'},
+	{:name => 'Test Language', :domain => 'test.wayground.ca'}
+].each do |site|
+	if I18n.locale.to_s == site[:lang]
+		%><li><strong><%= site[:name] %></strong></li>
+<%	else
+		%><li><%= link_to(site[:name], "http://#{site[:domain]}#{request.env['REQUEST_URI']}") %></li>
+<%	end
+end %></ul>

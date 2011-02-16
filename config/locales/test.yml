@@ -1,9 +1,5 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-# Most of this file is taken from:
-# https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en-US.yml
-
-en:
+# Right now, this is just a straight copy of en.yml
+test:
   date:
     formats:
       default: "%Y-%m-%d"

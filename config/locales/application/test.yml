@@ -1,0 +1,10 @@
+test:
+  # Header Navigation
+  home: "Home(test)"
+  search: "Search(test)"
+  login: "Login(test)"
+  logout: "Log-out(test)"
+  register: "Register(test)"
+  # Footer
+  copyright: 'Copyright (test).'
+  license: "License (test)."
