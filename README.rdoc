@@ -1,4 +1,4 @@
-== Wayground
+= Wayground
 
 Web content framework.
 http://wayground.ca/
@@ -9,9 +9,13 @@ Grant Neufeld
 http://grantneufeld.ca/
 
 
-=== Release Notes
+== Release Notes
 
-==== Version ??? - Started December 2010
+=== Version 0.0.1 - February 16, 2011
+
+All the core testing and metrics infrastructure setup and tested.
+
+=== Version ??? - Started December 2010
 
 Redoing my core application framework in Rails 3.
 
