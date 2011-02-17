@@ -69,3 +69,10 @@ The overall look of the site is defined by the html template: app/views/applicat
 and by the stylesheets in: public/stylesheets/
 
 Be careful when editing .erb files that you don’t break the ruby code embedded in them. The ruby code in .erb files is wrapped in “<% … %>”.
+
+
+== References
+
+Portions of this code are taken from, or modified from, other open source projects:
+
+* User access cucumber feature tests derived from Clearance http://github.com/thoughtbot/clearance
