@@ -25,7 +25,7 @@ end
 # Make the system pretend it’s a specific day.
 # See the source url for usage:
 # http://louismrose.tumblr.com/post/876230592/freezing-time-in-cucumber
-Given /^the date is "([^\"]*)"$/ do |date_string|
+Given /^the date is(?:| now) "([^\"]*)"$/ do |date_string|
 	Timecop.travel Chronic.parse("#{date_string} at noon")
 end
 Then /^reset the date$/ do

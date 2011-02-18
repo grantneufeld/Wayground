@@ -218,6 +218,7 @@ DEPENDENCIES
   autotest-growl
   autotest-rails
   capistrano
+  chronic
   cucumber-rails
   database_cleaner
   factory_girl

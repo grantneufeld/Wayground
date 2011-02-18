@@ -15,6 +15,7 @@ gem 'capistrano' #, '2.5.19'
 # gem 'ruby-debug19'
 
 group :development, :test do
+	gem 'chronic'
 	gem 'cucumber-rails' #, '0.3.2'
 	gem 'database_cleaner' #, '0.6.2'
 	gem 'metrical'
