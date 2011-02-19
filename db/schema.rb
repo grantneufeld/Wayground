@@ -10,6 +10,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 1) do
+
+  create_table "users", :force => true do |t|
+    t.string   "email",                                                  :null => false
+    t.string   "password_hash",        :limit => 128
+    t.string   "name"
+    t.boolean  "is_verified_realname",                :default => false, :null => false
+    t.boolean  "email_confirmed",                     :default => false, :null => false
+    t.string   "confirmation_token",   :limit => 128
+    t.string   "remember_token",       :limit => 128
+    t.string   "filename",             :limit => 63
+    t.string   "location"
+    t.text     "about"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["email"], :name => "email", :unique => true
+  add_index "users", ["filename"], :name => "filename", :unique => true
+  add_index "users", ["remember_token"], :name => "remember_token", :unique => true
 
 end

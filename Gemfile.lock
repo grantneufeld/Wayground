@@ -38,6 +38,7 @@ GEM
     autotest-growl (0.2.9)
     autotest-rails (4.1.0)
       ZenTest
+    bcrypt-ruby (2.1.4)
     builder (2.1.2)
     capistrano (2.5.19)
       highline
@@ -217,6 +218,7 @@ DEPENDENCIES
   autotest-fsevent
   autotest-growl
   autotest-rails
+  bcrypt-ruby
   capistrano
   chronic
   cucumber-rails
