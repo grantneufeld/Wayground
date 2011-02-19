@@ -13,6 +13,14 @@
 # simple_cov needs to be configured to generate the coverage/percentage.txt file,
 # which will just have the numeric percentage result.
 
+# checking for changes
+gs="$(git status | tail -n 1)"
+if echo $gs | grep -q "^nothing to commit" ; then
+	# no uncommitted changes - so nothing to commit
+	echo "Nothing to commit."
+	exit 2
+fi
+
 echo "Running test suites..."
 rm coverage/resultset.yml
 rake spec
@@ -34,14 +42,9 @@ echo "Generating Metrical reports..."
 metrical
 echo ""
 
-# check the git status
+# report the git status
 echo "Checking version control status..."
-gs="$(git status | tail -n 1)"
-if echo $gs | grep -q "^nothing to commit" ; then
-	# no uncommitted changes - so nothing to commit
-	echo "Nothing to commit."
-	exit 2
-elif echo $gs | grep -q "^no changes added to commit" ; then
+if echo $gs | grep -q "^no changes added to commit" ; then
 	# there are changes, but none have been staged for version control
 	git status
 	echo ""
