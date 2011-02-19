@@ -13,6 +13,9 @@ SimpleCov.start do
 
 	add_group "Models", "app/models"
 	add_group "Controllers", "app/controllers"
+	add_group "Helpers", "app/helpers"
+	add_group "Libraries", "lib"
+	#add_group "Plugins", "vendor/plugins"
 	add_group "Long files" do |src_file|
 		src_file.lines.count > 100
 	end
@@ -21,4 +24,14 @@ SimpleCov.start do
 	end
 end
 
-
+SimpleCov.at_exit do
+	SimpleCov.result.format!
+	path = 'coverage/percentage.txt'
+	if File.exist?(path)
+		f = File.open(path, 'w')
+	else
+		f = File.new(path, 'w')
+	end
+	f.write SimpleCov.result.covered_percent.to_s
+	f.close
+end

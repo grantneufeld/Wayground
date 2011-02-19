@@ -1,5 +1,7 @@
 = Before Committing Code Changes
 
+You can use the ./preflight script before committing code changes, or follow the directions that follow.
+
 
 == Code quality review
 
