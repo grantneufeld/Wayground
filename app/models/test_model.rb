@@ -1,3 +1,4 @@
+# A model used in testing that the testing systems are working as expected.
 class TestModel
 	@@generated_instances = []
 	
@@ -24,27 +25,21 @@ class TestModel
 	end
 	
 	def ==(arg)
-		if arg.is_a? TestModel
-			self.test_attribute == arg.test_attribute
-		else
-			self.test_attribute == arg
-		end
+		self.test_attribute == arg.is_a?(TestModel) ? arg.test_attribute : arg
 	end
 	
 	def testable_method
-		x = 'something'
-		x += '.'
-		x
+		self.test_attribute = 'Method tested.'
+		test_attribute
 	end
 	
 	def testable_feature
-		y = 'something'
-		y += '.'
-		y
+		self.test_attribute = 'Feature tested.'
+		test_attribute
 	end
 end
 
-
+# A model to simulate data table columns for TestModel objects.
 class TestColumnDef
 	attr_accessor :name
 	

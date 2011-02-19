@@ -1,3 +1,4 @@
+@test
 Feature: Testing system
   In order to test that the systems for testing the code are operational
   As a developer
@@ -5,7 +6,7 @@ Feature: Testing system
 
   Scenario: Test a feature
     When I test a feature
-    Then I should get "something."
+    Then I should get "Feature tested."
 
   @wip
   Scenario: In progress features are ignored during regular test cycles

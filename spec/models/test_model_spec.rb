@@ -3,7 +3,7 @@ require 'spec_helper'
 describe TestModel do
 	it "should have a testable method" do
 		test_object = TestModel.new
-		test_object.testable_method.should == 'something.'
+		test_object.testable_method.should == 'Method tested.'
 	end
 	
 	it "should create a new from a factory" do
