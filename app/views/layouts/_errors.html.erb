@@ -1,0 +1,15 @@
+<%
+# requires ‘item’ be an object that has an errors method that works like ActiveRecord.
+
+heading ||= 'Errors encountered'
+
+if item.errors.any?
+	%><div class="error_messages">
+<h2><%= heading %></h2>
+<ul>
+<%	for message in item.errors.full_messages
+		%><li><%= message %></li>
+<%	end
+%></ul>
+</div>
+<% end -%>
