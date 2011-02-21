@@ -19,6 +19,6 @@ tmp/**/*
 rails_best_practices_output.html
 rerun.txt
 tmp/*
-webrat-*.html
+webrat*.*
 (*)/*
 *.tmproj

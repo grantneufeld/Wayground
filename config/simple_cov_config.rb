@@ -1,5 +1,6 @@
 require 'simplecov'
 SimpleCov.start do
+	add_filter "/app/models/test_model.rb" # comment this line out if you want to test the testing system
 	add_filter "/config/"
 	add_filter "/coverage/"
 	add_filter "/db/"

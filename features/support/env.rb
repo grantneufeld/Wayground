@@ -7,6 +7,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/simple_cov_config')
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
+require 'ruby-debug'
 
 require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
 require 'cucumber/rails/rspec'
@@ -18,7 +19,7 @@ require 'webrat'
 require 'webrat/core/matchers'
 
 Webrat.configure do |config|
-  config.mode = :rails
+  config.mode = :rack
   config.open_error_files = false # Set to true if you want error pages to pop up in the browser
 end
 
