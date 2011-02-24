@@ -4,13 +4,22 @@
 # General
 
 Then /^(?:|I )should see error messages$/ do
-	assert_match /error(s)? prohibited/m, response.body
+	error_exp = '<div class="error_messages">'
+	if response.respond_to? :should
+		response.body.should match error_exp
+	else
+		assert_match error_exp, response.body
+	end
 end
 
 # Database
 
 Given /^no user exists with an email of "(.*)"$/ do |email|
-	assert_nil User.find_by_email(email)
+	if response.respond_to? :should
+		User.find_by_email(email).should be_nil
+	else
+		assert_nil User.find_by_email(email)
+	end
 end
 
 Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
@@ -47,11 +56,19 @@ end
 # Session
 
 Then /^(?:|I )should be signed in$/ do
-	assert controller.signed_in?
+	if response.respond_to? :should
+		controller.signed_in?.should be_true
+	else
+		assert controller.signed_in?
+	end
 end
 
 Then /^(?:|I )should be signed out$/ do
-	assert ! controller.signed_in?
+	if response.respond_to? :should
+		controller.signed_in?.should be_false
+	else
+		assert ! controller.signed_in?
+	end
 end
 
 When /^(?:|session is cleared|I quit the browser)$/ do
@@ -74,10 +91,17 @@ end
 Then /^a confirmation message should be sent to "(.*)"$/ do |email|
 	user = User.find_by_email(email)
 	sent = ActionMailer::Base.deliveries.first
-	assert_equal [user.email], sent.to
-	assert_match /confirm/i, sent.subject
-	assert !user.confirmation_token.blank?
-	assert_match /#{user.confirmation_token}/, sent.body
+	if response.respond_to? :should
+		sent.to.should eq [user.email]
+		sent.subject.should match /confirm/i
+		user.confirmation_token.blank?.should be_false
+		sent.body.should match /#{user.confirmation_token}/
+	else
+		assert_equal [user.email], sent.to
+		assert_match /confirm/i, sent.subject
+		assert !user.confirmation_token.blank?
+		assert_match /#{user.confirmation_token}/, sent.body
+	end
 end
 
 When /^(?:|I )follow the confirmation link sent to "(.*)"$/ do |email|
@@ -89,10 +113,17 @@ end
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
 	user = User.find_by_email(email)
 	sent = ActionMailer::Base.deliveries.first
-	assert_equal [user.email], sent.to
-	assert_match /password/i, sent.subject
-	assert !user.confirmation_token.blank?
-	assert_match /#{user.confirmation_token}/, sent.body
+	if response.respond_to? :should
+		sent.to.should eq [user.email]
+		sent.subject.should match /password/i
+		user.confirmation_token.blank?.should be_false
+		sent.body.should match /#{user.confirmation_token}/
+	else
+		assert_equal [user.email], sent.to
+		assert_match /password/i, sent.subject
+		assert !user.confirmation_token.blank?
+		assert_match /#{user.confirmation_token}/, sent.body
+	end
 end
 
 When /^(?:|I )follow the password reset link sent to "(.*)"$/ do |email|

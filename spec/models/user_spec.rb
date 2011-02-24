@@ -6,28 +6,28 @@ describe User do
 		it "should fail if there is no password" do
 			u = User.new
 			u.email = 'test@wayground.ca'
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if the password is less than 8 characters long" do
 			u = User.new
 			u.email = 'test@wayground.ca'
 			u.password_confirmation = u.password = '1234567'
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if the password is more than 63 characters long" do
 			u = User.new
 			u.email = 'test@wayground.ca'
 			u.password_confirmation = u.password = 'a' * 64
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if there is no password confirmation" do
 			u = User.new
 			u.email = 'test@wayground.ca'
 			u.password = 'password'
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if the password confirmation is blank" do
@@ -35,7 +35,7 @@ describe User do
 			u.email = 'test@wayground.ca'
 			u.password = 'password'
 			u.password_confirmation = ''
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if the password confirmation does not match" do
@@ -43,20 +43,20 @@ describe User do
 			u.email = 'test@wayground.ca'
 			u.password = 'password'
 			u.password_confirmation = 'missmatch'
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if there is no email address" do
 			u = User.new
 			u.password_confirmation = u.password = 'password'
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if the email address is not a proper email address" do
 			u = User.new
 			u.email = 'invalid@bad-email'
 			u.password_confirmation = u.password = 'password'
-			u.valid?.should == false
+			u.valid?.should be_false
 		end
 		
 		it "should fail if there is already a user registered with the same email address" do
@@ -67,7 +67,7 @@ describe User do
 			u2 = User.new
 			u2.email = 'test+duplicate@wayground.ca'
 			u2.password_confirmation = u2.password = 'another1'
-			u2.valid?.should == false
+			u2.valid?.should be_false
 		end
 		
 		it "should fail if there is already a user registered with the same email address but different case" do
@@ -78,7 +78,7 @@ describe User do
 			u2 = User.new
 			u2.email = 'TEST+DUPLICATE@WAYGROUND.CA'
 			u2.password_confirmation = u2.password = 'another1'
-			u2.valid?.should == false
+			u2.valid?.should be_false
 		end
 		
 		it "should add a user record with valid parameters" do
@@ -99,15 +99,15 @@ describe User do
 		end
 		
 		it "should save an encrypted version of a new user’s password" do
-			@user.password_hash.present?.should == true
+			@user.password_hash.present?.should be_true
 		end
 		
 		it "should fail to authenticate a user with a non-matching password" do
-			User.authenticate(@user.email, 'wrongpassword').should == nil
+			User.authenticate(@user.email, 'wrongpassword').should be_nil
 		end
 		
 		it "should authenticate a user with a valid password" do
-			User.authenticate(@user.email, 'password').should == @user
+			User.authenticate(@user.email, 'password').should eq @user
 		end
 	end
 end
