@@ -1,0 +1,7 @@
+<h1>Sign Out</h1>
+
+<p>You can sign out from your user account.</p>
+
+<%= form_tag(sign_out_path, :method => :delete) do %>
+<p><%= submit_tag "Sign Out" %></p>
+<% end %>
