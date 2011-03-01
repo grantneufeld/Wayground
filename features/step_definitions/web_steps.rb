@@ -141,8 +141,8 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
-  if response.respond_to? :should
-    response.should contain(text)
+  if response_body.respond_to? :should
+    response_body.should contain(text)
   else
     assert_contain text
   end
@@ -161,8 +161,8 @@ end
 
 Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
-  if response.respond_to? :should
-    response.should contain(regexp)
+  if response_body.respond_to? :should
+    response_body.should match(regexp)
   else
     assert_match(regexp, response_body)
   end
