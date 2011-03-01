@@ -1,0 +1,8 @@
+<h1><%
+if @user.name.blank?
+	%>User: <%= @user.id %><%
+else
+	%><%= @user.name %><%
+end
+%></h1>
+<p>Registered since <%= @user.created_at.to_s %>.</p>
