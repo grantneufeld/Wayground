@@ -15,7 +15,7 @@ end
 # Database
 
 Given /^no user exists with an email of "(.*)"$/ do |email|
-	if response.respond_to? :should
+	if User.respond_to? :should
 		User.find_by_email(email).should be_nil
 	else
 		assert_nil User.find_by_email(email)
@@ -56,24 +56,21 @@ end
 # Session
 
 Then /^(?:|I )should be signed in$/ do
-	if response.respond_to? :should
-		controller.signed_in?.should be_true
+	tag = /<[a-z]+ id="user-menu" class="signed-in">/
+	if response_body.respond_to? :should
+		response_body.should match(tag)
 	else
-		assert controller.signed_in?
+		assert_match(tag, response_body)
 	end
 end
 
 Then /^(?:|I )should be signed out$/ do
-	if response.respond_to? :should
-		controller.signed_in?.should be_false
+	tag = /<[a-z]+ id="user-menu" class="signed-out">/
+	if response_body.respond_to? :should
+		response_body.should match(tag)
 	else
-		assert ! controller.signed_in?
+		assert_match(tag, response_body)
 	end
-end
-
-When /^(?:|session is cleared|I quit the browser)$/ do
-	request.reset_session
-	controller.instance_variable_set(:@_current_user, nil)
 end
 
 #Given /^(?:|I )have signed in with "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
@@ -106,8 +103,11 @@ end
 
 When /^(?:|I )follow the confirmation link sent to "(.*)"$/ do |email|
 	user = User.find_by_email(email)
-	visit new_user_confirmation_path(:user_id => user,
-	:token   => user.confirmation_token)
+	visit "/account/confirm/#{user.confirmation_token}"
+end
+
+When /^(?:|I )try to confirm my email with "(.*)"$/ do |confirmation_code|
+	visit "/account/confirm/#{confirmation_code}"
 end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
@@ -151,7 +151,7 @@ When /^(?:|I )sign in as "(.*)\/(.*)"$/ do |email, password|
 end
 
 When /^(?:|I )sign out$/ do
-	visit '/session', :delete
+	visit sign_out_path, :delete
 end
 
 When /^(?:|I )request password reset link to be sent to "(.*)"$/ do |email|
@@ -166,7 +166,13 @@ When /^(?:|I )update my password with "(.*)\/(.*)"$/ do |password, confirmation|
 	And %{I press "Save this password"}
 end
 
+When /^(?:|I )quit the browser$/ do
+	# FIXME: this code from clearance gem doesn’t work anymore. need a way to “quit the browser” in cucumber step
+	#request.reset_session
+	#controller.instance_variable_set(:@_current_user, nil)
+end
+
 When /^(?:|I )return next time$/ do
-	When %{session is cleared}
+	When %{I quit the browser}
 	And %{I go to the homepage}
 end
