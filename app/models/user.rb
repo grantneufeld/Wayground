@@ -4,14 +4,14 @@ require 'bcrypt'
 # * http://railscasts.com/episodes/250-authentication-from-scratch
 # * https://github.com/rails/rails/commit/bd9dc4ff23ab1e185df6ccf35d6058c0a3d234ce
 class User < ActiveRecord::Base
-	attr_accessible :email, :password, :password_confirmation
+	attr_accessible :email, :name, :password, :password_confirmation
 	
 	attr_accessor :password
 	before_save :encrypt_password
+	before_create :generate_email_confirmation_token
 	
-	validates :password,
-		:presence => true,
-		:length => { :within => 8..63 }
+	validates_presence_of :password, :on => :create
+	validates_length_of :password, :within => 8..63, :if => :password_required?
 	validates_confirmation_of :password
 	validates_presence_of :password_confirmation, :if => :password_required?
 	validates :email,
@@ -35,6 +35,25 @@ class User < ActiveRecord::Base
 	def encrypt_password
 		if password.present?
 			self.password_hash = BCrypt::Password.create(password)
+		end
+	end
+
+	def generate_email_confirmation_token
+		unless email_confirmed || confirmation_token.present?
+			self.confirmation_token = Digest::SHA1.hexdigest("=#{email}-#{created_at.to_s}.")
+		end
+	end
+
+	# Set the user’s email_confirmed status, if the code matches the token,
+	# and the user has not already been confirmed.
+	def confirm_code!(in_code)
+		if !email_confirmed && (in_code == confirmation_token)
+			self.confirmation_token = nil
+			self.email_confirmed = true
+			self.save!
+			return true
+		else
+			return false
 		end
 	end
 end

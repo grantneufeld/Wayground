@@ -110,4 +110,33 @@ describe User do
 			User.authenticate(@user.email, 'password').should eq @user
 		end
 	end
+
+	describe "email code confirmation" do
+		before(:each) do
+			@user = User.new
+			@user.email = 'test+newuser@wayground.ca'
+			@user.password_confirmation = @user.password = 'password'
+			@user.save!
+		end
+
+		it "should generate a confirmation token when creating a new user" do
+			@user.confirmation_token.blank?.should_not be
+		end
+		it "should fail to confirm if the code parameter does not match the saved token" do
+			@user.confirm_code!('invalid token').should be_false
+		end
+		it "should fail to confirm if the user’s email has already been confirmed" do
+			@user.email_confirmed = true
+			@user.save!
+			@user.confirm_code!(@user.confirmation_token).should be_false
+		end
+		it "should successfully flag the user’s email as confirmed" do
+			@user.confirm_code!(@user.confirmation_token)
+			@user.email_confirmed.should be_true
+		end
+		it "should clear the confirmation token when the user’s email is confirmed" do
+			@user.confirm_code!(@user.confirmation_token)
+			@user.confirmation_token.should be_nil
+		end
+	end
 end
