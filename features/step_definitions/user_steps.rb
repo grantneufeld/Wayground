@@ -106,6 +106,33 @@ When /^(?:|I )follow the confirmation link sent to "(.*)"$/ do |email|
 	visit "/account/confirm/#{user.confirmation_token}"
 end
 
+# FIXME: This is some ugly monkey-patching just to simulate a failure condition in the absence of proper stubbing support.
+class User < ActiveRecord::Base
+	@@test_fail_confirm_code = false
+	def self.test_fail_confirm_code=(val)
+		@@test_fail_confirm_code = val
+	end
+	alias :test_old_confirm_code! :confirm_code!
+	def confirm_code!(in_code)
+		if @@test_fail_confirm_code
+			raise "failure"
+		else
+			test_old_confirm_code!(in_code)
+		end
+	end
+end
+When /^(?:|I )follow the confirmation link sent to "(.*)" with a failure$/ do |email|
+	user = User.find_by_email(email)
+	User.test_fail_confirm_code = true
+	begin
+		visit "/account/confirm/#{user.confirmation_token}"
+	rescue Webrat::PageLoadError
+		# a page load error is normal here, but we’ll need to manually follow the redirect
+		visit response.location
+	end
+	User.test_fail_confirm_code = false
+end
+
 When /^(?:|I )try to confirm my email with "(.*)"$/ do |confirmation_code|
 	visit "/account/confirm/#{confirmation_code}"
 end

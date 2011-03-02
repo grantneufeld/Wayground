@@ -10,6 +10,14 @@ module NavigationHelpers
 
 		when /the home\s?page/
 			'/'
+		when /the sign up page/
+			'/sign_up'
+		when /the sign in page/
+			'/sign_in'
+		when /the sign out page/
+			'/sign_out'
+		when /the account page/
+			'/account'
 
 		# the following are examples using path_to_pickle
 

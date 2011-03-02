@@ -8,6 +8,18 @@
 <%= csrf_meta_tag %>
 </head><body>
 
+<div id="header">
+<ul id="user-menu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
+<% if current_user.nil? %>
+<li><%= link_to 'Register as New User', sign_up_path %></li>
+<li><%= link_to 'Sign In', sign_in_path %></li>
+<% else -%>
+<li><%= link_to 'My Account', account_path %></li>
+<li><%= link_to 'Sign Out', sign_out_path %></li>
+<% end -%>
+</ul>
+</div>
+
 <div id="flash"<%= flash.length <= 0 ? ' style="display:none"' : '' %>><%
 if flash.length > 0
 	flash.each do |key, msg|
