@@ -6,13 +6,14 @@ require 'factory_girl'
 # 	f.email_attribute_name {Factory.next :email}
 
 Factory.sequence :email do |n|
-	"user#{n}@test.tld"
+	"email#{n}@factory.tld"
 end
-
 Factory.sequence :filename do |n|
 	"filename#{n}"
 end
-
+Factory.sequence :uid do |n|
+	n
+end
 
 # FACTORIES
 
@@ -27,4 +28,11 @@ Factory.define :user do |user|
 end
 Factory.define :email_confirmed_user, :parent => :user do |user|
 	user.email_confirmed { true }
+end
+
+Factory.define :authentication do |f|
+	f.user            { Factory(:user) }
+	f.provider        {'twitter'}
+	f.uid             { Factory.next :uid }
+	f.sequence(:name) {|n| "Auth User#{n}"}
 end

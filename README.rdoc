@@ -45,7 +45,9 @@ Put the entire project directory where you want it on your web server’s file s
 
 Copy config/database.default.yml to config/database.yml and edit that file to use whatever database backend(s) you want for your installation. The default will use SQLite, which is okay for small projects, but you’ll likely want to switch to something like PostgreSQL or MySQL.
 
-Copy config/initializers/secret_token.default.rb to config/initializers/secret_token.rb, then edit that file to use your own secret key.
+Copy config/initializers/secret_token.rb.default to config/initializers/secret_token.rb, then edit that file to use your own, made-up (random), secret key.
+
+Copy config/initializers/omniauth.rb.default to config/initializers/omniauth.rb, then edit that file to use your own external service authentication codes.
 
 From within the project directory, run the following command to ensure you have the required gems (and the required versions of those gems):
  > sudo bundle update

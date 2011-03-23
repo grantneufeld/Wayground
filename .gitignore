@@ -6,6 +6,7 @@ config/amazon_s3.yml
 config/deploy.rb
 config/initializers/cookie_verification_secret.rb
 config/initializers/oauth_consumers.rb
+config/initializers/omniauth.rb
 config/initializers/secret_token.rb
 coverage/*
 coverage.data

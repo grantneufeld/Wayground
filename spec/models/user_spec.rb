@@ -2,7 +2,11 @@
 require 'spec_helper'
 
 describe User do
-	describe "validations on create" do
+	def mock_auth(stubs = {})
+		@mock_auth = mock_model(Authentication, stubs)
+	end
+
+	describe "validations without authentications" do
 		it "should fail if there is no password" do
 			u = User.new
 			u.email = 'test@wayground.ca'
@@ -89,7 +93,32 @@ describe User do
 			User.find_by_email(u.email).should == u
 		end
 	end
-	
+	describe "validations with authentications" do
+		it "should fail to validate when no authentication and no email/pass" do
+			user = User.new
+			user.valid?.should be_false
+		end
+		it "should validate when there is an authentication and no email/pass" do
+			authentication = Factory.build(:authentication)
+			user = authentication.user
+			user.valid?.should be_true
+		end
+	end
+
+	describe "create_from_authentication!" do
+		it "should create a new user with the authentication" do
+			#authentication = mock_auth({:name => 'User From Auth', :email => 'test+fromauth@wayground.ca', :user= => nil, :to_ary => []})
+			authentication = Factory.create(:authentication,
+				{:name => 'User From Auth', :email => 'test+fromauth@wayground.ca'}
+			)
+			user = User.create_from_authentication!(authentication)
+			user.valid?.should be_true
+			user.name.should eq 'User From Auth'
+			user.email.should eq 'test+fromauth@wayground.ca'
+			user.authentications[0].should be authentication
+		end
+	end
+
 	describe "password encryption" do
 		before(:each) do
 			@user = User.new

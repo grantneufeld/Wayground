@@ -10,10 +10,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 2) do
+
+  create_table "authentications", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider",    :null => false
+    t.string   "uid",         :null => false
+    t.string   "nickname"
+    t.string   "name"
+    t.string   "email"
+    t.string   "location"
+    t.string   "url"
+    t.string   "image_url"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "authentications", ["provider", "uid"], :name => "auth", :unique => true
+  add_index "authentications", ["user_id", "provider"], :name => "user"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                  :null => false
+    t.string   "email"
     t.string   "password_hash",        :limit => 128
     t.string   "name"
     t.boolean  "is_verified_realname",                :default => false, :null => false

@@ -1,0 +1,6 @@
+= Sign In Graphics
+
+These are graphics provided for displaying signin links using external services.
+
+Twitter icons derived from originals at:
+https://dev.twitter.com/pages/sign_in_with_twitter

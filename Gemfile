@@ -11,6 +11,7 @@ gem 'sqlite3', '>= 1.3.3'
 gem 'capistrano' #, '2.5.19'
 
 gem 'bcrypt-ruby', '2.1.4'
+gem 'omniauth', '>= 0.2.0'
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'

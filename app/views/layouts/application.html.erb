@@ -14,6 +14,14 @@
 <li><%= link_to 'Register as New User', sign_up_path %></li>
 <li><%= link_to 'Sign In', sign_in_path %></li>
 <% else -%>
+<li>Signed in as<%
+case session[:source]
+when 'twitter'
+	%>Twitter:<%
+when 'facebook'
+	%>Facebook:<%
+end
+%> <%= current_user.name %></li>
 <li><%= link_to 'My Account', account_path %></li>
 <li><%= link_to 'Sign Out', sign_out_path %></li>
 <% end -%>
