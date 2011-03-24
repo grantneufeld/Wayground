@@ -1,17 +1,22 @@
-<h1>Sign Up</h1>
-
+<div class="columns cols2">
+<div class="column col1">
+<h1>Sign Up Using Your Existing Account</h1>
 <p><%= render :partial => 'sessions/authentication_links' %></p>
+</div>
 
+<div class="column col2 lastcol">
+<h1>Sign Up Here</h1>
 <%= form_for @user, :url => sign_up_path do |f| %>
 <%= show_errors(@user) %>
 <table><tbody>
-<tr><th><%= f.label :email %></th><td><%= f.email_field :email %></td></tr>
-<tr><th><%= f.label :password %></th><td><%= f.password_field :password %></td></tr>
-<tr><th><%= f.label :password_confirmation, 'Confirm Password' %></th><td><%= f.password_field :password_confirmation %></td></tr>
-<tr><th><%= f.label :name %></th><td><%= f.text_field :name %></td></tr>
+<tr><th><%= f.label :email %>:</th><td><%= f.email_field :email %></td></tr>
+<tr><th><%= f.label :password %>:</th><td><%= f.password_field :password %></td></tr>
+<tr><th><%= f.label :password_confirmation, 'Confirm Password' %>:</th><td><%= f.password_field :password_confirmation %></td></tr>
+<tr><th><%= f.label :name %>:</th><td><%= f.text_field :name %></td></tr>
 </tbody>
-<tfoot>
-<tr><th></th><td><%= f.submit 'Sign Up' %></td></tr>
-</tfoot>
+<tfoot><tr><th></th><td><%= f.submit 'Sign Up' %></td></tr></tfoot>
 </table>
 <% end %>
+</div>
+<div class="closeblock"></div>
+</div>

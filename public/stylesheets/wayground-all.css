@@ -1,0 +1,60 @@
+a img{border:0px none;}
+
+#headertitle, #maintitle, #subtitle, #navmenu > li, h1, h2, h3, h4, h5, h6{font-family:Ubuntu,'Officina Serif ITC',Helvetica,sans-serif;}
+h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0em;}
+* + h1,* + h2,* + h3,* + h4,* + h5,* + h6{margin-top:1em;}
+#maintitle{font-weight:bold; line-height:0.808em; text-transform:uppercase;}
+#subtitle{line-height:0.947em; margin:0em;}
+#flash > * + *{margin-top:1em;}
+#flash > p{text-indent:0em;}
+.button, .nowrap{white-space:nowrap;}
+.subtext{font-weight:normal;}
+
+table, tr, th, td{border-spacing:0em;}
+th, td{padding:0.2em 0.4em; vertical-align:top;}
+th{text-align:left;}
+thead > tr > th{text-align:center;}
+thead, thead > tr, thead > tr > th{background:#999; color:white;}
+tbody > tr > th:first-child{text-align:right;}
+tr:nth-child(odd){background:#EEE; color:black;}
+tr:nth-child(even){background:#DDD; color:black;}
+
+
+.simplecols2{-moz-column-count:2; -webkit-column-count:2; column-count:2;}
+.closeblock{clear:both; height:1px;}
+.columns, #content > .columns{margin:0em auto 0em 0em; border-collapse:collapse; border-spacing:0em;}
+.cols2, #content > .cols2, .featureblock > .cols2{max-width:1024px;}
+.cols3, #content > .cols3, .featureblock > .cols3{max-width:1536px;}
+.cols4, #content > .cols4, .featureblock > .cols4{max-width:2048px;}
+h1 + .columns{clear:right;}
+.columns > .column{float:left; min-width:8em;/*128px*/ max-width:30em;/*512px - 2em for padding*/}
+.cols2 > .column{max-width:47.5%;}
+.cols3 > .column{max-width:30.3%;}
+.cols4 > .column{max-width:22.5%;}
+.column{margin-top:0.625em; padding-right:1em; border-right:thin dotted gray; border-collapse:collapse; border-spacing:0em;}
+.column + .column{padding-left:0.9375em;}
+.lastcol{padding-right:0em; border-right:0em none;}
+@media all and (max-width:62.9375em/*1007px*/) {
+/* reduce column width to not bump onto next line */
+.cols4 > .column{max-width:22%;}
+}
+@media all and (max-width:56.25em/*900px*/) {
+/* switch to 2-column when not enough room for 4 */
+.cols4 > .column{max-width:47.5%;}
+.cols4 > .col2{padding-right:0em; border-right:0em none;}
+.cols4 > .col3{clear:left; padding-left:0em;}
+}
+@media all and (max-width:50.5em/*808px*/) {
+/* switch to 2-column when not enough room for 3 */
+.cols3 > .column{max-width:47.5%;}
+.cols3 > .col2{padding-right:0em; border-right:0em none;}
+.cols3 > .col3{clear:left; padding-left:0em; padding-right:1em; border-right:thin dotted gray;}
+}
+@media all and (max-width:43.125em/*690px*/) {
+/* reduce column width to not bump onto next line */
+.column, .cols2 > .column, .cols3 > .column, .cols4 > .column{max-width:45%;}
+}
+@media all and (max-width:32em/*512px*/) {
+/* switch to single column when not enough room for 2 */
+.column, .cols2 > .column, .column, .cols3 > .column, .column, .cols4 > .column{float:none; padding:0em; border-right:0em none; max-width:none;}
+}

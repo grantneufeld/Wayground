@@ -106,7 +106,7 @@ end
 # Session
 
 Then /^(?:|I )should be signed in$/ do
-	tag = /<[a-z]+ id="user-menu" class="signed-in">/
+	tag = /<[a-z]+ id="usermenu" class="signed-in">/
 	if response_body.respond_to? :should
 		response_body.should match(tag)
 	else
@@ -115,7 +115,7 @@ Then /^(?:|I )should be signed in$/ do
 end
 
 Then /^(?:|I )should be signed out$/ do
-	tag = /<[a-z]+ id="user-menu" class="signed-out">/
+	tag = /<[a-z]+ id="usermenu" class="signed-out">/
 	if response_body.respond_to? :should
 		response_body.should match(tag)
 	else
