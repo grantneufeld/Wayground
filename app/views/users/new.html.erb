@@ -1,5 +1,7 @@
 <h1>Sign Up</h1>
 
+<p><%= render :partial => 'sessions/authentication_links' %></p>
+
 <%= form_for @user, :url => sign_up_path do |f| %>
 <%= show_errors(@user) %>
 <table><tbody>

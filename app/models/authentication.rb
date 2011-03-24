@@ -55,4 +55,13 @@ class Authentication < ActiveRecord::Base
 	def new_user?
 		new_user
 	end
+
+	def label
+		case provider
+		when 'twitter'
+			"@#{nickname}"
+		else
+			name || uid
+		end
+	end
 end

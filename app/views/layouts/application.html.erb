@@ -14,14 +14,14 @@
 <li><%= link_to 'Register as New User', sign_up_path %></li>
 <li><%= link_to 'Sign In', sign_in_path %></li>
 <% else -%>
-<li>Signed in as<%
+<li>Signed in as <%= current_user.name %> <%
 case session[:source]
 when 'twitter'
-	%><%= image_tag('/icon/site/twitter.png', :alt => 'Twitter:', :title => 'Twitter', :size => '16x16') %><%
+	%><%= image_tag('/icon/site/twitter.png', :alt => '(via Twitter)', :title => 'via Twitter', :size => '16x16') %><%
 when 'facebook'
-	%>Facebook:<%
+	%>(via Facebook)<%
 end
-%> <%= current_user.name %></li>
+%></li>
 <li><%= link_to 'My Account', account_path %></li>
 <li><%= link_to 'Sign Out', sign_out_path %></li>
 <% end -%>

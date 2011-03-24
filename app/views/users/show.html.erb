@@ -6,7 +6,7 @@ else
 	%><%= user_name %><%
 end
 %></h1>
-<p>Registered since <%= @user.created_at.to_s %>.</p>
+<p>Registered on <%= @user.created_at.to_s(:plain_date) %>.</p>
 
 <h2>Linked Accounts</h2>
 <%
@@ -19,19 +19,9 @@ else
 		sites[authentication.provider] = authentication
 	end
 	sites.keys.sort.each do |key|
-		a = sites[key]
-		%><p><%= link_to "Your #{a.provider.titleize} account", a.url %>.</p>
+		authentication = sites[key]
+		%><p><%= link_to "Your #{authentication.provider.titleize} account — #{authentication.label}", authentication.url %>.</p>
 <%	end
 end
-#if sites['facebook'].nil? && sites['twitter'].nil?
-	%><p>
-<%	if sites['facebook'].nil?
-		%><%= link_to image_tag('/icon/site/facebook.png', :alt => ' ', :size => '16x16') + ' Sign in with Facebook'.html_safe, '/auth/facebook', :class => 'button' %><span class="separator">.</span>
-<%	end
-	if sites['twitter'].nil?
-		%><%= link_to image_tag('/icon/site/twitter.png', :alt => ' ', :size => '16x16') + ' Sign in with Twitter'.html_safe, '/auth/twitter', :class => 'button' %><span class="separator">.</span>
-<%	end
-%></p>
-<%
-#end
--%>
+%><h3>Link to your accounts on other websites</h3>
+<p><%= render :partial => 'sessions/authentication_links' %></p>

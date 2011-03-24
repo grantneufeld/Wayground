@@ -1,8 +1,5 @@
 <h1>Sign In</h1>
-<p>
-<%= link_to image_tag('/icon/site/facebook.png', :alt => ' ', :size => '16x16') + ' Sign in with Facebook'.html_safe, '/auth/facebook', :class => 'button' %><span class="separator">.</span>
-<%= link_to image_tag('/icon/site/twitter.png', :alt => ' ', :size => '16x16') + ' Sign in with Twitter'.html_safe, '/auth/twitter', :class => 'button' %><span class="separator">.</span>
-</p>
+<p><%= render :partial => 'sessions/authentication_links' %></p>
 <p>If you are a registered user, you can sign in here:</p>
 <%= form_tag sign_in_path do %>
 <table><tbody>
