@@ -8,7 +8,7 @@
 <%= stylesheet_link_tag 'wayground-all', :media => 'all' %>
 <%= stylesheet_link_tag 'wayground-print', :media => 'print' %>
 <%= stylesheet_link_tag 'wayground-screen', :media => 'screen' %>
-<%= javascript_include_tag :defaults %>
+<% #= javascript_include_tag :defaults -%>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <%= csrf_meta_tag %>
 </head><body>
@@ -50,14 +50,16 @@ if @site_breadcrumbs && @site_breadcrumbs.size > 0
 <% 	end
 	%></ul>
 <%
-end -%>
+end
 
-<div id="flash"<%= flash.length <= 0 ? ' style="display:none"'.html_safe : '' %>><%
+if flash.length > 0 %>
+<div id="flash"<%= flash.length <= 0 ? ' class="hidden"'.html_safe : '' %>><%
 if flash.length > 0
 	flash.each do |key, msg|
 		%><p class="<%= key %>"><%= msg %></p>
 <%	end
 end %></div>
+<% end -%>
 
 <div id="content">
 <%= yield %>

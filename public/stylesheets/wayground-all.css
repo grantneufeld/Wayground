@@ -8,6 +8,7 @@ h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0em;}
 #flash > * + *{margin-top:1em;}
 #flash > p{text-indent:0em;}
 .button, .nowrap{white-space:nowrap;}
+.hidden{display:none;}
 .subtext{font-weight:normal;}
 
 table, tr, th, td{border-spacing:0em;}
