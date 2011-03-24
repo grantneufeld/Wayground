@@ -1,5 +1,4 @@
-# remove the @future tag to test the testing system
-@future @test
+@test
 Feature: Testing system
   In order to test that the systems for testing the code are operational
   As a developer

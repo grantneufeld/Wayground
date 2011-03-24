@@ -1,10 +1,19 @@
 <%
 rerun = File.file?('rerun.txt') ? IO.read('rerun.txt') : ""
 rerun_opts = rerun.to_s.strip.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} #{rerun}"
-std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} --strict --tags ~@wip --tags ~@future"
+std_tags = "--tags ~@wip --tags ~@future --tags ~@test"
+std_format = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'}"
+std_opts = "#{std_format} --strict #{std_tags}"
+
+# FIXME: When Cucumber handles numeric tag limits and boolean tags, replace the “wip” profile below.
+# > wip: < %= std_format % > --tags ~@test --tags @wip:3 --wip features
+# Ticket:
+# https://rspec.lighthouseapp.com/projects/16211/tickets/708-tag-numeric-limit-breaks-tag-boolean-exclusion
+
 %>
 default: <%= std_opts %> features
-wip: --tags ~@future --tags @wip:3 --wip features
-rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags ~@wip --tags ~@future
+wip: <%= std_format %> --tags ~@test --tags @wip --wip features
+rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict <%= std_tags %>
 autotest: <%= std_opts %> --color
 autotest-all: <%= std_opts %> --color
+testtest: <%= std_format %> --strict --tags @test --tags ~@wip --tags ~@future features
