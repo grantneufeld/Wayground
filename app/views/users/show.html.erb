@@ -1,8 +1,37 @@
 <h1><%
-if @user.name.blank?
+user_name = @user.name
+if user_name.blank?
 	%>User: <%= @user.id %><%
 else
-	%><%= @user.name %><%
+	%><%= user_name %><%
 end
 %></h1>
 <p>Registered since <%= @user.created_at.to_s %>.</p>
+
+<h2>Linked Accounts</h2>
+<%
+sites = {}
+if @user.authentications.count == 0
+	%><p>Your account is not linked to any other websites.</p>
+<%
+else
+	@user.authentications.each do |authentication|
+		sites[authentication.provider] = authentication
+	end
+	sites.keys.sort.each do |key|
+		a = sites[key]
+		%><p><%= link_to "Your #{a.provider.titleize} account", a.url %>.</p>
+<%	end
+end
+#if sites['facebook'].nil? && sites['twitter'].nil?
+	%><p>
+<%	if sites['facebook'].nil?
+		%><%= link_to image_tag('/icon/site/facebook.png', :alt => ' ', :size => '16x16') + ' Sign in with Facebook'.html_safe, '/auth/facebook', :class => 'button' %><span class="separator">.</span>
+<%	end
+	if sites['twitter'].nil?
+		%><%= link_to image_tag('/icon/site/twitter.png', :alt => ' ', :size => '16x16') + ' Sign in with Twitter'.html_safe, '/auth/twitter', :class => 'button' %><span class="separator">.</span>
+<%	end
+%></p>
+<%
+#end
+-%>

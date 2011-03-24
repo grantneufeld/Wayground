@@ -1,4 +1,4 @@
-# many of these methods are derived from the ones that come from Clearance 
+# many of these methods are derived from the ones that come from Clearance
 
 
 # General
@@ -30,7 +30,7 @@ Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
 		:password              => password,
 		:password_confirmation => password
 	end
-end 
+end
 
 #Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
 #	user = User.find_by_email(email)
@@ -52,6 +52,56 @@ Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
 		:password_confirmation => password
 	end
 end
+
+Given /^(?:|I )am not signed in$/ do
+	# FIXME: catch exceptions if not currently logged in
+	When "I sign out"
+end
+When /^(?:|I ) sign out$/ do
+	visit '/sign_out'
+	click_button 'Sign Out'
+end
+
+
+# OAuth
+
+Given /^(?:|I )am pretending to access the external websites$/ do
+	OmniAuth.config.test_mode = true
+end
+Given /^(?:|I )am actually using the external websites$/ do
+	OmniAuth.config.test_mode = false
+end
+
+Given /^(?:|I )have my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, uid|
+	provider.downcase!
+	uid ||= rand(255).to_s
+	auth = {'uid' => uid}
+	auth['user_info'] = {'nickname' => uid} if provider == 'twitter'
+	OmniAuth.config.add_mock(provider.to_sym, auth)
+end
+When /^(?:|I )(?:|try to )sign in with my ([^ ]+) account(?:| @[^ ]+)(?:| again)$/ do |provider|
+    When 'I go to the sign in page'
+    When "I follow \"Sign in with #{provider.titleize}\""
+end
+When /^(?:|I )register my ([^ ]+) account(?:| @[^ ]+)(?:| again)$/ do |provider|
+    When "I go to the account page"
+    And "I follow \"Sign in with #{provider.titleize}\""
+end
+Given /^(?:|I )have previously signed in with my Twitter account(?:| @([^ ]+))$/ do |nick|
+	nick_tag = nick.blank? ? '' : " @#{nick}"
+	Given "I have my Twitter account#{nick_tag}"
+	When "I sign in with my Twitter account#{nick_tag}"
+	When "I sign out"
+end
+Then /^(?:|I )should be registered with my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, nick|
+	visit '/account'
+	response_body.should match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+end
+Then /^(?:|I )should not be registered with my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, nick|
+	visit '/account'
+	response_body.should_not match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+end
+
 
 # Session
 
@@ -79,6 +129,10 @@ end
 #end
 
 Given /^(?:|I )have signed in with "(.*)\/(.*)"$/ do |email, password|
+	Given %{I am signed up and confirmed as "#{email}/#{password}"}
+	And %{I sign in as "#{email}/#{password}"}
+end
+Given /^(?:|I )have signed in with my email [<"]?(.+@[^>\"]+)[>"]? and(?:| my) password "?([^\"]*)"?$/ do |email, password|
 	Given %{I am signed up and confirmed as "#{email}/#{password}"}
 	And %{I sign in as "#{email}/#{password}"}
 end

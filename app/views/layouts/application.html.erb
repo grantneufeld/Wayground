@@ -17,7 +17,7 @@
 <li>Signed in as<%
 case session[:source]
 when 'twitter'
-	%>Twitter:<%
+	%><%= image_tag('/icon/site/twitter.png', :alt => 'Twitter:', :title => 'Twitter', :size => '16x16') %><%
 when 'facebook'
 	%>Facebook:<%
 end

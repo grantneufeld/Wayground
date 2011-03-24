@@ -4,7 +4,7 @@
 class SessionsController < ApplicationController
 	before_filter :cant_be_signed_in, :only => [:new, :create]
 	before_filter :must_be_signed_in, :only => [:delete, :destroy]
-	
+
 	def new
 	end
 
@@ -34,31 +34,20 @@ class SessionsController < ApplicationController
 		auth = request.env["omniauth.auth"]
 		user = current_user
 		end_up_at_url = request.env['omniauth.origin'] || account_url
-		authentication, auth_user = Authentication.authenticate(auth, user)
-		if authentication
-			# found an authentication, so sign in
+		authentication = Authentication.authenticate_callback!(auth, user)
+		if user.present? # added an authentication to the user
+			notice = "Added authentication from #{auth['provider']}."
+		elsif authentication.new_user? # created a new user
+			notice = "You are now registered on this site."
+		else # signed in
 			notice = "You are now signed in."
-		else
-			authentication, auth_user = Authentication.create_with_auth!(auth, user)
-			if user
-				# added authentication to already signed in user
-				notice = "Added authentication from #{auth['provider']}."
-			else
-				# created a new user
-				notice = "You are now registered on this site."
-			end
 		end
-		session[:user_id] = auth_user.id
+		session[:user_id] = authentication.user_id
 		session[:source] = authentication.provider
 		redirect_to end_up_at_url, :notice => notice
 	rescue Wayground::WrongUserForAuthentication
 		redirect_to end_up_at_url, :alert => "ERROR: The authentication failed because the requested authentication is already assigned to a different account!"
 	end
-
-	## if this actually gets called, we have an OmniAuth failure
-	#def blank
-	#	render :text => "Not found. (OmniAuth routing failure.)", :status => 404
-	#end
 
 
 	protected
