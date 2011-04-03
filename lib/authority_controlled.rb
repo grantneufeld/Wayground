@@ -13,19 +13,22 @@ ActiveRecord::Base.class_eval do
   # - :item_authority_flag_field => A boolean field name string that is used to track
   #    whether individual records on the model will require authority to view.
   #    Defaults to ‘"is_authority_controlled"’.
-  #    Set to ‘false’ if you want all of the model’s records to require authority to be viewed.
+  #    Set to ‘:always_private’ to have all of the model’s records require authority to be viewed.
+  #    Set to ‘:always_viewable’ to have all of the model’s records not require authority to be viewed.
   def self.acts_as_authority_controlled(options={})
     # check if already loaded
     return if self.included_modules.include?(AuthorityControlled::InstanceMethods)
 
     # support a custom authority flag field (or none at all if all records private)
-    if options[:item_authority_flag_field] == false
+    if options[:item_authority_flag_field] == :always_private
       class_eval do
         def is_authority_controlled?
           true
         end
-        def is_authority_controlled=(value); end
       end
+    # TODO: implement the following chunk of code when there’s a class that needs non-private viewable items (e.g., Page)
+    #elsif options[:item_authority_flag_field] == :always_viewable
+    #  # use the default methods set on ActiveRecord
     #else
     #  # use the field name defined by item_authority_flag_field if present,
     #  # otherwise, use the default field name: is_authority_controlled
@@ -51,7 +54,6 @@ ActiveRecord::Base.class_eval do
       # just fall back on the inherited authority_area method attached to all ActiveRecord classes below
     end
 
-    # FIXME: not sure why has_many was producing an “undefined method” error when being called directly. is there a load-sequence problem?
     class_eval do
       has_many :authorities, :as => :item, :dependent => :delete_all
     end
@@ -71,13 +73,18 @@ ActiveRecord::Base.class_eval do
   def is_authority_controlled?
     false
   end
+  def is_authority_controlled=(value); end
 
   def has_authority_to?(user = nil, action_type = :can_view)
     if action_type == :can_view && !(is_authority_controlled?)
       # anyone can view a non-controlled item
       true
     else
-      nil
+      if user
+        self.class.for_user(user).for_area(authority_area)
+      else
+        nil
+      end
     end
   end
 end

@@ -61,7 +61,7 @@ class Authentication < ActiveRecord::Base
 		when 'twitter'
 			"@#{nickname}"
 		else
-			name || uid
+			nickname || name || uid
 		end
 	end
 end

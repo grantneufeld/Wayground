@@ -17,19 +17,39 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
     end
   end
   describe ".is_authority_controlled?" do
-    it "should default to false for ActiveRecord models that are not set as authority_controlled" do
-      Authentication.new.is_authority_controlled?.should be_false
-    end
     it "should be false for ActiveRecord models that are not set as authority_controlled" do
       Authority.new.is_authority_controlled?.should be_false
     end
-    it "should be true for ActiveRecord models that are set as authority_controlled" do
+    it "should be true for ActiveRecord models that are set as authority_controlled and always private" do
       User.new.is_authority_controlled?.should be_true
     end
+    # TODO: when there's such a class (such as Page)
+    #it "should default to false for models that are set as authority_controlled but not flagged" do
+    #   Page.new.is_authority_controlled?.should be_false
+    #end
+    #it "should be true for models that are set as authority_controlled and flagged" do
+    #   item = Page.new.is_authority_controlled = true
+    #   item.is_authority_controlled?.should be_true
+    #end
   end
   describe ".has_authority_to?" do
     it "should allow viewing for models that are not set as authority_controlled" do
       Authority.new.has_authority_to?.should be_true
+    end
+    it "should not allow users to change models that are not set as authority_controlled, without authority" do
+      Authority.new.has_authority_to?(nil, :can_edit).should be_false
+    end
+    it "should refer to authority_area authorities for change actions when not set as authority_controlled" do
+      item = Factory.create(:authority, :area => 'test')
+      user = Factory.create(:user)
+      a = Factory.create(:authority, :user => user, :area => 'Authority', :can_edit => true)
+      item.has_authority_to?(user, :can_edit).should be_true
+    end
+    it "should fall back to global authorities for change actions when not set as authority_controlled" do
+      item = Factory.create(:authority, :area => 'test')
+      user = Factory.create(:user)
+      a = Factory.create(:authority, :user => user, :area => 'global', :can_edit => true)
+      item.has_authority_to?(user, :can_edit).should be_true
     end
   end
 end
@@ -50,13 +70,13 @@ describe "acts_as_authority_controlled" do
   it "should not allow a class to be assigned to the ‘global’ authority_area" do
     expect {
       class TestAuthorityControlledCannotBeGlobal < ActiveRecord::Base
-        acts_as_authority_controlled :authority_area => 'global', :item_authority_flag_field => false
+        acts_as_authority_controlled :authority_area => 'global', :item_authority_flag_field => :always_private
       end
     }.to raise_exception(Wayground::ModelAuthorityAreaCannotBeGlobal)
   end
   it "should allow a class to be assigned to a custom authority_area" do
     class TestAuthorityControlledCustomArea < ActiveRecord::Base
-      acts_as_authority_controlled :authority_area => 'Custom Area'
+      acts_as_authority_controlled :authority_area => 'Custom Area', :item_authority_flag_field => :always_private
     end
     TestAuthorityControlledCustomArea.authority_area.should eq 'Custom Area'
   end
