@@ -16,29 +16,29 @@ class Authentication < ActiveRecord::Base
 		authentication
 	end
 
-	# Create a new Authentication, given an Oauth hash, for an optional user.
-	def self.create_with_auth!(auth, user = nil)
-		authentication = Authentication.new(user_attrs_from_auth(auth))
-		if user
-			user.authentications << authentication
-			user.save!
-		else
-			user = User.create_from_authentication!(authentication)
-			authentication.new_user = true
-		end
-		authentication
-	end
+  # Create a new Authentication, given an Oauth hash, for an optional user.
+  def self.create_with_auth!(auth, user = nil)
+    authentication = Authentication.new(user_attrs_from_auth(auth))
+    if user.nil?
+      user = User.create_from_authentication!(authentication)
+      authentication.new_user = true
+    else
+      user.authentications << authentication
+      user.save!
+    end
+    authentication
+  end
 
-	def self.user_attrs_from_auth(auth)
-		auth['user_info'] ||= {}
-		{
-			:provider => auth['provider'], :uid => auth['uid'],
-			:nickname => auth['user_info']['nickname'], :name => auth['user_info']['name'],
-			:email => auth['user_info']['email'], :location => auth['user_info']['location'],
-			:image_url => auth['user_info']['image'], :description => auth['user_info']['description'],
-			:url => url_from_provider_auth(auth)
-		}
-	end
+  def self.user_attrs_from_auth(auth)
+    user_info = auth['user_info'] || {}
+    {
+      :provider => auth['provider'], :uid => auth['uid'],
+      :nickname => user_info['nickname'], :name => user_info['name'],
+      :email => user_info['email'], :location => user_info['location'],
+      :image_url => user_info['image'], :description => user_info['description'],
+      :url => url_from_provider_auth(auth)
+    }
+  end
 
 	# figure out the user’s url on the service, if available
 	def self.url_from_provider_auth(auth)
@@ -56,12 +56,7 @@ class Authentication < ActiveRecord::Base
 		new_user
 	end
 
-	def label
-		case provider
-		when 'twitter'
-			"@#{nickname}"
-		else
-			nickname || name || uid
-		end
-	end
+  def label
+    (provider == 'twitter' ? '@' : '') + (nickname || name || uid)
+  end
 end

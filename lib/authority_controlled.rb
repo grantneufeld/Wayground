@@ -32,24 +32,24 @@ ActiveRecord::Base.class_eval do
     #else
     #  # use the field name defined by item_authority_flag_field if present,
     #  # otherwise, use the default field name: is_authority_controlled
-    #  class_eval <<-EOV
+    #  class_eval "
     #    def is_authority_controlled?
     #      self.#{(options[:item_authority_flag_field].present? ?
     #      options[:item_authority_flag_field] : 'is_authority_controlled')}
     #    end
-    #  EOV
+    #  "
     end
 
     # define the authority area for the model
-    if options[:authority_area] == 'global'
+    option_area = options[:authority_area]
+    if option_area == 'global'
       raise Wayground::ModelAuthorityAreaCannotBeGlobal, 'cannot use "global" as an authority area, it is reserved'
-    elsif options[:authority_area].present?
+    elsif option_area.present?
       # override the authority area for the class
-      class_eval <<-EOV
+      class_eval "
         def self.authority_area
-          '#{options[:authority_area]}'
-        end
-      EOV
+          '#{option_area}'
+        end"
     else
       # just fall back on the inherited authority_area method attached to all ActiveRecord classes below
     end
@@ -79,12 +79,10 @@ ActiveRecord::Base.class_eval do
     if action_type == :can_view && !(is_authority_controlled?)
       # anyone can view a non-controlled item
       true
+    elsif user
+      Authority.for_user(user).for_area(authority_area).for_action(action_type)
     else
-      if user
-        self.class.for_user(user).for_area(authority_area)
-      else
-        nil
-      end
+      nil
     end
   end
 end
@@ -92,40 +90,26 @@ end
 # Additions for classes to be set up as Authority controlled.
 module AuthorityControlled
   module InstanceMethods
-    def set_authority_for!(user, action)
+    # action_type = :can_create, :can_view, :can_edit, :can_delete, :can_invite, :can_permit
+
+    def set_authority_for!(user, action_type)
       # check for existing authorization
       authority = self.authorities.for_user(user).first
       if authority
-        unless authority[action]
-          authority[action] = true
-          authority.save!
-        end
+        authority.set_action!(action_type)
       else
-        authority = self.authorities.new(action => true)
+        authority = self.authorities.new(action_type => true)
         authority.user = user
         authority.save!
       end
     end
-    # action_type = :can_create, :can_view, :can_edit, :can_delete, :can_invite, :can_permit
+
     def has_authority_to?(user, action_type = :can_view)
       if action_type == :can_view && !(is_authority_controlled?)
         # anyone can view a non-controlled item
         true
       else
-        valid_authority = nil
-        # FIXME: this could be done better
-        user_authorities = Authority.for_user(user).for_item_or_area(self, authority_area).for_action(action_type)
-        # try to find an authority that gives permission,
-        # prioritizing an authority that identifies the user as the owner
-        user_authorities.each do |authority|
-          if authority.is_owner? && authority.item == self
-            valid_authority = authority
-            break
-          elsif authority[action_type]
-            valid_authority ||= authority
-          end
-        end
-        valid_authority
+        Authority.user_has_for_item(user, self, action_type)
       end
     end
   end

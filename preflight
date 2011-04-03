@@ -39,7 +39,8 @@ fi
 
 # report on the code quality
 echo "Generating Metrical reports..."
-metrical
+rake metrics:all
+open tmp/metric_fu/output/index.html
 echo ""
 
 # report the git status

@@ -17,11 +17,8 @@ class Authority < ActiveRecord::Base
   scope :for_area, lambda {|area|
     where("authorities.area = ? OR authorities.area = 'global'", area)
   }
-  #scope :for_item, lambda {|item|
-  #  where(:item_id => item.id, :item_type => item.class.name) # or area = #{item.area} or area = 'global'
-  #}
-  scope :for_item_or_area, lambda { |item, area|
-    where("(authorities.item_id = ? AND authorities.item_type = ?) OR authorities.area = ? OR authorities.area = 'global'", item.id, item.class.name, area)
+  scope :for_item, lambda { |item|
+    where("(authorities.item_id = ? AND authorities.item_type = ?) OR authorities.area = ? OR authorities.area = 'global'", item.id, item.class.name, item.authority_area)
   }
   scope :for_user, lambda {|user|
     where(:user_id => user.id)
@@ -31,4 +28,32 @@ class Authority < ActiveRecord::Base
     where("(authorities.#{action} = ? OR authorities.is_owner = ?)", true, true)
   }
   scope :where_owner, where(:is_owner => true)
+
+  def self.user_has_for_item(user, item, action_type = :can_view)
+    valid_authority = nil
+    # FIXME: this could be done better
+    if action_type.nil?
+      user_authorities = Authority.for_user(user).for_item(item)
+    else
+      user_authorities = Authority.for_user(user).for_item(item).for_action(action_type)
+    end
+    # try to find an authority that gives permission,
+    # prioritizing an authority that identifies the user as the owner of the item
+    user_authorities.each do |authority|
+      if authority.is_owner? && authority.item == item
+        valid_authority = authority
+        break
+      elsif authority[action_type]
+        valid_authority ||= authority
+      end
+    end
+    valid_authority
+  end
+
+  def set_action!(action_type)
+    unless self[action_type]
+      self[action_type] = true
+      self.save!
+    end
+  end
 end
