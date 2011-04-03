@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 2) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -29,6 +29,26 @@ ActiveRecord::Schema.define(:version => 2) do
 
   add_index "authentications", ["provider", "uid"], :name => "auth", :unique => true
   add_index "authentications", ["user_id", "provider"], :name => "user"
+
+  create_table "authorities", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.string   "area",       :limit => 31
+    t.boolean  "is_owner"
+    t.boolean  "can_create"
+    t.boolean  "can_view"
+    t.boolean  "can_edit"
+    t.boolean  "can_delete"
+    t.boolean  "can_invite"
+    t.boolean  "can_permit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "authorities", ["area", "user_id"], :name => "area"
+  add_index "authorities", ["item_id", "item_type", "user_id"], :name => "item"
+  add_index "authorities", ["user_id", "item_id", "item_type", "area"], :name => "user_map", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "email"

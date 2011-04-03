@@ -5,6 +5,8 @@ require 'bcrypt'
 # * http://railscasts.com/episodes/250-authentication-from-scratch
 # * https://github.com/rails/rails/commit/bd9dc4ff23ab1e185df6ccf35d6058c0a3d234ce
 class User < ActiveRecord::Base
+  acts_as_authority_controlled :item_authority_flag_field => false
+
 	attr_accessible :email, :name, :password, :password_confirmation
 	attr_accessor :password
 

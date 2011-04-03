@@ -128,9 +128,12 @@ end
 #	And %{I sign in as "#{email}/#{password}"}
 #end
 
+Given /^(?:|I )have signed in$/ do
+  user = Factory(:user, :password => 'password')
+  Given "I have signed in with my email #{user.email} and password \"password\""
+end
 Given /^(?:|I )have signed in with "(.*)\/(.*)"$/ do |email, password|
-	Given %{I am signed up and confirmed as "#{email}/#{password}"}
-	And %{I sign in as "#{email}/#{password}"}
+  Given "I have signed in with my email #{email} and password \"#{password}\""
 end
 Given /^(?:|I )have signed in with my email [<"]?(.+@[^>\"]+)[>"]? and(?:| my) password "?([^\"]*)"?$/ do |email, password|
 	Given %{I am signed up and confirmed as "#{email}/#{password}"}

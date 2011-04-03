@@ -36,3 +36,8 @@ Factory.define :authentication do |f|
 	f.uid             { Factory.next :uid }
 	f.sequence(:name) {|n| "Auth User#{n}"}
 end
+
+# note that this factory will require being called with a value for either :item or :area, or it will fail
+Factory.define :authority do |f|
+  f.user { Factory(:user) }
+end

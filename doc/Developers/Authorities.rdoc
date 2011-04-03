@@ -1,0 +1,11 @@
+= Authorities - Access Control
+
+The Authority model is used to attach permissions to items and “areas” (groupings of items or functionality).
+
+You define a model as having authority access control with a call to ‘acts_as_authority_controlled’ in your class definition.
+
+Unless overridden when calling ‘acts_as_authority_controlled’, you must have an ‘is_authority_controlled’ field on your model table. When set true, it indicates that the record cannot be viewed without the user having authority.
+
+Users can access restricted items (records) by:
+1) Being the owner of the item, or the applicable authority area, or the special “global” area (e.g., admins).
+2) Having Authority for the requested action (for the item or the applicable, or global, authority area).

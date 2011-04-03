@@ -1,0 +1,1 @@
+require 'authority_controlled'
