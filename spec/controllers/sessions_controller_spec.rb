@@ -59,7 +59,7 @@ describe SessionsController do
 	describe "GET 'delete'" do
 		it "should redirect to the sign in page if not signed in" do
 			get 'delete'
-			response.location.should match /^[a-z]+:\/*[^\/]+\/sign_in$/
+			response.location.should match /^[a-z]+:\/*[^\/]+\/signin$/
 		end
 		it "should notify the user if not signed in" do
 			get 'delete'
@@ -76,7 +76,7 @@ describe SessionsController do
 	describe "DELETE 'destroy'" do
 		it "should redirect to the sign in page if not signed in" do
 			delete 'destroy'
-			response.location.should match /^[a-z]+:\/*[^\/]+\/sign_in$/
+			response.location.should match /^[a-z]+:\/*[^\/]+\/signin$/
 		end
 		it "should flash an alert if not signed in" do
 			delete 'destroy'
@@ -92,7 +92,7 @@ describe SessionsController do
 			session[:user_id] = mock_user.id
 			User.stub!(:find).with(session[:user_id]).and_return(mock_user)
 			delete 'destroy'
-			response.location.should eq root_url #match /^[a-z]+:\/*[^\/]+\/sign_in$/
+			response.location.should eq root_url #match /^[a-z]+:\/*[^\/]+\/signin$/
 		end
 		it "should notify the user that they are signed out after sign out" do
 			session[:user_id] = mock_user.id
