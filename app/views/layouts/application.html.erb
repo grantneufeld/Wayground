@@ -20,7 +20,7 @@
 </div>
 <ul id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
 <%	if current_user.nil?
-		%><li><%= link_to 'Register as New User', sign_up_path %></li><li><%= link_to 'Sign In', sign_in_path %></li><%
+		%><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li><%
 	else
 		%><li class="text">Signed in as <%= current_user.name %> <%
 		case session[:source]
@@ -29,7 +29,7 @@
 		when 'facebook'
 			%>(via Facebook)<%
 		end
-		%></li><li><%= link_to 'My Account', account_path %></li><li><%= link_to 'Sign Out', sign_out_path %></li><%
+		%></li><li><%= link_to 'My Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li><%
 	end %>
 </ul>
 <form action="" method="get" accept-charset="utf-8" id="globalsearch">

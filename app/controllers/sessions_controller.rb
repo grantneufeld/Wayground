@@ -60,7 +60,7 @@ class SessionsController < ApplicationController
 
 	def must_be_signed_in
 		if current_user.nil?
-			redirect_to sign_in_url, :notice => "You are not signed in."
+			redirect_to signin_url, :notice => "You are not signed in."
 		end
 	end
 end

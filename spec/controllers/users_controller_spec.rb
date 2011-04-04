@@ -21,9 +21,9 @@ describe UsersController do
 			get 'show'
 			response.should be_success
 		end
-		it "should redirect to the sign_in page if the user is not signed-in" do
+		it "should redirect to the signin page if the user is not signed-in" do
 			get 'show'
-			response.should redirect_to(sign_in_url)
+			response.should redirect_to(signin_url)
 		end
 	end
 
@@ -94,7 +94,7 @@ describe UsersController do
 		end
 		it "should redirect to sign-in if the user is not signed-in" do
 			get 'confirm', :confirmation_code => 'abc123'
-			response.should redirect_to(sign_in_url)
+			response.should redirect_to(signin_url)
 		end
 		it "should not confirm the user if the wrong code is supplied" do
 			set_logged_in({:email_confirmed => false, :confirm_code! => false})

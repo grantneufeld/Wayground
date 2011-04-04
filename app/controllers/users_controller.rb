@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 	def set_user
 		@user = current_user
 		if @user.nil?
-			redirect_to sign_in_url, :status => 307,
+			redirect_to signin_url, :status => 307,
 				:notice => "You must be signed-in to access your account."
 		# TODO: support system admins having access to reviewing or modifying other users
 		#elsif params[:id].present?

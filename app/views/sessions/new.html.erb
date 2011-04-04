@@ -1,7 +1,7 @@
 <h1>Sign In</h1>
 <p><%= render :partial => 'sessions/authentication_links' %></p>
 <p>If you are a registered user, you can sign in here:</p>
-<%= form_tag sign_in_path do %>
+<%= form_tag signin_path do %>
 <table><tbody>
 <tr><th><%= label_tag :email %></th><td><%= email_field_tag :email, params[:email] %></td></tr>
 <tr><th><%= label_tag :password %></th><td><%= password_field_tag :password %></td></tr>

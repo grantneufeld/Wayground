@@ -3,11 +3,11 @@ require 'spec_helper'
 describe UsersController do
 	describe "routing" do
 		it "recognizes and generates #new" do
-			{ :get => "/sign_up" }.should route_to(:controller => "users", :action => "new")
+			{ :get => "/signup" }.should route_to(:controller => "users", :action => "new")
 		end
 
 		it "recognizes and generates #create" do
-			{ :post => "/sign_up" }.should route_to(:controller => "users", :action => "create") 
+			{ :post => "/signup" }.should route_to(:controller => "users", :action => "create")
 		end
 
 		it "recognizes and generates #confirm" do

@@ -11,11 +11,11 @@ module NavigationHelpers
 		when /the home\s?page/
 			'/'
 		when /the sign up page/
-			'/sign_up'
+			'/signup'
 		when /the sign in page/
-			'/sign_in'
+			'/signin'
 		when /the sign out page/
-			'/sign_out'
+			'/signout'
 		when /the account page/
 			'/account'
 

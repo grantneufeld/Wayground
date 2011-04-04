@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # many of these methods are derived from the ones that come from Clearance
 
 
@@ -58,7 +60,7 @@ Given /^(?:|I )am not signed in$/ do
 	When "I sign out"
 end
 When /^(?:|I ) sign out$/ do
-	visit '/sign_out'
+  visit '/signout'
 	click_button 'Sign Out'
 end
 
@@ -235,7 +237,7 @@ When /^(?:|I )sign in as "(.*)\/(.*)"$/ do |email, password|
 end
 
 When /^(?:|I )sign out$/ do
-	visit sign_out_path, :delete
+  visit signout_path, :delete
 end
 
 When /^(?:|I )request password reset link to be sent to "(.*)"$/ do |email|
