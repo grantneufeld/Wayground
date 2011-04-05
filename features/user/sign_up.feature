@@ -21,6 +21,7 @@ Feature: Sign up
     Then I should see error messages
 
   Scenario: User signs up
+    Given there is already a user "Someone Else"
     When I go to the sign up page
     And I fill in "Email" with "test+signup@wayground.ca"
     And I fill in "Password" with "password"

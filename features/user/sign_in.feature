@@ -9,14 +9,14 @@ Feature: Sign in
   Scenario: User is not signed up
     Given no user exists with an email of "test+email@wayground.ca"
     When I go to the sign in page
-    And I sign in as "test+email@wayground.ca/password"
+    And I sign in with email test+email@wayground.ca and password "password"
     Then I should see "Wrong email or password"
     And I should be signed out
 
   Scenario: User enters wrong password
     Given I am signed up and confirmed as "test+email@wayground.ca/password"
     When I go to the sign in page
-    And I sign in as "test+email@wayground.ca/wrongpassword"
+    And I sign in with email test+email@wayground.ca and password "wrongpassword"
     Then I should see "Wrong email or password"
     And I should be signed out
 
@@ -24,7 +24,7 @@ Feature: Sign in
   Scenario: User is not confirmed
     Given I signed up with "test+email@wayground.ca/password"
     When I go to the sign in page
-    And I sign in as "test+email@wayground.ca/password"
+    And I sign in with email test+email@wayground.ca and password "password"
     Then I should see "User has not confirmed email"
     And I should be signed out
 

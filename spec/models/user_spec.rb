@@ -168,4 +168,55 @@ describe User do
 			@user.confirmation_token.should be_nil
 		end
 	end
+
+	describe "#set_authority_on_area" do
+	  it "should create an authority" do
+	    user = Factory.create(:user)
+	    user.set_authority_on_area('global', :can_edit)
+	    user.has_authority_for_area('global', :can_edit).should be_true
+    end
+    it "should ammend an existing authority" do
+	    user = Factory.create(:user)
+	    authority = Factory.build(:authority, :user => user, :area => 'global', :can_view => true)
+	    user.authorities << authority
+	    user.save!
+	    user.set_authority_on_area('global', :can_edit)
+	    authority = user.authorizations.for_area('global').first
+	    authority.can_view?.should be_true
+	    authority.can_edit?.should be_true
+    end
+  end
+
+	describe "#set_authority_on_item" do
+		before(:each) do
+			@user = Factory.create(:user)
+			@item = Factory.create(:user)
+		end
+	  it "should create an authority" do
+	    @user.set_authority_on_area('global', :can_edit)
+	    @user.has_authority_for_area('global', :can_edit).should be_true
+    end
+    it "should ammend an existing authority" do
+	    authority = Factory.build(:authority, :user => @user, :item => @item, :can_view => true)
+	    @user.authorities << authority
+	    @user.save!
+	    #debugger
+	    @user.set_authority_on_item(@item, :can_edit)
+	    authority = @user.authorizations.for_item(@item).first
+	    authority.can_view?.should be_true
+	    authority.can_edit?.should be_true
+    end
+  end
+
+	describe "#has_authority_for_area" do
+	  it "should default to the view authority for the area" do
+    end
+	  it "should return the authority for the area if it authorizes the action" do
+    end
+	  it "should return the authority for the area if the action is set to nil" do
+    end
+    it "should return the global authority if there isn’t one for the specified area" do
+    end
+  end
+
 end

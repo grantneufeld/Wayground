@@ -31,5 +31,5 @@ Feature: Password reset
     Then I should be signed in
     When I sign out
     Then I should be signed out
-    And I sign in as "test+email@wayground.ca/newpassword"
+    And I sign in with email test+email@wayground.ca and password "newpassword"
     Then I should be signed in

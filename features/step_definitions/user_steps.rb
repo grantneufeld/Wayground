@@ -1,18 +1,30 @@
 # encoding: utf-8
 
-# many of these methods are derived from the ones that come from Clearance
+# Some of these methods are derived from the ones that come from Clearance.
 
 
-# General
+# UTILITY METHODS
 
-Then /^(?:|I )should see error messages$/ do
-	error_exp = '<div class="error_messages">'
-	if response.respond_to? :should
-		response.body.should match error_exp
-	else
-		assert_match error_exp, response.body
-	end
+def users_named(name_list, password = nil)
+  names = name_list.split(/(?:, *|,? and )/)
+  # get the users
+  users = []
+  names.each do |name|
+    user_with_name = User.find_by_name(name)
+    if user_with_name
+      users << user_with_name
+    else
+      params = {:name => name}
+      unless password.blank?
+        params[:password] = password
+        params[:password_confirmation] = password
+      end
+      users << Factory.create(:user, params)
+    end
+  end
+  users
 end
+
 
 # Database
 
@@ -22,6 +34,14 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 	else
 		assert_nil User.find_by_email(email)
 	end
+end
+
+
+# Registration
+
+Given /^there is (?:|already )a user "([^\"]*)"(?:| with password "([^\"]*)")$/ do |user_name, password|
+  password = 'password' if password.blank?
+  user = users_named(user_name, password)[0]
 end
 
 Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
@@ -54,6 +74,31 @@ Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
 		:password_confirmation => password
 	end
 end
+
+When /^(?:|I )sign up as "([^\"]*)"(?:| with password "([^\"]*)")$/ do |user_name, password|
+  password = 'password' if password.blank?
+  visit '/signup'
+  fill_in('email', :with => Factory.next(:email))
+  fill_in('password', :with => password)
+  fill_in('Confirm Password', :with => password) # password_confirmation
+  fill_in('name', :with => user_name)
+  click_button('Sign Up')
+end
+
+
+# Sign In
+
+When /^I sign in as "([^\"]*)"(?:| with password "([^\"]*)")$/ do |user_name, password|
+  password = 'password' if password.blank?
+  user = users_named(user_name, password)[0]
+  visit '/signin'
+  fill_in('email', :with => user.email)
+  fill_in('password', :with => password)
+  click_button('Sign In')
+end
+
+
+# Sign Out
 
 Given /^(?:|I )am not signed in$/ do
 	# FIXME: catch exceptions if not currently logged in
@@ -127,7 +172,7 @@ end
 
 #Given /^(?:|I )have signed in with "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
 #	Given %{I am signed up and confirmed as "#{email}/#{password}" with id #{id}}
-#	And %{I sign in as "#{email}/#{password}"}
+#  And %{I sign in with #{email} and password "#{password}"}
 #end
 
 Given /^(?:|I )have signed in$/ do
@@ -137,10 +182,18 @@ end
 Given /^(?:|I )have signed in with "(.*)\/(.*)"$/ do |email, password|
   Given "I have signed in with my email #{email} and password \"#{password}\""
 end
-Given /^(?:|I )have signed in with my email [<"]?(.+@[^>\"]+)[>"]? and(?:| my) password "?([^\"]*)"?$/ do |email, password|
+Given /^(?:|I )have signed in with (?:|my )email [<"]?(.+@[^>\"]+)[>"]? and (?:|my )password "?([^\"]*)"?$/ do |email, password|
 	Given %{I am signed up and confirmed as "#{email}/#{password}"}
-	And %{I sign in as "#{email}/#{password}"}
+  When %{I sign in with email #{email} and password "#{password}"}
 end
+
+When /^(?:|I )sign in with (?:|my )email [<"]?(.+@[^>\"]+)[>"]? and (?:|my )password "?([^\"]*)"?$/ do |email, password|
+  visit '/signin'
+  fill_in "Email", :with => email
+  fill_in "Password", :with => password
+  click_button "Sign In"
+end
+
 
 # Emails
 
@@ -228,13 +281,6 @@ end
 #end
 
 # Actions
-
-When /^(?:|I )sign in as "(.*)\/(.*)"$/ do |email, password|
-	When %{I go to the sign in page}
-	And %{I fill in "Email" with "#{email}"}
-	And %{I fill in "Password" with "#{password}"}
-	And %{I press "Sign In"}
-end
 
 When /^(?:|I )sign out$/ do
   visit signout_path, :delete

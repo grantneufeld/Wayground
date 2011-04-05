@@ -1,0 +1,37 @@
+<p>
+<b>User:</b>
+<%= @authority.user %>
+</p>
+
+<p>
+<b>Item:</b>
+<%= @authority.item %>
+</p>
+
+<p>
+<b>Area:</b>
+<%= @authority.area %>
+</p>
+
+<p>
+<b>Is owner:</b>
+<%= @authority.is_owner %>
+</p>
+
+<p>
+<b>Can create:</b>
+<%= @authority.can_create %>
+<br /><b>Can view:</b>
+<%= @authority.can_view %>
+<br /><b>Can edit:</b>
+<%= @authority.can_edit %>
+<br /><b>Can delete:</b>
+<%= @authority.can_delete %>
+<br /><b>Can invite:</b>
+<%= @authority.can_invite %>
+<br /><b>Can permit:</b>
+<%= @authority.can_permit %>
+</p>
+
+
+<p><%= link_to 'Edit', edit_authority_path(@authority) %></p>

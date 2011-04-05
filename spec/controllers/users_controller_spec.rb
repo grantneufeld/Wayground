@@ -62,7 +62,19 @@ describe UsersController do
 			# TODO: check that there are errors reported
 			response.location.blank?.should be_true
 		end
+		it "should create a new user record as an admin when valid form submitted" do
+		  # clear out any existing users so this will be the first, so be made an admin
+		  Authority.delete_all
+		  User.delete_all
+			post 'create', :user => {:email => 'test+new@wayground.ca',
+				:password => 'password', :password_confirmation => 'password'
+			}
+			flash[:notice].should match /You are now registered as an administrator for this site/i
+			response.should redirect_to(account_url)
+		end
 		it "should create a new user record when valid form submitted" do
+		  # have an existing user so we don’t default to creating an admin
+		  Factory.create(:user)
 			post 'create', :user => {:email => 'test+new@wayground.ca',
 				:password => 'password', :password_confirmation => 'password'
 			}

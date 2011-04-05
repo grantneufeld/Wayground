@@ -11,6 +11,10 @@ Wayground::Application.routes.draw do
   delete "signout" => "sessions#destroy"
   # OAUTH
   match "/auth/:provider/callback" => "sessions#oauth_callback"
+  # AUTHORITIES
+  resources :authorities do
+    get 'delete', :on => :member
+  end
 
   root :to => "users#root"
 end

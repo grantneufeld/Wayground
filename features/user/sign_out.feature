@@ -8,7 +8,7 @@ Feature: Sign out
 
   Scenario: User signs out
     Given I am signed up and confirmed as "test+email@wayground.ca/password"
-    When I sign in as "test+email@wayground.ca/password"
+    When I sign in with email test+email@wayground.ca and password "password"
     And I sign out
     Then I should see "You are now signed out"
     And I should be signed out

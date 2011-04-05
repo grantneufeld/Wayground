@@ -1,0 +1,22 @@
+<%= form_for(@authority) do |f| %>
+<%= show_errors(@authority) %>
+
+<table>
+<tbody>
+<tr><th><%= f.label :user_id %></th>
+  <td><%= f.text_field :user_id %></td></tr>
+<tr><th><%= f.label :item %></th>
+  <td><%= f.text_field :item %></td></tr>
+<tr><th><%= f.label :area %></th>
+  <td><%= f.text_field :area %></td></tr>
+<tr><th></th><td><%= f.check_box :is_owner %><%= f.label :is_owner %></td></tr>
+<tr><th></th><td><%= f.check_box :can_create %><%= f.label :can_create %></td></tr>
+<tr><th></th><td><%= f.check_box :can_view %><%= f.label :can_view %></td></tr>
+<tr><th></th><td><%= f.check_box :can_edit %><%= f.label :can_edit %></td></tr>
+<tr><th></th><td><%= f.check_box :can_delete %><%= f.label :can_delete %></td></tr>
+<tr><th></th><td><%= f.check_box :can_invite %><%= f.label :can_invite %></td></tr>
+<tr><th></th><td><%= f.check_box :can_permit %><%= f.label :can_permit %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td><%= f.submit 'Save Authority' %></td></tr></tfoot>
+</table>
+<% end -%>

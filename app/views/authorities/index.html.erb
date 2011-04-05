@@ -1,0 +1,37 @@
+<h1>List of Authorities</h1>
+
+<table>
+<thead><tr>
+<th>User</th>
+<th>Item</th>
+<th>Area</th>
+<th>Is owner</th>
+<th>Can create</th>
+<th>Can view</th>
+<th>Can edit</th>
+<th>Can delete</th>
+<th>Can invite</th>
+<th>Can permit</th>
+<th>Actions</th>
+</tr></thead>
+<tbody>
+<% @authorities.each do |authority|
+  %><tr>
+<td><%= authority.user %></td>
+<td><%= authority.item %></td>
+<td><%= authority.area %></td>
+<td><%= authority.is_owner %></td>
+<td><%= authority.can_create %></td>
+<td><%= authority.can_view %></td>
+<td><%= authority.can_edit %></td>
+<td><%= authority.can_delete %></td>
+<td><%= authority.can_invite %></td>
+<td><%= authority.can_permit %></td>
+<td><%= link_to 'Show', authority %>
+• <%= link_to 'Edit', edit_authority_path(authority) %>
+• <%= link_to 'Destroy', authority, :confirm => 'Are you sure?', :method => :delete %></td>
+</tr>
+<% end %></tbody>
+</table>
+
+<p><%= link_to 'New Authority', new_authority_path %></p>

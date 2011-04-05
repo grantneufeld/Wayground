@@ -32,9 +32,10 @@ ActiveRecord::Schema.define(:version => 3) do
 
   create_table "authorities", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "authorized_by_id"
     t.integer  "item_id"
     t.string   "item_type"
-    t.string   "area",       :limit => 31
+    t.string   "area",             :limit => 31
     t.boolean  "is_owner"
     t.boolean  "can_create"
     t.boolean  "can_view"
@@ -47,6 +48,7 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   add_index "authorities", ["area", "user_id"], :name => "area"
+  add_index "authorities", ["authorized_by_id", "user_id", "area"], :name => "authorizer"
   add_index "authorities", ["item_id", "item_type", "user_id"], :name => "item"
   add_index "authorities", ["user_id", "item_id", "item_type", "area"], :name => "user_map", :unique => true
 

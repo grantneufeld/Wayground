@@ -80,7 +80,7 @@ ActiveRecord::Base.class_eval do
       # anyone can view a non-controlled item
       true
     elsif user
-      Authority.for_user(user).for_area(authority_area).for_action(action_type)
+      Authority.for_user(user).for_area_or_global(authority_area).for_action(action_type)
     else
       nil
     end

@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
 
 	# from oauth sources, so user can login from an external authenticating site
 	has_many :authentications
+	# the authorities (permissions) this user has to access items and areas
+	has_many :authorizations, :class_name => 'Authority', :dependent => :delete_all
 
 	before_save :encrypt_password
 	before_create :generate_email_confirmation_token
@@ -74,4 +76,31 @@ class User < ActiveRecord::Base
 			return false
 		end
 	end
+
+  def set_authority_on_area(area, action_type = :can_view)
+    authority = self.authorities.for_area(area).first
+    if authority
+      authority.set_action!(action_type)
+    else
+      self.authorizations.create!(:area => area, action_type => true)
+    end
+  end
+  def set_authority_on_item(item, action_type = :can_view)
+    authority = self.authorizations.for_item(item).first
+    if authority
+      authority.set_action!(action_type)
+    else
+      self.authorizations.create!(:item => item, action_type => true)
+    end
+  end
+
+  def has_authority_for_area(area, action_type = :can_view)
+    if action_type.nil?
+      self.authorizations.for_area_or_global(area).first
+    elsif action_type == :is_owner
+      self.authorizations.for_area_or_global(area).where_owner.first
+    else
+      self.authorizations.for_area_or_global(area).for_action(action_type).first
+    end
+  end
 end

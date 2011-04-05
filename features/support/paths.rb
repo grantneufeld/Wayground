@@ -19,6 +19,13 @@ module NavigationHelpers
 		when /the account page/
 			'/account'
 
+    when /the authorities index/
+      '/authorities'
+    when /an authority page/
+      /\/authorities\/[0-9]+/
+    when /the new authority page/
+      '/authorities/new'
+
 		# the following are examples using path_to_pickle
 
 		when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page
