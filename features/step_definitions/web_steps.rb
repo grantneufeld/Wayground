@@ -35,9 +35,9 @@ end
 World(WithinHelpers)
 
 # Single-line step scoper
-When /^(.*) within ([^:]+)$/ do |step, parent|
-  with_scope(parent) { When step }
-end
+#When /^(.*) within ([^:]+)$/ do |step, parent|
+#  with_scope(parent) { When step }
+#end
 
 # Multi-line step scoper
 When /^(.*) within ([^:]+):$/ do |step, parent, table_or_string|
@@ -48,15 +48,15 @@ Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
-When /^(?:|I )go to (.+)$/ do |page_name|
+When /^(?:|I )(?:|try to )go to (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
-When /^(?:|I )press "([^"]*)"$/ do |button|
+When /^(?:|I )press "([^\"]*)"$/ do |button|
   click_button(button)
 end
 
-When /^(?:|I )follow "([^"]*)"$/ do |link|
+When /^(?:|I )follow "([^\"]*)"$/ do |link|
   click_link(link)
 end
 
@@ -95,7 +95,7 @@ end
 
 # Use this step in conjunction with Rail's datetime_select helper. For example:
 # When I select "December 25, 2008 10:00" as the date and time
-When /^(?:|I )select "([^"]*)" as the date and time$/ do |time|
+When /^(?:|I )select "([^\"]*)" as the date and time$/ do |time|
   select_datetime(time)
 end
 
@@ -116,7 +116,7 @@ end
 # When I select "2:20PM" as the time
 # Note: Rail's default time helper provides 24-hour time-- not 12 hour time. Webrat
 # will convert the 2:20PM to 14:20 and then select it.
-When /^(?:|I )select "([^"]*)" as the time$/ do |time|
+When /^(?:|I )select "([^\"]*)" as the time$/ do |time|
   select_time(time)
 end
 
@@ -129,7 +129,7 @@ end
 
 # Use this step in conjunction with Rail's date_select helper.  For example:
 # When I select "February 20, 1981" as the date
-When /^(?:|I )select "([^"]*)" as the date$/ do |date|
+When /^(?:|I )select "([^\"]*)" as the date$/ do |date|
   select_date(date)
 end
 
@@ -140,15 +140,15 @@ When /^(?:|I )select "([^"]*)" as the "([^"]*)" date$/ do |date, date_label|
   select_date(date, :from => date_label)
 end
 
-When /^(?:|I )check "([^"]*)"$/ do |field|
+When /^(?:|I )check "([^\"]*)"$/ do |field|
   check(field)
 end
 
-When /^(?:|I )uncheck "([^"]*)"$/ do |field|
+When /^(?:|I )uncheck "([^\"]*)"$/ do |field|
   uncheck(field)
 end
 
-When /^(?:|I )choose "([^"]*)"$/ do |field|
+When /^(?:|I )choose "([^\"]*)"$/ do |field|
   choose(field)
 end
 
@@ -211,7 +211,7 @@ Then /^(?:|I )should see \/([^\/]*)\/ within "([^\"]*)"$/ do |regexp, selector|
   end
 end
 
-Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+Then /^(?:|I )should not see "([^\"]*)"$/ do |text|
   if response.respond_to? :should_not
     response.should_not contain(text)
   else
@@ -239,7 +239,7 @@ Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   end
 end
 
-Then /^(?:|I )should not see \/([^\/]*)\/ within "([^"]*)"$/ do |regexp, selector|
+Then /^(?:|I )should not see \/([^\/]*)\/ within "([^\"]*)"$/ do |regexp, selector|
   within(selector) do |content|
     regexp = Regexp.new(regexp)
     if content.respond_to? :should_not
@@ -280,7 +280,7 @@ Then /^the "([^"]*)" field(?: within (.*))? should not contain "([^"]*)"$/ do |f
   end
 end
 
-Then /^the "([^"]*)" checkbox should be checked$/ do |label|
+Then /^the "([^\"]*)" checkbox should be checked$/ do |label|
   field = field_labeled(label)
   if field.respond_to? :should
     field.should be_checked
@@ -289,7 +289,7 @@ Then /^the "([^"]*)" checkbox should be checked$/ do |label|
   end
 end
 
-Then /^the "([^"]*)" checkbox should not be checked$/ do |label|
+Then /^the "([^\"]*)" checkbox should not be checked$/ do |label|
   field = field_labeled(label)
   if field.respond_to? :should_not
     field.should_not be_checked
@@ -298,7 +298,7 @@ Then /^the "([^"]*)" checkbox should not be checked$/ do |label|
   end
 end
 
-Then /^the "([^"]*)" checkbox(?: within (.*))? should be checked$/ do |label, parent|
+Then /^the "([^\"]*)" checkbox(?: within (.*))? should be checked$/ do |label, parent|
   with_scope(parent) do
     field_checked = find_field(label)['checked']
     if field_checked.respond_to? :should
@@ -309,7 +309,7 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should be checked$/ do |label, pa
   end
 end
 
-Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label, parent|
+Then /^the "([^\"]*)" checkbox(?: within (.*))? should not be checked$/ do |label, parent|
   with_scope(parent) do
     field_checked = find_field(label)['checked']
     if field_checked.respond_to? :should
@@ -323,9 +323,9 @@ end
 Then /^(?:|I )should be on (.+)$/ do |page_name|
   current_path = URI.parse(current_url).path
   if current_path.respond_to? :should
-    current_path.should == path_to(page_name)
+    current_path.should match(path_to(page_name))
   else
-    assert_equal path_to(page_name), current_path
+    assert_match path_to(page_name), current_path
   end
 end
 
