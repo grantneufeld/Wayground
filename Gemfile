@@ -23,7 +23,7 @@ group :development, :test do
 	gem 'cucumber-rails', '>= 0.4.0' #'0.3.2'
 	gem 'database_cleaner', '>= 0.6.3'
 	gem 'metric_fu', '>= 2.0.1', :require => false
-	gem 'pickle', '0.4.4' # additions for Cucumber
+	gem 'pickle', '0.4.4', :require => false # additions for Cucumber
 	gem 'rails_best_practices', '>= 0.7.1', :require => false
 	gem 'rspec', '2.5.0' # core testing framework
 	gem 'rspec-rails', '2.5.0'

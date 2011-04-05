@@ -14,7 +14,7 @@ describe ApplicationHelper do
 		it "displays errors (ActiveRecord-style) from an object" do
 			item = User.new({:email => 'invalid'})
 			item.valid?
-			helper.show_errors(item).should match /Errors encountered/i
+			helper.show_errors(item).should match /[0-9]+ errors? prevented this User from being saved:/i
 		end
 	end
 end

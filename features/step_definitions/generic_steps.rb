@@ -31,3 +31,25 @@ end
 Then /^reset the date$/ do
 	Timecop.return
 end
+
+
+Then /^(?:|I )should see error messages$/ do
+	error_exp = '<div class="error_messages">'
+	if response.respond_to? :should
+		response.body.should match error_exp
+	else
+		assert_match error_exp, response.body
+	end
+end
+
+# field_names is one or more field names, separated by commas and “and”s.
+Then /^(?:|I )should see errors for (.+)$/ do |field_names|
+  field_names = field_names.split(/(?:, *|,? and )/)
+  field_names.each do |field_name|
+    # <div class="error_messages"><ul><li>field_name...
+    within('.error_messages > ul') do |content|
+      content.should contain(/^#{field_name} /)
+    end
+  end
+end
+

@@ -1,7 +1,22 @@
-<!DOCTYPE html>
+<% # encoding: utf-8
+
+# Parameters - all are optional
+#
+# @page_title: Used in the <title> meta tag. If blank, defaults to the site title.
+# @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
+# @content_for_description: Plain text string to be used as the value for the <meta name="description"> tag.
+# @content_for_head: HTML meta tags to go in the document head.
+
+%><!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Wayground</title>
+<title><%
+if @page_title.nil? or @page_title == '' or params[:url] == '/'
+	%>Wayground<%
+else
+	%><%=h @page_title %> — Wayground<%
+end
+%></title>
 <meta name="viewport" content="width=device-width" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
 <!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
@@ -11,7 +26,13 @@
 <% #= javascript_include_tag :defaults -%>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <%= csrf_meta_tag %>
-</head><body>
+<% unless @content_for_description.blank?
+	%><meta name="description" content="<%=h @content_for_description %>" />
+<% end
+unless @content_for_head.blank?
+	%><%= @content_for_head %>
+<% end
+%></head><body>
 
 <div id="header">
 <div id="headertitle">

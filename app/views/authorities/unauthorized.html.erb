@@ -1,0 +1,12 @@
+<% # encoding: utf-8
+@page_title ||= '403 Forbidden'
+
+%><h1>Restricted Access</h1>
+<p>You do not have permission to access what you requested.</p>
+<p><%
+if current_user
+  %>If you have an additional account (such as an administrator account), you may need to sign out from your current account and sign in to that account.<%
+else
+  %>You may need to <%= link_to "Sign In", signin_path %> in order to access the requested item.<%
+end
+%></p>

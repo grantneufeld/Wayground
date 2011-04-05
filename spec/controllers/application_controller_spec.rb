@@ -13,5 +13,9 @@ describe ApplicationController do
 			session[:user_id] = 123
 			controller.send(:current_user).id.should eq 123
 		end
+		it "should clear the session user_id if user not found" do
+		  session[:user_id] = 987
+		  controller.send(:current_user).should eq nil
+	  end
 	end
 end

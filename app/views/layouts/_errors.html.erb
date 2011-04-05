@@ -1,15 +1,14 @@
 <% # encoding: utf-8
 # requires ‘item’ be an object that has an errors method that works like ActiveRecord.
 
-heading ||= 'Errors encountered'
-
 if item.errors.any?
-	%><div class="error_messages">
+  heading ||= "#{pluralize(item.errors.count, "error")} prevented this #{item.class.name} from being saved:"
+  %><div class="error_messages">
 <h2><%= heading %></h2>
 <ul>
-<%	for message in item.errors.full_messages
-		%><li><%= message %></li>
-<%	end
-%></ul>
+<%  item.errors.full_messages.each do |message|
+      %><li><%= message %></li>
+<%  end
+  %></ul>
 </div>
 <% end -%>
