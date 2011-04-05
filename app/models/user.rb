@@ -13,10 +13,12 @@ class User < ActiveRecord::Base
 	# from oauth sources, so user can login from an external authenticating site
 	has_many :authentications
 	# the authorities (permissions) this user has to access items and areas
+  # (not to be confused with has_many :authorities which are the authorities other users have to access this user)
 	has_many :authorizations, :class_name => 'Authority', :dependent => :delete_all
 
 	before_save :encrypt_password
 	before_create :generate_email_confirmation_token
+  after_create :first_user_is_admin
 	
 	validates_presence_of :password, :on => :create, :if => :local_authentication_required?
 	validates_length_of :password, :within => 8..63, :allow_blank => true
@@ -76,6 +78,29 @@ class User < ActiveRecord::Base
 			return false
 		end
 	end
+
+  # The first user created is automatically an admin.
+  def first_user_is_admin
+    self.make_admin if User.count == 1
+  end
+
+  # give the user ownership of, and full access to, the specified area
+  def make_admin(area = 'global')
+    authority = self.authorities.for_area(area).first
+    if authority
+      authority.update_attributes!({
+        :is_owner => true, :can_create => true, :can_view => true,
+        :can_edit => true, :can_delete => true, :can_invite => true,
+        :can_permit => true
+      })
+    else
+      self.authorizations.create!(:area => area,
+        :is_owner => true, :can_create => true, :can_view => true,
+        :can_edit => true, :can_delete => true, :can_invite => true,
+        :can_permit => true
+      )
+    end
+  end
 
   def set_authority_on_area(area, action_type = :can_view)
     authority = self.authorities.for_area(area).first

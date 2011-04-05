@@ -28,11 +28,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(params[:user])
-    existing_user_count = User.count
     if @user.save
       session[:user_id] = @user.id
-      if existing_user_count == 0
-        @user.set_authority_on_area('global', :is_owner)
+      if @user.authorizations.count == 1
+        # an authority was created along with the user, so they must be an admin
         notice = "You are now registered as an administrator for this site."
       else
         notice = "You are now registered on this site."
