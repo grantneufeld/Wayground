@@ -112,3 +112,20 @@ background:linear-gradient(top, rgba(0,0,0,0.1), rgba(0,0,0,0) 20%, rgba(0,0,0,0
 .featureblock > h1{background:rgba(0,0,0,0.2); border-radius:0.1429em; padding:0.1429em 0.2857em; max-width:100%;}
 .featureblock > .columns{margin:0em auto 0em 0em; padding:0em 0.5em;}
 .featureblock + *{margin-top:1.25em;}
+
+.actions{background:#CCC; color:black; padding:0.2em 0.4em; margin:0.5em 0em;}
+.action, .action:link, .action:visited{background:#999;
+background:-webkit-gradient(linear, center top, center bottom, from(#545454), color-stop(0.5, #808080), to(#545454));
+background:-moz-linear-gradient(top, #545454, #808080 50%, #545454);
+background:linear-gradient(top, #545454, #808080 50%, #545454);
+color:white; text-decoration:none; border-radius:0.15em; display:inline; margin:0em 0.25em; padding:0.15em 0.6em; font-size:1.1em; font-weight:bold; text-shadow:0em 0em 0.1em black; line-height:1.6em; white-space:nowrap; vertical-align:middle;}
+.action:hover, .action:link:hover, .action:visited:hover{background:blue; color:white;
+background:-webkit-gradient(linear, center top, center bottom, from(#007ba8), color-stop(0.5, #0BF), to(#007ba8));
+background:-moz-linear-gradient(top, #007ba8, #0BF 50%, #007ba8);
+background:linear-gradient(top, #007ba8, #0BF 50%, #007ba8);
+}
+.action:active, .action:link:active, .action:visited:active{background:red; color:white;
+background:-webkit-gradient(linear, center top, center bottom, from(#800), color-stop(0.5, #F00), to(#800));
+background:-moz-linear-gradient(top, #800, #F00 50%, #800);
+background:linear-gradient(top, #800, #F00 50%, #800);
+}
