@@ -16,20 +16,20 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       Authentication.authority_area.should eq "Authentication"
     end
   end
-  describe ".is_authority_controlled?" do
+  describe ".is_authority_restricted?" do
     it "should be false for ActiveRecord models that are not set as authority_controlled" do
-      Authority.new.is_authority_controlled?.should be_false
+      Authority.new.is_authority_restricted?.should be_false
     end
     it "should be true for ActiveRecord models that are set as authority_controlled and always private" do
-      User.new.is_authority_controlled?.should be_true
+      User.new.is_authority_restricted?.should be_true
     end
     # TODO: when there's such a class (such as Page)
     #it "should default to false for models that are set as authority_controlled but not flagged" do
-    #   Page.new.is_authority_controlled?.should be_false
+    #   Page.new.is_authority_restricted?.should be_false
     #end
     #it "should be true for models that are set as authority_controlled and flagged" do
     #   item = Page.new.is_authority_controlled = true
-    #   item.is_authority_controlled?.should be_true
+    #   item.is_authority_restricted?.should be_true
     #end
   end
   describe ".has_authority_to?" do
@@ -57,7 +57,7 @@ end
 describe "acts_as_authority_controlled" do
   describe "item_authority_flag_field" do
     it "should, when field is set to false, require authority for all records to be viewed" do
-      User.new.is_authority_controlled?.should be_true
+      User.new.is_authority_restricted?.should be_true
     end
     it "should, when using the default, restrict viewing records when the flag is set" do
     end
@@ -85,7 +85,7 @@ end
 describe "authority_controlled class" do
   describe "has_many authorities" do
   end
-  describe "#is_authority_controlled?" do
+  describe "#is_authority_restricted?" do
   end
   describe "#set_authority_for!" do
     it "should assign access to a user for an item" do

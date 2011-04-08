@@ -15,14 +15,24 @@ ActiveRecord::Base.class_eval do
   #    Defaults to ‘"is_authority_controlled"’.
   #    Set to ‘:always_private’ to have all of the model’s records require authority to be viewed.
   #    Set to ‘:always_viewable’ to have all of the model’s records not require authority to be viewed.
+  # - :inherits_from => A symbol for the method name to access an object that is authority controlled.
+  #    E.g., Path (custom url) gets it’s authority info through it’s item (typically a Page).
   def self.acts_as_authority_controlled(options={})
     # check if already loaded
     return if self.included_modules.include?(AuthorityControlled::InstanceMethods)
 
+    inherits_from = options[:inherits_from]
+
     # support a custom authority flag field (or none at all if all records private)
-    if options[:item_authority_flag_field] == :always_private
+    if inherits_from.present?
+      class_eval "
+        def is_authority_restricted?
+          self.#{inherits_from}.present? && self.#{inherits_from}.is_authority_restricted?
+        end
+      "
+    elsif options[:item_authority_flag_field] == :always_private
       class_eval do
-        def is_authority_controlled?
+        def is_authority_restricted?
           true
         end
       end
@@ -33,7 +43,7 @@ ActiveRecord::Base.class_eval do
     #  # use the field name defined by item_authority_flag_field if present,
     #  # otherwise, use the default field name: is_authority_controlled
     #  class_eval "
-    #    def is_authority_controlled?
+    #    def is_authority_restricted?
     #      self.#{(options[:item_authority_flag_field].present? ?
     #      options[:item_authority_flag_field] : 'is_authority_controlled')}
     #    end
@@ -50,15 +60,32 @@ ActiveRecord::Base.class_eval do
         def self.authority_area
           '#{option_area}'
         end"
+    elsif inherits_from.present?
+      class_eval "
+        def self.authority_area
+          self.#{inherits_from}.authority_area
+        end
+      "
     else
-      # just fall back on the inherited authority_area method attached to all ActiveRecord classes below
+      # just fall back on the authority_area method inherited from ActiveRecord (defined below)
     end
 
-    class_eval do
-      has_many :authorities, :as => :item, :dependent => :delete_all
+    if inherits_from.present?
+      class_eval "
+        def authorities
+          self.#{inherits_from} && self.#{inherits_from}.authorities
+        end
+        def as_authority_controlled_item
+          self.#{inherits_from}
+        end
+      "
+      include AuthorityControlled::InheritInstanceMethods
+    else
+      class_eval do
+        has_many :authorities, :as => :item, :dependent => :delete_all
+      end
+      include AuthorityControlled::InstanceMethods
     end
-
-    include AuthorityControlled::InstanceMethods
   end
 
   # ActiveRecord descendants have their authority area defined as their class name by default
@@ -70,13 +97,13 @@ ActiveRecord::Base.class_eval do
   end
 
   # ActiveRecord descendants are not authority controlled unless specifically set to be
-  def is_authority_controlled?
+  def is_authority_restricted?
     false
   end
-  def is_authority_controlled=(value); end
+  #def is_authority_controlled=(value); end
 
   def has_authority_to?(user = nil, action_type = :can_view)
-    if action_type == :can_view && !(is_authority_controlled?)
+    if action_type == :can_view && !(is_authority_restricted?)
       # anyone can view a non-controlled item
       true
     elsif user
@@ -105,11 +132,30 @@ module AuthorityControlled
     end
 
     def has_authority_to?(user, action_type = :can_view)
-      if action_type == :can_view && !(is_authority_controlled?)
+      if action_type == :can_view && !(is_authority_restricted?)
         # anyone can view a non-controlled item
         true
       else
         Authority.user_has_for_item(user, self, action_type)
+      end
+    end
+  end
+
+  # Use these instead of the normal instance methods when a model is inheriting
+  # its authority controls from a related model.
+  module InheritInstanceMethods
+    # action_type = :can_create, :can_view, :can_edit, :can_delete, :can_invite, :can_permit
+
+    def set_authority_for!(user, action_type)
+      raise Wayground::WrongModelForSettingAuthority, 'set authority on the related item instead'
+    end
+
+    def has_authority_to?(user, action_type = :can_view)
+      if action_type == :can_view && !(is_authority_restricted?)
+        # anyone can view a non-controlled item
+        true
+      else
+        Authority.user_has_for_item(user, as_authority_controlled_item, action_type)
       end
     end
   end
