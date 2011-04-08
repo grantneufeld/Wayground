@@ -39,6 +39,7 @@ group :test do
 	gem 'autotest-rails', '>= 4.1.0'
 	gem 'factory_girl', '>= 1.3.3'
 	gem 'factory_girl_rails', '>= 1.0.1'
+	gem 'launchy' # for webrat to be able to open saved html files in browser for review
 	gem 'timecop', '>= 0.3.5'
 	gem 'webrat', '>= 0.7.3' # web interface testing; parses html, etc., issues http requests
 end
