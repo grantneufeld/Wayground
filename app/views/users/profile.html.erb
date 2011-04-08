@@ -1,0 +1,21 @@
+<h1><%
+user_name = @user.name
+if user_name.blank?
+  %>User: <%= @user.id %><%
+else
+  %><%= user_name %><%
+end
+%></h1>
+<%
+
+sites = {}
+if @user.authentications.count > 0
+  @user.authentications.each do |authentication|
+    sites[authentication.provider] = authentication
+  end
+  sites.keys.sort.each do |key|
+    authentication = sites[key]
+    %><p><%= authentication.provider.titleize %>: <%= link_to authentication.label, authentication.url %></p>
+<%
+  end
+end -%>

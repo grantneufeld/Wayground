@@ -3,7 +3,8 @@
 # Set authorities (permissions / access-control) for users.
 class AuthoritiesController < ApplicationController
   before_filter :requires_authority
-	before_filter :set_authority, :except => [:index, :new, :create]
+  before_filter :set_authority, :except => [:index, :new, :create]
+  before_filter :set_site_location, :except => [:index]
 
   # GET /authorities
   # GET /authorities.xml
@@ -108,6 +109,11 @@ class AuthoritiesController < ApplicationController
   # Most of the actions for this controller receive the id of an Authority as a parameter.
   def set_authority
     @authority = Authority.find(params[:id])
+  end
+
+  # Breadcrumbs for actions on this controller start with the index page.
+  def set_site_location
+    @site_breadcrumbs = [{:text => 'Authorities', :url => authorities_path}]
   end
 
   # The actions for this controller all require that the user is authorized to view Authority records.

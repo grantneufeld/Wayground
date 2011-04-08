@@ -4,13 +4,14 @@ Wayground::Application.routes.draw do
   post "signup" => "users#create"
   get "account/confirm/:confirmation_code" => "users#confirm", :as => :confirm_account
   resource :account, :controller => 'users', :except => [:index, :new, :create, :destroy]
+  get 'profile/:id' => 'users#profile', :as => :profile
   # SESSIONS
   get "signin" => "sessions#new", :as => :signin
   post "signin" => "sessions#create"
   get "signout" => "sessions#delete", :as => :signout
   delete "signout" => "sessions#destroy"
   # OAUTH
-  match "/auth/:provider/callback" => "sessions#oauth_callback"
+  match "auth/:provider/callback" => "sessions#oauth_callback"
   # AUTHORITIES
   resources :authorities do
     get 'delete', :on => :member

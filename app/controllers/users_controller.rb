@@ -6,6 +6,7 @@
 class UsersController < ApplicationController
   # TODO: remove :root once we get a real root page
   before_filter :set_user, :except => [:root, :new, :create]
+  before_filter :set_site_location, :except => [:show]
   before_filter :cant_be_signed_in, :only => [:new, :create]
 
   # TODO: remove this once we get a real root page
@@ -17,6 +18,9 @@ class UsersController < ApplicationController
       @user = User.new
       render 'new'
     end
+  end
+
+  def profile
   end
 
   def show
@@ -77,6 +81,11 @@ class UsersController < ApplicationController
     #    :alert => "You are not authorized to access other user’s accounts."
     #  end
     end
+  end
+
+  # Breadcrumbs for actions on this controller start with the index page.
+  def set_site_location
+    @site_breadcrumbs = [{:text => 'Users', :url => account_path}]
   end
 
   def cant_be_signed_in

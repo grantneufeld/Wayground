@@ -6,6 +6,8 @@
 # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
 # @content_for_description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @content_for_head: HTML meta tags to go in the document head.
+# @site_section: lower-case string label for the active section of the website.
+# @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
 
 %><!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
@@ -67,7 +69,7 @@ unless @content_for_head.blank?
 if @site_breadcrumbs && @site_breadcrumbs.size > 0
 	%><ul id="breadcrumb">
 <%	@site_breadcrumbs.each do |breadcrumb|
-		%><li><%= link_to breadcrumb.text, breadcrumb.url %></li>
+		%><li><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
 <% 	end
 	%></ul>
 <%
