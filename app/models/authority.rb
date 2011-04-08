@@ -2,7 +2,7 @@
 
 class Authority < ActiveRecord::Base
   attr_accessible :item_type, :item_id, :area, :is_owner, :can_create,
-    :can_view, :can_edit, :can_delete, :can_invite, :can_permit
+    :can_view, :can_edit, :can_delete, :can_invite, :can_permit, :user_proxy
 
   belongs_to :user
   belongs_to :authorized_by, :class_name => 'User'
@@ -37,22 +37,12 @@ class Authority < ActiveRecord::Base
   scope :where_owner, where(:is_owner => true)
 
   def self.build_from_params(params)
-    user_id = params[:user_id]
-    if user_id.blank?
-      authority = Authority.new(params)
+    user = User.find_by_string(params[:user_proxy])
+    if user.nil?
+      Authority.new(params)
     else
-      if user_id.match(/\A[0-9]+\z/)
-        @user = User.find(user_id)
-      else
-        @user = User.find_by_email(user_id)
-      end
-      if @user.nil?
-        authority = Authority.new(params)
-      else
-        authority = @user.authorizations.new(params)
-      end
+      user.authorizations.new(params)
     end
-    authority
   end
 
   def self.user_has_for_item(user, item, action_type = :can_view)
@@ -74,6 +64,20 @@ class Authority < ActiveRecord::Base
       end
     end
     valid_authority
+  end
+
+  # Setting the user via a string value (e.g., either an email address or id) or a User instance.
+  def user_proxy
+    self.user && self.user.email
+  end
+  def user_proxy=(item)
+    if item.blank?
+      self.user = nil
+    elsif item.is_a? String
+      self.user = User.find_by_string(item)
+    else
+      self.user = item
+    end
   end
 
   #def user_has_for_area(user, area, action_type = :can_view)

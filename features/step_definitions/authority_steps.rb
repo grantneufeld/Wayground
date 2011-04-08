@@ -62,6 +62,12 @@ Given /^(?:|the user )"([^\"]*)" has (?:|the )authority to ([a-z]+) (.+)$/ do |u
   user.set_authority_on_area(area, action_type)
 end
 
+Given /^(?:|I )have signed in as an admin$/ do
+  user = Factory.create(:user, :password => 'password')
+  user.make_admin!
+  When %{I sign in with email #{user.email} and password "#{user.password}"}
+end
+
 
 # Assigning Authorities
 

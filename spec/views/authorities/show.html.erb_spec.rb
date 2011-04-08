@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "authorities/show.html.erb" do
   before(:each) do
     @authority = assign(:authority, stub_model(Authority,
-    :user => nil,
+    :user => stub_model(User, {:id => 123, :email => 'user@test.tld'}),
     :item => nil,
     :area => "Area",
     :is_owner => false,

@@ -25,8 +25,20 @@ class User < ActiveRecord::Base
 	validates_confirmation_of :password, :if => :password_present?
 	validates_presence_of :password_confirmation, :if => :password_present?
 	validates_presence_of :email, :if => :local_authentication_required?
-	validates_format_of :email, :with => /.+@.+\.[A-Za-z0-9]+/, :allow_blank => true
+	validates_format_of :email, :with => /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/, :allow_blank => true
 	validates_uniqueness_of :email, :case_sensitive => false, :if => :email_present?
+
+  def self.find_by_string(str)
+    if str.blank?
+      nil
+    elsif str.match /\A[0-9]+\z/
+      find(str.to_i)
+    elsif str.match /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/
+      find_by_email(str)
+    else
+      find_by_name(str)
+    end
+  end
 
 	def local_authentication_required?
 		authentications[0].nil?
@@ -81,11 +93,11 @@ class User < ActiveRecord::Base
 
   # The first user created is automatically an admin.
   def first_user_is_admin
-    self.make_admin if User.count == 1
+    self.make_admin! if User.count == 1
   end
 
   # give the user ownership of, and full access to, the specified area
-  def make_admin(area = 'global')
+  def make_admin!(area = 'global')
     authority = self.authorities.for_area(area).first
     if authority
       authority.update_attributes!({
@@ -94,11 +106,14 @@ class User < ActiveRecord::Base
         :can_permit => true
       })
     else
-      self.authorizations.create!(:area => area,
+      authority = Authority.new(:area => area,
         :is_owner => true, :can_create => true, :can_view => true,
         :can_edit => true, :can_delete => true, :can_invite => true,
         :can_permit => true
       )
+      authority.authorized_by ||= self
+      self.authorizations << authority
+      self.save!
     end
   end
 

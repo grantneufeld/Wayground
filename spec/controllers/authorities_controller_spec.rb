@@ -85,9 +85,10 @@ describe AuthoritiesController do
     describe "with valid params" do
       it "assigns a newly created authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:new).with({'these' => 'params'}) { mock_authority(:save => true) }
+        Authority.stub(:new).with({'these' => 'params'}) { mock_authority(:save => true, :user => mock_user) }
         post :create, :authority => {'these' => 'params'}
         assigns(:authority).should be(mock_authority)
+        assigns(:user).should_not be_nil
       end
       it "redirects to the created authority" do
         set_logged_in_admin
