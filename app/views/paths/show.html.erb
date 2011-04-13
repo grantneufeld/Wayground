@@ -1,0 +1,12 @@
+<h1>Custom Path: <%= link_to @path.sitepath, @path.sitepath %></h1>
+
+<% if @path.item.present? -%>
+<p><b>Shows <%= @path.item.class.name %>:</b><%= @path.item %></p>
+<%
+end
+
+if @path.redirect.present? -%>
+<p><b>Redirects to:</b> <%= link_to @path.redirect, @path.redirect %></p>
+<% end -%>
+
+<p class="actions"><%= link_to 'Edit', edit_path_path(@path), :class => 'action' %><span class="separator">, </span><%= link_to 'Delete', delete_path_path(@path), :class => 'action' %></p>

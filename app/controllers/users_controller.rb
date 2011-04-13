@@ -5,20 +5,9 @@
 # and by admins as the plural resources “/users”.
 class UsersController < ApplicationController
   # TODO: remove :root once we get a real root page
-  before_filter :set_user, :except => [:root, :new, :create]
+  before_filter :set_user, :except => [:new, :create]
   before_filter :set_site_location, :except => [:show]
   before_filter :cant_be_signed_in, :only => [:new, :create]
-
-  # TODO: remove this once we get a real root page
-  def root
-    @user = current_user
-    if @user.present?
-      render 'show'
-    else
-      @user = User.new
-      render 'new'
-    end
-  end
 
   def profile
   end

@@ -1,0 +1,25 @@
+<h1>Paths</h1>
+
+<table>
+<thead><tr>
+<th>Item</th>
+<th>Sitepath</th>
+<th>Redirect</th>
+<th>Actions</th>
+</tr></thead>
+<tbody>
+<% @paths.each do |path|
+  %><tr>
+<td><%= path.item ? link_to(path.item.title, path.item) : '' %></td>
+<td><%= link_to path.sitepath, path.sitepath %></td>
+<td><%= path.redirect %></td>
+<td><%= link_to 'Show', path %>
+<%= link_to 'Edit', edit_path_path(path) %>
+<%= link_to 'Destroy', path, :confirm => 'Are you sure?', :method => :delete %></td>
+</tr>
+<% end -%>
+</tbody></table>
+
+<p class="actions">
+<%= link_to 'New Path', new_path_path, :class => 'action' %>
+</p>

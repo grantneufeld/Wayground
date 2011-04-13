@@ -17,5 +17,14 @@ Wayground::Application.routes.draw do
     get 'delete', :on => :member
   end
 
-  root :to => "users#root"
+  # CONTENT
+  resources :paths do
+    get 'delete', :on => :member
+  end
+  resources :pages do
+    get 'delete', :on => :member
+  end
+
+  root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }
+  get '*url' => "paths#sitepath"
 end

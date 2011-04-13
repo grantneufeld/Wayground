@@ -1,0 +1,15 @@
+<%= form_for(@page) do |f| %>
+<%= show_errors(@page) %>
+<table><tbody>
+<tr><th><%= f.label :filename %></th>
+  <td><%= f.text_field :filename %></td></tr>
+<tr><th><%= f.label :title %></th>
+  <td><%= f.text_field :title, :size => 64 %></td></tr>
+<tr><th><%= f.label :description %></th>
+  <td><%= f.text_area :description, :rows => 8 %></td></tr>
+<tr><th><%= f.label :content %></th>
+  <td><%= f.text_area :content %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td><%= f.submit 'Save Page' %></td></tr></tfoot>
+</table>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 3) do
+ActiveRecord::Schema.define(:version => 5) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -51,6 +51,31 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "authorities", ["authorized_by_id", "user_id", "area"], :name => "authorizer"
   add_index "authorities", ["item_id", "item_type", "user_id"], :name => "item"
   add_index "authorities", ["user_id", "item_id", "item_type", "area"], :name => "user_map", :unique => true
+
+  create_table "pages", :force => true do |t|
+    t.integer  "parent_id"
+    t.boolean  "is_authority_controlled", :default => false, :null => false
+    t.string   "filename",                                   :null => false
+    t.string   "title",                                      :null => false
+    t.text     "description"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "pages", ["parent_id", "filename"], :name => "path", :unique => true
+
+  create_table "paths", :force => true do |t|
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.text     "sitepath",   :null => false
+    t.text     "redirect"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "paths", ["item_type", "item_id"], :name => "item_idx"
+  add_index "paths", ["sitepath"], :name => "sitepath", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "email"

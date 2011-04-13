@@ -1,0 +1,14 @@
+<%= form_for(@path) do |f| %>
+<%= show_errors(@path) %>
+
+<table><tbody>
+<% #<tr><th><%= f.label :item % ></th>
+  #<td><%= f.text_field :item % ></td></tr>
+ %><tr><th><%= f.label :sitepath %></th>
+  <td><%= f.text_area :sitepath %></td></tr>
+<tr><th><%= f.label :redirect %></th>
+  <td><%= f.text_area :redirect %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td><%= f.submit 'Save Path' %></td></tr></tfoot>
+</table>
+<% end %>

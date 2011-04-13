@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<% if @page.parent
+  %><p>
+<b>Parent:</b>
+<%= link_to @page.parent.title, @page.parent %>
+</p>
+<% end -%>
+<p>
+<b>Filename:</b>
+<%= link_to @page.filename, @page.sitepath %>
+</p>
+
+<p>
+<b>Title:</b>
+<%= @page.title %>
+</p>
+
+<p>
+<b>Description:</b>
+<%= @page.description %>
+</p>
+
+<p>
+<b>Content:</b>
+<%= @page.content %>
+</p>
+
+<p class="actions">
+<%= link_to 'Edit', edit_page_path(@page), :class => 'action' %>
+<%= link_to 'Delete', delete_page_path(@page), :class => 'action' %>
+</p>

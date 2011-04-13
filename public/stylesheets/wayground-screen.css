@@ -12,6 +12,7 @@ a:link{color:blue;}
 a:visited{color:purple;}
 a:link:hover, a:visited:hover{background:rgba(255,255,0,0.2); color:blue; text-decoration:none;}
 a:link:active, a:visited:active{color:red;}
+textarea{width:100%;}
 
 .separator{display:none;}
 .error_messages{background:rgba(255,128,128,0.5); color:black; margin:1em auto; padding:0.5em 1em;}

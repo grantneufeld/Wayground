@@ -1,0 +1,10 @@
+<% # encoding: utf-8
+%><h1>New Site Installation</h1>
+<p>A home page has not been set up for this website yet.</p>
+<p><%
+if User.count == 0
+  %>You will need to create an administrator account in order to create web pages. Please go to the <%= link_to 'Sign Up', signup_path %> page now.<%
+else
+  %>As an administrator, please <%= link_to 'create a new Page', new_page_path
+%> (using the special case of a slash “/” as the Filename).<%
+end %></p>

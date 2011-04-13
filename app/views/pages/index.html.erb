@@ -1,0 +1,27 @@
+<h1>Web Pages</h1>
+
+<table>
+<thead><tr>
+<th>Parent</th>
+<th>Filename</th>
+<th>Title</th>
+<th>Description</th>
+<th>Actions</th>
+</tr></thead>
+<tbody>
+<% @pages.each do |page|
+  %><tr>
+<td><%= page.parent ? page.parent.sitepath : '' %></td>
+<td>/<%= page.filename == '/' ? '' : page.filename %></td>
+<td><%= page.title %></td>
+<td><%= page.description %></td>
+<td><%= link_to 'Details', page %>
+<br /><%= link_to 'Edit', edit_page_path(page) %>
+<br /><%= link_to 'Destroy', page, :confirm => 'Are you sure?', :method => :delete %></td>
+</tr>
+<% end %></tbody>
+</table>
+
+<p class="actions">
+<%= link_to 'New Page', new_page_path, :class => 'action' %>
+</p>

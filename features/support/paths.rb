@@ -26,6 +26,16 @@ module NavigationHelpers
     when /the new authority page/
       '/authorities/new'
 
+    when /the list of paths/
+      '/paths'
+    when /the (?:|custom )path form/
+      '/paths/new'
+    when /the edit form for custom path "([^\"]+)"/
+      path = Path.find_by_sitepath($1)
+      edit_path_path(path)
+    when /"(\/.*)"/
+      $1
+
 		# the following are examples using path_to_pickle
 
 		when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page

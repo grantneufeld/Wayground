@@ -38,7 +38,7 @@ unless @content_for_head.blank?
 
 <div id="header">
 <div id="headertitle">
-<p id="maintitle"><a href="#">Wayground</a></p>
+<p id="maintitle"><a href="/">Wayground</a></p>
 <p id="subtitle">Tools for connecting, communicating and collaborating.</p>
 </div>
 <ul id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
@@ -61,7 +61,7 @@ unless @content_for_head.blank?
 </div>
 
 <ul id="navmenu">
-<li<%= @site_section == 'pages' ? ' class="current"'.html_safe : '' %>><a href="">Pages</a></li>
+<li<%= @site_section == 'pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
 <li<%= @site_section == 'events' ? ' class="current"'.html_safe : '' %>><a href="">Events</a></li>
 <li<%= @site_section == 'admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
 </ul>
