@@ -1,0 +1,7 @@
+<% # encoding: utf-8
+
+%><h1>Delete “<%= @page.title %>” Page?</h1>
+
+<%= form_tag(path_path(@page), :method => :delete) do %>
+<p><%= submit_tag "Delete Page" %></p>
+<% end %>

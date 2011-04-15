@@ -97,9 +97,10 @@ class User < ActiveRecord::Base
   end
 
   # give the user ownership of, and full access to, the specified area
-  def make_admin!(area = 'global')
+  def make_admin!(area = 'global', authorizing_user = nil)
     authority = self.authorities.for_area(area).first
     if authority
+      authority.authorized_by = authorizing_user unless authorizing_user.nil?
       authority.update_attributes!({
         :is_owner => true, :can_create => true, :can_view => true,
         :can_edit => true, :can_delete => true, :can_invite => true,
@@ -111,7 +112,7 @@ class User < ActiveRecord::Base
         :can_edit => true, :can_delete => true, :can_invite => true,
         :can_permit => true
       )
-      authority.authorized_by ||= self
+      authority.authorized_by = authorizing_user || self
       self.authorizations << authority
       self.save!
     end

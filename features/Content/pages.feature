@@ -13,7 +13,6 @@ Feature: Custom Web Pages
   @future
   Scenario: try to create a web page with invalid params
 
-  @wip
   Scenario: Create a new web page with a custom path
     Given I am authorized to manage web pages
     When I create a web page as "newpage"

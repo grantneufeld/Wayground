@@ -6,15 +6,26 @@ Given /^there are no custom paths$/ do
   Path.delete_all
 end
 
-# will default to creating 5 paths if “some” is specified as the number
+# Generate some number of paths, mixing public and private paths.
+# Will default to creating 5 paths if “some” is specified as the number.
 Given /^(?:|I )have (some|[0-9]+) custom paths$/ do |quantity|
-  (quantity == 'some' ? 5 : quantity.to_i).times do
+  quantity = (quantity == 'some' ? 5 : quantity.to_i)
+  existing_path_count = Path.count
+  return if quantity <= existing_path_count
+  quantity -= existing_path_count
+  private_quantity = rand(quantity - 2) + 1
+  public_quantity = quantity - private_quantity
+  public_quantity.times do
     Factory(:path, :redirect => '/')
+  end
+  private_quantity.times do
+    page = Factory.create(:page, :is_authority_controlled => true)
+    Factory.create(:path, :item => page)
   end
 end
 
 Given /^(?:|I )have a custom path "([^\"]*)"$/ do |sitepath|
-  Factory(:path, :sitepath => sitepath, :redirect => '/')
+  Factory.create(:path, :sitepath => sitepath, :redirect => '/')
 end
 
 # ACTIONS
@@ -69,18 +80,20 @@ Then /^(?:|I )should see the default home page$/ do
   response.should match("<h1>New Site Installation</h1>")
 end
 
-Then /^(?:|I )should see just the public paths for the website$/ do
+Then /^(?:|I )should just be able to see the public paths for the website$/ do
   public_paths = []
   Path.in_order.all.each do |path|
     public_paths << path unless path.is_authority_restricted?
   end
   total_public_paths = public_paths.count
-  pending # express the regexp above with the code you wish you had
+  visit '/paths'
+  response.should have_selector("tbody>tr", :count => total_public_paths)
 end
 
-Then /^(?:|I )should see the all paths for the website$/ do
+Then /^(?:|I )should be able to see the all paths for the website$/ do
   total_paths = Path.count
-  pending # express the regexp above with the code you wish you had
+  visit '/paths'
+  response.should have_selector("tbody>tr", :count => total_paths)
 end
 
 Then /^(?:|I )should not have a custom path "([^\"]*)"$/ do |sitepath|

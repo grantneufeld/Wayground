@@ -15,7 +15,7 @@ class Path < ActiveRecord::Base
     :message => 'must begin with a ‘/’ and be letters, numbers, dashes, percentage signs, underscores and/or slashes, with an optional extension'
   validates_uniqueness_of :sitepath
   validates_presence_of :redirect,
-    :if=>Proc.new {|p| (p.item.nil? && p.item_id.nil?)},
+    :if=>Proc.new {|path| (path.item.nil? && path.item_id.nil?)},
     :message => 'must have a redirect url/path if not attached to an item on the website'
   validates_format_of :redirect, :allow_nil => true,
     :with => /\A(https?:\/\/.+|\/(([\w%~_\?=&\-]+\/?)+(\.[\w%~_\?=&#\-]+|\/)?)?)\z/,
@@ -23,7 +23,8 @@ class Path < ActiveRecord::Base
 
   scope :for_sitepath, lambda {|searchpath|
     # strip trailing slash, if present
-    where({ :sitepath => (( matches = searchpath.match(/^(.+)\/$/) ) ? matches[1] : searchpath) })
+    matches = searchpath.match(/^(.+)\/$/)
+    where({:sitepath => (matches ? matches[1] : searchpath)})
   }
   scope :in_order, order(:sitepath)
 

@@ -5,7 +5,7 @@
 <%
 end
 
-if @path.redirect.present? -%>
+if @path.redirect? -%>
 <p><b>Redirects to:</b> <%= link_to @path.redirect, @path.redirect %></p>
 <% end -%>
 

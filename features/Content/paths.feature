@@ -39,18 +39,14 @@ Feature: Custom Paths (URLs)
     When I delete the custom path "/custom/path"
     Then I should not have a custom path "/custom/path"
 
-  @wip
   Scenario: Review the custom paths used by the website
     Given I have some custom paths
-    When I go to the list of paths
-    Then I should see just the public paths for the website
+    Then I should just be able to see the public paths for the website
 
-  @wip
   Scenario: As an admin, review the custom paths used by the website
     Given I have some custom paths
     And I have signed in as an admin
-    When I go to the list of paths
-    Then I should see the all paths for the website
+    Then I should be able to see the all paths for the website
 
 
 # AUTHORIZATIONS
