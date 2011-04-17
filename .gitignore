@@ -15,11 +15,15 @@ db/*.sqlite3-journal
 db/development_structure.sql
 log/*.log
 public/cache/**/*
+public/ckeditor/_samples/*
+public/ckeditor/_source/*
+public/ckeditor/*.asp
+public/ckeditor/*.php
 public/**/all.*
-tmp/**/*
 rails_best_practices_output.html
 rerun.txt
 tmp/*
+tmp/**/*
 webrat*.*
 (*)/*
 *.tmproj

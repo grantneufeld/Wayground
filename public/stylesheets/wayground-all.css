@@ -12,6 +12,7 @@ h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0em;}
 .subtext{font-weight:normal;}
 
 table, tr, th, td{border-spacing:0em;}
+table.full{width:100%;}
 th, td{padding:0.2em 0.4em; vertical-align:top;}
 th{text-align:left;}
 thead > tr > th{text-align:center;}

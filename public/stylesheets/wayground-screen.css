@@ -12,7 +12,7 @@ a:link{color:blue;}
 a:visited{color:purple;}
 a:link:hover, a:visited:hover{background:rgba(255,255,0,0.2); color:blue; text-decoration:none;}
 a:link:active, a:visited:active{color:red;}
-textarea{width:100%;}
+textarea{width:98%;}
 
 .separator{display:none;}
 .error_messages{background:rgba(255,128,128,0.5); color:black; margin:1em auto; padding:0.5em 1em;}
@@ -91,7 +91,8 @@ background:linear-gradient(left, white, #EEE 50%, white);
 #flash .notice{background:#FFC; color:black; border:thin solid #CCC;}
 #flash .warning{background:#FDD; color:#300; border:thin solid #F99;}
 
-#content{clear:both; background:white; color:black; margin:0em; padding:0em 0em 1.25em;}
+#content, .wysiwygeditor{clear:both; background:white; color:black; margin:0em; padding:0em 0em 1.25em;}
+.wysiwygeditor{padding:1.25em;}
 #content > *{margin-left:1.25em; margin-right:1.25em; max-width:61.5em;/*984px*/}
 #content > .columns{margin-left:1.25em;}
 #content > *:first-child{padding-top:1.25em;}

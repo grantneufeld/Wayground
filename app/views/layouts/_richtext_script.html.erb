@@ -1,0 +1,31 @@
+<%
+# include this partial at some point after the declaration of the textarea field you want made into a richtext editor field
+
+fieldname ||= 'page[content]'
+@rich_text_editor = true
+
+%><script type="text/javascript">
+// I wish I knew a way to change these indenting defaults in config instead of manually like this. Sigh.
+CKEDITOR.replace('<%= fieldname %>',{ on : { instanceReady : function(ev){
+this.dataProcessor.writer.setRules('br',{
+  indent : false, breakBeforeOpen : true, breakAfterClose : false});
+this.dataProcessor.writer.setRules('h1',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('h2',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('h3',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('h4',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('h5',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('h6',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('li',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('p',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+this.dataProcessor.writer.setRules('pre',{
+  indent : false, breakBeforeOpen : true, breakAfterOpen : false, breakBeforeClose : false, breakAfterClose : true});
+}}});
+</script>

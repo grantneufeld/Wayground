@@ -3,6 +3,7 @@
 # Parameters - all are optional
 #
 # @page_title: Used in the <title> meta tag. If blank, defaults to the site title.
+# @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
 # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
 # @content_for_description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @content_for_head: HTML meta tags to go in the document head.
@@ -25,7 +26,12 @@ end
 <%= stylesheet_link_tag 'wayground-all', :media => 'all' %>
 <%= stylesheet_link_tag 'wayground-print', :media => 'print' %>
 <%= stylesheet_link_tag 'wayground-screen', :media => 'screen' %>
-<% #= javascript_include_tag :defaults -%>
+<% if @rich_text_editor
+  %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
+<% # javascript_include_tag '/ckeditor/adapters/jquery.js'
+end
+%><% #= javascript_include_tag :defaults
+-%>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <%= csrf_meta_tag %>
 <% unless @content_for_description.blank?
