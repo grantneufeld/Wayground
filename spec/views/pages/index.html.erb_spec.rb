@@ -23,6 +23,7 @@ describe "pages/index.html.erb" do
   end
 
   it "renders a list of pages" do
+    view.stub(:current_user) { nil }
     render
     assert_select "tr>td", :text => "/myfilename".to_s
     assert_select "tr>td", :text => "My Title".to_s

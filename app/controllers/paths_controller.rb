@@ -137,15 +137,7 @@ class PathsController < ApplicationController
   def render_path_item(item)
     # TODO: handle security-access for private items
     if item.is_a? Page
-      @page = item #@versioned_item = item
-      @page_title = @page.title
-      @content_for_description = @page.description
-      @site_breadcrumbs = @page.breadcrumbs
-#      page_nav_links(@page)
-      respond_to do |format|
-        format.html { render :template => 'paths/page' }
-        format.xml  { render :xml => @page }
-      end
+      render_item_as_page(item)
     # TODO: handle use of Paths for items other than Pages
     #elsif item.is_a? ???
     else
@@ -156,5 +148,17 @@ class PathsController < ApplicationController
         format.xml { render :xml => item }
       end
     end
+  end
+
+  def render_item_as_page(item)
+      @page = item
+      @page_title = @page.title
+      @content_for_description = @page.description
+      @site_breadcrumbs = @page.breadcrumbs
+#      page_nav_links(@page)
+      respond_to do |format|
+        format.html { render :template => 'paths/page' }
+        format.xml  { render :xml => @page }
+      end
   end
 end

@@ -8,6 +8,7 @@
 # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
 # @content_for_description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @content_for_head: HTML meta tags to go in the document head.
+# @content_for_actions: links (of class="action") to go in the action bar for the page.
 # @site_section: lower-case string label for the active section of the website.
 # @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
 
@@ -97,6 +98,11 @@ end %></div>
 </div>
 
 <div id="footer">
+<% if content_for? :actions
+	%><p class="actions">
+<%= content_for :actions %>
+</p>
+<% end -%>
 <p id="about"><a href="">About Wayground</a>.</p>
 <p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> Wayground.</p>
 </div>

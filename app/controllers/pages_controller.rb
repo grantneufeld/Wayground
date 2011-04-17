@@ -4,6 +4,7 @@ class PagesController < ApplicationController
   before_filter :requires_authority, :except => [:index]
   before_filter :set_section
   before_filter :set_page, :except => [:index, :new, :create]
+  before_filter :set_new_page, :only => [:new, :create]
 
   # GET /pages
   # GET /pages.xml
@@ -31,13 +32,6 @@ class PagesController < ApplicationController
   # GET /pages/new
   # GET /pages/new.xml
   def new
-    @page_title = 'New Page'
-    @page = Page.new
-    if params[:parent].present?
-      @page.parent = Page.find(params[:parent])
-      @site_breadcrumbs = @page.breadcrumbs
-    end
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @page }
@@ -47,13 +41,6 @@ class PagesController < ApplicationController
   # POST /pages
   # POST /pages.xml
   def create
-    @page_title = 'New Page'
-    @page = Page.new(params[:page])
-    if params[:parent].present?
-      @page.parent = Page.find(params[:parent])
-      @site_breadcrumbs = @page.breadcrumbs
-    end
-
     respond_to do |format|
       if @page.save
         format.html { redirect_to(@page, :notice => 'Page was successfully created.') }
@@ -73,12 +60,12 @@ class PagesController < ApplicationController
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
-    @page_title = "Edit Page “#{@page.title}”"
     respond_to do |format|
       if @page.update_attributes(params[:page])
         format.html { redirect_to(@page, :notice => 'Page was successfully updated.') }
         format.xml  { head :ok }
       else
+        @page_title = "Edit Page “#{@page.title}”"
         format.html { render :action => "edit" }
         format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
       end
@@ -118,5 +105,14 @@ class PagesController < ApplicationController
   # Most of the actions for this controller receive the id of an Authority as a parameter.
   def set_page
     @page = Page.find(params[:id])
+  end
+
+  def set_new_page
+    @page_title = 'New Page'
+    @page = Page.new(params[:page])
+    if params[:parent].present?
+      @page.parent = Page.find(params[:parent])
+      @site_breadcrumbs = @page.breadcrumbs
+    end
   end
 end
