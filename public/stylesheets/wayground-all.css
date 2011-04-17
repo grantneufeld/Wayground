@@ -16,11 +16,16 @@ table.full{width:100%;}
 th, td{padding:0.2em 0.4em; vertical-align:top;}
 th{text-align:left;}
 thead > tr > th{text-align:center;}
-thead, thead > tr, thead > tr > th{background:#999; color:white;}
+thead, thead > tr{background:#999; color:white; text-shadow:0em 0em 0.2em black;}
 tbody > tr > th:first-child{text-align:right;}
-tr:nth-child(odd){background:#EEE; color:black;}
-tr:nth-child(even){background:#DDD; color:black;}
-
+tbody > tr:nth-child(odd){background:#EEE; color:black;}
+tbody > tr:nth-child(even){background:#DDD; color:black;}
+tfoot, tfoot > tr{background:#CCC; color:black;}
+td, th{
+  background:-webkit-gradient(linear, left center, right center, from(rgba(255,255,255,0.2)), color-stop(0.1, rgba(255,255,255,0)), color-stop(0.9, rgba(0,0,0,0)), to(rgba(0,0,0,0.01)));
+  background:-moz-linear-gradient(left, rgba(255,255,255,0.2), rgba(255,255,255,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.01));
+  background:linear-gradient(left, rgba(255,255,255,0.2), rgba(255,255,255,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.01));
+}
 
 .simplecols2{-moz-column-count:2; -webkit-column-count:2; column-count:2;}
 .closeblock{clear:both; height:1px;}
@@ -60,3 +65,5 @@ h1 + .columns{clear:right;}
 /* switch to single column when not enough room for 2 */
 .column, .cols2 > .column, .column, .cols3 > .column, .column, .cols4 > .column{float:none; padding:0em; border-right:0em none; max-width:none;}
 }
+
+.preview{background:white; color:black; border:thin solid #999; max-height:18em; overflow:auto; padding:1.2em;}

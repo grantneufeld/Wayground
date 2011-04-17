@@ -2,8 +2,8 @@
 
 class PagesController < ApplicationController
   before_filter :requires_authority, :except => [:index]
+  before_filter :set_section
   before_filter :set_page, :except => [:index, :new, :create]
-  before_filter :set_breadcrumbs, :except => [:index]
 
   # GET /pages
   # GET /pages.xml
@@ -21,6 +21,7 @@ class PagesController < ApplicationController
   # GET /pages/1.xml
   def show
     @page_title = "Page “#{@page.title}”"
+    @site_breadcrumbs = @page.breadcrumbs if @page.parent.present?
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @page }
@@ -32,6 +33,10 @@ class PagesController < ApplicationController
   def new
     @page_title = 'New Page'
     @page = Page.new
+    if params[:parent].present?
+      @page.parent = Page.find(params[:parent])
+      @site_breadcrumbs = @page.breadcrumbs
+    end
 
     respond_to do |format|
       format.html # new.html.erb
@@ -44,6 +49,10 @@ class PagesController < ApplicationController
   def create
     @page_title = 'New Page'
     @page = Page.new(params[:page])
+    if params[:parent].present?
+      @page.parent = Page.find(params[:parent])
+      @site_breadcrumbs = @page.breadcrumbs
+    end
 
     respond_to do |format|
       if @page.save
@@ -102,13 +111,12 @@ class PagesController < ApplicationController
     end
   end
 
+  def set_section
+    @site_section = 'Pages'
+  end
+
   # Most of the actions for this controller receive the id of an Authority as a parameter.
   def set_page
     @page = Page.find(params[:id])
-  end
-
-  # Breadcrumbs for actions on this controller start with the index page.
-  def set_breadcrumbs
-    @site_breadcrumbs = [{:text => 'Pages', :url => pages_path}]
   end
 end

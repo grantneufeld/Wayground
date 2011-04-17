@@ -5,6 +5,7 @@ describe "pages/index.html.erb" do
     assign(:pages, [
       stub_model(Page,
         :parent => nil,
+        :path => stub_model(Path, :sitepath => '/myfilename'),
         :filename => "myfilename",
         :title => "My Title",
         :description => "My description.",
@@ -12,6 +13,7 @@ describe "pages/index.html.erb" do
       ),
       stub_model(Page,
         :parent => nil,
+        :path => stub_model(Path, :sitepath => '/myfilename'),
         :filename => "Filename",
         :title => "Title",
         :description => "A description.",

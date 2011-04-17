@@ -1,0 +1,4 @@
+<%= link_to 'View', page.sitepath, :title => 'Go to the page', :class => 'action' %>
+<%= link_to 'Edit', edit_page_path(page), :title => 'Make changes to the page', :class => 'action' %>
+<%= link_to 'Add Subpage', new_page_path(:parent => page.id), :title => 'Add a page under this page', :class => 'action' %>
+<%= link_to 'Delete', page, :confirm => "Are you sure you want to permanently delete the page “#{page.title}”?", :method => :delete, :href => delete_page_path(page), :title => 'Permanently remove the page from the website', :class => 'action' %>

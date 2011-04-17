@@ -1,6 +1,9 @@
 <% # encoding: utf-8
 
 %><%= form_for(@page) do |f| %>
+<% if @page.parent.present?
+    %><%= hidden_field_tag('parent', @page.parent.id) %>
+<% end -%>
 <%= show_errors(@page) %>
 <table class="full"><tbody>
 <tr><th><%= f.label :filename %></th>
@@ -11,14 +14,16 @@
 	  %>/<%
 	end
 	%><%= f.text_field :filename %>
-  <br>Letters, numbers, dashes, underscores and an optional extension (e.g., “.html”).
+	<br>The filename is used for the web page link (E.g., http://wayground.ca/<strong>myfilename</strong>).
+  <br>You can use letters, numbers, dashes, underscores and an optional extension (e.g., “.html”).
 	<br>For the home page, use just a slash “/”.
 	<br><strong>Warning:</strong> Changing the filename when updating the page can break links to the page.</td></tr>
 <tr><th><%= f.label :title %></th>
-  <td><%= f.text_field :title, :size => 64 %></td></tr>
+  <td><%= f.text_field :title, :size => 64 %>
+  <br>The Title appears in the title-bar of the web browser.</td></tr>
 <tr><th><%= f.label :description %></th>
-  <td>The description is not shown to the user on the page, but is used when listing pages and by some search engines.
-  <br><%= f.text_area :description, :rows => 4 %></td></tr>
+  <td><%= f.text_area :description, :rows => 4 %>
+  <br>The description is not shown on the page, but is used when listing pages and by some search engines.</td></tr>
 <tr><th><%= f.label :content %></th>
   <td><%= f.text_area :content, :rows => 16 %></td></tr>
 </tbody>

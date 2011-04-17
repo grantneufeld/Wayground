@@ -23,6 +23,7 @@ Wayground::Application.routes.draw do
   end
   resources :pages do
     get 'delete', :on => :member
+    delete 'delete' => 'pages#destroy', :on => :member
   end
 
   root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }

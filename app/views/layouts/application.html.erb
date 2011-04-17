@@ -3,6 +3,7 @@
 # Parameters - all are optional
 #
 # @page_title: Used in the <title> meta tag. If blank, defaults to the site title.
+# @page_uses_javascript: A boolean that determines whether to load the default javascript files.
 # @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
 # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
 # @content_for_description: Plain text string to be used as the value for the <meta name="description"> tag.
@@ -26,12 +27,13 @@ end
 <%= stylesheet_link_tag 'wayground-all', :media => 'all' %>
 <%= stylesheet_link_tag 'wayground-print', :media => 'print' %>
 <%= stylesheet_link_tag 'wayground-screen', :media => 'screen' %>
-<% if @rich_text_editor
+<% if @page_uses_javascript
+  %><%= javascript_include_tag :defaults %>
+<% end
+if @rich_text_editor
   %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
 <% # javascript_include_tag '/ckeditor/adapters/jquery.js'
-end
-%><% #= javascript_include_tag :defaults
--%>
+end -%>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <%= csrf_meta_tag %>
 <% unless @content_for_description.blank?
@@ -67,9 +69,9 @@ unless @content_for_head.blank?
 </div>
 
 <ul id="navmenu">
-<li<%= @site_section == 'pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
-<li<%= @site_section == 'events' ? ' class="current"'.html_safe : '' %>><a href="">Events</a></li>
-<li<%= @site_section == 'admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
+<li<%= @site_section == 'Pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
+<li<%= @site_section == 'Events' ? ' class="current"'.html_safe : '' %>><a href="">Events</a></li>
+<li<%= @site_section == 'Admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
 </ul>
 <%
 if @site_breadcrumbs && @site_breadcrumbs.size > 0
