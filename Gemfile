@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.5'
+gem 'rails', '3.0.7'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -8,10 +8,10 @@ gem 'rails', '3.0.5'
 gem 'sqlite3', '>= 1.3.3'
 
 # Deploy with Capistrano
-gem 'capistrano' #, '2.5.19'
+gem 'capistrano' #, '2.5.21'
 
 gem 'bcrypt-ruby', '2.1.4'
-gem 'omniauth', '>= 0.2.0'
+gem 'omniauth', '>= 0.2.4'
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
@@ -20,11 +20,11 @@ gem 'omniauth', '>= 0.2.0'
 group :development, :test do
 	gem 'chronic', '>= 0.2.3'
 	gem 'cucumber', '>= 0.10.2' #'0.10.0'
-	gem 'cucumber-rails', '>= 0.4.0' #'0.3.2'
-	gem 'database_cleaner', '>= 0.6.3'
+	gem 'cucumber-rails', '>= 0.4.1' #'0.3.2'
+	gem 'database_cleaner', '>= 0.6.7'
 	gem 'metric_fu', '>= 2.0.1', :require => false
-	gem 'pickle', '0.4.4', :require => false # additions for Cucumber
-	gem 'rails_best_practices', '>= 0.7.1', :require => false
+	gem 'pickle', '0.4.7', :require => false # additions for Cucumber
+	gem 'rails_best_practices', '>= 0.8.1', :require => false
 	gem 'rspec', '2.5.0' # core testing framework
 	gem 'rspec-rails', '2.5.0'
 	gem 'ruby-debug19', '>= 0.11.6', :require => 'ruby-debug'
