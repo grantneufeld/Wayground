@@ -1,7 +1,8 @@
 <% if @page.parent
+  parent = @page
   %><p>
 <b>Parent:</b>
-<%= link_to @page.parent.title, @page.parent %>
+<%= link_to parent.title, parent %>
 </p>
 <% end -%>
 <p>

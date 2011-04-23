@@ -1,4 +1,5 @@
-<p><b>User:</b> <%= link_to @authority.user.email, profile_path(@authority.user) %></p>
+<% user = @authority.user -%>
+<p><b>User:</b> <%= link_to user.email, profile_path(user) %></p>
 
 <% item = @authority.item
 if item

@@ -4,6 +4,8 @@ class PathsController < ApplicationController
   before_filter :requires_authority, :except => [:sitepath, :index]
   before_filter :set_path, :except => [:sitepath, :index, :new, :create]
   before_filter :set_breadcrumbs, :except => [:sitepath, :index]
+  before_filter :set_new, :only => [:new, :create]
+  before_filter :set_edit, :only => [:edit, :update]
 
   # process arbitrary paths
   def sitepath
@@ -51,9 +53,6 @@ class PathsController < ApplicationController
   # GET /paths/new
   # GET /paths/new.xml
   def new
-    @page_title = 'New Custom Path'
-    @path = Path.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @path }
@@ -63,9 +62,6 @@ class PathsController < ApplicationController
   # POST /paths
   # POST /paths.xml
   def create
-    @page_title = 'New Custom Path'
-    @path = Path.new(params[:path])
-
     respond_to do |format|
       if @path.save
         format.html { redirect_to(@path, :notice => 'Path was successfully created.') }
@@ -79,14 +75,11 @@ class PathsController < ApplicationController
 
   # GET /paths/1/edit
   def edit
-    @page_title = "Edit Custom Path: #{@path.sitepath}"
   end
 
   # PUT /paths/1
   # PUT /paths/1.xml
   def update
-    @page_title = "Edit Custom Path: #{@path.sitepath}"
-
     respond_to do |format|
       if @path.update_attributes(params[:path])
         format.html { redirect_to(@path, :notice => 'Path was successfully updated.') }
@@ -132,6 +125,15 @@ class PathsController < ApplicationController
   # Breadcrumbs for actions on this controller start with the index page.
   def set_breadcrumbs
     @site_breadcrumbs = [{:text => 'Paths', :url => paths_path}]
+  end
+
+  def set_new
+    @page_title = 'New Custom Path'
+    @path = Path.new(params[:path])
+  end
+
+  def set_edit
+    @page_title = "Edit Custom Path: #{@path.sitepath}"
   end
 
   def render_path_item(item)

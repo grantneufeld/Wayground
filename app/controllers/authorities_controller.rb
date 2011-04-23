@@ -2,7 +2,10 @@
 
 # Set authorities (permissions / access-control) for users.
 class AuthoritiesController < ApplicationController
-  before_filter :requires_authority
+  before_filter :requires_view_authority, :only => [:index, :show]
+  before_filter :requires_create_authority, :only => [:new, :create]
+  before_filter :requires_edit_authority, :only => [:edit, :update]
+  before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_authority, :except => [:index, :new, :create]
   before_filter :set_site_location, :except => [:index]
 
@@ -32,7 +35,6 @@ class AuthoritiesController < ApplicationController
   # GET /authorities/new
   # GET /authorities/new.xml
   def new
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Authority', :can_create)
     @authority = Authority.new
     @page_title = "New Authority"
 
@@ -45,7 +47,6 @@ class AuthoritiesController < ApplicationController
   # POST /authorities
   # POST /authorities.xml
   def create
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Authority', :can_create)
     @authority = Authority.build_from_params(params[:authority])
     @authority.authorized_by = current_user
     @user = @authority.user
@@ -64,14 +65,12 @@ class AuthoritiesController < ApplicationController
 
   # GET /authorities/1/edit
   def edit
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Authority', :can_edit)
     @page_title = "Update Authority"
   end
 
   # PUT /authorities/1
   # PUT /authorities/1.xml
   def update
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Authority', :can_edit)
     @authority.authorized_by = current_user
     @page_title = "Update Authority"
 
@@ -88,14 +87,12 @@ class AuthoritiesController < ApplicationController
 
   # GET /authorities/1/delete
   def delete
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Authority', :can_delete)
     @page_title = "Delete Authority"
   end
 
   # DELETE /authorities/1
   # DELETE /authorities/1.xml
   def destroy
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Authority', :can_delete)
     @authority.destroy
 
     respond_to do |format|
@@ -116,9 +113,26 @@ class AuthoritiesController < ApplicationController
     @site_breadcrumbs = [{:text => 'Authorities', :url => authorities_path}]
   end
 
-  # The actions for this controller all require that the user is authorized to view Authority records.
-  def requires_authority
-    unless current_user && current_user.has_authority_for_area('Authority')
+  def requires_view_authority
+    unless current_user && current_user.has_authority_for_area('Authority', :can_view)
+      raise Wayground::AccessDenied
+    end
+  end
+
+  def requires_create_authority
+    unless current_user && current_user.has_authority_for_area('Authority', :can_create)
+      raise Wayground::AccessDenied
+    end
+  end
+
+  def requires_edit_authority
+    unless current_user && current_user.has_authority_for_area('Authority', :can_edit)
+      raise Wayground::AccessDenied
+    end
+  end
+
+  def requires_delete_authority
+    unless current_user && current_user.has_authority_for_area('Authority', :can_delete)
       raise Wayground::AccessDenied
     end
   end
