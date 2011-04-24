@@ -2,6 +2,10 @@
 require 'spec_helper'
 
 describe Page do
+  before(:all) do
+    @editor = Factory.create(:user)
+  end
+
   describe "acts_as_authority_controlled" do
     it "should be in the “Content” area" do
       Page.authority_area.should eq 'Content'
@@ -76,6 +80,7 @@ describe Page do
   describe "#generate_path" do
     it "should be called after the Page is saved" do
       page = Page.new(:filename => 'page', :title => 'Page')
+      page.editor = @editor
       page.save!
       page.path.should_not be_nil
     end
@@ -133,7 +138,10 @@ describe Page do
 
   describe "#sitepath" do
     it "should be the path’s sitepath" do
-      Page.create!(:filename => 'testpage', :title => 'Page').sitepath.should eq '/testpage'
+      page = Page.new(:filename => 'testpage', :title => 'Page')
+      page.editor = @editor
+      page.save!
+      page.sitepath.should eq '/testpage'
     end
   end
 

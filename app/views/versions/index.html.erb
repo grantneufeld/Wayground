@@ -1,0 +1,18 @@
+<h1>Edit version history for “<%= link_to @item.title, @item %>”</h1>
+
+<table>
+<thead><tr>
+<th>Editor</th>
+<th>Edited at</th>
+<th>Edit Comment</th>
+</tr></thead>
+<tbody>
+<% @versions.each do |version|
+  user = version.user
+  %><tr>
+<td><%= link_to user.name, profile_path(user) %></td>
+<td><%= link_to version.edited_at, page_version_path(@item, version) %></td>
+<td><%= version.edit_comment %></td>
+</tr>
+<% end %></tbody>
+</table>

@@ -1,0 +1,64 @@
+<%
+item = @version.item
+user = @version.user
+
+-%>
+<p>
+<b>Item:</b>
+<%= link_to item.title, item %>
+</p>
+
+<p>
+<b>User:</b>
+<%= link_to user.name, profile_path(user) %>
+</p>
+
+<p>
+<b>Edited at:</b>
+<%= @version.edited_at %>
+</p>
+
+<p>
+<b>Edit Comment:</b>
+<%= @version.edit_comment %>
+</p>
+
+<p>
+<b>Filename:</b>
+<%= @version.filename %>
+</p>
+
+<p>
+<b>Title:</b>
+<%= @version.title %>
+</p>
+
+<p>
+<b>Url:</b>
+<%= @version.url %>
+</p>
+
+<p>
+<b>Description:</b>
+<%= @version.description %>
+</p>
+
+<p>
+<b>Content:</b>
+<%= @version.content %>
+</p>
+
+<p>
+<b>Content type:</b>
+<%= @version.content_type %>
+</p>
+
+<p>
+<b>Start on:</b>
+<%= @version.start_on %>
+</p>
+
+<p>
+<b>End on:</b>
+<%= @version.end_on %>
+</p>

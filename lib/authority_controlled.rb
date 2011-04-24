@@ -37,17 +37,17 @@ ActiveRecord::Base.class_eval do
         end
       end
     # TODO: implement the following chunk of code when there’s a class that needs non-private viewable items (e.g., Page)
-    #elsif options[:item_authority_flag_field] == :always_viewable
-    #  # use the default methods set on ActiveRecord
-    #else
-    #  # use the field name defined by item_authority_flag_field if present,
-    #  # otherwise, use the default field name: is_authority_controlled
-    #  class_eval "
-    #    def is_authority_restricted?
-    #      self.#{(options[:item_authority_flag_field].present? ?
-    #      options[:item_authority_flag_field] : 'is_authority_controlled')}
-    #    end
-    #  "
+    elsif options[:item_authority_flag_field] == :always_viewable
+      # use the default methods set on ActiveRecord
+    else
+      # use the field name defined by item_authority_flag_field if present,
+      # otherwise, use the default field name: is_authority_controlled
+      class_eval "
+        def is_authority_restricted?
+          self.#{(options[:item_authority_flag_field].present? ?
+          options[:item_authority_flag_field] : 'is_authority_controlled')}
+        end
+      "
     end
 
     # define the authority area for the model
@@ -135,8 +135,10 @@ module AuthorityControlled
       if action_type == :can_view && !(is_authority_restricted?)
         # anyone can view a non-controlled item
         true
-      else
+      elsif user
         Authority.user_has_for_item(user, self, action_type)
+      else
+        nil
       end
     end
   end
@@ -154,8 +156,10 @@ module AuthorityControlled
       if action_type == :can_view && !(is_authority_restricted?)
         # anyone can view a non-controlled item
         true
-      else
+      elsif user
         Authority.user_has_for_item(user, as_authority_controlled_item, action_type)
+      else
+        false
       end
     end
   end

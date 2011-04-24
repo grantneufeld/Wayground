@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 5) do
+ActiveRecord::Schema.define(:version => 6) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -95,5 +95,26 @@ ActiveRecord::Schema.define(:version => 5) do
   add_index "users", ["email"], :name => "email", :unique => true
   add_index "users", ["filename"], :name => "filename", :unique => true
   add_index "users", ["remember_token"], :name => "remember_token", :unique => true
+
+  create_table "versions", :force => true do |t|
+    t.integer  "item_id",      :null => false
+    t.string   "item_type",    :null => false
+    t.integer  "user_id",      :null => false
+    t.datetime "edited_at",    :null => false
+    t.string   "edit_comment"
+    t.string   "filename"
+    t.string   "title"
+    t.text     "url"
+    t.text     "description"
+    t.text     "content"
+    t.string   "content_type"
+    t.date     "start_on"
+    t.date     "end_on"
+  end
+
+  add_index "versions", ["edited_at", "item_type", "item_id"], :name => "edits_by_date"
+  add_index "versions", ["item_type", "item_id", "edited_at"], :name => "item_by_date"
+  add_index "versions", ["user_id", "edited_at", "item_type", "item_id"], :name => "user_by_date"
+  add_index "versions", ["user_id", "item_type", "item_id", "edited_at"], :name => "user_by_item"
 
 end

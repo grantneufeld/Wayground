@@ -5,6 +5,7 @@ class PagesController < ApplicationController
   before_filter :set_section
   before_filter :set_page, :except => [:index, :new, :create]
   before_filter :set_new_page, :only => [:new, :create]
+  before_filter :set_editor, :only => [:create, :update, :destroy]
 
   # GET /pages
   # GET /pages.xml
@@ -114,5 +115,9 @@ class PagesController < ApplicationController
       @page.parent = Page.find(params[:parent])
       @site_breadcrumbs = @page.breadcrumbs
     end
+  end
+
+  def set_editor
+    @page.editor = current_user
   end
 end

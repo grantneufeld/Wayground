@@ -24,6 +24,7 @@ Wayground::Application.routes.draw do
   resources :pages do
     get 'delete', :on => :member
     delete 'delete' => 'pages#destroy', :on => :member
+    resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
 
   root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }
