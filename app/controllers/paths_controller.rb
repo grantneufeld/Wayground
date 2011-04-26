@@ -155,7 +155,7 @@ class PathsController < ApplicationController
   def render_item_as_page(item)
       @page = item
       @page_title = @page.title
-      @content_for_description = @page.description
+      @page_description = @page.description
       @site_breadcrumbs = @page.breadcrumbs
 #      page_nav_links(@page)
       respond_to do |format|

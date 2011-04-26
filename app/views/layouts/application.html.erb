@@ -6,17 +6,21 @@
 # @page_uses_javascript: A boolean that determines whether to load the default javascript files.
 # @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
 # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
-# @content_for_description: Plain text string to be used as the value for the <meta name="description"> tag.
-# @content_for_head: HTML meta tags to go in the document head.
-# @content_for_actions: links (of class="action") to go in the action bar for the page.
+# @page_description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @site_section: lower-case string label for the active section of the website.
 # @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
+
+# Blocks - all are optional. Called with ‘content_for :block_name do … end’.
+#
+# :actions - links (of class="action") to go in the action bar for the page (at the top of the footer).
+# :footer - Goes in the footer, right after the actions (if any).
+# :head - Goes at the end of the head. Useful for custom meta tags, javascript links, etc.
 
 %><!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title><%
-if @page_title.nil? or @page_title == '' or params[:url] == '/'
+if @page_title.blank? or params[:url] == '/'
 	%>Wayground<%
 else
 	%><%=h @page_title %> — Wayground<%
@@ -37,13 +41,15 @@ if @rich_text_editor
 end -%>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <%= csrf_meta_tag %>
-<% unless @content_for_description.blank?
-	%><meta name="description" content="<%=h @content_for_description %>" />
+<%
+if @browser_nocache
+	%><meta name="robots" content="noindex" />
 <% end
-unless @content_for_head.blank?
-	%><%= @content_for_head %>
+unless @page_description.blank?
+	%><meta name="description" content="<%=h @page_description %>" />
 <% end
-%></head><body>
+%><%= yield :head -%>
+</head><body>
 
 <div id="header">
 <div id="headertitle">
@@ -100,9 +106,10 @@ end %></div>
 <div id="footer">
 <% if content_for? :actions
 	%><p class="actions">
-<%= content_for :actions %>
+<%= yield :actions %>
 </p>
 <% end -%>
+<%= yield :footer -%>
 <p id="about"><a href="">About Wayground</a>.</p>
 <p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> Wayground.</p>
 </div>
