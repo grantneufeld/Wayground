@@ -115,20 +115,19 @@ describe "layouts/application.html.erb" do
 
   # Blocks
 
-  it "should process content_for :head" do
-    # FIXME: need to figure out how to set content_for values when testing views
-    #content_for(:head) { 'Test Head' }
-    #render
-    #rendered.should match(/Test Head[ \t\r\n]*<\/head>/)
+  # :head - Goes at the end of the head. Useful for custom meta tags, javascript links, etc.
+  it "content_for(:head) should go at the end of the head element" do
+    view.content_for(:head) { 'Test Head' }
+    render
+    rendered.should match(/Test Head[ \t\r\n]*<\/head>/)
   end
 
-  # @site_section: lower-case string label for the active section of the website.
+  # :actions - links (of class="action") to go in the action bar for the page (at the top of the footer).
   describe "content_for(:actions)" do
     it "should show the actions block" do
-      # FIXME: handle content_for :actions testing
-      #content_for(:actions) { "Test Actions" }
-      #render
-      #rendered.should match(/<p class="actions">[ \t\r\n]*Test Actions[ \t\r\n]*<\/p>/)
+      view.content_for(:actions) { "Test Actions" }
+      render
+      rendered.should match(/<p class="actions">[ \t\r\n]*Test Actions[ \t\r\n]*<\/p>/)
     end
     it "should not show the actions block if not empty" do
       render
@@ -136,8 +135,11 @@ describe "layouts/application.html.erb" do
     end
   end
 
-  it "should process content_for :footer" do
-    # FIXME: handle content_for :footer testing
+  # :footer - Goes in the footer, right after the actions (if any).
+  it "content_for(:footer) should go at the top of the footer" do
+    view.content_for(:footer) { 'Test Footer' }
+    render
+    rendered.should match(/<div id="footer">[ \t\r\n]*Test Footer/)
   end
 
 
