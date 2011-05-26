@@ -18,7 +18,7 @@ describe PagesController do
     controller.stub!(:current_user).and_return(mock_user(stubs))
   end
   def mock_admin(stubs={})
-    @mock_admin ||= mock_model(User, {:id => 1, :email => 'test+mockadmin@wayground.ca', :name => 'The Admin', :has_authority_for_area => mock_admin_authority}.merge(stubs))
+    @mock_admin ||= mock_model(User, {:id => 1, :email => 'test+mockadmin@wayground.ca', :name => 'The Admin', :has_authority_for_area => mock_admin_authority, :has_authority_for_item => mock_admin_authority}.merge(stubs))
   end
   def mock_user(stubs={})
     @mock_user ||= mock_model(User, {:id => 2, :email => 'test+mockuser@wayground.ca', :name => 'A. User', :has_authority_for_area => nil}.merge(stubs))

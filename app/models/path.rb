@@ -37,17 +37,6 @@ class Path < ActiveRecord::Base
     self.for_sitepath(inpath).first
   end
 
-  # FIXME: make self.allowed_for_user part of lib/authority_controlled.rb instead
-  # FIXME: make this work with scopes somehow so it can be used with restrictions like order and where
-  def self.allowed_for_user(user = nil, action = :can_view)
-    # TODO: there is probably a more efficient way to do this
-    paths = []
-    all.each do |path|
-      paths << path if path.has_authority_to?(user, action)
-    end
-    paths
-  end
-
   # The sitepath should not end in a slash, except for the root/home path.
   def clean_sitepath
     matches = self.sitepath.match /^(.+)\/$/

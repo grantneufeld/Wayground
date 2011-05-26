@@ -19,7 +19,7 @@ ActiveRecord::Base.class_eval do
   #    E.g., Path (custom url) gets it’s authority info through it’s item (typically a Page).
   def self.acts_as_authority_controlled(options={})
     # check if already loaded
-    return if self.included_modules.include?(AuthorityControlled::InstanceMethods)
+    return if self.included_modules.include?(AuthorityControlled::InstanceMethods) || self.included_modules.include?(AuthorityControlled::InheritInstanceMethods)
 
     inherits_from = options[:inherits_from]
 
@@ -70,6 +70,19 @@ ActiveRecord::Base.class_eval do
       # just fall back on the authority_area method inherited from ActiveRecord (defined below)
     end
 
+    class_eval do
+      # FIXME: make this work with scopes somehow so it can be used with restrictions like order and where
+      # Find all except those the user does not have authority to access.
+      def self.allowed_for_user(user = nil, action = :can_view)
+        # TODO: there is probably a more efficient way to do this
+        items = []
+        all.each do |item|
+          items << item if item.has_authority_to?(user, action)
+        end
+        items
+      end
+    end
+
     if inherits_from.present?
       class_eval "
         def authorities
@@ -85,6 +98,19 @@ ActiveRecord::Base.class_eval do
         has_many :authorities, :as => :item, :dependent => :delete_all
       end
       include AuthorityControlled::InstanceMethods
+    end
+  end
+
+  def self.allowed_for_user(user = nil, action = :can_view)
+    if user.nil?
+      action == :can_view ? all : []
+    else
+      # TODO: there is probably a more efficient way to do this
+      items = []
+      all.each do |item|
+        items << item if item.has_authority_to?(user, action)
+      end
+      items
     end
   end
 

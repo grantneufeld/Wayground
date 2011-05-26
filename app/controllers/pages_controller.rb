@@ -1,9 +1,11 @@
 # encoding: utf-8
 
 class PagesController < ApplicationController
-  before_filter :requires_authority, :except => [:index]
-  before_filter :set_section
   before_filter :set_page, :except => [:index, :new, :create]
+  before_filter :requires_create_authority, :only => [:new, :create]
+  before_filter :requires_edit_authority, :only => [:edit, :update]
+  before_filter :requires_delete_authority, :only => [:delete, :destroy]
+  before_filter :set_section
   before_filter :set_new_page, :only => [:new, :create]
   before_filter :set_editor, :only => [:create, :update, :destroy]
 
@@ -22,6 +24,7 @@ class PagesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.xml
   def show
+    requires_authority(:can_view)
     @page_title = "Page “#{@page.title}”"
     @site_breadcrumbs = @page.breadcrumbs if @page.parent.present?
     respond_to do |format|
@@ -93,10 +96,22 @@ class PagesController < ApplicationController
   protected
 
   # The actions for this controller all require that the user is authorized to view Authority records.
-  def requires_authority
-    unless current_user && current_user.has_authority_for_area(Page.authority_area)
+  def requires_authority(action)
+    unless current_user && (
+      (@page && @page.has_authority_to?(current_user, action)) ||
+      current_user.has_authority_for_area(Page.authority_area, action)
+    )
       raise Wayground::AccessDenied
     end
+  end
+  def requires_create_authority
+    requires_authority(:can_create)
+  end
+  def requires_edit_authority
+    requires_authority(:can_edit)
+  end
+  def requires_delete_authority
+    requires_authority(:can_delete)
   end
 
   def set_section
