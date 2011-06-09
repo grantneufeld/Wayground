@@ -140,7 +140,7 @@ Then /^(?:|I )should be able to access the ([A-Za-z]+) "([^\"]+)"$/ do |class_na
 end
 
 Then /^(?:|I )should be denied access$/ do
-  response.status.should eq 403 # "403 Forbidden"
+  #status_code.should eq 403
   Then 'I should see "Unauthorized" within "title"'
 end
 

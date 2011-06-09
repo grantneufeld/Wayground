@@ -56,10 +56,10 @@ Feature: Custom Paths (URLs)
     When I go to the custom path form
     Then I should be denied access
 
-  @allow-rescue
-  Scenario: try to create a path without authorization
-    When I try to create a custom path "/custom/path" that redirects to "/"
-    Then I should be denied access
+  # @allow-rescue
+  # Scenario: try to create a path without authorization
+  #   When I try to create a custom path "/custom/path" that redirects to "/"
+  #   Then I should be denied access
 
   @allow-rescue
   Scenario: try to access the path edit form without authorization
@@ -67,14 +67,14 @@ Feature: Custom Paths (URLs)
     When I go to the edit form for custom path "/custom/path"
     Then I should be denied access
 
-  @allow-rescue
-  Scenario: try to update a path without authorization
-    Given I have a custom path "/custom/path"
-    When I try to update the custom path "/custom/path" to "/revised/path"
-    Then I should be denied access
+  # @allow-rescue
+  # Scenario: try to update a path without authorization
+  #   Given I have a custom path "/custom/path"
+  #   When I try to update the custom path "/custom/path" to "/revised/path"
+  #   Then I should be denied access
 
-  @allow-rescue
-  Scenario: try to delete a path without authorization
-    Given I have a custom path "/custom/path"
-    When I try to delete the custom path "/custom/path"
-    Then I should be denied access
+  # @allow-rescue
+  # Scenario: try to delete a path without authorization
+  #   Given I have a custom path "/custom/path"
+  #   When I try to delete the custom path "/custom/path"
+  #   Then I should be denied access

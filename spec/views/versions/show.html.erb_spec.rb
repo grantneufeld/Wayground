@@ -18,15 +18,15 @@ describe "versions/show.html.erb" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should contain('Page Title')
-    rendered.should contain('User Name')
-    rendered.should contain('2000-01-02 03:04:05')
-    rendered.should contain("Comment")
-    rendered.should contain("Filename")
-    rendered.should contain("Title")
-    rendered.should contain("MyText")
-    rendered.should contain("MyText")
-    rendered.should contain("MyText")
-    rendered.should contain("Content Type")
+    rendered.should match(/Page Title/)
+    rendered.should match(/User Name/)
+    rendered.should match(/2000-01-02 03:04:05/)
+    rendered.should match(/Comment/)
+    rendered.should match(/Filename/)
+    rendered.should match(/Title/)
+    rendered.should match(/MyText/)
+    rendered.should match(/MyText/)
+    rendered.should match(/MyText/)
+    rendered.should match(/Content Type/)
   end
 end

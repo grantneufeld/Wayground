@@ -26,6 +26,9 @@ There are two special tags to be used when writing feature scenarios. Tags are p
 * ‘@wip’: Work in progress. These are for the scenarios you are currently working on (in general, there should be no more than 3 of these active at a time). These scenarios will not run during the normal cucumber execution, since they are expected to fail (being incomplete). You can run just the @wip scenarios while your work is in progress:
 > rake cucumber:wip
 
+If you need to test Javascript in the context of your features, you can tag scenarios with ‘@javascript’.
+Capybara also provides explicit @selenium, @culerity and @rack_test tags to define which handler to use.
+
 
 == Unit Testing With Rspec
 

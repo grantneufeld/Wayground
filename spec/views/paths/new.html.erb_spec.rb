@@ -12,7 +12,6 @@ describe "paths/new.html.erb" do
   it "renders new path form" do
     render
 
-    # Run the generator again with the --webrat flag if you want to use webrat matchers
     assert_select "form", :action => paths_path, :method => "post" do
       assert_select "textarea#path_sitepath", :name => "path[sitepath]"
       assert_select "textarea#path_redirect", :name => "path[redirect]"

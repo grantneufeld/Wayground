@@ -19,6 +19,7 @@ Feature: Sign out
     When I go to the sign out page
     Then I should see "You are not signed in"
 
+  @future
   Scenario: User tries to sign out when not signed in
-    When I sign out
+    When I try to sign out
     Then I should see "You are not signed in"

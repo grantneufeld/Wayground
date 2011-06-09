@@ -14,7 +14,6 @@ describe "pages/new.html.erb" do
   it "renders new page form" do
     render
 
-    # Run the generator again with the --webrat flag if you want to use webrat matchers
     assert_select "form", :action => pages_path, :method => "post" do
       assert_select "input#page_filename", :name => "page[filename]"
       assert_select "input#page_title", :name => "page[title]"

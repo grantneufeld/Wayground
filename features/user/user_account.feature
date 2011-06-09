@@ -1,6 +1,6 @@
 @user
 Feature: User account
-  In order to review account details
+  In order to give users control of their information
   As a user
   I want access to my account details
 
@@ -11,5 +11,4 @@ Feature: User account
   Scenario: User accesses the account page
     Given I have signed in with "test+email@wayground.ca/password"
     When I go to the account page
-    Then I should be on the account page
-    And I should see /<h1>User: [0-9]+<.h1>/
+    Then I should see my account details

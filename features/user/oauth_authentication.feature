@@ -1,6 +1,6 @@
 @user
 Feature: Registration from external websites
-  In order to register users without having to go through a sign up form
+  In order to make it easier for users to register
   As a user
   I want to register and sign-in using my existing account on an external website
 
@@ -34,5 +34,6 @@ Feature: Registration from external websites
   Scenario: Signed-in user tries to use an authentication already registered to another user
     Given I have previously signed in with my Twitter account @testuser
     And I have signed in with my email test+email@wayground.ca and password "password"
-    When I try to sign in with my Twitter account @testuser
+    When I note which user I am
+    And I try to register my Twitter account @testuser
     Then I should not be registered with my Twitter account @testuser

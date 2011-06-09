@@ -6,9 +6,9 @@
 # Drop in in features/support/
 
 module Rack
-	module Test
-		DEFAULT_HOST = "example.com"
-	end
+  module Test
+    DEFAULT_HOST = "example.com"
+  end
 end
 
 # Source:

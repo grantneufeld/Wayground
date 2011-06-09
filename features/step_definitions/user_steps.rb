@@ -78,10 +78,10 @@ end
 When /^(?:|I )sign up as "([^\"]*)"(?:| with password "([^\"]*)")$/ do |user_name, password|
   password = 'password' if password.blank?
   visit '/signup'
-  fill_in('email', :with => Factory.next(:email))
-  fill_in('password', :with => password)
-  fill_in('Confirm Password', :with => password) # password_confirmation
-  fill_in('name', :with => user_name)
+  fill_in('user_email', :with => Factory.next(:email))
+  fill_in('user_password', :with => password)
+  fill_in('user_password_confirmation', :with => password)
+  fill_in('user_name', :with => user_name)
   click_button('Sign Up')
 end
 
@@ -127,12 +127,12 @@ Given /^(?:|I )have my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, uid|
 	OmniAuth.config.add_mock(provider.to_sym, auth)
 end
 When /^(?:|I )(?:|try to )sign in with my ([^ ]+) account(?:| @[^ ]+)(?:| again)$/ do |provider|
-    When 'I go to the sign in page'
-    When "I follow \"Sign in with #{provider.titleize}\""
+  When 'I go to the sign in page'
+  When "I follow \"Sign in with #{provider.titleize}\""
 end
-When /^(?:|I )register my ([^ ]+) account(?:| @[^ ]+)(?:| again)$/ do |provider|
-    When "I go to the account page"
-    And "I follow \"Sign in with #{provider.titleize}\""
+When /^(?:|I )(?:|try to )register my ([^ ]+) account(?:| @[^ ]+)(?:| again)$/ do |provider|
+  be_on_account_page
+  click_link "Sign in with #{provider.titleize}"
 end
 Given /^(?:|I )have previously signed in with my Twitter account(?:| @([^ ]+))$/ do |nick|
 	nick_tag = nick.blank? ? '' : " @#{nick}"
@@ -141,33 +141,58 @@ Given /^(?:|I )have previously signed in with my Twitter account(?:| @([^ ]+))$/
 	When "I sign out"
 end
 Then /^(?:|I )should be registered with my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, nick|
-	visit '/account'
-	response_body.should match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+  be_on_account_page
+  body.should match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
 end
 Then /^(?:|I )should not be registered with my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, nick|
-	visit '/account'
-	response_body.should_not match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+  be_on_account_page
+  if @noted_user.present?
+    if body.match(/<h1>User: #{@noted_user}<\/h1>/)
+      # we’re on the account page of the user being checked
+      body.should_not match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+    else
+      body.should match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+    end
+  else
+    body.should_not match(/<a [^>]*href="[^"]+#{nick}"[^>]*>Your #{provider.titleize} account/)
+  end
 end
 
+When /^(?:|I )note which user I am$/ do
+  be_on_account_page
+  @noted_user = body.match(/<h1>User: (.+)<\/h1>/)[1]
+end
+
+def be_on_account_page
+  # some ugliness here because going through a remote host for OAuth messes up Capybara’s session tracking
+  unless current_path == '/account'
+    signin_link = find_link('My Account') rescue nil
+    if signin_link
+      click_link 'My Account'
+    else
+      visit '/account'
+    end
+  end
+end
 
 # Session
 
 Then /^(?:|I )should be signed in$/ do
-	tag = /<[a-z]+ id="usermenu" class="signed-in">/
-	if response_body.respond_to? :should
-		response_body.should match(tag)
-	else
-		assert_match(tag, response_body)
-	end
+  tag = /<[a-z]+ id="usermenu" class="signed-in">/
+  if body.respond_to? :should
+    body.should match(tag)
+  else
+    assert_match(tag, body)
+  end
 end
 
 Then /^(?:|I )should be signed out$/ do
-	tag = /<[a-z]+ id="usermenu" class="signed-out">/
-	if response_body.respond_to? :should
-		response_body.should match(tag)
-	else
-		assert_match(tag, response_body)
-	end
+  tag = /<[a-z]+ id="usermenu" class="signed-out">/
+  if body.respond_to? :should
+    body.should match(tag)
+  else
+    assert_match(tag, body)
+  end
 end
 
 #Given /^(?:|I )have signed in with "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
@@ -220,15 +245,20 @@ end
 
 # FIXME: This is some ugly monkey-patching just to simulate a failure condition in the absence of proper stubbing support.
 class User < ActiveRecord::Base
+  # a class variable to track whether we want confirm_code! to fail or not
 	@@test_fail_confirm_code = false
 	def self.test_fail_confirm_code=(val)
 		@@test_fail_confirm_code = val
 	end
+  # keep a reference to the original confirm_code! method
 	alias :test_old_confirm_code! :confirm_code!
+  # override the confirm_code! method with our testing version
 	def confirm_code!(in_code)
+    # check if we want to force failure
 		if @@test_fail_confirm_code
 			raise "failure"
 		else
+      # if not forcing failure, just pass the call to the normal confirm_code! method
 			test_old_confirm_code!(in_code)
 		end
 	end
@@ -236,12 +266,10 @@ end
 When /^(?:|I )follow the confirmation link sent to "(.*)" with a failure$/ do |email|
 	user = User.find_by_email(email)
 	User.test_fail_confirm_code = true
-	begin
-		visit "/account/confirm/#{user.confirmation_token}"
-	rescue Webrat::PageLoadError
-		# a page load error is normal here, but we’ll need to manually follow the redirect
-		visit response.location
-	end
+  visit "/account/confirm/#{user.confirmation_token}"
+  # Because of the ugliness between rack test and capybara’s default domains (example.org vs. example.com),
+  # it’s not visiting the redirect location and instead returning a weird redirect warning page.
+  click_link('redirected')
 	User.test_fail_confirm_code = false
 end
 
@@ -283,7 +311,11 @@ end
 # Actions
 
 When /^(?:|I )sign out$/ do
-  visit signout_path, :delete
+  begin
+    click_link 'Sign Out' unless current_path == '/signout'
+    click_button('Sign Out')
+  rescue Capybara::ElementNotFound
+  end
 end
 
 When /^(?:|I )request password reset link to be sent to "(.*)"$/ do |email|
@@ -307,4 +339,9 @@ end
 When /^(?:|I )return next time$/ do
 	When %{I quit the browser}
 	And %{I go to the homepage}
+end
+
+Then /^(?:|I )should see my account details$/ do
+  current_path.should match(path_to('the account page'))
+  page.should have_selector('h1', :text => 'User: ')
 end

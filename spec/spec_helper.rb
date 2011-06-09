@@ -5,6 +5,11 @@ require 'ruby-debug'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
+# To add capybara support:
+#require 'capybara/rspec'
+# Only example groups tagged with “:type => :request” will have capybara support. E.g.:
+#   describe "the thing we are doing", :type => :request do ...
+
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}

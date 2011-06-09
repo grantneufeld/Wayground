@@ -33,8 +33,8 @@ describe "versions/index.html.erb" do
 
   it "renders a list of versions" do
     render
-    rendered.should have_selector("tr>td", :content => 'My User', :count => 2)
-    rendered.should have_selector("tr>td", :content => "2000-01-02 03:04:05", :count => 2)
-    rendered.should have_selector("tr>td", :content => "Comment", :count => 2)
+    rendered.should match(/My User/)
+    rendered.should match(/2000-01-02 03:04:05/)
+    rendered.should match(/Comment/)
   end
 end

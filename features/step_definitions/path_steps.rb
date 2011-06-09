@@ -40,19 +40,12 @@ When /^(?:|I )create a custom path "([^\"]*)" that redirects to "([^\"]*)"$/ do 
   fill_in 'Redirect', :with => redirect
   click_button 'Save Path'
 end
-When /^(?:|I )try to create a custom path "([^\"]*)" that redirects to "([^\"]*)"$/ do |sitepath, redirect|
-  visit paths_path, :post, :path => {:sitepath => sitepath, :redirect => redirect}
-end
 
 When /^(?:|I )update the custom path "([^\"]*)" to "([^\"]*)"$/ do |sitepath, newpath|
   path = Path.find_by_sitepath(sitepath)
   visit edit_path_path(path)
   fill_in 'Sitepath', :with => newpath
   click_button 'Save Path'
-end
-When /^(?:|I )try to update the custom path "([^\"]*)" to "([^\"]*)"$/ do |sitepath, newpath|
-  path = Path.find_by_sitepath(sitepath)
-  visit path_path(path), :put, :path => {:sitepath => newpath}
 end
 
 When /^(?:|I )fill out the form to edit a custom path "([^\"]*)" with invalid data$/ do |sitepath|
@@ -77,7 +70,7 @@ end
 
 Then /^(?:|I )should see the default home page$/ do
   #response.should render_template("paths/default_home")
-  response.should match("<h1>New Site Installation</h1>")
+  page.should have_selector('h1', :text => 'New Site Installation')
 end
 
 Then /^(?:|I )should just be able to see the public paths for the website$/ do
@@ -87,13 +80,13 @@ Then /^(?:|I )should just be able to see the public paths for the website$/ do
   end
   total_public_paths = public_paths.count
   visit '/paths'
-  response.should have_selector("tbody>tr", :count => total_public_paths)
+  page.should have_selector("tbody>tr", :count => total_public_paths)
 end
 
 Then /^(?:|I )should be able to see the all paths for the website$/ do
   total_paths = Path.count
   visit '/paths'
-  response.should have_selector("tbody>tr", :count => total_paths)
+  page.should have_selector("tbody>tr", :count => total_paths)
 end
 
 Then /^(?:|I )should not have a custom path "([^\"]*)"$/ do |sitepath|
@@ -109,10 +102,9 @@ end
 Then /^(?:|I )should be redirected to "([^\"]*)"$/ do |redirect|
   if redirect.match /^https?:.*/
     # redirected to an url
-    response.location.should eq redirect
+    current_url.should eq redirect
   else
     # local path
-    current_path = URI.parse(current_url).path
     current_path.should match(redirect)
   end
 end

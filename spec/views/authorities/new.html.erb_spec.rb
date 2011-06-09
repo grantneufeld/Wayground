@@ -19,7 +19,6 @@ describe "authorities/new.html.erb" do
   it "renders new authority form" do
     render
 
-    # Run the generator again with the --webrat flag if you want to use webrat matchers
     assert_select "form", :action => authorities_path, :method => "post" do
       assert_select "input#authority_user_proxy", :name => "authority[user_proxy]"
       assert_select "input#authority_item", :name => "authority[item]"

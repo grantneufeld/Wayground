@@ -15,8 +15,6 @@ end
 
 Then /^(?:|I )should see the web page for "([^\"]+)"$/ do |filename|
   path = Path.find_for_path(filename)
-  page = path.item
-  within('title') do |content|
-    content.should contain(page.title)
-  end
+  the_page = path.item
+  page.should have_selector('title', :text => the_page.title)
 end
