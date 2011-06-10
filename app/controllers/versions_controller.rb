@@ -37,7 +37,7 @@ class VersionsController < ApplicationController
   end
 
   def requires_authority
-    unless @item.has_authority_to?(current_user)
+    unless @item.has_authority_for_user_to?(current_user)
       raise Wayground::AccessDenied
     end
   end

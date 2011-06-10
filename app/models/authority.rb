@@ -31,7 +31,7 @@ class Authority < ActiveRecord::Base
     where(:user_id => user.id)
   }
   scope :for_action, lambda {|action|
-    raise "invalid action “#{action}”" unless action.match(/\Acan_[a-z]+\z/)
+    raise "invalid action “#{action}”" unless action.match(/\A(can_[a-z]+|is_owner)\z/)
     where("(authorities.#{action} = ? OR authorities.is_owner = ?)", true, true)
   }
   scope :where_owner, where(:is_owner => true)
@@ -49,13 +49,13 @@ class Authority < ActiveRecord::Base
     valid_authority = nil
     # FIXME: this could be done better
     if action_type.nil?
-      user_authorities = Authority.for_user(user).for_item_or_area(item)
+      user_authorizations = Authority.for_user(user).for_item_or_area(item)
     else
-      user_authorities = Authority.for_user(user).for_item_or_area(item).for_action(action_type)
+      user_authorizations = Authority.for_user(user).for_item_or_area(item).for_action(action_type)
     end
     # try to find an authority that gives permission,
     # prioritizing an authority that identifies the user as the owner of the item
-    user_authorities.each do |authority|
+    user_authorizations.each do |authority|
       if authority.is_owner? && authority.item == item
         valid_authority = authority
         break

@@ -77,7 +77,7 @@ ActiveRecord::Base.class_eval do
         # TODO: there is probably a more efficient way to do this
         items = []
         all.each do |item|
-          items << item if item.has_authority_to?(user, action)
+          items << item if item.has_authority_for_user_to?(user, action)
         end
         items
       end
@@ -108,7 +108,7 @@ ActiveRecord::Base.class_eval do
       # TODO: there is probably a more efficient way to do this
       items = []
       all.each do |item|
-        items << item if item.has_authority_to?(user, action)
+        items << item if item.has_authority_for_user_to?(user, action)
       end
       items
     end
@@ -128,7 +128,7 @@ ActiveRecord::Base.class_eval do
   end
   #def is_authority_controlled=(value); end
 
-  def has_authority_to?(user = nil, action_type = :can_view)
+  def has_authority_for_user_to?(user = nil, action_type = :can_view)
     if action_type == :can_view && !(is_authority_restricted?)
       # anyone can view a non-controlled item
       true
@@ -157,7 +157,7 @@ module AuthorityControlled
       end
     end
 
-    def has_authority_to?(user, action_type = :can_view)
+    def has_authority_for_user_to?(user, action_type = :can_view)
       if action_type == :can_view && !(is_authority_restricted?)
         # anyone can view a non-controlled item
         true
@@ -178,7 +178,7 @@ module AuthorityControlled
       raise Wayground::WrongModelForSettingAuthority, 'set authority on the related item instead'
     end
 
-    def has_authority_to?(user, action_type = :can_view)
+    def has_authority_for_user_to?(user, action_type = :can_view)
       if action_type == :can_view && !(is_authority_restricted?)
         # anyone can view a non-controlled item
         true

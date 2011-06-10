@@ -12,8 +12,9 @@ class User < ActiveRecord::Base
 
 	# from oauth sources, so user can login from an external authenticating site
 	has_many :authentications
-	# the authorities (permissions) this user has to access items and areas
-  # (not to be confused with has_many :authorities which are the authorities other users have to access this user)
+  # WARNING: it is easy to confuse authorizations with authorities:
+  # authorizations: the Authority instances (permissions) this user has to access items and areas.
+  # authorities: the Authority instances other users have to access this user.
 	has_many :authorizations, :class_name => 'Authority', :dependent => :delete_all
 
 	before_save :encrypt_password
@@ -28,6 +29,10 @@ class User < ActiveRecord::Base
 	validates_format_of :email, :with => /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/, :allow_blank => true
 	validates_uniqueness_of :email, :case_sensitive => false, :if => :email_present?
 
+  # Returns user(s) that exactly match the string.
+  # If string is an integer, searches by user.id.
+  # If string is an email address, searches by user.email.
+  # Otherwise, searches by user.name.
   def self.find_by_string(str)
     if str.blank?
       nil
@@ -98,7 +103,7 @@ class User < ActiveRecord::Base
 
   # give the user ownership of, and full access to, the specified area
   def make_admin!(area = 'global', authorizing_user = nil)
-    authority = self.authorities.for_area(area).first
+    authority = self.authorizations.for_area(area).first
     if authority
       authority.authorized_by = authorizing_user unless authorizing_user.nil?
       authority.update_attributes!({
@@ -119,7 +124,7 @@ class User < ActiveRecord::Base
   end
 
   def set_authority_on_area(area, action_type = :can_view)
-    authority = self.authorities.for_area(area).first
+    authority = self.authorizations.for_area(area).first
     if authority
       authority.set_action!(action_type)
     else
@@ -131,7 +136,9 @@ class User < ActiveRecord::Base
     if authority
       authority.set_action!(action_type)
     else
-      self.authorizations.create!(:item => item, action_type => true)
+      authority = self.authorizations.new(action_type => true)
+      authority.item = item
+      authority.save!
     end
   end
 
