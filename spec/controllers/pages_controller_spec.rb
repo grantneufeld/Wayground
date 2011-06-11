@@ -52,21 +52,45 @@ describe PagesController do
   end
 
   describe "GET new" do
+    it "requires the user to have authority" do
+      get :new
+      response.status.should eq 403
+    end
+
     it "assigns a new page as @page" do
       set_logged_in_admin
       Page.stub(:new) { mock_page }
       get :new
       assigns(:page).should be(mock_page)
     end
+
+    it "assigns the parent page if given" do
+      set_logged_in_admin
+      parent_page = Factory.create(:page)
+      get :new, :parent => parent_page.id.to_s
+      assigns(:page).parent.should eq parent_page
+    end
   end
 
   describe "POST create" do
+    it "requires the user to have authority" do
+      post :create
+      response.status.should eq 403
+    end
+
     describe "with valid params" do
       it "assigns a newly created page as @page" do
         set_logged_in_admin
         Page.stub(:new).with({'these' => 'params'}) { mock_page(:save => true) }
         post :create, :page => {'these' => 'params'}
         assigns(:page).should be(mock_page)
+      end
+
+      it "assigns the parent page if given" do
+        set_logged_in_admin
+        parent_page = Factory.create(:page)
+        post :create, :parent => parent_page.id.to_s, :page => {:filename => 'spec_create_with_parent', :title => 'test'}
+        assigns(:page).parent.should eq parent_page
       end
 
       it "redirects to the created page" do
@@ -95,6 +119,12 @@ describe PagesController do
   end
 
   describe "GET edit" do
+    it "requires the user to have authority" do
+      test_page = Factory.create(:page)
+      get :edit, :id => test_page.id.to_s
+      response.status.should eq 403
+    end
+
     it "assigns the requested page as @page" do
       set_logged_in_admin
       Page.stub(:find).with("37") { mock_page }
@@ -104,6 +134,12 @@ describe PagesController do
   end
 
   describe "PUT update" do
+    it "requires the user to have authority" do
+      test_page = Factory.create(:page)
+      put :update, :id => test_page.id.to_s
+      response.status.should eq 403
+    end
+
     describe "with valid params" do
       it "updates the requested page" do
         set_logged_in_admin
@@ -145,6 +181,12 @@ describe PagesController do
   end
 
   describe "GET delete" do
+    it "requires the user to have authority" do
+      test_page = Factory.create(:page)
+      get :delete, :id => test_page.id.to_s
+      response.status.should eq 403
+    end
+
     it "shows a form for confirming deletion of a page" do
       set_logged_in_admin
       Page.stub(:find).with("37") { mock_page }
@@ -154,6 +196,12 @@ describe PagesController do
   end
 
   describe "DELETE destroy" do
+    it "requires the user to have authority" do
+      test_page = Factory.create(:page)
+      delete :destroy, :id => test_page.id.to_s
+      response.status.should eq 403
+    end
+
     it "destroys the requested page" do
       set_logged_in_admin
       Page.stub(:find).with("37") { mock_page }
