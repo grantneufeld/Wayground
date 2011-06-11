@@ -1,8 +1,11 @@
 # encoding: utf-8
 
 class PathsController < ApplicationController
-  before_filter :requires_authority, :except => [:sitepath, :index]
   before_filter :set_path, :except => [:sitepath, :index, :new, :create]
+  before_filter :requires_view_authority, :only => [:show]
+  before_filter :requires_create_authority, :only => [:new, :create]
+  before_filter :requires_edit_authority, :only => [:edit, :update]
+  before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_breadcrumbs, :except => [:sitepath, :index]
   before_filter :set_new, :only => [:new, :create]
   before_filter :set_edit, :only => [:edit, :update]
@@ -24,6 +27,7 @@ class PathsController < ApplicationController
     elsif @path.redirect?
       redirect_to @path.redirect
     else
+      requires_view_authority
       render_path_item(@path.item)
     end
   end
@@ -93,7 +97,6 @@ class PathsController < ApplicationController
 
   # GET /paths/1/delete
   def delete
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Content', :can_delete)
     @page_title = "Delete Custom Path: #{@path.sitepath}"
   end
 
@@ -110,14 +113,29 @@ class PathsController < ApplicationController
 
   protected
 
-  # The actions for this controller all require that the user is authorized to view Authority records.
-  def requires_authority
-    unless current_user && current_user.has_authority_for_area(Path.authority_area)
+  # The actions for this controller, except for viewing, require that the user is authorized.
+  def requires_authority(action)
+    unless (
+      (@path && @path.has_authority_for_user_to?(current_user, action)) ||
+      (current_user && current_user.has_authority_for_area(Path.authority_area, action))
+    )
       raise Wayground::AccessDenied
     end
   end
+  def requires_view_authority
+    requires_authority(:can_view)
+  end
+  def requires_create_authority
+    requires_authority(:can_create)
+  end
+  def requires_edit_authority
+    requires_authority(:can_edit)
+  end
+  def requires_delete_authority
+    requires_authority(:can_delete)
+  end
 
-  # Most of the actions for this controller receive the id of an Authority as a parameter.
+  # Most of the actions for this controller receive the id of a Path as a parameter.
   def set_path
     @path = Path.find(params[:id])
   end

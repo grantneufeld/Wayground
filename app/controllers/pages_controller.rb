@@ -95,7 +95,7 @@ class PagesController < ApplicationController
 
   protected
 
-  # The actions for this controller all require that the user is authorized to view Authority records.
+  # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
     unless current_user && (
       (@page && @page.has_authority_for_user_to?(current_user, action)) ||

@@ -183,7 +183,13 @@ module AuthorityControlled
         # anyone can view a non-controlled item
         true
       elsif user
-        Authority.user_has_for_item(user, as_authority_controlled_item, action_type)
+        item = as_authority_controlled_item
+        if item
+          Authority.user_has_for_item(user, item, action_type)
+        else
+          # if there is no inherited item, go with self
+          Authority.user_has_for_item(user, self, action_type)
+        end
       else
         false
       end

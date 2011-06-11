@@ -36,17 +36,34 @@ describe PathsController do
   end
 
   describe "GET sitepath" do
-    it "assigns @path based on the url called" do
-    end
     it "displays the default home page if the root url was called and there is no Path found" do
+      get :sitepath, {:url => '/'}
+      response.should render_template('default_home')
     end
     it "shows the 404 missing error if no Path was found and not the root url" do
+      get :sitepath, {:url => '/no/such/path'}
+      response.status.should eq 404
+      response.should render_template('missing')
     end
     it "redirects if the Path is a redirect" do
+      path = Factory.create(:path, {:redirect => '/'})
+      get :sitepath, {:url => path.sitepath}
+      response.should redirect_to('/')
     end
     it "shows the Page if the Path’s item is a Page" do
+      page = Factory.create(:page)
+      path = Factory.create(:path, {:item => page})
+      get :sitepath, {:url => path.sitepath}
+      response.status.should eq 200
+      response.should render_template('page')
+      assigns(:page).should eq page
     end
     it "shows the 501 unimplemented error if the Path’s item is not supported" do
+      set_logged_in_admin
+      item = Factory.create(:user)
+      path = Factory.create(:path, {:item => item})
+      get :sitepath, {:url => path.sitepath}
+      response.status.should eq 501
     end
   end
 
@@ -69,6 +86,11 @@ describe PathsController do
   end
 
   describe "GET new" do
+    it "requires the user to have authority" do
+      get :new
+      response.status.should eq 403
+    end
+
     it "assigns a new path as @path" do
       set_logged_in_admin
       Path.stub(:new) { mock_path }
@@ -77,16 +99,12 @@ describe PathsController do
     end
   end
 
-  describe "GET edit" do
-    it "assigns the requested path as @path" do
-      set_logged_in_admin
-      Path.stub(:find).with("37") { mock_path }
-      get :edit, :id => "37"
-      assigns(:path).should be(mock_path)
-    end
-  end
-
   describe "POST create" do
+    it "requires the user to have authority" do
+      post :create
+      response.status.should eq 403
+    end
+
     describe "with valid params" do
       it "assigns a newly created path as @path" do
         set_logged_in_admin
@@ -120,7 +138,28 @@ describe PathsController do
     end
   end
 
+  describe "GET edit" do
+    it "requires the user to have authority" do
+      path = Factory.create(:path, {:redirect => '/'})
+      get :edit, :id => path.id.to_s
+      response.status.should eq 403
+    end
+
+    it "assigns the requested path as @path" do
+      set_logged_in_admin
+      Path.stub(:find).with("37") { mock_path }
+      get :edit, :id => "37"
+      assigns(:path).should be(mock_path)
+    end
+  end
+
   describe "PUT update" do
+    it "requires the user to have authority" do
+      path = Factory.create(:path, {:redirect => '/'})
+      put :update, :id => path.id.to_s
+      response.status.should eq 403
+    end
+
     describe "with valid params" do
       it "updates the requested path" do
         set_logged_in_admin
@@ -162,6 +201,11 @@ describe PathsController do
   end
 
   describe "GET delete" do
+    it "requires the user to have authority" do
+      path = Factory.create(:path, {:redirect => '/'})
+      get :delete, :id => path.id.to_s
+      response.status.should eq 403
+    end
     it "shows a form for confirming deletion of a path" do
       set_logged_in_admin
       Path.stub(:find).with("37") { mock_path }
@@ -171,6 +215,12 @@ describe PathsController do
   end
 
   describe "DELETE destroy" do
+    it "requires the user to have authority" do
+      path = Factory.create(:path, {:redirect => '/'})
+      delete :destroy, :id => path.id.to_s
+      response.status.should eq 403
+    end
+
     it "destroys the requested path" do
       set_logged_in_admin
       Path.stub(:find).with("37") { mock_path }
