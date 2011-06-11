@@ -65,6 +65,19 @@ describe PathsController do
       get :sitepath, {:url => path.sitepath}
       response.status.should eq 501
     end
+    it "shows the 404 missing error if the Path’s item requires authority to view" do
+      page = Factory.create(:page, {:is_authority_controlled => true})
+      path = Factory.create(:path, {:item => page})
+      get :sitepath, {:url => path.sitepath}
+      response.status.should eq 404
+    end
+    it "allows an authorized user to access an authority controlled item" do
+      set_logged_in_admin
+      page = Factory.create(:page, {:is_authority_controlled => true})
+      path = Factory.create(:path, {:item => page})
+      get :sitepath, {:url => path.sitepath}
+      response.status.should eq 200
+    end
   end
 
   describe "GET index" do

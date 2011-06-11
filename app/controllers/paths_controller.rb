@@ -30,6 +30,9 @@ class PathsController < ApplicationController
       requires_view_authority
       render_path_item(@path.item)
     end
+  rescue Wayground::AccessDenied
+    # don’t reveal to unauthorized users that an item exists if it is access controlled
+    missing
   end
 
   # GET /paths
