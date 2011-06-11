@@ -229,5 +229,12 @@ describe "inherited authority model" do
     end
     it "should not allow unauthorized users to access restricted items" do
     end
+    it "should allow area-authorized users access when no item to inherit from" do
+      user = Factory.create(:user)
+      user.set_authority_on_area(INHERITED_AUTHORITY_CLASS.authority_area, :can_edit)
+      item = INHERITED_AUTHORITY_CLASS.create!(:sitepath => '/spec/authority/inherited/no_item', :redirect => '/')
+      item.has_authority_for_user_to?(user, :can_edit).should be_true
+      item.has_authority_for_user_to?(user, :can_delete).should be_false
+    end
   end
 end

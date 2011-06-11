@@ -60,14 +60,19 @@ ActiveRecord::Base.class_eval do
         def self.authority_area
           '#{option_area}'
         end"
-    elsif inherits_from.present?
-      class_eval "
-        def self.authority_area
-          self.#{inherits_from}.authority_area
-        end
-      "
     else
       # just fall back on the authority_area method inherited from ActiveRecord (defined below)
+    end
+    if inherits_from.present?
+      class_eval "
+        def authority_area
+          if self.#{inherits_from}
+            self.#{inherits_from}.authority_area
+          else
+            self.class.authority_area
+          end
+        end
+      "
     end
 
     class_eval do
