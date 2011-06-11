@@ -45,6 +45,9 @@ class Authority < ActiveRecord::Base
     end
   end
 
+  # Find an Authority that gives the +user+ permission to perform the +action_type+ on the +item+.
+  # Prefers authority instances designating the +user+ as the owner of the +item+.
+  # +action_type+:: an access_control action symbol. If +nil+, does not restrict by action. Default: +:can_view+
   def self.user_has_for_item(user, item, action_type = :can_view)
     valid_authority = nil
     # FIXME: this could be done better
@@ -59,7 +62,10 @@ class Authority < ActiveRecord::Base
       if authority.is_owner? && authority.item == item
         valid_authority = authority
         break
-      elsif authority[action_type]
+      elsif (action_type.nil? || authority[action_type]) && authority.item == item
+        # second priority is for authorities on the item
+        valid_authority = authority
+      elsif (action_type.nil? || authority[action_type]) || authority.is_owner?
         valid_authority ||= authority
       end
     end
@@ -67,9 +73,16 @@ class Authority < ActiveRecord::Base
   end
 
   # Setting the user via a string value (e.g., either an email address or id) or a User instance.
+
+  # Returns the user’s email address as a proxy string for the user, or +false+ if missing.
   def user_proxy
     self.user && self.user.email
   end
+
+  # Assigns the +user+ based on a string or User instance.
+  # If +item+ is blank, user is set to nil.
+  # If +item+ is a string matching an user email, id, or name, sets the user.
+  # If +item+ is a User instance, sets the user.
   def user_proxy=(item)
     if item.blank?
       self.user = nil
