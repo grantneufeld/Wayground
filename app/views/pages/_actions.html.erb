@@ -7,7 +7,7 @@ if !skip_view && (!(page.is_authority_restricted?) || (user && page.has_authorit
 <% end
 
 if user
-  if page.has_authority_for_user_to?(user, :can_edit)
+  if page.has_authority_for_user_to?(user, :can_update)
     %><%= link_to 'Edit', edit_page_path(page), :title => 'Make changes to the page', :class => 'action' %>
 <% end
   if page.has_authority_for_user_to?(user, :can_create)

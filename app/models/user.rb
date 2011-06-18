@@ -108,14 +108,14 @@ class User < ActiveRecord::Base
       authority.authorized_by = authorizing_user unless authorizing_user.nil?
       authority.update_attributes!({
         :is_owner => true, :can_create => true, :can_view => true,
-        :can_edit => true, :can_delete => true, :can_invite => true,
-        :can_permit => true
+        :can_update => true, :can_delete => true, :can_invite => true,
+        :can_permit => true, :can_approve => true
       })
     else
       authority = Authority.new(:area => area,
         :is_owner => true, :can_create => true, :can_view => true,
-        :can_edit => true, :can_delete => true, :can_invite => true,
-        :can_permit => true
+        :can_update => true, :can_delete => true, :can_invite => true,
+        :can_permit => true, :can_approve => true
       )
       authority.authorized_by = authorizing_user || self
       self.authorizations << authority

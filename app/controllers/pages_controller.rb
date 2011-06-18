@@ -3,7 +3,7 @@
 class PagesController < ApplicationController
   before_filter :set_page, :except => [:index, :new, :create]
   before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_edit_authority, :only => [:edit, :update]
+  before_filter :requires_update_authority, :only => [:edit, :update]
   before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_section
   before_filter :set_new_page, :only => [:new, :create]
@@ -107,8 +107,8 @@ class PagesController < ApplicationController
   def requires_create_authority
     requires_authority(:can_create)
   end
-  def requires_edit_authority
-    requires_authority(:can_edit)
+  def requires_update_authority
+    requires_authority(:can_update)
   end
   def requires_delete_authority
     requires_authority(:can_delete)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 6) do
+ActiveRecord::Schema.define(:version => 7) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -39,10 +39,11 @@ ActiveRecord::Schema.define(:version => 6) do
     t.boolean  "is_owner"
     t.boolean  "can_create"
     t.boolean  "can_view"
-    t.boolean  "can_edit"
+    t.boolean  "can_update"
     t.boolean  "can_delete"
     t.boolean  "can_invite"
     t.boolean  "can_permit"
+    t.boolean  "can_approve"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

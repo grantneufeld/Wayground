@@ -8,10 +8,11 @@ class CreateAuthorities < ActiveRecord::Migration
       t.boolean :is_owner
       t.boolean :can_create
       t.boolean :can_view
-      t.boolean :can_edit
+      t.boolean :can_update
       t.boolean :can_delete
       t.boolean :can_invite
       t.boolean :can_permit
+      t.boolean :can_approve
       t.timestamps
     end
     change_table :authorities do |t|

@@ -15,14 +15,16 @@ if item
 <%= @authority.can_create %>
 <br /><b>Can view:</b>
 <%= @authority.can_view %>
-<br /><b>Can edit:</b>
-<%= @authority.can_edit %>
+<br /><b>Can update:</b>
+<%= @authority.can_update %>
 <br /><b>Can delete:</b>
 <%= @authority.can_delete %>
 <br /><b>Can invite:</b>
 <%= @authority.can_invite %>
 <br /><b>Can permit:</b>
 <%= @authority.can_permit %>
+<br /><b>Can approve:</b>
+<%= @authority.can_approve %>
 </p>
 
 <p class="actions"><%= link_to 'Edit', edit_authority_path(@authority), :class => 'action' %></p>

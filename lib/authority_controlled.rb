@@ -148,7 +148,7 @@ end
 # Additions for classes to be set up as Authority controlled.
 module AuthorityControlled
   module InstanceMethods
-    # action_type = :can_create, :can_view, :can_edit, :can_delete, :can_invite, :can_permit
+    # action_type = :can_create, :can_view, :can_update, :can_delete, :can_invite, :can_permit, :can_approve
 
     def set_authority_for!(user, action_type)
       # check for existing authorization
@@ -177,7 +177,7 @@ module AuthorityControlled
   # Use these instead of the normal instance methods when a model is inheriting
   # its authority controls from a related model.
   module InheritInstanceMethods
-    # action_type = :can_create, :can_view, :can_edit, :can_delete, :can_invite, :can_permit
+    # action_type = :can_create, :can_view, :can_update, :can_delete, :can_invite, :can_permit, :can_approve
 
     def set_authority_for!(user, action_type)
       raise Wayground::WrongModelForSettingAuthority, 'set authority on the related item instead'

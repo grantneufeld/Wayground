@@ -9,10 +9,11 @@ describe "authorities/show.html.erb" do
     :is_owner => false,
     :can_create => false,
     :can_view => false,
-    :can_edit => false,
+    :can_update => false,
     :can_delete => false,
     :can_invite => false,
-    :can_permit => false
+    :can_permit => false,
+    :can_approve => false
     ))
   end
 
@@ -21,6 +22,7 @@ describe "authorities/show.html.erb" do
     rendered.should match(//)
     rendered.should match(//)
     rendered.should match(/Area/)
+    rendered.should match(/false/)
     rendered.should match(/false/)
     rendered.should match(/false/)
     rendered.should match(/false/)

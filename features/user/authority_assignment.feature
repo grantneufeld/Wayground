@@ -48,15 +48,15 @@ Feature: Authority assignment
     Given there is an admin user "Test Admin"
     And there is a user "Test User"
     When I sign in as "Test Admin"
-    And I add an authority for "Test User" to edit Users
-    Then "Test User" should have authority to edit Users
+    And I add an authority for "Test User" to update Users
+    Then "Test User" should have authority to update Users
 
   Scenario: an admin can add a global authority
     Given there is an admin user "Test Admin"
     And there is a user "Test User"
     When I sign in as "Test Admin"
-    And I add an authority for "Test User" to edit globally
-    Then "Test User" should have authority to edit anything
+    And I add an authority for "Test User" to update globally
+    Then "Test User" should have authority to update anything
 
   @future
   Scenario: an admin can add an item-specific authority
@@ -70,10 +70,10 @@ Feature: Authority assignment
   Scenario: an admin can modify an authority
     Given there is an admin user "Test Admin"
     And there is a user "Test User"
-    And "Test User" has authority to edit Users
+    And "Test User" has authority to update Users
     When I sign in as "Test Admin"
     And I add an authority for "Test User" to delete Users
-    Then "Test User" should have authority to edit Users
+    Then "Test User" should have authority to update Users
     And "Test User" should have authority to delete Users
 
   @future
@@ -82,10 +82,10 @@ Feature: Authority assignment
   Scenario: an admin can remove an authority
     Given there is an admin user "Test Admin"
     And there is a user "Test User"
-    And "Test User" has authority to edit Users
+    And "Test User" has authority to update Users
     When I sign in as "Test Admin"
-    And I remove the authority to edit Users from "Test User"
-    Then "Test User" should not have authority to edit Users
+    And I remove the authority to update Users from "Test User"
+    Then "Test User" should not have authority to update Users
 
 # The following is a straight copy from an incomplete project.
 # They may not all be useful or applicable now.
@@ -112,13 +112,13 @@ Feature: Authority assignment
 
   # modifying an item (page)
   @future
-  Scenario: user with no authority cannot edit a page
+  Scenario: user with no authority cannot update a page
   @future
-  Scenario: user with global authority can edit a page
+  Scenario: user with global authority can update a page
   @future
-  Scenario: user with area-specific authority can edit a page
+  Scenario: user with area-specific authority can update a page
   @future
-  Scenario: user with item-specific authority can edit a page
+  Scenario: user with item-specific authority can update a page
 
   # removing an item
   @future

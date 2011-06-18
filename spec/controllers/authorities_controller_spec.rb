@@ -115,7 +115,7 @@ describe AuthoritiesController do
   end
 
   describe "GET edit" do
-    it "blocks users without the :can_edit authority" do
+    it "blocks users without the :can_update authority" do
       set_logged_in_user
       get :edit, :id => "37"
       response.status.should eq 403 # "403 Forbidden"
@@ -129,7 +129,7 @@ describe AuthoritiesController do
   end
 
   describe "PUT update" do
-    it "blocks users without the :can_edit authority" do
+    it "blocks users without the :can_update authority" do
       set_logged_in_user
       put :update, :id => "37", :authority => {'these' => 'params'}
       response.status.should eq 403 # "403 Forbidden"

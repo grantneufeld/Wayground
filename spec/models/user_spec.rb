@@ -276,18 +276,18 @@ describe User do
 	describe "#set_authority_on_area" do
 	  it "should create an authority" do
 	    user = Factory.create(:user)
-	    user.set_authority_on_area('global', :can_edit)
-	    user.has_authority_for_area('global', :can_edit).should be_true
+	    user.set_authority_on_area('global', :can_update)
+	    user.has_authority_for_area('global', :can_update).should be_true
     end
     it "should ammend an existing authority" do
 	    user = Factory.create(:user)
 	    authority = Factory.build(:authority, :user => user, :area => 'global', :can_view => true)
       user.authorizations << authority
 	    user.save!
-	    user.set_authority_on_area('global', :can_edit)
+	    user.set_authority_on_area('global', :can_update)
 	    authority = user.authorizations.for_area('global').first
 	    authority.can_view?.should be_true
-	    authority.can_edit?.should be_true
+	    authority.can_update?.should be_true
     end
   end
 
@@ -299,17 +299,17 @@ describe User do
 		end
 	  it "should create an authority" do
       @user.authorizations.delete_all
-      @user.set_authority_on_item(@item, :can_edit)
-      @item.has_authority_for_user_to?(@user, :can_edit).should be_true
+      @user.set_authority_on_item(@item, :can_update)
+      @item.has_authority_for_user_to?(@user, :can_update).should be_true
     end
     it "should ammend an existing authority" do
 	    authority = Factory.build(:authority, :user => @user, :item => @item, :can_view => true)
       @user.authorizations << authority
 	    @user.save!
-	    @user.set_authority_on_item(@item, :can_edit)
+	    @user.set_authority_on_item(@item, :can_update)
 	    authority = @user.authorizations.for_item(@item).first
 	    authority.can_view?.should be_true
-	    authority.can_edit?.should be_true
+	    authority.can_update?.should be_true
     end
   end
 
@@ -318,7 +318,7 @@ describe User do
       @admin = Factory.create(:user)
       @user = Factory.create(:user)
       @auth_content = Factory.create(:authority, {:user => @user, :area => 'Content', :is_owner => true})
-      @auth_user = Factory.create(:authority, {:user => @user, :area => 'User', :can_edit => true})
+      @auth_user = Factory.create(:authority, {:user => @user, :area => 'User', :can_update => true})
       @auth_global = Factory.create(:authority, {:user => @user, :area => 'global', :can_view => true})
     end
     it "should default to the view authority for the area" do
@@ -329,11 +329,11 @@ describe User do
     end
     it "should return the authority for the area if the user is the owner" do
       @user.has_authority_for_area('Content', :is_owner).should == @auth_content
-      @user.has_authority_for_area('Content', :can_edit).should == @auth_content
+      @user.has_authority_for_area('Content', :can_update).should == @auth_content
     end
     it "should return the authority for the area if it authorizes the action" do
-      @user.has_authority_for_area('User', :can_edit).should == @auth_user
-      @user.has_authority_for_area('global', :can_edit).should be_nil
+      @user.has_authority_for_area('User', :can_update).should == @auth_user
+      @user.has_authority_for_area('global', :can_update).should be_nil
     end
     it "should return the global authority if there isn’t one for the specified area" do
       @user.has_authority_for_area('User', :can_view).should == @auth_global

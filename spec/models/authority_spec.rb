@@ -17,10 +17,11 @@ describe Authority do
         :is_owner => false,
         :can_create => false,
         :can_view => false,
-        :can_edit => false,
+        :can_update => false,
         :can_delete => false,
         :can_invite => false,
-        :can_permit => false
+        :can_permit => false,
+        :can_approve => false
       }
     end
 
@@ -88,7 +89,7 @@ describe Authority do
       # create a bunch of authorities
       Factory.create(:authority, {:user => @item_user, :item => @item1, :is_owner => true})
       Factory.create(:authority, {:user => @item_user, :item => @item2, :can_delete => true})
-      Factory.create(:authority, {:user => @item_user, :area => 'Content', :can_edit => true})
+      Factory.create(:authority, {:user => @item_user, :area => 'Content', :can_update => true})
       Factory.create(:authority, {:user => @item_user, :area => 'global', :can_view => true})
       #@item_user.reload
     end

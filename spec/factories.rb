@@ -45,10 +45,11 @@ Factory.define :owner_authority, :parent => :authority do |f|
 	f.is_owner { true }
 	f.can_create { true }
 	f.can_view { true }
-	f.can_edit { true }
+	f.can_update { true }
 	f.can_delete { true }
 	f.can_invite { true }
 	f.can_permit { true }
+	f.can_approve { true }
 end
 
 # Requires being called with a value for either :item or :redirect

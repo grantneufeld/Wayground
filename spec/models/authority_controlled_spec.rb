@@ -31,19 +31,19 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       NO_AUTHORITY_CLASS.new.has_authority_for_user_to?.should be_true
     end
     it "should not allow users to change models that are not set as authority_controlled, without authority" do
-      NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_edit).should be_false
+      NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_update).should be_false
     end
     it "should refer to authority_area authorities for change actions when not set as authority_controlled" do
       item = Factory.create(:authority, :area => 'test')
       user = Factory.create(:user)
-      a = Factory.create(:authority, :user => user, :area => 'Authority', :can_edit => true)
-      item.has_authority_for_user_to?(user, :can_edit).should be_true
+      a = Factory.create(:authority, :user => user, :area => 'Authority', :can_update => true)
+      item.has_authority_for_user_to?(user, :can_update).should be_true
     end
     it "should fall back to global authorities for change actions when not set as authority_controlled" do
       item = Factory.create(:authority, :area => 'test')
       user = Factory.create(:user)
-      a = Factory.create(:authority, :user => user, :area => 'global', :can_edit => true)
-      item.has_authority_for_user_to?(user, :can_edit).should be_true
+      a = Factory.create(:authority, :user => user, :area => 'global', :can_update => true)
+      item.has_authority_for_user_to?(user, :can_update).should be_true
     end
   end
   describe ".allowed_for_user" do
@@ -72,11 +72,11 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
     describe "nil user, non-view action" do
       it "should return no items for models that are not authority_controlled" do
         Factory.create(:authentication)
-        NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_edit).size.should eq 0
+        NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size.should eq 0
       end
       it "should return no items for models that are authority_controlled" do
         Factory.create(:page)
-        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_edit).size.should eq 0
+        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size.should eq 0
       end
     end
     describe "authorized user" do
@@ -85,13 +85,13 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
         Path.delete_all
         Factory.create(:page, :is_authority_controlled => true)
         page = Factory.create(:page, :is_authority_controlled => true)
-        user = Factory.create(:authority, :item => page, :can_edit => true).user
-        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(user, :can_edit).size.should eq 1
+        user = Factory.create(:authority, :item => page, :can_update => true).user
+        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
       end
       it "should return all items user has authority for for non-authority-controlled models" do
         auth = Factory.create(:authentication)
-        user = Factory.create(:authority, :item => auth, :can_edit => true).user
-        NO_AUTHORITY_CLASS.allowed_for_user(user, :can_edit).size.should eq 1
+        user = Factory.create(:authority, :item => auth, :can_update => true).user
+        NO_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
       end
     end
   end
@@ -155,10 +155,10 @@ describe "authority_controlled class" do
     it "should extend an existing authority" do
       item = Factory.create(:user)
       user = Factory.create(:user)
-      Factory.create(:authority, :user => user, :item => item, :can_edit => true)
+      Factory.create(:authority, :user => user, :item => item, :can_update => true)
       item.set_authority_for!(user, :can_delete)
       authority = item.has_authority_for_user_to?(user, :can_delete)
-      (authority.can_edit && authority.can_delete).should be_true
+      (authority.can_update && authority.can_delete).should be_true
     end
   end
   describe ".authority_area" do
@@ -199,13 +199,13 @@ describe "authority_controlled class" do
       Factory.create(:authority, :user => @viewer, :item => @item, :can_view => true)
     end
     it "should have authority for the owner" do
-      @item.has_authority_for_user_to?(@owner, :can_edit).should be_true
+      @item.has_authority_for_user_to?(@owner, :can_update).should be_true
     end
     it "should have authority for a viewer" do
       @item.has_authority_for_user_to?(@viewer).should be_true
     end
-    it "should not allow a viewer to edit" do
-      @item.has_authority_for_user_to?(@viewer, :can_edit).should be_false
+    it "should not allow a viewer to update" do
+      @item.has_authority_for_user_to?(@viewer, :can_update).should be_false
     end
     it "should not allow an unauthorized user" do
       unauthorized = Factory.create(:user)
@@ -231,9 +231,9 @@ describe "inherited authority model" do
     end
     it "should allow area-authorized users access when no item to inherit from" do
       user = Factory.create(:user)
-      user.set_authority_on_area(INHERITED_AUTHORITY_CLASS.authority_area, :can_edit)
+      user.set_authority_on_area(INHERITED_AUTHORITY_CLASS.authority_area, :can_update)
       item = INHERITED_AUTHORITY_CLASS.create!(:sitepath => '/spec/authority/inherited/no_item', :redirect => '/')
-      item.has_authority_for_user_to?(user, :can_edit).should be_true
+      item.has_authority_for_user_to?(user, :can_update).should be_true
       item.has_authority_for_user_to?(user, :can_delete).should be_false
     end
   end

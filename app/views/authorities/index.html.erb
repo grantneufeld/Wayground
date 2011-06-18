@@ -8,10 +8,11 @@
 <th>Is owner</th>
 <th>Can create</th>
 <th>Can view</th>
-<th>Can edit</th>
+<th>Can update</th>
 <th>Can delete</th>
 <th>Can invite</th>
 <th>Can permit</th>
+<th>Can approve</th>
 <th>Actions</th>
 </tr></thead>
 <tbody>
@@ -23,10 +24,11 @@
 <td><%= authority.is_owner %></td>
 <td><%= authority.can_create %></td>
 <td><%= authority.can_view %></td>
-<td><%= authority.can_edit %></td>
+<td><%= authority.can_update %></td>
 <td><%= authority.can_delete %></td>
 <td><%= authority.can_invite %></td>
 <td><%= authority.can_permit %></td>
+<td><%= authority.can_approve %></td>
 <td><%= link_to 'Show', authority %>
 • <%= link_to 'Edit', edit_authority_path(authority) %>
 • <%= link_to 'Destroy', authority, :confirm => 'Are you sure?', :method => :delete %></td>

@@ -14,13 +14,14 @@ end
 
 def action_type_from_label(action_label)
   case action_label.downcase
-  when 'create' then :can_create
-  when 'view'   then :can_view
-  when 'edit'   then :can_edit
-  when 'delete' then :can_delete
-  when 'invite' then :can_invite
-  when 'permit' then :can_permit
-  when 'owner'  then :is_owner
+  when 'create'  then :can_create
+  when 'view'    then :can_view
+  when 'update'  then :can_update
+  when 'delete'  then :can_delete
+  when 'invite'  then :can_invite
+  when 'permit'  then :can_permit
+  when 'approve' then :can_approve
+  when 'owner'   then :is_owner
   else
     raise 'invalid action label specified'
   end
