@@ -18,8 +18,8 @@ gem 'rake', '>= 0.9.2'
 group :development, :test do
   gem 'capybara'
   gem 'chronic', '>= 0.2.3'
-  gem 'cucumber', '>= 0.10.2' #'0.10.0'
-  gem 'cucumber-rails', '>= 0.4.1' #'0.3.2'
+  gem 'cucumber', '>= 1.0.0'
+  gem 'cucumber-rails', '>= 1.0.0'
   gem 'database_cleaner', '>= 0.6.7'
   gem 'launchy' # for opening saved html files in browser for review
   gem 'metric_fu', '>= 2.0.1', :require => false
