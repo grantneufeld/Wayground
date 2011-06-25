@@ -26,6 +26,11 @@ Wayground::Application.routes.draw do
     delete 'delete' => 'pages#destroy', :on => :member
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
+  resources :documents do
+    get 'delete', :on => :member
+    delete 'delete' => 'documents#destroy', :on => :member
+  end
+  get 'download/:id/*filename' => 'documents#download', :as => :download
 
   root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }
   get '*url' => "paths#sitepath"

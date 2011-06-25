@@ -1,0 +1,17 @@
+<h1>Documents</h1>
+
+<table>
+<% @documents.each do |document|
+  %><tr class="document_item"><td><%= icon_for_content_type(document.content_type) %><%= document.filename %> (<%= document.size %> bytes)
+<%
+  if document.description?
+    %><br /><%= document.description %>
+<% end
+%></td><td><%= link_to 'Download', "/download/#{document.id}/#{document.filename}", :class => 'action' %>
+<%= link_to 'Details', document, :class => 'action' %>
+<%= link_to 'Edit', edit_document_path(document), :class => 'action' %>
+<%= link_to 'Delete', delete_document_path(document), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %></td></tr>
+<% end -%>
+</table>
+
+<p class="actions"><%= link_to 'New Document', new_document_path, :class => 'action' %></p>

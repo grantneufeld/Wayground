@@ -1,0 +1,19 @@
+<%= form_for(@document, :html => {:multipart => true}) do |f| %>
+<%= show_errors(@document) %>
+<table><tbody>
+<% if @document.new_record? -%>
+<tr><th><%= f.label :file %></th>
+  <td><%= f.file_field :file %></td></tr>
+<% end -%>
+<tr><th><%= f.label :custom_filename %></th>
+  <td><%= f.text_field :custom_filename %>
+  <br />You can override the filename for the document here.
+  <br />You may want to do that to ensure it is a usable name.
+  <br />It must be only letters, numbers, dashes and underscores, with an optional extension (e.g., “.txt”).
+  <br />Note that it must not contain spaces, accented characters or other punctuation.</td></tr>
+<tr><th><%= f.label :description %></th>
+  <td><%= f.text_field :description, :size => 72 %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td><%= f.submit 'Save Document' %></td></tr></tfoot>
+</table>
+<% end %>

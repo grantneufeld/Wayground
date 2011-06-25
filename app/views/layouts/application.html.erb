@@ -79,6 +79,7 @@ unless @page_description.blank?
 <li<%= @site_section == 'Pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
 <li<%= @site_section == 'Events' ? ' class="current"'.html_safe : '' %>><a href="">Events</a></li>
 <li<%= @site_section == 'Admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
+<li<%= @site_section == 'Documents' ? ' class="current"'.html_safe : '' %>><%= link_to 'Documents', documents_path %></li>
 </ul>
 <%
 if @site_breadcrumbs && @site_breadcrumbs.size > 0

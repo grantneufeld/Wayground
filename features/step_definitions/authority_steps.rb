@@ -69,12 +69,11 @@ Given /^(?:|I )have signed in as an admin$/ do
   When %{I sign in with email #{user.email} and password "#{user.password}"}
 end
 
-Given /^(?:|I am )authorized to manage web pages$/ do
+Given /^(?:|I am )authorized to (?:manage web pages|upload documents)$/ do
   user = Factory.create(:user, :password => 'password')
   user.set_authority_on_area('Content', :is_owner)
   When %{I sign in with email #{user.email} and password "#{user.password}"}
 end
-
 
 
 # Assigning Authorities
