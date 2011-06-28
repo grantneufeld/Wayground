@@ -8,8 +8,7 @@ describe "documents/edit.html.erb" do
       :filename => "a.txt",
       :size => 1,
       :content_type => "text/plain",
-      :description => "A document.",
-      :data => "a"
+      :description => "A document."
     ))
   end
 

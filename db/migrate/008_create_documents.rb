@@ -12,7 +12,6 @@ class CreateDocuments < ActiveRecord::Migration
       t.string :content_type, :null => false # mimetype
       t.string :charset, :limit => 31 # just for text formats to specify the encoding such as ASCII, UTF-8,…
       t.string :description, :limit => 1023
-      t.binary :data, :null => false, :limit => 31.megabytes
       t.timestamps
     end
     change_table :documents do |t|

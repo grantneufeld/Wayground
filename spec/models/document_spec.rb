@@ -234,6 +234,31 @@ describe Document do
     end
   end
 
+  context "#data" do
+    it "should return the document’s Datastore.data" do
+      doc = Document.new
+      doc.datastore = Datastore.new(:data => 'abc')
+      doc.data.should eq('abc')
+    end
+    it "should return nil if the document does not have a Datastore yet" do
+      Document.new.data.should be_nil
+    end
+  end
+  context "#data=" do
+    it "should create a Datastore for the document if none yet" do
+      doc = Document.new
+      doc.data = 'abc'
+      doc.datastore.data.should eq('abc')
+    end
+    it "should update the document’s Datastore" do
+      doc = Document.new
+      datastore = Datastore.new(:data => 'abc')
+      doc.datastore = datastore
+      doc.data = 'def'
+      datastore.data.should eq 'def'
+    end
+  end
+
   describe "#assign_headers" do
     before(:all) do
       @create = Time.new(2009,6,7,8,9,10,0).getutc

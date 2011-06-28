@@ -13,6 +13,8 @@ class Document < ActiveRecord::Base
   # The Path object that lets the document be accessed via a sitepath (such as “/somestuff/filename”).
   # Will be nil if the document does not have a container_path.
   has_one :path, :as => :item, :validate => true, :dependent => :destroy
+  # the actual data of the file is stored in a separate table
+  has_one :datastore
 
   before_save :determine_size
   before_save :generate_path
@@ -109,6 +111,18 @@ class Document < ActiveRecord::Base
   end
   def custom_filename
     nil
+  end
+
+  def data
+    if datastore
+      datastore.data
+    else
+      nil
+    end
+  end
+  def data=(data)
+    self.datastore ||= Datastore.new()
+    self.datastore.data = data
   end
 
   # Set the response headers for when this document is to be the content/body of the HTTP response.

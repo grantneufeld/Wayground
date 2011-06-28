@@ -9,8 +9,7 @@ describe "documents/index.html.erb" do
         :filename => "Filename",
         :size => 1,
         :content_type => "Content Type",
-        :description => "Description",
-        :data => "Data"
+        :description => "Description"
       ),
       stub_model(Document,
         :user => nil,
@@ -18,8 +17,7 @@ describe "documents/index.html.erb" do
         :filename => "Filename",
         :size => 1,
         :content_type => "Content Type",
-        :description => "Description",
-        :data => "Data"
+        :description => "Description"
       )
     ])
   end

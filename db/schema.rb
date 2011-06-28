@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 8) do
+ActiveRecord::Schema.define(:version => 9) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -53,16 +53,22 @@ ActiveRecord::Schema.define(:version => 8) do
   add_index "authorities", ["item_id", "item_type", "user_id"], :name => "item"
   add_index "authorities", ["user_id", "item_id", "item_type", "area"], :name => "user_map", :unique => true
 
+  create_table "datastores", :force => true do |t|
+    t.integer "document_id"
+    t.binary  "data",        :limit => 32505856, :null => false
+  end
+
+  add_index "datastores", ["document_id"], :name => "document_id"
+
   create_table "documents", :force => true do |t|
     t.integer  "user_id"
     t.integer  "path_id"
-    t.boolean  "is_authority_controlled",                     :default => false, :null => false
-    t.string   "filename",                :limit => 127,                         :null => false
-    t.integer  "size",                                                           :null => false
-    t.string   "content_type",                                                   :null => false
+    t.boolean  "is_authority_controlled",                 :default => false, :null => false
+    t.string   "filename",                :limit => 127,                     :null => false
+    t.integer  "size",                                                       :null => false
+    t.string   "content_type",                                               :null => false
     t.string   "charset",                 :limit => 31
     t.string   "description",             :limit => 1023
-    t.binary   "data",                    :limit => 32505856,                    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
