@@ -4,7 +4,7 @@
 # This controller is always routed as a sub-controller to an item class (e.g., pages).
 class VersionsController < ApplicationController
   before_filter :set_item
-  before_filter :requires_authority
+  before_filter :requires_view_authority
 
   # GET /versions
   # GET /versions.xml
@@ -36,7 +36,7 @@ class VersionsController < ApplicationController
     @item = Page.find(params[:page_id])
   end
 
-  def requires_authority
+  def requires_view_authority
     unless @item.has_authority_for_user_to?(current_user)
       raise Wayground::AccessDenied
     end

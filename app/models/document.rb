@@ -31,6 +31,36 @@ class Document < ActiveRecord::Base
   # require data to be set, but allow it to be empty
   validates_presence_of :data, :unless => Proc.new {|doc| doc.data == ''}
 
+  def self.find_for_user(user)
+    if user.nil?
+      # if anonymous user, don’t show any authority controlled documents
+      self.where(:is_authority_controlled => false)
+    elsif user.has_authority_for_area(authority_area)
+      # if user has admin view authority on the Content area, show all documents
+      self.all
+    else
+      # need to check if user has authority for non-public documents
+      self.
+        # check against the authorities table
+        joins("LEFT OUTER JOIN authorities " +
+          # match the authorities for the documents
+          "ON authorities.item_type = 'Document' AND authorities.item_id = documents.id " +
+          # match authorities for the specified user
+          "AND authorities.user_id = #{user.id} " +
+          # where the user is the owner, or has authoritiy to view the document
+          "AND (authorities.is_owner = 't' OR authorities.can_view)"
+        ).
+        where(
+          # show public, not authority-controlled, documents
+          "documents.is_authority_controlled = ? " +
+          # and documents posted by the user
+          "OR documents.user_id = ? " +
+          # and documents that have an appropriate matching authority for the user
+          "OR authorities.id IS NOT NULL", false, user.id
+        )
+    end
+  end
+
   def determine_size
     self.size = (data.nil? ? 0 : data.size)
   end

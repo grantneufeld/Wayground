@@ -47,8 +47,9 @@ describe Version do
 
   describe ".versions_before" do
     it "should restrict searches to versions that occurred before a given datetime" do
-      first = Factory.create(:version, :edited_at => 5.days.ago)
-      item = first.item
+      item = Factory.create(:page)
+      item.versions.delete_all
+      first = Factory.create(:version, :item => item, :edited_at => 5.days.ago)
       second = Factory.create(:version, :item => item, :edited_at => 4.days.ago)
       Factory.create(:version, :item => item, :edited_at => 2.days.ago)
       Factory.create(:version, :item => item, :edited_at => 1.days.ago)
@@ -89,26 +90,32 @@ describe Version do
 
   describe "#previous" do
     it "should return nothing if this is the first version" do
-      version = Factory.create(:version)
+      version = Factory.create(:page).versions.first
       Version.find(version.id).previous.should be_nil
     end
     it "should return the first version if this is the second" do
-      first_version = Factory.create(:version, :edited_at => 1.week.ago)
-      version = Factory.create(:version, :item => first_version.item, :edited_at => 1.day.ago)
+      item = Factory.create(:page)
+      item.versions.delete_all
+      first_version = Factory.create(:version, :item => item, :edited_at => 1.week.ago)
+      version = Factory.create(:version, :item => item, :edited_at => 1.day.ago)
       version.previous.should eq first_version
     end
     it "should return the previous version when this version is in the middle" do
-      first_version = Factory.create(:version, :edited_at => 2.weeks.ago)
-      second_version = Factory.create(:version, :item => first_version.item, :edited_at => 2.weeks.ago)
-      version = Factory.create(:version, :item => first_version.item, :edited_at => 1.week.ago)
-      last_version = Factory.create(:version, :item => first_version.item, :edited_at => 1.day.ago)
+      item = Factory.create(:page)
+      item.versions.delete_all
+      first_version = Factory.create(:version, :item => item, :edited_at => 2.weeks.ago)
+      second_version = Factory.create(:version, :item => item, :edited_at => 2.weeks.ago)
+      version = Factory.create(:version, :item => item, :edited_at => 1.week.ago)
+      last_version = Factory.create(:version, :item => item, :edited_at => 1.day.ago)
       version.previous.should eq second_version
     end
     it "should return the previous version when this version is the last of many" do
-      first_version = Factory.create(:version, :edited_at => 2.weeks.ago)
-      second_version = Factory.create(:version, :item => first_version.item, :edited_at => 2.weeks.ago)
-      third_version = Factory.create(:version, :item => first_version.item, :edited_at => 1.week.ago)
-      version = Factory.create(:version, :item => first_version.item, :edited_at => 1.day.ago)
+      item = Factory.create(:page)
+      item.versions.delete_all
+      first_version = Factory.create(:version, :item => item, :edited_at => 2.weeks.ago)
+      second_version = Factory.create(:version, :item => item, :edited_at => 2.weeks.ago)
+      third_version = Factory.create(:version, :item => item, :edited_at => 1.week.ago)
+      version = Factory.create(:version, :item => item, :edited_at => 1.day.ago)
       version.previous.should eq third_version
     end
   end
@@ -133,9 +140,11 @@ describe Version do
       version.is_current?.should be_true
     end
     it "should be false if this is not the latest version" do
-      version = Factory.create(:version, :edited_at => 2.weeks.ago)
-      middle_version = Factory.create(:version, :item => version.item, :edited_at => 1.week.ago)
-      new_version = Factory.create(:version, :item => version.item, :edited_at => 1.day.ago)
+      item = Factory.create(:page)
+      item.versions.delete_all
+      version = Factory.create(:version, :item => item, :edited_at => 2.weeks.ago)
+      middle_version = Factory.create(:version, :item => item, :edited_at => 1.week.ago)
+      new_version = Factory.create(:version, :item => item, :edited_at => 1.day.ago)
       middle_version.is_current?.should be_false
     end
   end

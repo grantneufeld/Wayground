@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'factory_girl'
 
 # GLOBAL SEQUENCES
@@ -72,6 +73,7 @@ Factory.define :page do |f|
 end
 
 Factory.define :document do |f|
+  f.user { Factory(:user) }
   f.sequence(:filename) {|n| "factory_document_#{n}.txt"}
   #f.size {4} # should be auto-set by Document model, based on self.data
   f.content_type {'text/plain'}
@@ -79,8 +81,8 @@ Factory.define :document do |f|
   f.data {'data'}
 end
 
+# item must be supplied
 Factory.define :version do |f|
-  f.item { Factory(:page) }
   f.user { Factory(:user) }
   f.edited_at { (rand(100).hours.ago) }
   f.title { 'Factory Version' }

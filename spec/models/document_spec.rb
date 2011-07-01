@@ -105,6 +105,35 @@ describe Document do
     end
   end
 
+  describe ".find_for_user" do
+    before(:all) do
+      User.delete_all
+      Document.delete_all
+      Authority.delete_all
+      @admin = Factory.create(:user)
+      @admin.make_admin!
+      @public_doc = Factory.create(:document, :filename => 'public')
+      @admin_doc = Factory.create(:document, :filename => 'admin', :is_authority_controlled => true)
+      @user_doc = Factory.create(:document, :filename => 'user', :is_authority_controlled => true)
+      @user = @user_doc.user
+      @controlled_doc = Factory.create(:document, :filename => 'controlled', :is_authority_controlled => true)
+      @user.set_authority_on_item(@controlled_doc)
+    end
+    it "should find everything for admins" do
+      Document.find_for_user(@admin).should include(@public_doc, @admin_doc, @user_doc, @user_doc)
+    end
+    it "should exclude documents the user doesn’t have authority to view" do
+      docs = Document.find_for_user(@user)
+      docs.should include(@public_doc, @user_doc, @user_doc)
+      docs.should_not include(@admin_doc)
+    end
+    it "should exclude all authority controlled documents for anonymous users" do
+      docs = Document.find_for_user(nil)
+      docs.should include(@public_doc)
+      docs.should_not include(@admin_doc, @user_doc, @user_doc)
+    end
+  end
+
   describe "#determine_size" do
     it "should set the size to the size of the data" do
       document = Document.new()

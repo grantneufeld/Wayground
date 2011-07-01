@@ -7,20 +7,19 @@ describe VersionsController do
     Page.delete_all
     Path.delete_all
     Version.delete_all
-    @version = Factory.create(:version)
-    @page_id = @version.item.id
+    @page = Factory.create(:page)
+    @version = @page.versions.first
   end
 
   describe "GET index" do
     it "assigns all versions as @versions" do
-      get :index, :page_id => @page_id
+      get :index, :page_id => @page.id
       assigns(:versions).should eq(@version.item.versions)
     end
     it "restricts access for versions of items that require authorization to authorized users" do
-      version = Factory.create(:version)
-      page = version.item
+      page = Factory.create(:page, :is_authority_controlled => true)
+      version = page.versions.first
       user = version.user
-      page.update_attributes!(:is_authority_controlled => true)
       Factory.create(:owner_authority, :item => page, :user => user)
   		controller.stub!(:current_user).and_return(user)
       get :index, :page_id => page.id
@@ -35,7 +34,7 @@ describe VersionsController do
 
   describe "GET show" do
     it "assigns the requested version as @version" do
-      get :show, :id => @version.id, :page_id => @page_id
+      get :show, :id => @version.id, :page_id => @page.id
       assigns(:version).should eq(@version)
     end
   end

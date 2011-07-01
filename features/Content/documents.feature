@@ -32,3 +32,7 @@ Feature: Documents (files)
     Given I have uploaded a document "sample.txt"
     When I delete the document "sample.txt"
     Then there should not be a document "sample.txt"
+
+  Scenario: User tries to access a document without authority
+    Given a document "private.txt" requiring access authority
+    Then I should not be able to download the document file "private.txt"
