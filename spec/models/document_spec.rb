@@ -105,32 +105,33 @@ describe Document do
     end
   end
 
-  describe ".find_for_user" do
+  describe ".for_user" do
     before(:all) do
       User.delete_all
       Document.delete_all
       Authority.delete_all
       @admin = Factory.create(:user)
       @admin.make_admin!
-      @public_doc = Factory.create(:document, :filename => 'public')
+      @user = Factory.create(:user)
       @admin_doc = Factory.create(:document, :filename => 'admin', :is_authority_controlled => true)
-      @user_doc = Factory.create(:document, :filename => 'user', :is_authority_controlled => true)
-      @user = @user_doc.user
       @controlled_doc = Factory.create(:document, :filename => 'controlled', :is_authority_controlled => true)
       @user.set_authority_on_item(@controlled_doc)
+      @public_doc = Factory.create(:document, :filename => 'public')
+      @user_doc = Factory.create(:document, :filename => 'user', :is_authority_controlled => true, :user => @user)
     end
     it "should find everything for admins" do
-      Document.find_for_user(@admin).should include(@public_doc, @admin_doc, @user_doc, @user_doc)
+      Document.for_user(@admin).order(:filename).should eq [
+        @admin_doc, @controlled_doc, @public_doc, @user_doc
+      ]
     end
     it "should exclude documents the user doesn’t have authority to view" do
-      docs = Document.find_for_user(@user)
-      docs.should include(@public_doc, @user_doc, @user_doc)
-      docs.should_not include(@admin_doc)
+      Document.for_user(@user).order(:filename).should eq [@controlled_doc, @public_doc, @user_doc]
     end
     it "should exclude all authority controlled documents for anonymous users" do
-      docs = Document.find_for_user(nil)
-      docs.should include(@public_doc)
-      docs.should_not include(@admin_doc, @user_doc, @user_doc)
+      Document.for_user(nil).order(:filename).should eq [@public_doc]
+    end
+    it "should return a subset of all possible results when limit set" do
+      Document.for_user(@admin).order(:filename).limit(2).offset(1).should eq [@controlled_doc,@public_doc]
     end
   end
 
