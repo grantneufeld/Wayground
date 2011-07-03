@@ -83,7 +83,7 @@ describe PathsController do
   describe "GET index" do
     it "assigns all paths as @paths" do
       set_logged_in_admin
-      Path.stub(:all) { [mock_path] }
+      controller.stub(:paginate).and_return([mock_path])
       get :index
       assigns(:paths).should eq([mock_path])
     end

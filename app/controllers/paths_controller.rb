@@ -39,7 +39,7 @@ class PathsController < ApplicationController
   # GET /paths.xml
   def index
     @page_title = 'Custom Paths'
-    @paths = Path.allowed_for_user(current_user)
+    @paths = paginate(Path.for_user(current_user))
 
     respond_to do |format|
       format.html # index.html.erb

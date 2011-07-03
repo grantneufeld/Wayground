@@ -36,7 +36,7 @@ describe PagesController do
 
   describe "GET index" do
     it "assigns all pages as @pages" do
-      Page.stub(:all) { [mock_page] }
+      controller.stub(:paginate).with(Page).and_return([mock_page])
       get :index
       assigns(:pages).should eq([mock_page])
     end

@@ -14,6 +14,12 @@ describe "paths/index.html.erb" do
         :redirect => "/redirect/2"
       )
     ])
+    assign(:max, 5)
+    assign(:page, 3)
+    assign(:offset, 10)
+    assign(:default_max, 20)
+    assign(:source_total, 12)
+    assign(:selected_total, 2)
   end
 
   it "renders a list of paths" do

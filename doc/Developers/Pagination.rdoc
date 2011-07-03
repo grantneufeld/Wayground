@@ -1,0 +1,21 @@
+= Pagination for Controllers and Views
+
+To avoid problems with trying to return too many instances of a model, we use pagination to keep things down to manageable numbers. This is mostly used in controller `index` methods.
+
+== Controller Pagination
+
+There is one method available to controllers. It should be called in place of directly loading records for a model. It should be called before rendering views as it sets up a number of values that the pagination view helpers are dependant upon.
+
+`paginate`
+It takes one required parameter, `source`, which must be an ActiveRecord-type relation (e.g., AREL) or ActiveRecord class. For example: `@documents = paginate(Document.for_user(current_user))` where `for_user` is a scope on the `Document` class.
+
+== View Pagination
+
+Two helper methods are available to views. Both require that the pagination setup, done by `ApplicationController#paginate`, be done before they are called.
+
+`show_pagination_header`
+Renders a block that shows information about the pagination (e.g., “Showing 10 of 42 items.”). Normally used above a table or list of items from the pagination.
+It takes one optional parameter, `item_plural`, which should be the pluralized name of the type of item (e.g., “documents”).
+
+`show_pagination_selector`
+Renders the pagination selector (links to numbered pages), if there is more than one page.

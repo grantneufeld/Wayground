@@ -27,6 +27,54 @@ class Path < ActiveRecord::Base
     where({:sitepath => (matches ? matches[1] : searchpath)})
   }
   scope :in_order, order(:sitepath)
+  scope :for_user, lambda { |user|
+    # this is going to get ugly...
+    # Basically, going to need a join for each type of model that uses paths.
+    # Will also have to add a line to each of the where clauses, too.
+    # And extend the authorities table join.
+    # Sigh.
+    if user.nil?
+      # if anonymous user, don’t allow any authority controlled items
+      self.
+        joins(
+          # use parent item for linking to authorities
+          "LEFT OUTER JOIN pages " +
+          # match the parent item for the item
+          "ON #{table_name}.item_type = 'Page' AND pages.id = #{table_name}.item_id "
+        ).
+        where("pages.is_authority_controlled = ? OR #{table_name}.item_type IS NULL", false)
+    elsif user.has_authority_for_area(authority_area)
+      # if user has admin view authority on the Content area, allow all documents
+    else
+      # need to check if user has authority for non-public documents
+      # allow non-authority controlled documents, and documents the user has authority for
+      self.
+        joins(
+          # use parent item for linking to authorities
+          "LEFT OUTER JOIN pages " +
+          # match the parent item for the item
+          "ON #{table_name}.item_type = 'Page' AND pages.id = #{table_name}.item_id "
+        ).
+        joins(sanitize_sql_array([
+          # check against the authorities table
+          "LEFT OUTER JOIN authorities " +
+          # match the authorities for the parent item
+          "ON authorities.item_type = 'Page' AND authorities.item_id = pages.id " +
+          # match authorities for the specified user
+          "AND authorities.user_id = ?",
+          user.id
+        ])).
+        where([
+          # show all items without a parent item
+          "#{table_name}.item_id IS NULL " +
+          # show public, not authority-controlled, items
+          "OR pages.is_authority_controlled = ? " +
+          # and items that have an appropriate matching authority for the user
+          "OR (authorities.is_owner = ? OR authorities.can_view = ?)",
+          false, true, true
+        ])
+    end
+  }
 
   def self.home
     self.where(:sitepath => '/').first

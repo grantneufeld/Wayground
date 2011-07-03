@@ -20,10 +20,20 @@ describe "documents/index.html.erb" do
         :description => "Description"
       )
     ])
+    assign(:max, 2)
+    assign(:page, 2)
+    assign(:offset, 2)
+    assign(:default_max, 20)
+    assign(:source_total, 7)
+    assign(:selected_total, 2)
   end
 
   it "renders a list of documents" do
     render
+    # pagination
+    rendered.should match(/Showing 2 of 7 documents\./)
+    rendered.should match(/Pages:\s*<a[^>]*>First<\/a>\s*<a[^>]*>1<\/a>\s*<a[^>]*>2<\/a>\s*<a[^>]*>3<\/a>\s*<a[^>]*>4<\/a>\s*<a[^>]*>Last<\/a>/)
+    # content
     #<p class="document_item">Filename (1 bytes)
     #<br />Description
     #<a href="...">Show</a>

@@ -31,6 +31,27 @@ class ApplicationController < ActionController::Base
     @browser_nocache = true
   end
 
+  # Setup the pagination variables based on the params passed into the controller and the source class.
+  # Returns the paginated items.
+  # source: Must be an ActiveRecord-type relation (e.g., AREL) or ActiveRecord class.
+  # @default_max: Normally defaults to 20, but can be overridden before calling this method.
+  # @max: The maximum number of entries per page.
+  # @pagenum: The page number (starting with page 1).
+  # @source_total: The total number of items available from the source, without pagination.
+  # @selected_total: The number of items being displayed on the page.
+  def paginate(source)
+    @default_max ||= 20
+    @max = params[:max].to_i if params[:max].present?
+    @max ||= @default_max
+    @pagenum = params[:page].to_i if params[:page].present?
+    @pagenum ||= 1
+    @pagenum = 1 if @pagenum < 1
+    @source_total = source.count
+    items = source.limit(@max).offset((@pagenum - 1) * @max).all
+    @selected_total = items.size
+    items
+  end
+
 
   private
 

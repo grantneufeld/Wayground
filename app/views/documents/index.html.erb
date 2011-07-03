@@ -1,5 +1,6 @@
 <h1>Documents</h1>
-
+<%= show_pagination_header('documents') %>
+<%= show_pagination_selector %>
 <table>
 <% @documents.each do |document|
   %><tr class="document_item"><td><%= icon_for_content_type(document.content_type) %><%= document.filename %> (<%= document.size %> bytes)

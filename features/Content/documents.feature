@@ -36,3 +36,12 @@ Feature: Documents (files)
   Scenario: User tries to access a document without authority
     Given a document "private.txt" requiring access authority
     Then I should not be able to download the document file "private.txt"
+
+  Scenario: User views the list of documents
+    Given there are 42 documents
+    Given a document "private.txt" requiring access authority
+    When I go to the documents index
+    Then I should see 20 of 42 documents
+    And there should be 3 pages of documents
+    When I follow "Last"
+    Then I should see 2 of 42 documents

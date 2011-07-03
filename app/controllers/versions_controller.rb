@@ -9,7 +9,7 @@ class VersionsController < ApplicationController
   # GET /versions
   # GET /versions.xml
   def index
-    @versions = @item.versions
+    @versions = paginate(@item.versions)
     @page_title = "Revision history of “#{@item.title}”"
 
     respond_to do |format|

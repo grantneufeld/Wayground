@@ -1,0 +1,19 @@
+<%
+# This relies on the ApplicationController#paginate method having been called before this view is processed.
+
+if @source_total > @selected_total
+  %><p class="pagination">Pages:
+<% total_pages = (@source_total.to_f / @max).ceil
+path_params = {}
+path_params[:max] = @max unless @max == @default_max
+ -%>
+<%= link_to 'First', documents_path(path_params), {:class => 'action'} %>
+<%  # TODO: limit the number of page links to show (e.g, no more than ten)
+  (1..total_pages).each do |page_num|
+    %><%= link_to page_num, documents_path(path_params.merge(:page => (page_num == 1 ? nil : page_num))), {:class => 'action'} %>
+<%
+  end
+ %>
+<%= link_to 'Last', documents_path(path_params.merge(:page => total_pages)), {:class => 'action'} %>
+</p>
+<% end -%>

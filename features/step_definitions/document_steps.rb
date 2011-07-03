@@ -8,6 +8,18 @@ Given /^a document "([^\"]*)" requiring access authority$/ do |filename|
   Factory.create(:document, :filename => filename, :is_authority_controlled => true)
 end
 
+Given /^there are (\d+) documents$/ do |required_count|
+  required_count = required_count.to_i
+  doc_total = Document.for_user(nil).count
+  if doc_total < required_count
+    # add documents until we have the required count
+    (required_count - doc_total).times { Factory.create(:document) }
+  elsif doc_total > required_count
+    # remove documents until we have the required count
+    (doc_total - required_count).times { Document.for_user(nil).first.destroy }
+  end
+end
+
 Given /^there is no document "([^\"]*)" in the system$/ do |filename|
   docs = Document.where(:filename => filename)
   return if docs.nil?
@@ -67,3 +79,19 @@ end
 Then /^the document "([^\"]*)" should have the description "([^\"]*)"$/ do |filename, description|
   Document.where(:filename => filename).first.description.should eq description
 end
+
+Then /^I should see (\d+) of (\d+) documents$/ do |selected_total, source_total|
+  selected_total = selected_total.to_i
+  source_total = source_total.to_i
+  page.should have_selector('tr.document_item', :count => selected_total)
+  page.should have_selector('p.pagination_header',
+    :text => "Showing #{selected_total} of #{source_total} documents."
+  )
+end
+
+Then /^there should be (\d+) pages of documents$/ do |page_count|
+  page_count = page_count.to_i
+  page.should have_selector("p.pagination > a.action", :text => page_count.to_s)
+  page.should_not have_selector("p.pagination > a.action", :text => (page_count + 1).to_s)
+end
+

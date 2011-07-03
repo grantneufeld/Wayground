@@ -18,4 +18,33 @@ describe ApplicationController do
 		  controller.send(:current_user).should eq nil
 	  end
 	end
+
+  context "#missing" do
+  end
+
+  context "#unauthorized" do
+  end
+
+  context "#browser_dont_cache" do
+    it "should set the @browser_nocache variable" do
+      controller.send(:browser_dont_cache)
+      assigns[:browser_nocache].should be_true
+    end
+  end
+
+  context "#paginate" do
+    it "should setup a bunch of variables" do
+      controller.params ||= {}
+      controller.params.merge!({:page => '2', :max => '10'})
+      Document.delete_all
+      user = Factory.create(:document).user
+      11.times { Factory.create(:document, :user => user) }
+      controller.send(:paginate, Document)
+      assigns[:default_max].should eq 20
+      assigns[:max].should eq 10
+      assigns[:pagenum].should eq 2
+      assigns[:source_total].should eq 12
+      assigns[:selected_total].should eq 2
+    end
+  end
 end

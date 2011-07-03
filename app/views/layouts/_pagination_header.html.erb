@@ -1,0 +1,7 @@
+<%
+# This relies on the ApplicationController#paginate method having been called before this view is processed.
+# item_plural: The pluralized name of the type of item (e.g., “documents”).
+
+item_plural ||= 'items'
+-%>
+<p class="pagination_header">Showing <%= @selected_total %> of <%= @source_total %> <%= item_plural %>.</p>

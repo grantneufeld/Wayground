@@ -17,8 +17,7 @@ class DocumentsController < ApplicationController
   # GET /documents
   # GET /documents.xml
   def index
-    # TODO: use pagination for the list of documents instead of just one massive dump
-    @documents = Document.for_user(current_user).all
+    @documents = paginate(Document.for_user(current_user))
     @page_title = 'Documents Index'
 
     respond_to do |format|

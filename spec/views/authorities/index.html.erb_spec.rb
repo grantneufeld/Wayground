@@ -30,6 +30,12 @@ describe "authorities/index.html.erb" do
       :can_approve => false
       )
       ])
+      assign(:max, 11)
+      assign(:page, 3)
+      assign(:offset, 22)
+      assign(:default_max, 13)
+      assign(:source_total, 24)
+      assign(:selected_total, 2)
     end
 
     it "renders a list of authorities" do

@@ -63,14 +63,26 @@ describe DocumentsController do
   end
 
   describe "GET index" do
-    it "assigns all viewable documents as @documents" do
+    before(:all) do
       Document.delete_all
       Authority.delete_all
+      # create 11 public documents and 1 private
       document = Factory.create(:document)
       # create a document that should nto be viewable without authority
-      Factory.create(:document, :is_authority_controlled => true)
-      get :index
-      assigns(:documents).should eq([document])
+      @private_doc = Factory.create(:document, :is_authority_controlled => true)
+      10.times { Factory.create(:document, :user => document.user) }
+    end
+    it "assigns all viewable documents as @documents" do
+      get :index, {:max => '100'}
+      assigns(:documents).should_not include @private_doc
+    end
+    it "assigns the total number of viewable documents as @documents_total" do
+      get :index, {:max => '100'}
+      assigns(:source_total).should be 11
+    end
+    it "assigns the documents based on the pagination parameters" do
+      get :index, {:page => '2', :max => '10'}
+      assigns(:documents).size.should be 1
     end
   end
 

@@ -36,6 +36,9 @@ module NavigationHelpers
     when /^"(\/.*)"$/
       $1
 
+    when /^the documents index$/
+      '/documents'
+
     # the following are examples using path_to_pickle
 
     when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page

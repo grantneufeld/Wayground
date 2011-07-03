@@ -36,7 +36,7 @@ describe AuthoritiesController do
     end
     it "assigns all authorities as @authorities" do
       set_logged_in_admin
-      Authority.stub(:all) { [mock_admin_authority] }
+      controller.stub(:paginate).and_return([mock_admin_authority])
       get :index
       assigns(:authorities).should eq([mock_admin_authority])
     end

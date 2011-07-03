@@ -20,6 +20,12 @@ describe "pages/index.html.erb" do
         :content => "<p>Some content.</p>"
       )
     ])
+    assign(:max, 7)
+    assign(:page, 5)
+    assign(:offset, 28)
+    assign(:default_max, 23)
+    assign(:source_total, 30)
+    assign(:selected_total, 2)
   end
 
   it "renders a list of pages" do

@@ -29,6 +29,12 @@ describe "versions/index.html.erb" do
         #:content_type => "Content Type"
       )
     ])
+    assign(:max, 4)
+    assign(:page, 4)
+    assign(:offset, 12)
+    assign(:default_max, 25)
+    assign(:source_total, 14)
+    assign(:selected_total, 2)
   end
 
   it "renders a list of versions" do

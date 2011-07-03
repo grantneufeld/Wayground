@@ -13,7 +13,7 @@ class PagesController < ApplicationController
   # GET /pages.xml
   def index
     @page_title = 'Page Index'
-    @pages = Page.all
+    @pages = paginate(Page)
 
     respond_to do |format|
       format.html # index.html.erb

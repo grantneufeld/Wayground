@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe Path do
@@ -58,7 +59,7 @@ describe Path do
   end
 
   describe "scope" do
-    describe ":for_sitepath" do
+    context ":for_sitepath" do
       before(:all) do
         Path.delete_all
         @path = Factory.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
@@ -73,13 +74,44 @@ describe Path do
         Path.for_sitepath('/valid_sitepath/').should eq [@path]
       end
     end
-    describe ":home" do
+    context ":home" do
       it "should return nil when no home path record exists" do
         Path.home.should be_nil
       end
       it "should return the home Path" do
         home = Factory.create(:path, :sitepath => '/', :redirect => '/home')
         Path.home.should eq home
+      end
+    end
+    context ":for_user" do
+      before(:all) do
+        User.delete_all
+        Page.delete_all
+        Path.delete_all
+        Authority.delete_all
+        @admin = Factory.create(:user)
+        @admin.make_admin!
+        @user = Factory.create(:user)
+        @admin_path = Factory.create(:page, :filename => 'admin', :is_authority_controlled => true).path
+        @controlled_path = Factory.create(:page, :filename => 'controlled', :is_authority_controlled => true).path
+        @user.set_authority_on_item(@controlled_path.item)
+        @public_path = Factory.create(:redirect_path, :sitepath => '/public')
+        @user_path = Factory.create(:page, :filename => 'user', :is_authority_controlled => true, :editor => @user).path
+        @user.set_authority_on_item(@user_path.item)
+      end
+      it "should find everything for admins" do
+        Path.for_user(@admin).order(:sitepath).should eq [
+          @admin_path, @controlled_path, @public_path, @user_path
+        ]
+      end
+      it "should exclude paths the user doesn’t have authority to view" do
+        Path.for_user(@user).order(:sitepath).should eq [@controlled_path, @public_path, @user_path]
+      end
+      it "should exclude all authority controlled paths for anonymous users" do
+        Path.for_user(nil).order(:sitepath).should eq [@public_path]
+      end
+      it "should return a subset of all possible results when limit set" do
+        Path.for_user(@admin).order(:sitepath).limit(2).offset(1).should eq [@controlled_path,@public_path]
       end
     end
   end

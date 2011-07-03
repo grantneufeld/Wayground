@@ -12,7 +12,7 @@ class AuthoritiesController < ApplicationController
   # GET /authorities
   # GET /authorities.xml
   def index
-    @authorities = Authority.all
+    @authorities = paginate(Authority)
     @page_title = "Authorities"
 
     respond_to do |format|
