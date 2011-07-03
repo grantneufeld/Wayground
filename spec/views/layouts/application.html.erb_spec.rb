@@ -161,7 +161,7 @@ describe "layouts/application.html.erb" do
         rendered.should match(/<li[^>]*>Signed in as Test Tester/)
       end
       it "should link to the user’s account" do
-        rendered.should match(/<a href="\/account">My Account<\/a>/)
+        rendered.should match(/<a href="\/account">Your Account<\/a>/)
       end
       it "should have a Sign Out link" do
         rendered.should match(/<a href="\/signout">Sign Out<\/a>/)
