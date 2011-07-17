@@ -4,7 +4,6 @@
 # Accessed by users as the singular resource “/account”,
 # and by admins as the plural resources “/users”.
 class UsersController < ApplicationController
-  # TODO: remove :root once we get a real root page
   before_filter :set_user, :except => [:new, :create]
   before_filter :set_site_location, :except => [:show]
   before_filter :cant_be_signed_in, :only => [:new, :create]
@@ -22,8 +21,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      session[:user_id] = @user.id
-      if @user.authorizations.count == 1
+      cookies[:remember_token] = @user.remember_token_hash
+      if @user.admin?
         # an authority was created along with the user, so they must be an admin
         notice = "You are now registered as an administrator for this site."
       else

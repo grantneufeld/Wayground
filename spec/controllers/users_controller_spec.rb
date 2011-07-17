@@ -85,7 +85,7 @@ describe UsersController do
 			post 'create', :user => {:email => 'test+new@wayground.ca',
 				:password => 'password', :password_confirmation => 'password'
 			}
-			(session[:user_id] > 0).should be_true
+			cookies['remember_token'].should match /^.+\/[0-9]+$/
 		end
 	end
 

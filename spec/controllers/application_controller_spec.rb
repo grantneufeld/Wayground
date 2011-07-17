@@ -1,23 +1,24 @@
 require 'spec_helper'
 
 describe ApplicationController do
-	describe "current_user" do
-		# use controller.send(:current_user) to access the protected method
-		it "should return nil when user is not signed-in" do
-			session[:user_id] = nil
-			controller.send(:current_user).should be_nil
-		end
-		it "should return the user when signed-in" do
-			mock_user = mock_model(User, {:id => 123})
-			User.stub(:find).and_return(mock_user)
-			session[:user_id] = 123
-			controller.send(:current_user).id.should eq 123
-		end
-		it "should clear the session user_id if user not found" do
-		  session[:user_id] = 987
-		  controller.send(:current_user).should eq nil
-	  end
-	end
+  context "#current_user" do
+    # use controller.send(:current_user) to access the protected method
+    it "should return nil when user is not signed-in" do
+      request.cookies['remember_token'] = nil
+      controller.send(:current_user).should be_nil
+    end
+    it "should return the user when signed-in" do
+      mock_user = mock_model(User, {:id => 123, :remember_token_hash => 'test/123', :matches_token_hash? => true})
+      User.stub(:find).and_return(mock_user)
+      request.cookies['remember_token'] = 'test/123'
+      controller.send(:current_user).id.should eq 123
+    end
+    it "should clear the remember token cookie if user not found" do
+      User.stub(:find).with(987).and_raise(ActiveRecord::RecordNotFound)
+      request.cookies['remember_token'] = 'test/987'
+      controller.send(:current_user).should be_nil
+    end
+  end
 
   context "#missing" do
   end

@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
 
 	before_save :encrypt_password
 	before_create :generate_email_confirmation_token
+  before_create :generate_remember_token
   after_create :first_user_is_admin
 	
 	validates_presence_of :password, :on => :create, :if => :local_authentication_required?
@@ -95,6 +96,36 @@ class User < ActiveRecord::Base
 			return false
 		end
 	end
+
+  # REMEMBER ME
+
+  # Generate a unique token to be used to remember the user for future sessions.
+  def generate_remember_token
+    begin
+      self.remember_token = SecureRandom.urlsafe_base64
+    end while User.exists?(:remember_token => self.remember_token)
+  end
+
+  # Generate a secure hash, based on the remember token and user id, for use in cookies.
+  def remember_token_hash
+    if remember_token.blank?
+      generate_remember_token
+      save!
+    end
+    Digest::SHA1.hexdigest([remember_token,id].join('—')) + "/#{id}"
+  end
+
+  # Determines whether the given token_hash correctly identifies this user
+  def matches_token_hash?(token_hash)
+    token_hash == remember_token_hash
+  end
+
+  # AUTHORITIES
+
+  # Shortcut for determining if the user has global authority.
+  def admin?
+    has_authority_for_area('global', :is_owner)
+  end
 
   # The first user created is automatically an admin.
   def first_user_is_admin

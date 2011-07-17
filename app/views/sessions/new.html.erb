@@ -5,6 +5,7 @@
 <table><tbody>
 <tr><th><%= label_tag :email %></th><td><%= email_field_tag :email, params[:email] %></td></tr>
 <tr><th><%= label_tag :password %></th><td><%= password_field_tag :password %></td></tr>
+<tr><th></th><td><%= check_box_tag :remember_me, 1, params[:remember_me] %><%= label_tag :remember_me %></td></tr>
 </tbody>
 <tfoot><tr><th></th><td><%= submit_tag "Sign In" %></td></tr></tfoot>
 </table>

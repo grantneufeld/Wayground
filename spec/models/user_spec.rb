@@ -204,6 +204,63 @@ describe User do
 		end
 	end
 
+  # REMEMBER ME
+
+  context '#generate_remember_token' do
+    it "should create a unique token" do
+      user = Factory.new(:user)
+      user.generate_remember_token
+      user.save!
+      user.remember_token.present?.should be_true
+    end
+  end
+
+  context "#remember_token_hash" do
+    it "should produce a hash from the remember_token and user id" do
+      user = User.new
+      user.generate_remember_token
+      user.id = 123
+      user.remember_token_hash.should match /^.+\/123/
+    end
+    it "should generate a remember_token if blank" do
+      user = Factory.create(:user)
+      user.remember_token = nil
+      user.remember_token_hash
+      user.remember_token.present?.should be_true
+    end
+  end
+
+  context "#matches_token_hash?" do
+    it "should clear the token" do
+      user = User.new
+      user.generate_remember_token
+      token = user.remember_token_hash
+      user.matches_token_hash?(token).should be_true
+    end
+  end
+
+
+  # AUTHORITIES
+
+  context "#admin?" do
+    before(:all) do
+      @user = Factory.create(:user)
+    end
+    it "should be true for a user with global is_owner authority" do
+      @user.make_admin!
+      @user.admin?.should be_true
+    end
+    it "should not be true for a user with global, but not is_owner, authority" do
+      @user.authorities.delete_all
+      @user.set_authority_on_area('global', :can_view)
+      @user.admin?.should_not be_true
+    end
+    it "should not be true for a regular user" do
+      @user.authorities.delete_all
+      @user.admin?.should_not be_true
+    end
+  end
+
   describe "#first_user_is_admin" do
     before(:each) do
       Authority.delete_all

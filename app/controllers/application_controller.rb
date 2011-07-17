@@ -56,9 +56,21 @@ class ApplicationController < ActionController::Base
   private
 
   def current_user
-    user_id = session[:user_id]
-    @current_user ||= User.find(user_id) if user_id
+    unless @current_user
+      token = cookies[:remember_token]
+      if token
+        token_parsed = token.match(/\/([0-9]+)$/)
+        if token_parsed
+          user_id = token_parsed[1].to_i
+          user = User.find(user_id)
+          @current_user = user if user.matches_token_hash?(token)
+        end
+      end
+    end
   rescue ActiveRecord::RecordNotFound
-    session[:user_id] = nil
+    nil
+  ensure
+    cookies.delete(:remember_token) unless @current_user
+    return @current_user
   end
 end
