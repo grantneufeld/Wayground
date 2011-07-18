@@ -6,7 +6,7 @@
 # * git
 # * Ruby Gems
 # - cucumber
-# - metrical
+# - metric_fu
 # - rspec
 # - simple_cov
 #
@@ -23,8 +23,8 @@ fi
 
 echo "Running test suites..."
 rm coverage/resultset.yml
-rake spec
-rake cucumber
+bundle exec rake spec
+bundle exec rake cucumber
 
 # the following requires simple_cov to be configured to generate the coverage/percentage.txt file.
 if cat coverage/percentage.txt | grep -q "^100\.0*$" ; then
@@ -38,8 +38,8 @@ else
 fi
 
 # report on the code quality
-echo "Generating Metrical reports..."
-rake metrics:all
+echo "Generating Metric Fu reports..."
+bundle exec rake metrics:all
 open tmp/metric_fu/output/index.html
 echo ""
 
