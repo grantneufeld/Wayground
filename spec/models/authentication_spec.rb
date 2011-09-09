@@ -18,7 +18,6 @@ describe Authentication do
 		end
 		before(:each) do
 			@authentication = Factory.build(:authentication)
-			#debugger
 			@authentication.save!
 			@auth = {'provider' => @authentication.provider, 'uid' => @authentication.uid}
 		end
