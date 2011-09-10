@@ -1,20 +1,19 @@
 # encoding: utf-8
 
-# Storage of a data file.
-# Note that the data table is currently set to restrict files to 31 megabytes in size.
+# Metadata for a data file. (The actual file data is kept in Datastore.)
 class Document < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content'
-  attr_accessible :file, :custom_filename, :description, :is_authority_controlled
+  attr_accessible :file, :custom_filename, :description, :is_authority_controlled, :data
 
+  # the actual data of the file is stored in a separate table
+  belongs_to :datastore
   # The user who uploaded the document. May be nil if the system generated the document.
   belongs_to :user
-  # The optional Path that contains this document. If absent, document is at “/filename”.
-  belongs_to :container_path, :class_name => "Path", :foreign_key => "path_id"
+  # The optional Path that contains this document.
+  belongs_to :container_path, :class_name => "Path"
   # The Path object that lets the document be accessed via a sitepath (such as “/somestuff/filename”).
   # Will be nil if the document does not have a container_path.
   has_one :path, :as => :item, :validate => true, :dependent => :destroy
-  # the actual data of the file is stored in a separate table
-  has_one :datastore
 
   before_save :determine_size
   before_save :generate_path
@@ -29,7 +28,7 @@ class Document < ActiveRecord::Base
   validates_format_of :content_type, :with => /^[a-z\-]+\/[a-z\+\-]+$/,
     :message => "is not a valid content type"
   # require data to be set, but allow it to be empty
-  validates_presence_of :data, :unless => Proc.new {|doc| doc.data == ''}
+  validates_presence_of :datastore, :unless => Proc.new {|doc| doc.data == ''}
 
   # TODO: try to figure out a way to genericize the for_user scope so it can come from the authority_controlled library instead
   scope :for_user, lambda { |user|
@@ -165,7 +164,6 @@ class Document < ActiveRecord::Base
       'Content-Type' => content_type
     })
     # set Cache-control to “private/public, max-age=?, no-transform” where max-age is in seconds
-    cache_params = {:extras => ['no-transform']}
     if is_authority_restricted?
       cache_params = {:max_age => 30.minutes, :public => false}
     else

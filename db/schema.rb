@@ -54,15 +54,13 @@ ActiveRecord::Schema.define(:version => 9) do
   add_index "authorities", ["user_id", "item_id", "item_type", "area"], :name => "user_map", :unique => true
 
   create_table "datastores", :force => true do |t|
-    t.integer "document_id"
-    t.binary  "data",        :limit => 32505856, :null => false
+    t.binary "data", :limit => 133169152, :null => false
   end
 
-  add_index "datastores", ["document_id"], :name => "document_id"
-
   create_table "documents", :force => true do |t|
+    t.integer  "datastore_id"
+    t.integer  "container_path_id"
     t.integer  "user_id"
-    t.integer  "path_id"
     t.boolean  "is_authority_controlled",                 :default => false, :null => false
     t.string   "filename",                :limit => 127,                     :null => false
     t.integer  "size",                                                       :null => false
@@ -73,8 +71,9 @@ ActiveRecord::Schema.define(:version => 9) do
     t.datetime "updated_at"
   end
 
+  add_index "documents", ["container_path_id", "filename"], :name => "pathname", :unique => true
+  add_index "documents", ["datastore_id"], :name => "data"
   add_index "documents", ["filename"], :name => "file"
-  add_index "documents", ["path_id", "filename"], :name => "pathname", :unique => true
   add_index "documents", ["user_id", "filename"], :name => "userfile"
 
   create_table "pages", :force => true do |t|
@@ -104,13 +103,15 @@ ActiveRecord::Schema.define(:version => 9) do
 
   create_table "users", :force => true do |t|
     t.string   "email"
-    t.string   "password_hash",        :limit => 128
+    t.string   "password_hash",          :limit => 128
     t.string   "name"
-    t.boolean  "is_verified_realname",                :default => false, :null => false
-    t.boolean  "email_confirmed",                     :default => false, :null => false
-    t.string   "confirmation_token",   :limit => 128
-    t.string   "remember_token",       :limit => 128
-    t.string   "filename",             :limit => 63
+    t.boolean  "is_verified_realname",                  :default => false, :null => false
+    t.boolean  "email_confirmed",                       :default => false, :null => false
+    t.string   "confirmation_token",     :limit => 128
+    t.string   "remember_token",         :limit => 128
+    t.string   "password_reset_token",   :limit => 128
+    t.datetime "password_reset_sent_at"
+    t.string   "filename",               :limit => 63
     t.string   "location"
     t.text     "about"
     t.datetime "created_at"
@@ -119,6 +120,7 @@ ActiveRecord::Schema.define(:version => 9) do
 
   add_index "users", ["email"], :name => "email", :unique => true
   add_index "users", ["filename"], :name => "filename", :unique => true
+  add_index "users", ["password_reset_token"], :name => "password_reset_token", :unique => true
   add_index "users", ["remember_token"], :name => "remember_token", :unique => true
 
   create_table "versions", :force => true do |t|

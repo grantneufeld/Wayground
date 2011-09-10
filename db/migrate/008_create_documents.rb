@@ -1,11 +1,12 @@
 # encoding: utf-8
 
-# Used to store data files
+# Used to store the metadata for a data file.
 class CreateDocuments < ActiveRecord::Migration
   def self.up
     create_table :documents do |t|
+      t.belongs_to :datastore # the actual data of the file
+      t.belongs_to :container_path # optional Path containing this document (sitepath = '/container/filename')
       t.belongs_to :user
-      t.belongs_to :path
       t.boolean :is_authority_controlled, :null => false, :default => false
       t.string :filename, :null => false, :limit => 127
       t.integer :size, :null => false
@@ -15,8 +16,9 @@ class CreateDocuments < ActiveRecord::Migration
       t.timestamps
     end
     change_table :documents do |t|
+      t.index [:datastore_id], :name => 'data'
       t.index [:user_id, :filename], :name=>'userfile'
-      t.index [:path_id, :filename], :name=>'pathname', :unique => true
+      t.index [:container_path_id, :filename], :name=>'pathname', :unique => true
       t.index [:filename], :name=>'file'
     end
   end

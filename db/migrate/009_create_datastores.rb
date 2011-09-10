@@ -1,11 +1,8 @@
+# Storage of raw file data.
 class CreateDatastores < ActiveRecord::Migration
   def self.up
     create_table :datastores do |t|
-      t.belongs_to :document
-      t.binary :data, :null => false, :limit => 31.megabytes
-    end
-    change_table :datastores do |t|
-      t.index [:document_id], :name=>'document_id'
+      t.binary :data, :null => false, :limit => 127.megabytes
     end
   end
 
