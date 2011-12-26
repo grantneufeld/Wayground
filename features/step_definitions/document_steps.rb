@@ -29,8 +29,8 @@ Given /^there is no document "([^\"]*)" in the system$/ do |filename|
 end
 
 Given /^I have uploaded a document "([^\"]*)"$/ do |filename|
-  Given %{I am authorized to upload documents}
-  When %{I upload a document "#{filename}"}
+  step %{I am authorized to upload documents}
+  step %{I upload a document "#{filename}"}
 end
 
 # IMPORTANT: filename must be a file in spec/fixtures/files

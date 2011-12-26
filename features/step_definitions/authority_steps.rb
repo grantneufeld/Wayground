@@ -66,13 +66,13 @@ end
 Given /^(?:|I )have signed in as an admin$/ do
   user = Factory.create(:user, :password => 'password')
   user.make_admin!
-  When %{I sign in with email #{user.email} and password "#{user.password}"}
+  step %{I sign in with email #{user.email} and password "#{user.password}"}
 end
 
 Given /^(?:|I am )authorized to (?:manage web pages|upload documents)$/ do
   user = Factory.create(:user, :password => 'password')
   user.set_authority_on_area('Content', :is_owner)
-  When %{I sign in with email #{user.email} and password "#{user.password}"}
+  step %{I sign in with email #{user.email} and password "#{user.password}"}
 end
 
 
@@ -116,8 +116,8 @@ When /^(?:|I )(?:|try to )view the ([A-Za-z]+) "([^\"]+)"$/ do |class_name, labe
 end
 
 Then /^(?:|I )should see the authorities index$/ do
-  Then 'I should see "Authorities" within "title"'
-  Then 'I should see "List of Authorities" within "h1"'
+  step 'I should see "Authorities" within "title"'
+  step 'I should see "List of Authorities" within "h1"'
 end
 
 
@@ -141,7 +141,7 @@ end
 
 Then /^(?:|I )should be denied access$/ do
   #status_code.should eq 403
-  Then 'I should see "Unauthorized" within "title"'
+  step 'I should see "Unauthorized" within "title"'
 end
 
 

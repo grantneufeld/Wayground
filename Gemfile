@@ -12,6 +12,8 @@ gem 'capistrano', :require => false #, '2.5.21'
 
 gem 'bcrypt-ruby' #, '2.1.4'
 gem 'omniauth', '>= 0.2.4'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
 
 gem 'rake', '>= 0.9.2'
 
@@ -37,7 +39,7 @@ group :test do
   gem 'autotest-fsevent', '>= 0.2.4'
   gem 'autotest-growl', '>= 0.2.9'
   gem 'autotest-rails', '>= 4.1.0'
-  gem 'factory_girl', '>= 1.3.3'
-  gem 'factory_girl_rails', '>= 1.0.1'
+  gem 'factory_girl', '>= 2.3.2'
+  gem 'factory_girl_rails', '>= 1.4.0'
   gem 'timecop', '>= 0.3.5'
 end

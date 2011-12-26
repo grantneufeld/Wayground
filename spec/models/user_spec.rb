@@ -208,7 +208,7 @@ describe User do
 
   context '#generate_remember_token' do
     it "should create a unique token" do
-      user = Factory.new(:user)
+      user = Factory.build(:user)
       user.generate_remember_token
       user.save!
       user.remember_token.present?.should be_true
