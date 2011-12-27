@@ -118,7 +118,7 @@ class PagesController < ApplicationController
     @site_section = 'Pages'
   end
 
-  # Most of the actions for this controller receive the id of an Authority as a parameter.
+  # Most of the actions for this controller receive the id of a Page as a parameter.
   def set_page
     @page = Page.find(params[:id])
   end

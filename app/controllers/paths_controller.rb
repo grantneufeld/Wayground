@@ -14,7 +14,6 @@ class PathsController < ApplicationController
   def sitepath
     sitepath = params[:url]
     @path = Path.find_for_path(sitepath)
-
     if @path.nil?
       if sitepath == '/'
         respond_to do |format|
