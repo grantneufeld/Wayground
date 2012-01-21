@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 9) do
+ActiveRecord::Schema.define(:version => 10) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -76,6 +76,22 @@ ActiveRecord::Schema.define(:version => 9) do
   add_index "documents", ["datastore_id"], :name => "data"
   add_index "documents", ["filename"], :name => "file"
   add_index "documents", ["user_id", "filename"], :name => "userfile"
+
+  create_table "external_links", :force => true do |t|
+    t.integer  "item_id",                                       :null => false
+    t.string   "item_type",                                     :null => false
+    t.boolean  "is_source",                  :default => false, :null => false
+    t.integer  "position"
+    t.string   "site",       :limit => 31
+    t.string   "title",                                         :null => false
+    t.text     "url",        :limit => 1023,                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "external_links", ["item_type", "item_id"], :name => "index_external_links_on_item_type_and_item_id"
+  add_index "external_links", ["site"], :name => "site"
+  add_index "external_links", ["title"], :name => "title"
 
   create_table "pages", :force => true do |t|
     t.integer  "parent_id"

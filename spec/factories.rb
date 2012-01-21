@@ -53,6 +53,12 @@ Factory.define :owner_authority, :parent => :authority do |f|
 	f.can_approve { true }
 end
 
+Factory.define :external_link do |f|
+  f.sequence(:title) {|n| "Factory Link #{n}"}
+  f.sequence(:url) {|n| "http://link#{n}.factory/"}
+  f.item { Factory(:page) }
+end
+
 # Requires being called with a value for either :item or :redirect
 Factory.define :path do |f|
   f.sequence(:sitepath) {|n| "/sitepath/factory_sitepath_#{n}"}

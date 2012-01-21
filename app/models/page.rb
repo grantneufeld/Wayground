@@ -10,6 +10,7 @@ class Page < ActiveRecord::Base
   has_many :pages, :as => :parent
   has_one :path, :as => :item, :validate => true, :dependent => :destroy
   has_many :versions, :as => :item, :dependent => :delete_all
+  has_many :external_links, :as => :item
 
   before_create :generate_path
   before_update :update_path
