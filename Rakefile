@@ -4,11 +4,11 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-require 'metric_fu'
-MetricFu::Configuration.run do |config|
-  # remove rcov because it doesn’t work with ruby 1.9
-  config.metrics -= [:rcov]
-  config.verbose = true
-end
+#require 'metric_fu'
+#MetricFu::Configuration.run do |config|
+#  # remove rcov because it doesn’t work with ruby 1.9
+#  config.metrics -= [:rcov]
+#  config.verbose = true
+#end
 
 Wayground::Application.load_tasks
