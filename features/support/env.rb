@@ -9,9 +9,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../../config/simple_cov_conf
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 require 'ruby-debug'
 
-#require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
+require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
 require 'cucumber/rails'
-#require 'cucumber/rails/rspec'
+require 'cucumber/rails/rspec'
 #require 'cucumber/rails/world'
 #require 'cucumber/rails/active_record'
 #require 'cucumber/web/tableish'

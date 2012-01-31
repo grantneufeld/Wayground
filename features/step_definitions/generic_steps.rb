@@ -51,3 +51,6 @@ Then /^(?:|I )should see errors for (.+)$/ do |field_names|
   end
 end
 
+Then /^I should see a notice that "([^\"]*)"$/ do |notice|
+  body.should match(/<p class="notice">#{notice}<\/p>/)
+end

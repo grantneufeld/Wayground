@@ -27,6 +27,10 @@ describe AuthoritiesController do
   def mock_admin_authority(stubs={})
     @mock_admin_authority ||= mock_model(Authority, {:area => 'global', :is_owner => true, :user => @mock_admin}.merge(stubs)).as_null_object
   end
+  def reset_mock_admin_authority(stubs={})
+    @mock_admin_authority = nil
+    mock_admin_authority(stubs)
+  end
 
   describe "GET index" do
     it "blocks users without the :can_view authority" do
@@ -144,13 +148,13 @@ describe AuthoritiesController do
       end
       it "assigns the requested authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:find) { mock_admin_authority(:update_attributes => true) }
+        Authority.stub(:find) { reset_mock_admin_authority(:update_attributes => true) }
         put :update, :id => "1"
         assigns(:authority).should be(mock_admin_authority)
       end
       it "redirects to the authority" do
         set_logged_in_admin
-        Authority.stub(:find) { mock_admin_authority(:update_attributes => true) }
+        Authority.stub(:find) { reset_mock_admin_authority(:update_attributes => true) }
         put :update, :id => "1"
         response.should redirect_to(authority_url(mock_admin_authority))
       end

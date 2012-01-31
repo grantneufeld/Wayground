@@ -15,7 +15,6 @@ describe "documents/edit.html.erb" do
   it "renders the edit document form" do
     render
 
-    # Run the generator again with the --webrat flag if you want to use webrat matchers
     assert_select "form", :action => documents_path(@document), :method => "post" do
       #assert_select "input#document_file", :name => "document[file]"
       assert_select "input#document_custom_filename", :name => "document[custom_filename]"
