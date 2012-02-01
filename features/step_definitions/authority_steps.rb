@@ -144,6 +144,11 @@ Then /^(?:|I )should be denied access$/ do
   step 'I should see "Unauthorized" within "title"'
 end
 
+Then /^(?:|I )should be told to sign in$/ do
+  #status_code.should eq 403
+  step 'I should see "Sign In Required" within "title"'
+end
+
 
 # Checking Authorities
 

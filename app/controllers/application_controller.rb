@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, :with => :missing
   rescue_from Wayground::AccessDenied, :with => :unauthorized
+  rescue_from Wayground::LoginRequired, :with => :login_required
 
 
   protected
@@ -25,6 +26,14 @@ class ApplicationController < ActionController::Base
     flash.now[:warning] ||= 'You are not authorized for accessing the requested resource'
     browser_dont_cache
     render :template => 'authorities/unauthorized', :status => '403 Forbidden'
+  end
+
+  # report that the user must sign in
+  def login_required
+    @page_title = 'Sign In Required'
+    flash.now[:warning] ||= 'You must sign in to access the requested resource'
+    browser_dont_cache
+    render :template => 'authorities/login_required', :status => '403 Forbidden'
   end
 
   def browser_dont_cache
