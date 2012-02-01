@@ -27,6 +27,9 @@ describe EventsController do
     it "routes to #delete" do
       get("/events/1/delete").should route_to("events#delete", :id => "1")
     end
+    it "routes to #destroy via delete" do
+      delete("/events/1/delete").should route_to("events#destroy", :id => "1")
+    end
     it "routes to #destroy" do
       delete("/events/1").should route_to("events#destroy", :id => "1")
     end

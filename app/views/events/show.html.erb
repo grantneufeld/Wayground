@@ -28,7 +28,16 @@ end -%>
 
 <p><%= @event.content %></p>
 
-<p class="actions"><%= link_to 'Edit', edit_event_path(@event), :class => 'action' %>
-<%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
-<%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+if @user.present?
+  %><p class="actions"><%
+  if @event.has_authority_for_user_to?(@user, :can_update)
+    %><%= link_to 'Edit', edit_event_path(@event), :class => 'action' %>
+<%  if @event.has_authority_for_user_to?(@user, :can_delete)
+      %><%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
+<%  end
+  end
+  %><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+end -%>
 </div>

@@ -1,13 +1,20 @@
 # encoding: utf-8
 
 class EventsController < ApplicationController
+  before_filter :set_event, :except => [:index, :new, :create]
+  before_filter :requires_login, :only => [:new, :create]
+  before_filter :requires_update_authority, :only => [:edit, :update]
+  before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_section
+  before_filter :set_new_event, :only => [:new, :create]
 
   # GET /events
   # GET /events.xml
   def index
+    @page_title = 'Events'
     #@events = paginate(Event.all)
     @events = Event.all
+    @user = current_user
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @events }
@@ -17,8 +24,8 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.xml
   def show
-    @event = Event.find(params[:id])
-
+    @page_title = "#{@event.start_at.to_s(:simple_date)}: #{@event.title}"
+    @user = current_user
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @event }
@@ -28,8 +35,6 @@ class EventsController < ApplicationController
   # GET /events/new
   # GET /events/new.xml
   def new
-    @event = Event.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @event }
@@ -39,7 +44,6 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.xml
   def create
-    @event = Event.new(params[:event])
     user = current_user
     @event.user = user
 
@@ -61,18 +65,17 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
-    @event = Event.find(params[:id])
+    @page_title = "Edit Event: #{@event.title}"
   end
 
   # PUT /events/1
   # PUT /events/1.xml
   def update
-    @event = Event.find(params[:id])
-
+    @page_title = "Edit Event: #{@event.title}"
+    #@event.editor = current_user
     respond_to do |format|
       if @event.update_attributes(params[:event])
-        # TODO: if current_user is admin, give a different notice
-        notice = 'The event has been submitted.'
+        notice = 'The event has been saved.'
         format.html { redirect_to(@event, :notice => notice) }
         format.xml  { head :ok }
       else
@@ -84,13 +87,12 @@ class EventsController < ApplicationController
 
   # GET /events/1/delete
   def delete
-    @event = Event.find(params[:id])
+    @page_title = "Delete Event: #{@event.title}"
   end
 
   # DELETE /events/1
   # DELETE /events/1.xml
   def destroy
-    @event = Event.find(params[:id])
     @event.destroy
 
     respond_to do |format|
@@ -101,8 +103,40 @@ class EventsController < ApplicationController
 
   protected
 
+  # The actions for this controller, other than viewing, require login and usually authorization.
+  def requires_login
+    unless current_user
+      raise Wayground::LoginRequired
+    end
+  end
+  def requires_authority(action)
+    user = current_user
+    unless (
+      (@event && @event.has_authority_for_user_to?(user, action)) ||
+      (user && user.has_authority_for_area(Event.authority_area, action))
+    )
+      raise Wayground::AccessDenied
+    end
+  end
+  def requires_update_authority
+    requires_authority(:can_update)
+  end
+  def requires_delete_authority
+    requires_authority(:can_delete)
+  end
+
   def set_section
     @site_section = 'Events'
+  end
+
+  # Most of the actions for this controller receive the id of an Event as a parameter.
+  def set_event
+    @event = Event.find(params[:id])
+  end
+
+  def set_new_event
+    @page_title = 'New Event'
+    @event = Event.new(params[:event])
   end
 
 end

@@ -22,8 +22,20 @@ Feature: Events
   @future
   Scenario: Admin approves an event posted by a user
 
-  @future
   Scenario: Admin updates an event
+    Given I have signed in as an admin
+    And there is an event "Existing Event"
+    When I go to the page for the event "Existing Event"
+    And I follow "Edit"
+    And I fill in "Title" with "Updated Event"
+    And I press "Save Event"
+    Then I should see a notice that "The event has been saved."
+    And I should be on the page for the event "Updated Event"
 
-  @future
   Scenario: Admin deletes an event
+    Given I have signed in as an admin
+    And there is an event "Delete This Event"
+    When I go to the page for the event "Delete This Event"
+    And I follow "Delete"
+    # which, in an actual browser, would put up a confirmation alert
+    Then there should not be an event "Delete This Event"

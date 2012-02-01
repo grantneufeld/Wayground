@@ -10,8 +10,12 @@ Given /^there are (\d+) upcoming events$/ do |count_str|
   end
 end
 
-Given /^there is an event on "([^"]*)" titled "([^"]*)"$/ do |datetime_str, title|
-  Factory.create(:event, :start_at => datetime_str, :title => title)
+Given /^there is an event(?:| on "([^\"]*)")(?:| titled) "([^\"]*)"$/ do |datetime_str, title|
+  if datetime_str.present?
+    Factory.create(:event, :start_at => datetime_str, :title => title)
+  else
+    Factory.create(:event, :title => title)
+  end
 end
 
 
@@ -26,6 +30,10 @@ end
 Then /^I should see the event "([^\"]*)"$/ do |title|
   # There should be an elment tagged with the class "summary" that contains the title
   body.should match(/class="([^\"]* )?summary( [^\"]*)?"[^>]*>[ \t\r\n]*#{title}[ \t\r\n]*</)
+end
+
+Then /^there should not be an event "([^\"]*)"$/ do |title|
+  Event.find_by_title(title).should be_nil
 end
 
 

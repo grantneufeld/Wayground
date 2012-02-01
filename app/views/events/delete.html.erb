@@ -1,6 +1,6 @@
 <% # encoding: utf-8
 
-%><h1>Delete “<%= @event.title %>” Event?</h1>
+%><h1>Delete “<%= link_to @event.title, @event %>” Event?</h1>
 
 <%= form_tag(path_path(@event), :method => :delete) do %>
 <p><%= submit_tag "Delete Event" %></p>

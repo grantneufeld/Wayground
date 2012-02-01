@@ -46,6 +46,12 @@ module NavigationHelpers
     when /^the page for the event "(.+)"$/
       event = Event.find_by_title($1)
       event_path(event)
+    when /^the edit page for the event "(.+)"$/
+      event = Event.find_by_title($1)
+      edit_event_path(event)
+    when /^the delete page for the event "(.+)"$/
+      event = Event.find_by_title($1)
+      delete_event_path(event)
 
     # the following are examples using path_to_pickle
 

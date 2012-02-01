@@ -11,6 +11,7 @@ tzoff_minutes = tzoff_minutes % 60
 
 Time::DATE_FORMATS[:db] = "%Y-%m-%d %H:%M:%S"
 Time::DATE_FORMATS[:time_date] = "%l:%M:%S %p on %A, %B %d, %Y"
+Time::DATE_FORMATS[:simple_date] = "%B %e, %Y"
 Time::DATE_FORMATS[:plain_date] = "%A, %B %e, %Y"
 Time::DATE_FORMATS[:plain_time] = "%l:%M %p" # 3:45 pm
 Time::DATE_FORMATS[:http_header] = "%a, %d %b %Y %H:%M:%S %Z"

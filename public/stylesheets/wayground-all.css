@@ -3,6 +3,7 @@ a img{border:0px none;}
 #headertitle, #maintitle, #subtitle, #navmenu > li, h1, h2, h3, h4, h5, h6{font-family:Ubuntu,'Officina Serif ITC',Helvetica,sans-serif;}
 h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0em;}
 * + h1,* + h2,* + h3,* + h4,* + h5,* + h6{margin-top:1em;}
+abbr{border-bottom:0em none; text-decoration:none;}
 #maintitle{font-weight:bold; line-height:0.808em; text-transform:uppercase;}
 #subtitle{line-height:0.947em; margin:0em;}
 #flash > * + *{margin-top:1em;}

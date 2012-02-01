@@ -211,6 +211,7 @@ Given /^(?:|I )have signed in with "(.*)\/(.*)"$/ do |email, password|
   step "I have signed in with my email #{email} and password \"#{password}\""
 end
 Given /^(?:|I )have signed in with (?:|my )email [<"]?(.+@[^>\"]+)[>"]? and (?:|my )password "?([^\"]*)"?$/ do |email, password|
+  step "I am not signed in"
   step %{I am signed up and confirmed as "#{email}/#{password}"}
   step %{I sign in with email #{email} and password "#{password}"}
 end

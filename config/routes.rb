@@ -33,6 +33,7 @@ Wayground::Application.routes.draw do
   get 'download/:id/*filename' => 'documents#download', :as => :download
   resources :events do
     get 'delete', :on => :member
+    delete 'delete' => 'events#destroy', :on => :member
   end
 
   root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }

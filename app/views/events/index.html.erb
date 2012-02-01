@@ -1,4 +1,4 @@
-<h1>Events</h1>
+<h2>Events</h2>
 <%= #show_pagination_header('events')
 -%>
 <%= #show_pagination_selector
@@ -19,7 +19,7 @@ date_idx = nil
   unless event_end.blank?
     %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time) %></abbr><%
   end %>:
-<span class="summary"><%= event.title %></span></h4>
+<span class="summary"><%= link_to event.title, event %></span></h4>
 <%
   event_location = event.location
   event_address = event.address -%>
@@ -35,25 +35,33 @@ date_idx = nil
     %></span>
 <br /><%
   end
-%><span class="description"><%= event.description # TODO: format the description with at least linebreaks
-%></span>
+  %><span class="description"><%= event.description # TODO: format the description with at least linebreaks
+  %></span>
 <%
-event_organizer = event.organizer
-if event_organizer.present?
-  %><br />Presented by <%
-  event_organizer_url = event.organizer_url
-  if event_organizer_url.present?
-    %><a href="<%= event_organizer_url %>" class="organizer"><%= event_organizer %></a><%
-  else
-    %><span class="organizer"><%= event_organizer %></span><%
+  event_organizer = event.organizer
+  if event_organizer.present?
+    %><br />Presented by <%
+    event_organizer_url = event.organizer_url
+    if event_organizer_url.present?
+      %><a href="<%= event_organizer_url %>" class="organizer"><%= event_organizer %></a><%
+    else
+      %><span class="organizer"><%= event_organizer %></span><%
+    end
+    %>.<%
+  end %>
+<%
+  if event.has_authority_for_user_to?(@user, :can_update)
+    %><br /><%= link_to 'Edit', edit_event_path(event), :class => 'action' %>
+<%  if event.has_authority_for_user_to?(@user, :can_delete)
+      %><%= link_to 'Delete', delete_event_path(event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
+<%  end
   end
-  %>.<%
-end %>
-<br /><%= link_to 'Details', event, :class => 'action' %>
-<%= link_to 'Edit', edit_event_path(event), :class => 'action' %>
-<%= link_to 'Delete', delete_event_path(event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
-</p>
+  %></p>
 </div>
 <% end -%>
 
-<p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+if @user.present?
+  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+end -%>
