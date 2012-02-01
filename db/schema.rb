@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 10) do
+ActiveRecord::Schema.define(:version => 11) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -76,6 +76,36 @@ ActiveRecord::Schema.define(:version => 10) do
   add_index "documents", ["datastore_id"], :name => "data"
   add_index "documents", ["filename"], :name => "file"
   add_index "documents", ["user_id", "filename"], :name => "userfile"
+
+  create_table "events", :force => true do |t|
+    t.integer  "user_id"
+    t.datetime "start_at",                                                    :null => false
+    t.datetime "end_at"
+    t.boolean  "is_allday",                                :default => false, :null => false
+    t.boolean  "is_draft",                                 :default => false, :null => false
+    t.boolean  "is_approved",                              :default => false, :null => false
+    t.boolean  "is_wheelchair_accessible",                 :default => false, :null => false
+    t.boolean  "is_adults_only",                           :default => false, :null => false
+    t.boolean  "is_tentative",                             :default => false, :null => false
+    t.boolean  "is_featured",                              :default => false, :null => false
+    t.string   "title",                                                       :null => false
+    t.string   "description",              :limit => 511
+    t.text     "content",                  :limit => 8191
+    t.string   "organizer"
+    t.string   "organizer_url"
+    t.string   "location"
+    t.string   "address"
+    t.string   "city"
+    t.string   "province",                 :limit => 31
+    t.string   "country",                  :limit => 2
+    t.string   "location_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["start_at", "end_at", "is_allday"], :name => "dates"
+  add_index "events", ["title"], :name => "index_events_on_title"
+  add_index "events", ["user_id"], :name => "index_events_on_user_id"
 
   create_table "external_links", :force => true do |t|
     t.integer  "item_id",                                       :null => false

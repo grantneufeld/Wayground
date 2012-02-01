@@ -1,0 +1,59 @@
+<h1>Events</h1>
+<%= #show_pagination_header('events')
+-%>
+<%= #show_pagination_selector
+-%>
+<%
+date_idx = nil
+@events.each do |event|
+  event_start = event.start_at
+  event_end = event.end_at
+  event_date = event_start.to_date
+  if date_idx != event_date
+    date_idx = event_date
+    %><h3><%= event_start.to_s(:plain_date) %></h3>
+<%
+  end
+  %><div class="vevent">
+<h4><abbr class="dtstart" title="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(:plain_time) %></abbr><%
+  unless event_end.blank?
+    %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time) %></abbr><%
+  end %>:
+<span class="summary"><%= event.title %></span></h4>
+<%
+  event_location = event.location
+  event_address = event.address -%>
+<p><%
+  unless event_location.blank? && event_address.blank?
+    %><span class="location"><%
+    unless event_location.blank?
+      %><span class="fn org"><%= event.location %></span>
+<%  end
+    unless event_address.blank?
+      %>(<span class="adr"><span class="street-address"><%= event_address %></span></span>)<%
+    end
+    %></span>
+<br /><%
+  end
+%><span class="description"><%= event.description # TODO: format the description with at least linebreaks
+%></span>
+<%
+event_organizer = event.organizer
+if event_organizer.present?
+  %><br />Presented by <%
+  event_organizer_url = event.organizer_url
+  if event_organizer_url.present?
+    %><a href="<%= event_organizer_url %>" class="organizer"><%= event_organizer %></a><%
+  else
+    %><span class="organizer"><%= event_organizer %></span><%
+  end
+  %>.<%
+end %>
+<br /><%= link_to 'Details', event, :class => 'action' %>
+<%= link_to 'Edit', edit_event_path(event), :class => 'action' %>
+<%= link_to 'Delete', delete_event_path(event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
+</p>
+</div>
+<% end -%>
+
+<p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>

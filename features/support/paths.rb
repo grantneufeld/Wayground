@@ -39,6 +39,14 @@ module NavigationHelpers
     when /^the documents index$/
       '/documents'
 
+    when /^the upcoming events page$/
+      '/events'
+    when /^the event form$/
+      '/events/new'
+    when /^the page for the event "(.+)"$/
+      event = Event.find_by_title($1)
+      event_path(event)
+
     # the following are examples using path_to_pickle
 
     when /^#{capture_model}(?:'s)? page$/                           # eg. the forum's page

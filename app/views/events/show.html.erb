@@ -1,0 +1,34 @@
+<div class="vevent">
+<h2 class="summary"><%= @event.title %></h2>
+
+<p><abbr class="dtstart" title="<%= @event.start_at.to_s(:microformat) %>"><%= @event.start_at.to_s(:plain_time) %></abbr><%
+  event_end = @event.end_at
+  unless event_end.blank?
+    %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time) %></abbr><%
+  end %></p>
+<p class="location"><%= link_to @event.location, @event.location_url, :class => 'fn org' %>
+<br /><span class="adr">
+<span class="street-address"><%= @event.address %></span>
+<br /><span class="locality"><%= @event.city %></span>, <span class="region"><%= @event.province %></span>, <span class="country-name"><%= @event.country %></span>
+</span></p>
+<%
+event_organizer = @event.organizer
+if event_organizer.present?
+  %><p>Presented by <%
+  event_organizer_url = @event.organizer_url
+  if event_organizer_url.present?
+    %><a href="<%= event_organizer_url %>" class="organizer"><%= event_organizer %></a><%
+  else
+    %><span class="organizer"><%= event_organizer %></span><%
+  end
+  %></p>
+<%
+end -%>
+<p><%= @event.description %></p>
+
+<p><%= @event.content %></p>
+
+<p class="actions"><%= link_to 'Edit', edit_event_path(@event), :class => 'action' %>
+<%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
+<%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+</div>

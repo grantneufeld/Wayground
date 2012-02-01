@@ -16,7 +16,8 @@ table.full{width:100%;}
 th, td{padding:0.2em 0.4em; vertical-align:top;}
 th{text-align:left;}
 thead > tr > th{text-align:center;}
-thead, thead > tr{background:#999; color:white; text-shadow:0em 0em 0.2em black;}
+thead, thead > tr, tr.heading > th{background:#999; color:white; text-shadow:0em 0em 0.2em black;}
+tr.heading > th{font-size:110%; text-align:left !important;}
 tbody > tr > th:first-child{text-align:right;}
 tbody > tr:nth-child(odd){background:#EEE; color:black;}
 tbody > tr:nth-child(even){background:#DDD; color:black;}

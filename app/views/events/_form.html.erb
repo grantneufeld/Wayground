@@ -1,0 +1,54 @@
+<%= form_for(@event) do |f| %>
+  <% if @event.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@event.errors.count, "error") %> prohibited this event from being saved:</h2>
+
+      <ul>
+      <% @event.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<table><tbody>
+<tr><th><%= f.label :title %></th>
+  <td><%= f.text_field :title %></td></tr>
+<tr class="heading"><th colspan="2">Schedule</th></tr>
+<tr><th><%= f.label :start_at %></th>
+  <td><%= f.text_field :start_at %> (date &amp; time)</td></tr>
+<tr><th><%= f.label :end_at %></th>
+  <td><%= f.text_field :end_at %> (date &amp; time)</td></tr>
+<tr><th></th><td><%= f.check_box :is_allday %><%= f.label :is_allday, 'All-day' %> (ignore start and end times)</td></tr>
+<tr><th></th><td><%= f.check_box :is_tentative %><%= f.label :is_tentative %>
+  <br />(event will likely be at the posted time, but not yet confirmed)</td></tr>
+<tr class="heading"><th colspan="2">Organizer</th></tr>
+<tr><th><%= f.label :organizer %></th>
+  <td><%= f.text_field :organizer %></td></tr>
+<tr><th><%= f.label :organizer_url, 'Organizer Weblink' %></th>
+  <td><%= f.text_field :organizer_url %></td></tr>
+<tr class="heading"><th colspan="2">Location</th></tr>
+<tr><th><%= f.label :location, 'Location Name' %></th>
+  <td><%= f.text_field :location %></td></tr>
+<tr><th><%= f.label :address %></th>
+  <td><%= f.text_field :address %></td></tr>
+<tr><th><%= f.label :city %></th>
+  <td><%= f.text_field :city %></td></tr>
+<tr><th><%= f.label :province %></th>
+  <td><%= f.text_field :province %></td></tr>
+<tr><th><%= f.label :country %></th>
+  <td><%= f.text_field :country, :size => 3, :limit => 2 %></td></tr>
+<tr><th><%= f.label :location_url, 'Location Weblink' %></th>
+  <td><%= f.text_field :location_url %></td></tr>
+<tr><th></th><td><%= f.check_box :is_wheelchair_accessible %><%= f.label :is_wheelchair_accessible, 'Wheelchair accessible' %></td></tr>
+<tr class="heading"><th colspan="2">Details</th></tr>
+<tr><th></th><td><%= f.check_box :is_adults_only %><%= f.label :is_adults_only, 'Adults only' %> (only for ages 18+)</td></tr>
+<tr><th><%= f.label :description %></th>
+  <td>Short summary of the event’s purpose or activities
+  <br /><%= f.text_field :description %></td></tr>
+<tr><th><%= f.label :content, 'Long Description' %></th>
+  <td>Full description of the event (except the details entered above):
+  <br /><%= f.text_area :content %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Event') %></td></tr></tfoot>
+</table>
+<% end %>

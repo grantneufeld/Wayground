@@ -53,6 +53,17 @@ Factory.define :owner_authority, :parent => :authority do |f|
 	f.can_approve { true }
 end
 
+Factory.define :event do |f|
+  f.sequence(:start_at) {|n| n.days.from_now.to_datetime.to_s(:db)}
+  f.sequence(:title) {|n| "Factory Event #{n}"}
+end
+Factory.define :event_future, :parent => :event do |f|
+  # new events are in the future by default
+end
+Factory.define :event_past, :parent => :event do |f|
+  f.sequence(:start_at) {|n| n.days.ago.to_datetime.to_s(:db)}
+end
+
 Factory.define :external_link do |f|
   f.sequence(:title) {|n| "Factory Link #{n}"}
   f.sequence(:url) {|n| "http://link#{n}.factory/"}
