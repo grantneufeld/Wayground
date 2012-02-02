@@ -19,6 +19,9 @@ textarea{width:98%;}
 .field_with_errors{display:inline;}
 .field_with_errors > input{outline:2px solid #900;}
 .field_with_errors > label{color:#900;}
+.charcounter{}
+.charcounter_warn{font-weight:bold; background:yellow;}
+.charcounter_over{font-weight:bold; background:yellow; color:red;}
 
 #header{background:rgba(0,0,0,0.66);
 background:-webkit-gradient(linear, center top, center bottom, from(rgba(0,0,0,0.8)), color-stop(0.2, rgba(0,0,0,0.66)), to(rgba(0,0,0,0.66)));

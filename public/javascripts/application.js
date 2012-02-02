@@ -1,2 +1,14 @@
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
+function countChars(char_limit,field_id,count_display_id) {
+  var char_field = document.getElementById(field_id);
+  var count_field = document.getElementById(count_display_id)
+  var content = char_field.value;
+  var len = content.length;
+  count_field.innerHTML = char_limit - len;
+  if(len > char_limit) {
+    count_field.className = 'charcounter_over'
+  } else if(len > (char_limit - 10)) {
+    count_field.className = 'charcounter_warn'
+  } else {
+    count_field.className = 'charcounter'
+  }
+}
