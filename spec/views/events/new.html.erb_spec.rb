@@ -41,7 +41,7 @@ describe "events/new.html.erb" do
       assert_select "input#event_is_tentative", :name => "event[is_tentative]"
       #assert_select "input#event_is_featured", :name => "event[is_featured]"
       assert_select "input#event_title", :name => "event[title]"
-      assert_select "input#event_description", :name => "event[description]"
+      assert_select "textarea#event_description", :name => "event[description]"
       assert_select "textarea#event_content", :name => "event[content]"
       assert_select "input#event_organizer", :name => "event[organizer]"
       assert_select "input#event_organizer_url", :name => "event[organizer_url]"

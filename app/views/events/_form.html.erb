@@ -1,4 +1,7 @@
-<%= form_for(event) do |f| %>
+<%
+@page_uses_javascript = true
+
+%><%= form_for(event) do |f| %>
 <%
 if event.errors.any?
   %><div id="error_explanation">
@@ -13,7 +16,7 @@ end -%>
 <% end -%>
 <table><tbody>
 <tr><th><%= f.label :title %></th>
-  <td><%= f.text_field :title %></td></tr>
+  <td><%= f.text_field :title, :size => 60, :maxlength => 255 %></td></tr>
 <tr class="heading"><th colspan="2">Schedule</th></tr>
 <tr><th><%= f.label :start_at %></th>
   <td><%= f.text_field :start_at %> (date &amp; time)</td></tr>
@@ -24,31 +27,53 @@ end -%>
   <br />(event will likely be at the posted time, but not yet confirmed)</td></tr>
 <tr class="heading"><th colspan="2">Organizer</th></tr>
 <tr><th><%= f.label :organizer %></th>
-  <td><%= f.text_field :organizer %></td></tr>
+  <td><%= f.text_field :organizer, :size => 60, :maxlength => 255 %></td></tr>
 <tr><th><%= f.label :organizer_url, 'Organizer Weblink' %></th>
-  <td><%= f.text_field :organizer_url %></td></tr>
+  <td><%= f.text_field :organizer_url, :size => 60, :maxlength => 255 %></td></tr>
 <tr class="heading"><th colspan="2">Location</th></tr>
 <tr><th><%= f.label :location, 'Location Name' %></th>
-  <td><%= f.text_field :location %></td></tr>
+  <td><%= f.text_field :location, :size => 60, :maxlength => 255 %></td></tr>
 <tr><th><%= f.label :address %></th>
-  <td><%= f.text_field :address %></td></tr>
+  <td><%= f.text_field :address, :size => 60, :maxlength => 255 %></td></tr>
 <tr><th><%= f.label :city %></th>
-  <td><%= f.text_field :city %></td></tr>
+  <td><%= f.text_field :city, :size => 40, :maxlength => 255 %></td></tr>
 <tr><th><%= f.label :province %></th>
-  <td><%= f.text_field :province %></td></tr>
+  <td><%= f.text_field :province, :size => 32, :maxlength => 31 %></td></tr>
 <tr><th><%= f.label :country %></th>
-  <td><%= f.text_field :country, :size => 3, :limit => 2 %></td></tr>
+  <td><%= f.text_field :country, :size => 3, :maxlength => 2 %></td></tr>
 <tr><th><%= f.label :location_url, 'Location Weblink' %></th>
-  <td><%= f.text_field :location_url %></td></tr>
+  <td><%= f.text_field :location_url, :size => 60, :maxlength => 255 %></td></tr>
 <tr><th></th><td><%= f.check_box :is_wheelchair_accessible %><%= f.label :is_wheelchair_accessible, 'Wheelchair accessible' %></td></tr>
 <tr class="heading"><th colspan="2">Details</th></tr>
 <tr><th></th><td><%= f.check_box :is_adults_only %><%= f.label :is_adults_only, 'Adults only' %> (only for ages 18+)</td></tr>
 <tr><th><%= f.label :description %></th>
   <td>Short summary of the event’s purpose or activities
-  <br /><%= f.text_field :description %></td></tr>
+  <br /><% description_char_script = "countChars(511,'event_description','descriptionLength');"
+  %><%= f.text_area :description, :rows => 2, :onkeyup => description_char_script %>
+<script>
+document.write('<br /><span id="descriptionLength" class="charcounter">511</span> characters remaining.')
+<%= description_char_script %>
+</script></td></tr>
 <tr><th><%= f.label :content, 'Long Description' %></th>
   <td>Full description of the event (except the details entered above):
-  <br /><%= f.text_area :content %></td></tr>
+  <br /><% content_char_script = "countChars(8191,'event_content','contentLength');"
+  %><%= f.text_area :content, :rows => 12, :onkeyup => content_char_script %>
+<script>
+document.write('<br /><span id="contentLength" class="charcounter">8191</span> characters remaining.')
+<%= content_char_script %>
+</script></td></tr>
+<tr class="heading"><th colspan="2">Weblinks</th></tr>
+<tr><th></th><td>Links to listings of this event on other websites:</td></tr>
+<%
+  # add some blank external links
+  3.times do
+    @event.external_links.build
+  end
+  %><%=
+  f.fields_for :external_links, nil, :hidden_field_id => false do |builder|
+    %><tr><th></th><td><%= render "external_links/fields", :f => builder %></td></tr>
+<%
+  end -%>
 </tbody>
 <tfoot><tr><th></th><td class="actions"><%= f.submit('Save Event') %></td></tr></tfoot>
 </table>

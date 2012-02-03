@@ -10,14 +10,16 @@ Given /^there are (\d+) upcoming events$/ do |count_str|
   end
 end
 
-Given /^there is an event(?:| on "([^\"]*)")(?:| titled) "([^\"]*)"$/ do |datetime_str, title|
+Given /^there is an event(?:| on "([^\"]*)")(?:| titled) "([^\"]*)"(?:| with link "([^\"]*)")$/ do |datetime_str, title, url|
   if datetime_str.present?
-    Factory.create(:event, :start_at => datetime_str, :title => title)
+    event = Factory.create(:event, :start_at => datetime_str, :title => title)
   else
-    Factory.create(:event, :title => title)
+    event = Factory.create(:event, :title => title)
+  end
+  if url.present?
+    event.external_links.create!(:url => url)
   end
 end
-
 
 # Testing for event existence
 
@@ -32,6 +34,10 @@ Then /^I should see the event "([^\"]*)"$/ do |title|
   body.should match(/class="([^\"]* )?summary( [^\"]*)?"[^>]*>[ \t\r\n]*#{title}[ \t\r\n]*</)
 end
 
+Then /^there should be an event "([^\"]*)"$/ do |title|
+  Event.find_by_title(title).should be
+end
+
 Then /^there should not be an event "([^\"]*)"$/ do |title|
   Event.find_by_title(title).should be_nil
 end
@@ -42,4 +48,15 @@ end
 Then /^I should see that the event starts on "([^\"]*)"$/ do |datetime_str|
   dt = DateTime.parse(datetime_str)
   body.should match(/[ \t\r\n]class="dtstart"[ \t\r\n]title="#{dt.to_s(:microformat)}">/)
+end
+
+
+# Testing ExternalLinks attached to Events
+
+Then /^the event "([^\"]*)" should have the link "([^\"]*)"$/ do |title, url|
+  Event.find_by_title(title).external_links.find_by_url(url).should be
+end
+
+Then /^the event "([^\"]*)" should not have any links$/ do |title|
+  Event.find_by_title(title).external_links.count.should eq 0
 end

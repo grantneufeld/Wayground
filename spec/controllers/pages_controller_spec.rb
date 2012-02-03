@@ -89,6 +89,7 @@ describe PagesController do
       it "assigns the parent page if given" do
         set_logged_in_admin
         parent_page = Factory.create(:page)
+        parent_page.path ||= Factory.create(:path, :item => parent_page)
         post :create, :parent => parent_page.id.to_s, :page => {:filename => 'spec_create_with_parent', :title => 'test'}
         assigns(:page).parent.should eq parent_page
       end

@@ -12,7 +12,8 @@ Feature: Events
     And I fill in "Title" with "New Admin Event"
     And I fill in "Description" with "This is an event, newly posted by an admin."
     And I press "Save Event"
-    Then I should see a notice that "The event has been saved."
+    Then there should be an event "New Admin Event"
+    And I should see a notice that "The event has been saved."
     And I should be on the page for the event "New Admin Event"
 
   @future

@@ -1,16 +1,22 @@
 <div class="vevent">
 <h2 class="summary"><%= @event.title %></h2>
 
-<p><abbr class="dtstart" title="<%= @event.start_at.to_s(:microformat) %>"><%= @event.start_at.to_s(:plain_time) %></abbr><%
+<p><abbr class="dtstart" title="<%= @event.start_at.to_s(:microformat) %>"><%= @event.start_at.to_s(:plain_datetime) %></abbr><%
   event_end = @event.end_at
   unless event_end.blank?
-    %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time) %></abbr><%
+    %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).lstrip! %></abbr><%
   end %></p>
-<p class="location"><%= link_to @event.location, @event.location_url, :class => 'fn org' %>
+<p class="location"><%
+  if @event.location_url.present?
+    %><%= link_to @event.location, @event.location_url, :class => 'fn org' %><%
+  else
+    %><span class="fn org"><%= @event.location %></span><%
+  end %>
 <br /><span class="adr">
 <span class="street-address"><%= @event.address %></span>
 <br /><span class="locality"><%= @event.city %></span>, <span class="region"><%= @event.province %></span>, <span class="country-name"><%= @event.country %></span>
 </span></p>
+
 <%
 event_organizer = @event.organizer
 if event_organizer.present?
@@ -22,13 +28,34 @@ if event_organizer.present?
     %><span class="organizer"><%= event_organizer %></span><%
   end
   %></p>
-<%
-end -%>
-<p><%= @event.description %></p>
-
-<p><%= @event.content %></p>
 
 <%
+end
+
+if @event.description
+  %><p><%= @event.description %></p>
+
+<%
+end
+
+if @event.content.present?
+  %><p><%= @event.content %></p>
+
+<%
+end
+
+if @event.external_links.count > 0
+  %><h3>Links</h3>
+<ul>
+<%
+  @event.external_links.each do |external_link|
+    %><li><%= link_to external_link.title, external_link.url, :class => "url #{(external_link.site)}".rstrip! %></li>
+<%
+  end
+%></ul>
+
+<%
+end
 if @user.present?
   %><p class="actions"><%
   if @event.has_authority_for_user_to?(@user, :can_update)

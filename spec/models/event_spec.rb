@@ -98,6 +98,11 @@ describe Event do
       event = Event.new(:location_url => 'set location_url')
       event.location_url.should eq 'set location_url'
     end
+    it "should allow external_links_attributes to be set" do
+      url = 'http://set.external_links_attributes.tld/'
+      event = Event.new(:external_links_attributes => {'0' => {:url => url}})
+      event.external_links[0].url.should eq url
+    end
   end
 
   describe "validation" do

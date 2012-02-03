@@ -8,11 +8,14 @@ class Event < ActiveRecord::Base
     :is_draft, :is_wheelchair_accessible, :is_adults_only, :is_tentative, :is_featured,
     :title, :description, :content,
     :organizer, :organizer_url,
-    :location, :address, :city, :province, :country, :location_url
+    :location, :address, :city, :province, :country, :location_url,
+    :external_links_attributes
   )
 
   belongs_to :user
   has_many :external_links, :as => :item
+  accepts_nested_attributes_for :external_links,
+    :reject_if => lambda { |el| el[:url].blank? }, :allow_destroy => true
 
   validates_presence_of :start_at
   validate :validate_end_at_after_start_at,
@@ -36,7 +39,7 @@ class Event < ActiveRecord::Base
 
   # An event cannot end before, or when, it begins.
   def validate_end_at_after_start_at
-    unless end_at.blank? || (start_at.to_datetime < end_at.to_datetime)
+    unless start_at.blank? || end_at.blank? || (start_at.to_datetime < end_at.to_datetime)
       errors.add(:end_at, 'must be after the start date and time')
     end
   end

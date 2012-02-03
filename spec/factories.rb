@@ -67,7 +67,7 @@ end
 Factory.define :external_link do |f|
   f.sequence(:title) {|n| "Factory Link #{n}"}
   f.sequence(:url) {|n| "http://link#{n}.factory/"}
-  f.item { Factory(:page) }
+  f.item { Factory(:event) }
 end
 
 # Requires being called with a value for either :item or :redirect
