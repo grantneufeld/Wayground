@@ -8,7 +8,8 @@ class ExternalLink < ActiveRecord::Base
 
   belongs_to :item, :polymorphic => true
 
-  validates_presence_of :item_type, :item_id
+  # can’t require the item to be set before initial save when using nested attribute forms
+  validates_presence_of :item_type, :item_id, :on => :update
   validates_presence_of :title
   validates_length_of :title, :within => 1..255
   validates_presence_of :url
@@ -19,6 +20,7 @@ class ExternalLink < ActiveRecord::Base
   validates_numericality_of :position, :only_integer => true, :greater_than => 0
 
   before_validation :set_default_position
+  before_validation :set_title
 
   # Set the position to the end of the list of external links for the item,
   # if it is not already set.
@@ -34,6 +36,17 @@ class ExternalLink < ActiveRecord::Base
         end
       end
       self.position = new_position
+    end
+  end
+
+  # Add a title if not manually set
+  def set_title
+    if title.blank?
+      # TODO: pull the title from the remote url
+      unless url.blank?
+        # use the url’s domain
+        self.title = url.match(/^[a-z]+:\/*([^:\/]+)/)[1]
+      end
     end
   end
 

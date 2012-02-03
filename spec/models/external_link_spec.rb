@@ -46,71 +46,65 @@ describe ExternalLink do
     end
     it "should pass if all required values are set" do
       elink = ExternalLink.new(:title => 'A', :url => 'http://validation.test/all/required/values')
-      elink.item = @item
       elink.position = 1
       elink.valid?.should be_true
     end
     describe "of item" do
-      it "should fail if Item is not set" do
+      it "should fail if Item is not set on update" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://item.test/not.set')
+        elink.item = @item
+        elink.save!
+        elink.item = nil
         elink.valid?.should be_false
       end
     end
     describe "of title" do
-      it "should fail if title is not set" do
-        elink = ExternalLink.new(:url => 'http://title.test/no-title')
-        elink.item = @item
-        elink.valid?.should be_false
+      it "should set the title from the url if title is not set" do
+        elink = ExternalLink.new(:url => 'http://nil.title.test/no-title')
+        elink.valid?.should be_true
+        elink.title.should eq 'nil.title.test'
       end
-      it "should fail if title is blank" do
-        elink = ExternalLink.new(:title => '', :url => 'http://title.test/blank_title')
-        elink.item = @item
-        elink.valid?.should be_false
+      it "should set the title from the url if title is blank" do
+        elink = ExternalLink.new(:title => '', :url => 'http://blank.title.test/blank_title')
+        elink.valid?.should be_true
+        elink.title.should eq 'blank.title.test'
       end
       it "should fail if title is too long" do
-        elink = ExternalLink.new(:title => ('A' * 256), :url => 'http://title.test/too/long#title')
-        elink.item = @item
+        elink = ExternalLink.new(:title => ('A' * 256), :url => 'http://long.title.test/too/long#title')
         elink.valid?.should be_false
       end
     end
     describe "of url" do
       it "should fail if url is not set" do
         elink = ExternalLink.new(:title => 'A')
-        elink.item = @item
         elink.valid?.should be_false
       end
       it "should fail if url is blank" do
         elink = ExternalLink.new(:title => 'A', :url => '')
-        elink.item = @item
         elink.valid?.should be_false
       end
       it "should fail if url is not an url string" do
         elink = ExternalLink.new(:title => 'A', :url => 'not actually an url')
-        elink.item = @item
         elink.valid?.should be_false
       end
       it "should fail if url is too long" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://url.test/' + ('c' * 1008)) # 1024 - 'http://url.test/'.size
-        elink.item = @item
         elink.valid?.should be_false
       end
     end
     describe "of position" do
       it "should fail if value is negative" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://position.test/-negative')
-        elink.item = @item
         elink.position = -2
         elink.valid?.should be_false
       end
       it "should fail if value is zero" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://position.test/0/value')
-        elink.item = @item
         elink.position = 0
         elink.valid?.should be_false
       end
       it "should fail if value is not an integer" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://position.test/not_an_integer')
-        elink.item = @item
         elink.position = 3.14
         elink.valid?.should be_false
       end
