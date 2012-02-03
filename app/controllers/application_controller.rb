@@ -16,14 +16,14 @@ class ApplicationController < ActionController::Base
   # TODO: support params for missing (such as name of missing resource, e.g., "Group ID 123")
   def missing
     @page_title = '404 Missing'
-    flash.now[:warning] ||= 'Requested page not found.'
+    flash.now[:alert] ||= 'Requested page not found.'
     render :template => 'paths/missing', :status => '404 Missing'
   end
 
   # report that the user is not authorized
   def unauthorized
     @page_title = 'Unauthorized'
-    flash.now[:warning] ||= 'You are not authorized for accessing the requested resource'
+    flash.now[:alert] ||= 'You are not authorized for accessing the requested resource'
     browser_dont_cache
     render :template => 'authorities/unauthorized', :status => '403 Forbidden'
   end
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   # report that the user must sign in
   def login_required
     @page_title = 'Sign In Required'
-    flash.now[:warning] ||= 'You must sign in to access the requested resource'
+    flash.now[:alert] ||= 'You must sign in to access the requested resource'
     browser_dont_cache
     render :template => 'authorities/login_required', :status => '403 Forbidden'
   end

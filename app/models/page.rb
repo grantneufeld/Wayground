@@ -54,7 +54,7 @@ class Page < ActiveRecord::Base
   end
 
   def sitepath
-    path.sitepath
+    path.sitepath unless path.nil?
   end
 
 end

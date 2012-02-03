@@ -17,7 +17,7 @@ a:link, a:visited{text-decoration:none; border-bottom:thin dotted rgba(0,0,255,0
 #header{border-bottom:thin solid gray; padding-bottom:0.5em;}
 #flash > *{background:#EEE; padding:0.5em 1em; border:thin dotted lightgray; border-radius:0.25em;}
 #flash .notice{background:#FFE;}
-#flash .warning{background:#FFF8F8;}
+#flash .alert{background:#FFF8F8;}
 #footer{margin:2em 4em 0em; border-top:thin solid gray; padding:0.5em 1em 0em; font-size:80%;}
 #footer *{text-indent:0em;}
 .featureblock{border-top:2px solid lightgray; border-left:2px solid lightgray; padding:0.5em 0em 0em 1em; border-top-left-radius:0.5em; margin-top:1.5em;}
