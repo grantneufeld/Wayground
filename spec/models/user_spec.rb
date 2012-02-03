@@ -6,6 +6,14 @@ describe User do
 		@mock_auth = mock_model(Authentication, stubs)
 	end
 
+  describe "attr_accessible" do
+    it "should allow timezone to be set" do
+      tz_str = 'test timezone'
+      user = User.new(:timezone => tz_str)
+      user.timezone.should eq tz_str
+    end
+  end
+
 	describe "validations without authentications" do
 		it "should fail if there is no password" do
 			u = User.new
@@ -84,7 +92,14 @@ describe User do
 			u2.password_confirmation = u2.password = 'another1'
 			u2.valid?.should be_false
 		end
-		
+
+    it "should fail if invalid timezone specified" do
+      User.new(:email => 'test+validtimezone@wayground.ca',
+        :password => 'password', :password_confirmation => 'password',
+        :timezone => 'invalid timezone'
+      ).valid?.should be_false
+    end
+
 		it "should add a user record with valid parameters" do
 			u = User.new
 			u.email = 'test+good+parameters@wayground.ca'

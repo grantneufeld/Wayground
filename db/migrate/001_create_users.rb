@@ -9,6 +9,7 @@ class CreateUsers < ActiveRecord::Migration
 			t.string :confirmation_token, :limit => 128
 			t.string :remember_token, :limit => 128
 			t.string :filename, :limit => 63
+			t.string :timezone, :limit => 31
 			t.string :location
 			t.text :about
 			t.timestamps

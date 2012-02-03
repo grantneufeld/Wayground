@@ -7,7 +7,7 @@ require 'bcrypt'
 class User < ActiveRecord::Base
   acts_as_authority_controlled :item_authority_flag_field => :always_private
 
-	attr_accessible :email, :name, :password, :password_confirmation
+  attr_accessible :email, :name, :password, :password_confirmation, :timezone
 	attr_accessor :password
 
 	# from oauth sources, so user can login from an external authenticating site
@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
 	validates_presence_of :email, :if => :local_authentication_required?
 	validates_format_of :email, :with => /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/, :allow_blank => true
 	validates_uniqueness_of :email, :case_sensitive => false, :if => :email_present?
+  validate :validate_timezone
 
   # Returns user(s) that exactly match the string.
   # If string is an integer, searches by user.id.
@@ -55,6 +56,14 @@ class User < ActiveRecord::Base
 	def email_present?
 		email.present?
 	end
+
+  # If the timezone is set for a user, it must be valid.
+  # TODO: make this some kind of helper since it shows up in both the User and Event models.
+  def validate_timezone
+    if timezone.present? && ActiveSupport::TimeZone[timezone].nil?
+      errors.add(:timezone, 'must be a recognized timezone name')
+    end
+  end
 
 	def self.create_from_authentication!(authentication)
 		user = User.new({:name => authentication.name, :email => authentication.email})
