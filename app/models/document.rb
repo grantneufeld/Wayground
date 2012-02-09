@@ -160,7 +160,7 @@ class Document < ActiveRecord::Base
   def assign_headers(response)
     # Content-Length is auto-set
     response.headers.merge!({
-      'Last-Modified' => (updated_at || created_at).to_s(:http_header),
+      'Last-Modified' => (updated_at || created_at).utc.to_s(:http_header),
       'Content-Type' => content_type
     })
     # set Cache-control to “private/public, max-age=?, no-transform” where max-age is in seconds
