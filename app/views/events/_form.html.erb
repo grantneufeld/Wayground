@@ -3,18 +3,7 @@ require 'wayground_form_builder'
 @page_uses_javascript = true
 
 %><%= form_for(event, :builder => WaygroundFormBuilder) do |f| %>
-<%
-if event.errors.any?
-  %><div id="error_explanation">
-<h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
-<ul>
-<% event.errors.full_messages.each do |msg|
-  %><li><%= msg %></li>
-<%
-end -%>
-</ul>
-</div>
-<% end -%>
+<%= show_errors(event) %>
 <table><tbody>
 <tr><th><%= f.label :title %></th>
   <td><%= f.text_field :title, :size => 60, :maxlength => 255 %></td></tr>

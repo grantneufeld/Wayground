@@ -2,7 +2,7 @@
 
 # Details of a calendar event
 class Event < ActiveRecord::Base
-  acts_as_authority_controlled :authority_area => 'Calendar'
+  acts_as_authority_controlled :authority_area => 'Calendar', :item_authority_flag_field => :always_viewable
   attr_accessible(
     :start_at, :end_at, :timezone, :is_allday,
     :is_draft, :is_wheelchair_accessible, :is_adults_only, :is_tentative, :is_cancelled, :is_featured,
