@@ -29,12 +29,12 @@ Time::DATE_FORMATS[:compact_datetime] = "%b %d, %Y, %l:%M:%S%p"
 class ActiveSupport::TimeWithZone < Object
   # Return a string representation of the date & time in iCalendar format,
   # with the timezone specified. This includes the leading ‘:’ or ‘;’.
-  # Should immediately follow an iCalendar field name (such as “DTSTART”).
+  # Should immediately follow an iCalendar field name (such as “DTSTART” — don’t include colon or other separateor after).
   def icalendar_with_zone
     if utc?
       ":#{to_s(:icalendar_utc)}"
     else
-      "TZID=#{ActiveSupport::TimeZone::MAPPING[time_zone.name]}:#{to_s(:icalendar)}"
+      ";TZID=#{ActiveSupport::TimeZone::MAPPING[time_zone.name]}:#{to_s(:icalendar)}"
     end
   end
 end
