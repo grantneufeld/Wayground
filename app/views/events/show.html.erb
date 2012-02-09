@@ -1,4 +1,10 @@
-<div class="vevent">
+<% # encoding: utf-8
+content_for(:head) do
+  %><link rel="alternate" href="<%= event_path(@event, :format => 'ics') %>" type="text/calendar" title="icalendar file for event" />
+<%
+end
+
+%><div class="vevent">
 <h2 class="summary"><%
 if @event.is_cancelled
   %><span class="status" title="CANCELLED">Cancelled:</span>
@@ -10,7 +16,8 @@ end
   event_end = @event.end_at
   unless event_end.blank?
     %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).lstrip! %></abbr><%
-  end %></p>
+  end %>
+<br /><%= link_to 'Download to your calendar.', event_path(@event, :format => 'ics'), :class => 'ics', :title => 'Download a file, with this event’s details, compatible with most calendar applications' %></p>
 <p class="location"><%
   if @event.location_url?
     %><%= link_to @event.location, @event.location_url, :class => 'fn org' %><%

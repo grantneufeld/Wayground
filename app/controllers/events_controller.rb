@@ -17,7 +17,8 @@ class EventsController < ApplicationController
     @user = current_user
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @events }
+      format.ics # index.ics.erb
+      format.xml { render :xml => @events }
     end
   end
 
@@ -31,7 +32,8 @@ class EventsController < ApplicationController
     end
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @event }
+      format.ics # show.ics.erb
+      format.xml { render :xml => @event }
     end
   end
 

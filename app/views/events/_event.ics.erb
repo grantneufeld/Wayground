@@ -1,0 +1,54 @@
+BEGIN:VEVENT
+UID:<%= event.id %>-event@wayground.ca
+CREATED<%= event.created_at.icalendar_with_zone %>
+DTSTAMP<%= event.updated_at.icalendar_with_zone %>
+DTSTART<%= event.start_at.icalendar_with_zone %>
+<% if event.end_at?
+  %>DTEND<%= event.end_at.icalendar_with_zone %>
+<% end
+%>SUMMARY:<%= event.title.gsub(/(\r\n?|\n)/, "\\n").fold!(75,8) %>
+<% if event.description?
+  %>DESCRIPTION:<%= event.description.gsub(/(\r\n?|\n)/, "\\n").fold!(75,12) %>
+<% end
+%>CLASS:PUBLIC
+URL:<%= event_url(event).fold!(75,4) %>
+<% if event.location? || event.address?
+  # TODO: handle city, province, country, location_url.
+  location = event.location + (event.address? ? " (#{event.address})" : '')
+  %>LOCATION:<%= location.fold!(75,9) %>
+<% end
+%>STATUS:<%
+if event.is_tentative? || !(event.is_approved?)
+  %>TENTATIVE<%
+elsif event.is_cancelled?
+  %>CANCELLED<%
+else
+  %>CONFIRMED<%
+end %>
+<%
+if event.organizer?
+  if event.organizer_url?
+    organizer = ";CN=#{event.organizer}:#{event.organizer_url}"
+  else
+    organizer = ":CN=#{event.organizer}"
+  end
+  %>ORGANIZER<%= organizer.fold!(75,9) %>
+<%
+elsif event.organizer_url?
+  %>ORGANIZER:<%= event.organizer_url.fold!(75,10) %>
+<%
+end
+
+#if event.external_links.count > 0
+#  event.external_links.each do |el|
+#    nil
+#    % >ATTACH:< %= el.url.fold!(75,7) % >
+#< %
+#  end
+#end
+
+# TODO: more icalendar fields
+#SEQUENCE: = event.versions.count - 1
+#CATEGORIES: = event.tags.join(',').upcase.fold!(75,11)
+
+%>END:VEVENT

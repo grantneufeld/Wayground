@@ -136,3 +136,6 @@ background:-webkit-gradient(linear, center top, center bottom, from(#800), color
 background:-moz-linear-gradient(top, #800, #F00 50%, #800);
 background:linear-gradient(top, #800, #F00 50%, #800);
 }
+
+a.ics:before{content:url('../icon/file/ics.png'); padding-right:0.3em;}
+a.ics{text-decoration:none;}
