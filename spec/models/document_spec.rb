@@ -249,6 +249,30 @@ describe Document do
   describe "#cleanup_filename" do
     it "should really be a more efficient method from a library or something" do
     end
+    it "should convert runs of spaces to single underscores" do
+      doc = Document.new
+      doc.filename = '    test    with lots  of    spaces '
+      doc.cleanup_filename
+      doc.filename.should eq '_test_with_lots_of_spaces_'
+    end
+    it "should convert em and en dashes to simple dashes" do
+      doc = Document.new
+      doc.filename = '–en—em-plain'
+      doc.cleanup_filename
+      doc.filename.should eq '-en-em-plain'
+    end
+    it "should convert accented characters" do
+      doc = Document.new
+      doc.filename = "ªáÁàÀâÂåÅäÄãÃèéëêÈÉËÊìíïîÌÍÏÎòóöôõÒÓÖÔÕøØºùúüûÙÚÛµæÆœŒç¢ƒﬁﬂñÑ"
+      doc.cleanup_filename
+      doc.filename.should eq 'aaaaaaaaaaaaaeeeeeeeeiiiiiiiiooooooooooooouuuuuuuuaeaeoeoeccffiflnn'
+    end
+    it "should strip forbidden characters" do
+      doc = Document.new
+      doc.filename = "`=¡™£∞§¶•≠`⁄€‹›‡·‚±∑´®†¥¨ˆπ“‘«„´‰ˇ¨ˆ∏”’»ß∂©˙∆˚¬…˝Ω≈√∫˜≤≥÷¸˛Ç◊ı˜¯˘¿"
+      doc.cleanup_filename
+      doc.filename.should eq ''
+    end
   end
 
   describe "#custom_filename=" do

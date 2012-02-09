@@ -119,18 +119,22 @@ class Document < ActiveRecord::Base
   # Replaces or removes any disallowed characters from the filename.
   def cleanup_filename
     # Convert spaces to underscores,
-    self.filename.gsub!(' ', '_')
+    self.filename.gsub!(/ +/, '_')
     # em and en dashes to plain dashes,
     self.filename.gsub!(/[–—]/, '-')
     # convert accented characters to ascii equivalents,
-    self.filename.gsub!(/àáäâãÀÁÄÂÃåÅ/, 'a')
-    self.filename.gsub!(/èéëêÈÉËÊ/, 'e')
-    self.filename.gsub!(/ìíïîÌÍÏÎ/, 'i')
-    self.filename.gsub!(/òóöôõÒÓÖÔÕøØ/, 'o')
-    self.filename.gsub!(/ùúüûÙÚÛÛ/, 'u')
-    self.filename.gsub!(/ç¢/, 'c')
-    self.filename.gsub!(/ƒ/, 'f')
-    self.filename.gsub!(/ñÑ/, 'n')
+    self.filename.gsub!(/[ªáÁàÀâÂåÅäÄãÃ]/, 'a')
+    self.filename.gsub!(/[èéëêÈÉËÊ]/, 'e')
+    self.filename.gsub!(/[ìíïîÌÍÏÎ]/, 'i')
+    self.filename.gsub!(/[òóöôõÒÓÖÔÕøØº]/, 'o')
+    self.filename.gsub!(/[ùúüûÙÚÛµ]/, 'u')
+    self.filename.gsub!(/[æÆ]/, 'ae')
+    self.filename.gsub!(/[œŒ]/, 'oe')
+    self.filename.gsub!(/[ç¢]/, 'c')
+    self.filename.gsub!(/[ƒ]/, 'f')
+    self.filename.gsub!(/[ﬁ]/, 'fi')
+    self.filename.gsub!(/[ﬂ]/, 'fl')
+    self.filename.gsub!(/[ñÑ]/, 'n')
     # and then remove all forbidden characters.
     self.filename.gsub!(/[^A-Za-z0-9_\.\-]+/, '')
   end
