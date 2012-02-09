@@ -5,31 +5,16 @@ describe EventsController do
   before do
     Authority.delete_all
     User.destroy_all
+    # first user is automatically an admin
+    @user_admin = Factory.create(:user, :name => 'Admin User')
+    @user_normal = Factory.create(:user, :name => 'Normal User')
   end
 
-  def mock_admin(stubs={})
-    @mock_admin ||= mock_model(User, {:id => 1, :email => 'test+mockadmin@wayground.ca', :name => 'The Admin', :has_authority_for_area => mock_admin_authority}.merge(stubs))
+  def set_logged_in_admin
+    controller.stub!(:current_user).and_return(@user_admin)
   end
-  def mock_user(stubs={})
-    @mock_user ||= mock_model(User, {:id => 2, :email => 'test+mockuser@wayground.ca', :name => 'A. User', :has_authority_for_area => nil}.merge(stubs))
-  end
-
-  def set_logged_in_admin(stubs={})
-    controller.stub!(:current_user).and_return(mock_admin(stubs))
-  end
-  def set_logged_in_user(stubs={})
-    controller.stub!(:current_user).and_return(mock_user(stubs))
-  end
-
-  def mock_authority(stubs={})
-    @mock_authority ||= mock_model(Authority, {:area => 'global', :user => @mock_user}.merge(stubs)).as_null_object
-  end
-  def mock_admin_authority(stubs={})
-    @mock_admin_authority ||= mock_model(Authority, {:area => 'global', :is_owner => true, :user => @mock_admin}.merge(stubs)).as_null_object
-  end
-  def reset_mock_admin_authority(stubs={})
-    @mock_admin_authority = nil
-    mock_admin_authority(stubs)
+  def set_logged_in_user
+    controller.stub!(:current_user).and_return(@user_normal)
   end
 
   def mock_event(stubs={})
@@ -57,6 +42,13 @@ describe EventsController do
       event = Event.create! valid_attributes
       get :show, :id => event.id
       assigns(:event).should eq(event)
+    end
+    it "shows an alert when an event is_cancelled" do
+      event = Event.new(valid_attributes)
+      event.is_cancelled = true
+      event.save!
+      get :show, :id => event.id
+      request.flash[:alert].should match /[Cc]ancelled/
     end
   end
 

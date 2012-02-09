@@ -5,14 +5,15 @@ describe "events/index.html.erb" do
     assign(:events, [
       stub_model(Event,
         :user => nil,
-        :start_at => Time.now,
+        :start_at => Time.zone.parse('2012-01-01 11:00:00'),
         :end_at => nil,
         :is_allday => false,
         :is_draft => false,
-        :is_approved => false,
+        :is_approved => true,
         :is_wheelchair_accessible => false,
         :is_adults_only => false,
         :is_tentative => false,
+        :is_cancelled => false,
         :is_featured => false,
         :title => "Title",
         :description => "Description",
@@ -28,14 +29,15 @@ describe "events/index.html.erb" do
       ),
       stub_model(Event,
         :user => nil,
-        :start_at => Time.now,
+        :start_at => Time.zone.parse('2012-01-01 11:00:00'),
         :end_at => nil,
         :is_allday => false,
         :is_draft => false,
-        :is_approved => false,
+        :is_approved => true,
         :is_wheelchair_accessible => false,
         :is_adults_only => false,
         :is_tentative => false,
+        :is_cancelled => true,
         :is_featured => false,
         :title => "Title",
         :description => "Description",
@@ -54,6 +56,8 @@ describe "events/index.html.erb" do
 
   it "renders a list of events" do
     render
+    assert_select "div.vevent>h4>span.status", :text => "Cancelled:", :count => 1
+    assert_select "div.vevent>h4>abbr.dtstart", :text => "11:00 AM", :count => 2
     assert_select "div.vevent>h4>span.summary", :text => "Title", :count => 2
     assert_select "span.description", :text => "Description", :count => 2
     assert_select "a.organizer", :text => "Organizer", :count => 2

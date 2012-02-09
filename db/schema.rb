@@ -81,12 +81,14 @@ ActiveRecord::Schema.define(:version => 11) do
     t.integer  "user_id"
     t.datetime "start_at",                                                    :null => false
     t.datetime "end_at"
+    t.string   "timezone",                 :limit => 31
     t.boolean  "is_allday",                                :default => false, :null => false
     t.boolean  "is_draft",                                 :default => false, :null => false
     t.boolean  "is_approved",                              :default => false, :null => false
     t.boolean  "is_wheelchair_accessible",                 :default => false, :null => false
     t.boolean  "is_adults_only",                           :default => false, :null => false
     t.boolean  "is_tentative",                             :default => false, :null => false
+    t.boolean  "is_cancelled",                             :default => false, :null => false
     t.boolean  "is_featured",                              :default => false, :null => false
     t.string   "title",                                                       :null => false
     t.string   "description",              :limit => 511
@@ -103,7 +105,7 @@ ActiveRecord::Schema.define(:version => 11) do
     t.datetime "updated_at"
   end
 
-  add_index "events", ["start_at", "end_at", "is_allday"], :name => "dates"
+  add_index "events", ["start_at", "end_at", "is_allday", "is_approved", "is_draft", "is_cancelled"], :name => "dates"
   add_index "events", ["title"], :name => "index_events_on_title"
   add_index "events", ["user_id"], :name => "index_events_on_user_id"
 
@@ -150,15 +152,14 @@ ActiveRecord::Schema.define(:version => 11) do
 
   create_table "users", :force => true do |t|
     t.string   "email"
-    t.string   "password_hash",          :limit => 128
+    t.string   "password_hash",        :limit => 128
     t.string   "name"
-    t.boolean  "is_verified_realname",                  :default => false, :null => false
-    t.boolean  "email_confirmed",                       :default => false, :null => false
-    t.string   "confirmation_token",     :limit => 128
-    t.string   "remember_token",         :limit => 128
-    t.string   "password_reset_token",   :limit => 128
-    t.datetime "password_reset_sent_at"
-    t.string   "filename",               :limit => 63
+    t.boolean  "is_verified_realname",                :default => false, :null => false
+    t.boolean  "email_confirmed",                     :default => false, :null => false
+    t.string   "confirmation_token",   :limit => 128
+    t.string   "remember_token",       :limit => 128
+    t.string   "filename",             :limit => 63
+    t.string   "timezone",             :limit => 31
     t.string   "location"
     t.text     "about"
     t.datetime "created_at"
@@ -167,7 +168,6 @@ ActiveRecord::Schema.define(:version => 11) do
 
   add_index "users", ["email"], :name => "email", :unique => true
   add_index "users", ["filename"], :name => "filename", :unique => true
-  add_index "users", ["password_reset_token"], :name => "password_reset_token", :unique => true
   add_index "users", ["remember_token"], :name => "remember_token", :unique => true
 
   create_table "versions", :force => true do |t|

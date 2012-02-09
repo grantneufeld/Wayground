@@ -1,5 +1,10 @@
 <div class="vevent">
-<h2 class="summary"><%= @event.title %></h2>
+<h2 class="summary"><%
+if @event.is_cancelled
+  %><span class="status" title="CANCELLED">Cancelled:</span>
+<%
+end
+%><%= @event.title %></h2>
 
 <p><abbr class="dtstart" title="<%= @event.start_at.to_s(:microformat) %>"><%= @event.start_at.to_s(:plain_datetime) %></abbr><%
   event_end = @event.end_at
@@ -7,7 +12,7 @@
     %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).lstrip! %></abbr><%
   end %></p>
 <p class="location"><%
-  if @event.location_url.present?
+  if @event.location_url?
     %><%= link_to @event.location, @event.location_url, :class => 'fn org' %><%
   else
     %><span class="fn org"><%= @event.location %></span><%
@@ -38,7 +43,7 @@ if @event.description
 <%
 end
 
-if @event.content.present?
+if @event.content?
   %><p><%= @event.content %></p>
 
 <%

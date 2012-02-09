@@ -26,6 +26,9 @@ class EventsController < ApplicationController
   def show
     @page_title = "#{@event.start_at.to_s(:simple_date)}: #{@event.title}"
     @user = current_user
+    if @event.is_cancelled
+      flash.now.alert = 'This event has been cancelled.'
+    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @event }

@@ -4,6 +4,7 @@ describe "events/edit.html.erb" do
   before(:each) do
     @event = assign(:event, stub_model(Event,
       :user => nil,
+      :start_at => Time.parse('June 12, 2015 at 11:30 AM'),
       :end_at => "",
       :is_allday => false,
       :is_draft => false,
@@ -11,6 +12,7 @@ describe "events/edit.html.erb" do
       :is_wheelchair_accessible => false,
       :is_adults_only => false,
       :is_tentative => false,
+      :is_cancelled => false,
       :is_featured => false,
       :title => "MyString",
       :description => "MyString",
@@ -39,6 +41,7 @@ describe "events/edit.html.erb" do
       assert_select "input#event_is_wheelchair_accessible", :name => "event[is_wheelchair_accessible]"
       assert_select "input#event_is_adults_only", :name => "event[is_adults_only]"
       assert_select "input#event_is_tentative", :name => "event[is_tentative]"
+      assert_select "input#event_is_cancelled", :name => "event[is_cancelled]"
       #assert_select "input#event_is_featured", :name => "event[is_featured]"
       assert_select "input#event_title", :name => "event[title]"
       assert_select "textarea#event_description", :name => "event[description]"

@@ -1,6 +1,6 @@
 <%= f.hidden_field :id %>
 <table><tbody><tr><th><%= f.label :url, 'Weblink' %></th>
-  <td><%= f.text_field :url %>
+  <td><%= f.url_field :url %>
   <%= f.check_box :_destroy %><%= f.label :_destroy, 'Remove' %></td></tr>
 <tr><th><%= f.label :title %></th>
   <td><%= f.text_field :title %></td></tr></tbody></table>

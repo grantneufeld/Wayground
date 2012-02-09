@@ -2,6 +2,15 @@
 require 'spec_helper'
 
 describe Event do
+
+  before do
+    Authority.delete_all
+    User.destroy_all
+    # first user is automatically an admin
+    @user_admin = Factory.create(:user, :name => 'Admin User')
+    @user_normal = Factory.create(:user, :name => 'Normal User')
+  end
+
   describe "acts_as_authority_controlled" do
     it "should be in the “Calendar” area" do
       Event.authority_area.should eq 'Calendar'
@@ -10,21 +19,24 @@ describe Event do
 
   describe "attr_accessible" do
     it "should not allow user to be set" do
-      user = Factory.build(:user)
-      event = Event.new(:user => user)
+      event = Event.new(:user => @user_normal)
       event.user.should be_nil
     end
     it "should not allow user_id to be set" do
-      event = Event.new(:user_id => 1)
+      event = Event.new(:user_id => @user_normal.id)
       event.user_id.should be_nil
     end
     it "should allow start_at to be set" do
       event = Event.new(:start_at => '2012-01-02 03:04:05')
-      event.start_at.to_s(:db).should eq '2012-01-02 03:04:05'
+      event.start_at.getlocal.to_s(:db).should eq '2012-01-02 03:04:05'
     end
     it "should allow end_at to be set" do
       event = Event.new(:end_at => '2012-06-07 08:09:10')
-      event.end_at.to_s(:db).should eq '2012-06-07 08:09:10'
+      event.end_at.getlocal.to_s(:db).should eq '2012-06-07 08:09:10'
+    end
+    it "should allow timezone to be set" do
+      event = Event.new(:timezone => 'UTC')
+      event.timezone.should eq 'UTC'
     end
     it "should allow is_allday to be set" do
       event = Event.new(:is_allday => true)
@@ -49,6 +61,10 @@ describe Event do
     it "should allow is_tentative to be set" do
       event = Event.new(:is_tentative => true)
       event.is_tentative.should be_true
+    end
+    it "should allow is_cancelled to be set" do
+      event = Event.new(:is_cancelled => true)
+      event.is_cancelled.should be_true
     end
     it "should allow is_featured to be set" do
       event = Event.new(:is_featured => true)
@@ -124,6 +140,28 @@ describe Event do
           :end_at => '2012-01-01 01:01:00'
         )
         event.valid?.should be_false
+      end
+    end
+    describe "of timezone" do
+      it "should pass if timezone is nil" do
+        Event.new(:start_at => '2012-01-01 01:01:01', :title => 'not a timezone',
+          :timezone => nil
+        ).valid?.should be_true
+      end
+      it "should pass if timezone is blank" do
+        Event.new(:start_at => '2012-01-01 01:01:01', :title => 'not a timezone',
+          :timezone => ''
+        ).valid?.should be_true
+      end
+      it "should pass if timezone is one of the recognized timezones" do
+        Event.new(:start_at => '2012-01-01 01:01:01', :title => 'UTC timezone',
+          :timezone => 'UTC'
+        ).valid?.should be_true
+      end
+      it "should fail if the string is present but not a timezone" do
+        Event.new(:start_at => '2012-01-01 01:01:01', :title => 'not a timezone',
+          :timezone => 'invalid timezone'
+        ).valid?.should be_false
       end
     end
     describe "of is_approved" do
@@ -268,7 +306,7 @@ describe Event do
   describe "approve_if_authority" do
     it "should not set is_approved if regular user" do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'already approved')
-      event.user = Factory.create(:user)
+      event.user = @user_normal
       # TESTING:
       event.user.has_authority_for_area('Calendar', :is_owner).should be_false
       # actual tests:
@@ -288,12 +326,51 @@ describe Event do
     it "should not change is_approved if already true" do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'already approved')
       event.is_approved = true
-      event.user = Factory.create(:user)
+      event.user = @user_normal
       # TESTING:
       event.user.has_authority_for_area('Calendar', :is_owner).should be_false
       # actual tests:
       event.approve_if_authority
       event.is_approved.should be_true
+    end
+  end
+
+  describe "#set_timezone" do
+    it "should set the timezone based on the user" do
+      tz_str = 'Central Time (US & Canada)'
+      event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'user’s timezone')
+      event.user = Factory.build(:user, :timezone => tz_str)
+      event.set_timezone
+      event.timezone.should eq tz_str
+    end
+    it "should set the timezone to the system default if no user" do
+      default_tz = Time.zone_default
+      tz_str = 'Pacific Time (US & Canada)'
+      Time.zone_default = ActiveSupport::TimeZone[tz_str]
+      event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'system default timezone')
+      event.set_timezone
+      event.timezone.should eq tz_str
+      Time.zone_default = default_tz
+    end
+    it "should not override an existing timezone" do
+      event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'preset timezone',
+        :timezone => 'Saskatchewan'
+      )
+      event.user = Factory.build(:user, :timezone => 'UTC')
+      event.set_timezone
+      event.timezone.should eq 'Saskatchewan'
+    end
+    it "should be automatically called on create" do
+      event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'auto-set timezone on create')
+      event.save!
+      event.timezone.present?.should be_true
+    end
+    it "should not be called on update" do
+      event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'no timezone on update')
+      event.save!
+      event.timezone = nil
+      event.save!
+      event.timezone.present?.should be_false
     end
   end
 

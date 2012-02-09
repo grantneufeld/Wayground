@@ -12,6 +12,7 @@ describe "events/show.html.erb" do
       :is_wheelchair_accessible => false,
       :is_adults_only => false,
       :is_tentative => false,
+      :is_cancelled => false,
       :is_featured => false,
       :title => "Title",
       :description => "Description",
@@ -27,7 +28,7 @@ describe "events/show.html.erb" do
     ))
   end
 
-  it "renders attributes in <p>" do
+  it "renders the expected text" do
     render
     rendered.should match(/Title/)
     rendered.should match(/Description/)
@@ -40,5 +41,15 @@ describe "events/show.html.erb" do
     rendered.should match(/Province/)
     rendered.should match(/Country/)
     rendered.should match(/href="Location Url"/)
+  end
+
+  it "renders the Cancelled notice" do
+    @event = assign(:event, stub_model(Event, :start_at => Time.current, :title => 'Title',
+      :is_cancelled => true
+    ))
+    render
+    rendered.should match(
+      /<h2 class="summary"><span class="status" title="CANCELLED">Cancelled:<\/span>[ \r\n\t]+Title<\/h2>/
+    )
   end
 end

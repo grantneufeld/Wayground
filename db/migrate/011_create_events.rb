@@ -4,12 +4,14 @@ class CreateEvents < ActiveRecord::Migration
       t.belongs_to :user
       t.datetime :start_at, :null => false
       t.datetime :end_at
+      t.string :timezone, :limit => 31
       t.boolean :is_allday, :null => false, :default => false
       t.boolean :is_draft, :null => false, :default => false
       t.boolean :is_approved, :null => false, :default => false
       t.boolean :is_wheelchair_accessible, :null => false, :default => false
       t.boolean :is_adults_only, :null => false, :default => false
       t.boolean :is_tentative, :null => false, :default => false
+      t.boolean :is_cancelled, :null => false, :default => false
       t.boolean :is_featured, :null => false, :default => false
       t.string :title, :null => false, :limit => 255
       t.string :description, :limit => 511
@@ -28,7 +30,7 @@ class CreateEvents < ActiveRecord::Migration
     end
     change_table :events do |t|
       t.index [:user_id]
-      t.index [:start_at, :end_at, :is_allday], :name=>'dates'
+      t.index [:start_at, :end_at, :is_allday, :is_approved, :is_draft, :is_cancelled], :name=>'dates'
       t.index [:title]
     end
   end
