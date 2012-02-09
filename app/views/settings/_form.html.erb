@@ -1,0 +1,11 @@
+<%= form_for(setting) do |f| %>
+<%= show_errors(setting) %>
+<table><tbody>
+<tr><th><%= f.label :key %></th>
+  <td><%= f.text_field :key, :size => 32, :maxlength => 255 %></td></tr>
+<tr><th><%= f.label :value %></th>
+  <td><%= f.text_area :value, :rows => 8 %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Setting') %></td></tr></tfoot>
+</table>
+<% end -%>

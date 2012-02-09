@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p><b>Key:</b>
+<%= @setting.key %>
+</p>
+
+<p><b>Value:</b>
+<%= @setting.value %>
+</p>
+
+<p class="actions">
+<%= link_to 'Edit', edit_setting_path(@setting) %>
+<%= link_to 'Delete', delete_setting_path(@setting) %>
+</p>

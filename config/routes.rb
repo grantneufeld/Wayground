@@ -16,6 +16,10 @@ Wayground::Application.routes.draw do
   resources :authorities do
     get 'delete', :on => :member
   end
+  # SETTINGS
+  resources :settings do
+    get 'delete', :on => :member
+  end
 
   # CONTENT
   resources :paths do

@@ -89,6 +89,11 @@ Factory.define :redirect_path, :parent => :path do |f|
   f.redirect {'/'}
 end
 
+Factory.define :setting do |f|
+  f.sequence(:key) {|n| "factory_key_#{n}"}
+  f.sequence(:value) {|n| "From factory (#{n})."}
+end
+
 Factory.define :user do |user|
 	user.email                 { Factory.next :email }
 	user.password              { "password" }

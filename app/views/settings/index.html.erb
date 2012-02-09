@@ -1,0 +1,13 @@
+<h1>Settings</h1>
+<p class="actions">
+<%= link_to 'Add New Setting', new_setting_path, :class => 'action' %>
+</p>
+<% if @settings.count > 0 %>
+<table><tbody>
+<% @settings.each do |setting|
+  %><tr><th><%= setting.key %>:</th> <td><%= setting.value %></td> <td><%= link_to 'Edit', edit_setting_path(setting) %><span class="separator">,</span> <%= link_to 'Delete', delete_setting_path(setting) %></td></tr>
+<% end -%>
+</tbody></table>
+<% else %>
+<p><strong>No settings available.</strong></p>
+<% end -%>
