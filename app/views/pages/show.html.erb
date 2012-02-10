@@ -1,11 +1,16 @@
-<% if @page.parent
+<%
+@versioned_item = @page # let the application template know we’re looking at an item with versions
+
+if @page.parent
   parent = @page
   %><p>
 <b>Parent:</b>
 <%= link_to parent.title, parent %>
 </p>
-<% end -%>
-<p>
+<%
+end
+
+%><p>
 <b>Filename:</b>
 <%= link_to @page.filename, @page.sitepath %>
 </p>

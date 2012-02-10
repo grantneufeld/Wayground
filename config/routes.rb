@@ -38,6 +38,7 @@ Wayground::Application.routes.draw do
   resources :events do
     get 'delete', :on => :member
     delete 'delete' => 'events#destroy', :on => :member
+    resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
 
   root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }

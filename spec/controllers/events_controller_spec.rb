@@ -3,6 +3,7 @@ require 'spec_helper'
 describe EventsController do
 
   before do
+    Event.destroy_all
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
@@ -31,7 +32,7 @@ describe EventsController do
 
   describe "GET index" do
     it "assigns all events as @events" do
-      event = Event.create! valid_attributes
+      event = Factory.create(:event)
       get :index
       assigns(:events).should eq([event])
     end
@@ -39,14 +40,12 @@ describe EventsController do
 
   describe "GET show" do
     it "assigns the requested event as @event" do
-      event = Event.create! valid_attributes
+      event = Factory.create(:event)
       get :show, :id => event.id
       assigns(:event).should eq(event)
     end
     it "shows an alert when an event is_cancelled" do
-      event = Event.new(valid_attributes)
-      event.is_cancelled = true
-      event.save!
+      event = Factory.create(:event, :is_cancelled => true)
       get :show, :id => event.id
       request.flash[:alert].should match /[Cc]ancelled/
     end
@@ -132,14 +131,14 @@ describe EventsController do
   describe "GET edit" do
     it "requires the user to have authority" do
       set_logged_in_user
-      event = Event.create!(valid_attributes)
+      event = Factory.create(:event)
       get :edit, :id => event.id
       response.status.should eq 403
     end
 
     it "assigns the requested event as @event" do
       set_logged_in_admin
-      event = Event.create! valid_attributes
+      event = Factory.create(:event)
       get :edit, :id => event.id
       assigns(:event).should eq(event)
     end
@@ -148,7 +147,7 @@ describe EventsController do
   describe "PUT update" do
     it "requires the user to have authority" do
       set_logged_in_user
-      event = Event.create!(valid_attributes)
+      event = Factory.create(:event)
       put :update, :id => event.id, :event => {'these' => 'params'}
       response.status.should eq 403
     end
@@ -156,7 +155,7 @@ describe EventsController do
     describe "with valid params" do
       it "updates the requested event" do
         set_logged_in_admin
-        event = Event.create! valid_attributes
+        event = Factory.create(:event)
         # Assuming there are no other events in the database, this
         # specifies that the Event created on the previous line
         # receives the :update_attributes message with whatever params are
@@ -167,14 +166,14 @@ describe EventsController do
 
       it "assigns the requested event as @event" do
         set_logged_in_admin
-        event = Event.create! valid_attributes
+        event = Factory.create(:event)
         put :update, :id => event.id, :event => valid_attributes
         assigns(:event).should eq(event)
       end
 
       it "redirects to the event" do
         set_logged_in_admin
-        event = Event.create! valid_attributes
+        event = Factory.create(:event)
         put :update, :id => event.id, :event => valid_attributes
         response.should redirect_to(event)
       end
@@ -183,7 +182,7 @@ describe EventsController do
     describe "with invalid params" do
       it "assigns the event as @event" do
         set_logged_in_admin
-        event = Event.create! valid_attributes
+        event = Factory.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
         Event.any_instance.stub(:save).and_return(false)
         put :update, :id => event.id, :event => {}
@@ -192,7 +191,7 @@ describe EventsController do
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        event = Event.create! valid_attributes
+        event = Factory.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
         Event.any_instance.stub(:save).and_return(false)
         put :update, :id => event.id, :event => {}
@@ -204,7 +203,7 @@ describe EventsController do
   describe "GET delete" do
     it "requires the user to have authority" do
       set_logged_in_user
-      event = Event.create!(valid_attributes)
+      event = Factory.create(:event)
       get :delete, :id => event.id
       response.status.should eq 403
     end
@@ -220,14 +219,14 @@ describe EventsController do
   describe "DELETE destroy" do
     it "requires the user to have authority" do
       set_logged_in_user
-      event = Event.create!(valid_attributes)
+      event = Factory.create(:event)
       delete :destroy, :id => event.id
       response.status.should eq 403
     end
 
     it "destroys the requested event" do
       set_logged_in_admin
-      event = Event.create! valid_attributes
+      event = Factory.create(:event)
       expect {
         delete :destroy, :id => event.id
       }.to change(Event, :count).by(-1)
@@ -235,7 +234,7 @@ describe EventsController do
 
     it "redirects to the events list" do
       set_logged_in_admin
-      event = Event.create! valid_attributes
+      event = Factory.create(:event)
       delete :destroy, :id => event.id
       response.should redirect_to(events_url)
     end

@@ -1,4 +1,6 @@
 <% # encoding: utf-8
+@versioned_item = @event # let the application template know we’re looking at an item with versions
+
 content_for(:head) do
   %><link rel="alternate" href="<%= event_path(@event, :format => 'ics') %>" type="text/calendar" title="icalendar file for event" />
 <%

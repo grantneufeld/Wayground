@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-# Reviewing versions of arbitrary items (such as Pages).
+# Reviewing versions of arbitrary items (such as Pages or Events).
 # This controller is always routed as a sub-controller to an item class (e.g., pages).
 class VersionsController < ApplicationController
   before_filter :set_item
@@ -33,7 +33,11 @@ class VersionsController < ApplicationController
   protected
 
   def set_item
-    @item = Page.find(params[:page_id])
+    if params[:page_id].present?
+      @item = Page.find(params[:page_id])
+    elsif params[:event_id].present?
+      @item = Event.find(params[:event_id])
+    end
   end
 
   def requires_view_authority

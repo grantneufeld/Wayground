@@ -4,11 +4,15 @@ require 'spec_helper'
 describe VersionsController do
 
   before(:all) do
+    Version.delete_all
     Page.delete_all
     Path.delete_all
-    Version.delete_all
-    @page = Factory.create(:page)
+    Event.delete_all
+    User.delete_all
+    @user = Factory.create(:user)
+    @page = Factory.create(:page, :editor => @user)
     @version = @page.versions.first
+    @event = Factory.create(:event, :user => @user, :editor => @user)
   end
 
   describe "GET index" do
@@ -39,4 +43,14 @@ describe VersionsController do
     end
   end
 
+  describe "#set_item" do
+    it "should assign the page to @item when page_id is passed in" do
+      get :show, :id => @version.id, :page_id => @page.id
+      assigns(:item).should eq(@page)
+    end
+    it "should assign the event to @item when event_id is passed in" do
+      get :show, :id => @version.id, :event_id => @event.id
+      assigns(:item).should eq(@event)
+    end
+  end
 end

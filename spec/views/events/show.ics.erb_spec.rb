@@ -84,6 +84,7 @@ describe "events/show.ics.erb" do
     rendered.should match(/^ORGANIZER;CN=Organizer:http:\/\/organizer\.tld\/$/)
     #rendered.should match(/^ATTACH:http:\/\/1st\.external\.link\/$/)
     #rendered.should match(/^ATTACH:http:\/\/2nd\.external\.link\/$/)
+    rendered.should match(/^SEQUENCE:1$/)
     rendered.should match(/^END:VEVENT[\r\n]*\z/)
   end
 end

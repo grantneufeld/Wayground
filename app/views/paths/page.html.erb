@@ -1,4 +1,7 @@
-<%= @page.content.html_safe %>
+<%
+@versioned_item = @page # let the application template know we’re looking at an item with versions
+
+%><%= @page.content.html_safe %>
 <% content_for :actions do
   %><%= render :partial => 'pages/actions', :locals => {:page => @page, :skip_view => true} %><%
 end -%>

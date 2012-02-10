@@ -17,6 +17,19 @@ describe Event do
     end
   end
 
+  describe "attr_accessor" do
+    it "should provide an editor accessor" do
+      event = Event.new
+      event.editor = 'test'
+      event.editor.should eq 'test'
+    end
+    it "should provide an edit_comment accessor" do
+      event = Event.new
+      event.edit_comment = 'test'
+      event.edit_comment.should eq 'test'
+    end
+  end
+
   describe "attr_accessible" do
     it "should not allow user to be set" do
       event = Event.new(:user => @user_normal)
@@ -118,6 +131,14 @@ describe Event do
       url = 'http://set.external_links_attributes.tld/'
       event = Event.new(:external_links_attributes => {'0' => {:url => url}})
       event.external_links[0].url.should eq url
+    end
+    it "should not allow editor to be set" do
+      event = Event.new(:editor => @user_normal)
+      event.editor.should be_nil
+    end
+    it "should allow edit_comment to be set" do
+      event = Event.new(:edit_comment => 'set edit_comment')
+      event.edit_comment.should eq 'set edit_comment'
     end
   end
 
@@ -272,6 +293,7 @@ describe Event do
   describe "scopes" do
     describe "default_scope" do
       it "should order by start date & time by default" do
+        Event.delete_all
         event2 = Factory.create(:event, :start_at => '2002-02-02 02:02:02')
         event4 = Factory.create(:event, :start_at => '2004-04-04 04:04:04')
         event3 = Factory.create(:event, :start_at => '2003-03-03 03:03:03')
@@ -281,6 +303,7 @@ describe Event do
     end
     describe ".approved" do
       it "should return only events where is_approved" do
+        Event.delete_all
         event1 = Factory.build(:event)
         event1.is_approved = true
         event1.save!
@@ -362,15 +385,37 @@ describe Event do
     end
     it "should be automatically called on create" do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'auto-set timezone on create')
+      event.editor = @user_admin
       event.save!
       event.timezone.present?.should be_true
     end
     it "should not be called on update" do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'no timezone on update')
+      event.editor = @user_admin
       event.save!
       event.timezone = nil
       event.save!
       event.timezone.present?.should be_false
+    end
+  end
+
+  describe "#add_version" do
+    it "should add a Version" do
+      event = Factory.create(:event, :editor => @user_admin, :edit_comment => 'add a version')
+      expect { event.add_version }.to change{event.versions.count}.by(1)
+    end
+    it "should fail if editor has not been set" do
+      event = Factory.create(:event, :editor => @user_admin, :edit_comment => 'without editor')
+      event.editor = nil
+      expect { event.add_version }.to raise_error
+    end
+    it "should be called after an event is created" do
+      event = Factory.build(:event, :editor => @user_admin, :edit_comment => 'add_version after save')
+      expect { event.save! }.to change{event.versions.count}.by(1)
+    end
+    it "should be called after an event is updated" do
+      event = Factory.create(:event, :editor => @user_admin, :edit_comment => 'add_version after update')
+      expect { event.update_attributes(:title => 'updated version') }.to change{event.versions.count}.by(1)
     end
   end
 

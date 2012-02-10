@@ -12,7 +12,13 @@
   user = version.user
   %><tr>
 <td><%= link_to user.name, profile_path(user) %></td>
-<td><%= link_to version.edited_at, page_version_path(@item, version) %></td>
+<td><%
+if @item.is_a? Page
+  %><%= link_to version.edited_at, page_version_path(@item, version) %><%
+elsif @item.is_a? Event
+  %><%= link_to version.edited_at, event_version_path(@item, version) %><%
+end
+%></td>
 <td><%= version.edit_comment %></td>
 </tr>
 <% end %></tbody>

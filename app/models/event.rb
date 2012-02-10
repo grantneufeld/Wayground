@@ -3,19 +3,21 @@
 # Details of a calendar event
 class Event < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Calendar', :item_authority_flag_field => :always_viewable
+  attr_accessor :editor, :edit_comment
   attr_accessible(
     :start_at, :end_at, :timezone, :is_allday,
     :is_draft, :is_wheelchair_accessible, :is_adults_only, :is_tentative, :is_cancelled, :is_featured,
     :title, :description, :content,
     :organizer, :organizer_url,
     :location, :address, :city, :province, :country, :location_url,
-    :external_links_attributes
+    :external_links_attributes, :edit_comment
   )
 
   belongs_to :user
   has_many :external_links, :as => :item
   accepts_nested_attributes_for :external_links,
     :reject_if => lambda { |el| el[:url].blank? }, :allow_destroy => true
+  has_many :versions, :as => :item, :dependent => :delete_all
 
   validates_length_of :title, :within => 1..255
   validates_presence_of :start_at
@@ -38,6 +40,7 @@ class Event < ActiveRecord::Base
 
   before_save :approve_if_authority
   before_create :set_timezone
+  after_save :add_version
 
   # An event cannot end before, or when, it begins.
   def validate_end_at_after_start_at
@@ -76,6 +79,34 @@ class Event < ActiveRecord::Base
         self.timezone = Time.zone_default.name
       end
     end
+  end
+
+  # Add a Version based on the current state of this item
+  def add_version
+    data = "timezone: #{timezone}\n" + \
+      "is_allday: #{is_allday}\n" + \
+      "is_draft: #{is_draft}\n" + \
+      "is_approved: #{is_approved}\n" + \
+      "is_wheelchair_accessible: #{is_wheelchair_accessible}\n" + \
+      "is_adults_only: #{is_adults_only}\n" + \
+      "is_tentative: #{is_tentative}\n" + \
+      "is_cancelled: #{is_cancelled}\n" + \
+      "is_featured: #{is_featured}\n" + \
+      "organizer: #{organizer}\n" + \
+      "organizer_url: #{organizer_url}\n" + \
+      "location: #{location}\n" + \
+      "address: #{address}\n" + \
+      "city: #{city}\n" + \
+      "province: #{province}\n" + \
+      "country: #{country}\n" + \
+      "location_url: #{location_url}\n" + \
+      "content:\n#{content}"
+    self.versions.create!(
+      :user => editor, :edited_at => self.updated_at, :edit_comment => edit_comment,
+      :filename => nil, :title => title, :url => nil, :description => description,
+      :content => data, :content_type => 'text/plain',
+      :start_on => start_at.to_date, :end_on => (end_at? ? end_at.to_date : nil)
+    )
   end
 
 end

@@ -105,9 +105,20 @@ end %></div>
 </div>
 
 <div id="footer">
-<% if content_for? :actions
+<%
+if @versioned_item || content_for?(:actions)
 	%><p class="actions">
-<%= yield :actions %>
+<%
+  if @versioned_item && @versioned_item.versions.count > 1
+    if @versioned_item.is_a? Page
+      %><%= link_to 'Versions', page_versions_path(@versioned_item), :class => 'action',
+        :title => 'Previous versions of this Page' %>
+<%  elsif @versioned_item.is_a? Event
+      %><%= link_to 'Versions', event_versions_path(@versioned_item), :class => 'action',
+        :title => 'Previous versions of this Event' %>
+<%  end
+  end
+%><%= yield :actions %>
 </p>
 <% end -%>
 <%= yield :footer -%>

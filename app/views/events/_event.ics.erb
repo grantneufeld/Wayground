@@ -46,9 +46,11 @@ end
 #< %
 #  end
 #end
+%>SEQUENCE:<%= event.versions.count %>
+<%
 
 # TODO: more icalendar fields
-#SEQUENCE: = event.versions.count - 1
+#
 #CATEGORIES: = event.tags.join(',').upcase.fold!(75,11)
 
 %>END:VEVENT

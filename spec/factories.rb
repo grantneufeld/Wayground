@@ -56,6 +56,7 @@ end
 Factory.define :event do |f|
   f.sequence(:start_at) {|n| n.days.from_now.to_datetime.to_s(:db)}
   f.sequence(:title) {|n| "Factory Event #{n}"}
+  f.editor { Factory(:user) }
 end
 Factory.define :event_future, :parent => :event do |f|
   # new events are in the future by default
