@@ -3,6 +3,7 @@
 
 content_for(:head) do
   %><link rel="alternate" href="<%= event_path(@event, :format => 'ics') %>" type="text/calendar" title="icalendar file for event" />
+<link rel="profile" href="http://microformats.org/profile/hcalendar" />
 <%
 end
 

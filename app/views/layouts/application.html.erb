@@ -18,15 +18,15 @@
 
 %><!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <title><%
 if @page_title.blank? or params[:url] == '/'
 	%>Wayground<%
 else
-	%><%=h @page_title %> — Wayground<%
+	%><%=h @page_title %> [Wayground]<%
 end
 %></title>
-<meta name="viewport" content="width=device-width" />
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
 <!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
 <%= stylesheet_link_tag 'wayground-all', :media => 'all' %>
@@ -39,7 +39,6 @@ if @rich_text_editor
   %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
 <% # javascript_include_tag '/ckeditor/adapters/jquery.js'
 end -%>
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 <%= csrf_meta_tag %>
 <%
 if @browser_nocache
