@@ -316,8 +316,22 @@ describe Event do
         Event.approved.should eq [event1, event3]
       end
     end
-    describe ".current" do
+    describe ".upcoming" do
       it "should return only events that are active on, or after, the current current date & time" do
+        Event.delete_all
+        # create some past events
+        Factory.create(:event, :start_at => 1.day.ago)
+        Factory.create(:event, :start_at => 2.weeks.ago)
+        Factory.create(:event, :start_at => 3.months.ago)
+        # create an event that occurred earlier today
+        event1 = Factory.create(:event, :start_at => Time.current.beginning_of_day)
+        # create an event happening in just a minute
+        event2 = Factory.create(:event, :start_at => Time.current.advance(:minutes => 1))
+        # create some future events
+        event3 = Factory.create(:event, :start_at => 1.hour.from_now)
+        event4 = Factory.create(:event, :start_at => 2.days.from_now)
+        event5 = Factory.create(:event, :start_at => 3.months.from_now)
+        Event.upcoming.should eq [event1, event2, event3, event4, event5]
       end
     end
     describe ".past" do

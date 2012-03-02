@@ -37,6 +37,7 @@ class Event < ActiveRecord::Base
 
   default_scope order('start_at')
   scope :approved, where(:is_approved => true)
+  scope :upcoming, where('start_at >= ?', Time.current.beginning_of_day)
 
   before_save :approve_if_authority
   before_create :set_timezone
