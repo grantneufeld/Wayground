@@ -1,7 +1,7 @@
 <h1><%
-user_name = @user.name
+user_name = @profile_user.name
 if user_name.blank?
-  %>User: <%= @user.id %><%
+  %>User: <%= @profile_user.id %><%
 else
   %><%= user_name %><%
 end
@@ -9,8 +9,8 @@ end
 <%
 
 sites = {}
-if @user.authentications.count > 0
-  @user.authentications.each do |authentication|
+if @profile_user.authentications.count > 0
+  @profile_user.authentications.each do |authentication|
     sites[authentication.provider] = authentication
   end
   sites.keys.sort.each do |key|

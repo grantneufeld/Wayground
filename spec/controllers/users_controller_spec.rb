@@ -14,7 +14,19 @@ describe UsersController do
 	def set_logged_in(stubs={})
 		controller.stub!(:current_user).and_return(mock_user(stubs))
 	end
-	
+
+  describe "GET 'profile'" do
+    let(:user) { @user = Factory.create(:user) }
+    it "should be successful" do
+      get 'profile', :id => user.id
+      response.should be_success
+    end
+    it "should show the specified user’s profile" do
+      get 'profile', :id => user.id
+      assigns(:profile_user).should eq user
+    end
+  end
+
 	describe "GET 'show'" do
 		it "should be successful" do
 			set_logged_in

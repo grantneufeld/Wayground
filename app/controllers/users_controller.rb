@@ -4,11 +4,13 @@
 # Accessed by users as the singular resource “/account”,
 # and by admins as the plural resources “/users”.
 class UsersController < ApplicationController
-  before_filter :set_user, :except => [:new, :create]
-  before_filter :set_site_location, :except => [:show]
+  before_filter :set_user, :except => [:profile, :new, :create]
+  before_filter :set_site_location, :except => [:profile, :show]
   before_filter :cant_be_signed_in, :only => [:new, :create]
 
   def profile
+    @profile_user = User.find(params[:id])
+    @page_title = "User: #{@profile_user.name}"
   end
 
   def show
