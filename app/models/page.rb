@@ -30,7 +30,11 @@ class Page < ActiveRecord::Base
   end
 
   def update_path
-    self.path.update_attributes!(:sitepath => self.calculate_sitepath)
+    if self.path.nil?
+      generate_path
+    else
+      self.path.update_attributes!(:sitepath => self.calculate_sitepath)
+    end
   end
 
   def calculate_sitepath

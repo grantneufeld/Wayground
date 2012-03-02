@@ -35,7 +35,7 @@ Feature: Authority assignment
     Given there is an admin user "Test Admin"
     When I sign in as "Test Admin"
     And I go to the authorities index
-    Then I should see the authorities index
+    Then I should be on the authorities index
 
   Scenario: an admin can review an authority
     Given there is an admin user "Test Admin"
