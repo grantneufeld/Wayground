@@ -1,5 +1,6 @@
 <% # encoding: utf-8
 @versioned_item = @event # let the application template know we’re looking at an item with versions
+@page_main_class = 'vevent'
 
 content_for(:head) do
   %><link rel="alternate" href="<%= event_path(@event, :format => 'ics') %>" type="text/calendar" title="icalendar file for event" />
@@ -7,8 +8,7 @@ content_for(:head) do
 <%
 end
 
-%><div class="vevent">
-<h2 class="summary"><%
+%><h2 class="summary"><%
 if @event.is_cancelled
   %><span class="status" title="CANCELLED">Cancelled:</span>
 <%
@@ -47,14 +47,14 @@ if event_organizer.present?
 <%
 end
 
-if @event.description
-  %><p><%= @event.description %></p>
+if @event.description?
+  %><%= simple_text_to_html(@event.description) %>
 
 <%
 end
 
 if @event.content?
-  %><p><%= @event.content %></p>
+  %><%= simple_text_to_html(@event.content) %>
 
 <%
 end
@@ -64,7 +64,7 @@ if @event.external_links.count > 0
 <ul>
 <%
   @event.external_links.each do |external_link|
-    %><li><%= link_to external_link.title, external_link.url, :class => "url #{(external_link.site)}".rstrip! %></li>
+    %><li><%= link_to external_link.title, external_link.url, :class => "url #{(external_link.site)}".rstrip!, :target => '_blank' %></li>
 <%
   end
 %></ul>
@@ -82,4 +82,3 @@ if @user.present?
   %><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
 <%
 end -%>
-</div>
