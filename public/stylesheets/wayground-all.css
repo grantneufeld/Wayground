@@ -1,17 +1,29 @@
+/* clear default formatting */
 a img{border:0px none;}
 
-#headertitle, #maintitle, #subtitle, #navmenu > li, h1, h2, h3, h4, h5, h6{font-family:Ubuntu,'Officina Serif ITC',Helvetica,sans-serif;}
-h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0em;}
-* + h1,* + h2,* + h3,* + h4,* + h5,* + h6{margin-top:1em;}
-abbr{border-bottom:0em none; text-decoration:none;}
-#maintitle{font-weight:bold; line-height:0.808em; text-transform:uppercase;}
-#subtitle{line-height:0.947em; margin:0em;}
-#flash > * + *{margin-top:1em;}
-#flash > p{text-indent:0em;}
-.button, .nowrap{white-space:nowrap;}
-.hidden{display:none;}
-.subtext{font-weight:normal;}
+/* font */
+body,p,li,td,th{font-family:"Lucida Grande",Helvetica,Verdana,sans-serif;}
+#headertitle,#maintitle,#subtitle,#navmenu > li,h1,h2,h3,h4,h5,h6{font-family:Ubuntu,"Myriad Pro",Myriad,"Officina Serif ITC",Helvetica,sans-serif;}
+h1{font-size:1.8em;}
+h2{font-size:1.8em;}
+h3{font-size:1.15em;}
+h4{font-size:1.05em;}
 
+/* spacing */
+*{margin-top:0em; margin-bottom:0em;}
+body{margin:0em; padding:0em;}
+h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0em;}
+*+*{margin-top:0.75em;}
+*+ul{margin-top:0.2em;}
+*+li{margin-top:0.2em;}
+h1 + *{margin-top:0.75em;}
+* + p,* + h1,* + h2,* + h3,* + h4,* + h5,* + h6{margin-top:1em;}
+p,li,td,th{line-height:1.4em;}
+ul{padding-left:2em;}
+header,nav{margin:0em; padding:0em;}
+textarea{width:98%;}
+
+/* tables */
 table, tr, th, td{border-spacing:0em;}
 table.full{width:100%;}
 th, td{padding:0.2em 0.4em; vertical-align:top;}
@@ -31,6 +43,15 @@ td, th{
 }
 td > table, th > table{width:100%;}
 
+/* elements */
+.button, .nowrap{white-space:nowrap;}
+.hidden{display:none;}
+.separator{display:none;}
+
+/* columns
+	TODO: This needs to be redone to use em measurements instead of px
+	TODO: This needs to be redone to mobile-first format (instead of widescreen-first)
+*/
 .simplecols2{-moz-column-count:2; -webkit-column-count:2; column-count:2;}
 .closeblock{clear:both; height:1px;}
 .columns, #content > .columns{margin:0em auto 0em 0em; border-collapse:collapse; border-spacing:0em;}
@@ -71,3 +92,50 @@ h1 + .columns{clear:right;}
 }
 
 .preview{background:white; color:black; border:thin solid #999; max-height:18em; overflow:auto; padding:1.2em;}
+
+/* header */
+#logo{float:left; margin:0em 0.33em 0em 0em; max-height:1.25em;}
+#maintitle{line-height:0.808em; text-transform:uppercase;}
+#subtitle{font-size:1.1875em; line-height:0.947em; margin:0em;}
+
+#flash > * + *{margin-top:1em;}
+#flash > p{text-indent:0em;}
+
+#main{clear:both; margin:0em; padding:0em;}
+#main.single{background:white; color:black; padding:0em 0em 1.25em;}
+#main > *{margin-left:1.25em; margin-right:1.25em; max-width:61.5em;/*984px*/}
+#main > .columns{margin-left:1.25em;}
+#main > *:first-child{padding-top:1.25em;}
+#main > h1, #main > h1:first-child{max-width:35.1429em; margin-left:0.7143em; margin-right:0.7143em; padding-top:0.66em;}
+#main > * + h1{padding-top:0.25em; border-top:thin dotted rgba(0,0,0,0.2);}
+#main > h2{max-width:41em; margin-left:0.8333em; margin-right:0.8333em;}
+#main > h3{max-width:49.2em; margin-left:1em; margin-right:1em;}
+#main > p{max-width:68.3333em; margin-left:1.3889em; margin-right:1.3889em;}
+#main > .contentchunk, .contentchunk{background:white; color:black; margin:1em 0em; padding:0.5em 1em; max-width:43em;}
+#main > .contentchunk > .heading:first-child, .contentchunk > .heading:first-child{margin:-0.5em -1em; padding:0.5em 1em;}
+
+.calendar{}
+.calendar > h3{border-top:1px dashed black; padding-top:0.5em;}
+.vevent{margin:0.25em 0em 0em 1em; max-width:40em;}
+.vevent + .vevent{border-top:1px dotted grey; margin-top:0.5em; padding-top:0.25em;}
+.vevent h4 + *{margin-top:0em;}
+
+#main > .more, .more{float:left; margin:1em; padding:0.5em 1em;}
+#main > .more h2, .more h2, #main > .more ul, .more ul{display:inline;}
+
+#footer{clear:both; font-size:0.8em; margin:0em; padding:1em 4em;}
+
+/* changes as display area widens */
+@media all and (min-width: 401px) {
+h3{font-size:1.4em;}
+}
+@media all and (min-width: 421px) {
+#main > .contentchunk, .contentchunk{margin-left:1em; margin-right:1em;}
+}
+@media all and (min-width: 588px) {
+#header h1{font-size:3em;}
+}
+@media all and (min-width: 641px) {
+#main > .contentchunk, .contentchunk{float:left;}
+#main > .more h2, #main > .more ul, #main > .more li, .more h2, .more ul, .more li{display:block;}
+}

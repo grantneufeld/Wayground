@@ -57,7 +57,7 @@ describe "events/index.html.erb" do
   it "renders a list of events" do
     render
     assert_select "div.vevent>h4>span.status", :text => "Cancelled:", :count => 1
-    assert_select "div.vevent>h4>abbr.dtstart", :text => "11:00 AM", :count => 2
+    assert_select "div.vevent>h4>time.dtstart", :text => "11:00 AM", :count => 2
     assert_select "div.vevent>h4>span.summary", :text => "Title", :count => 2
     assert_select "span.description", :text => "Description", :count => 2
     assert_select "a.organizer", :text => "Organizer", :count => 2

@@ -30,9 +30,9 @@ date_idx = nil
     %><span class="status" title="CANCELLED">Cancelled:</span>
 <%
   end
-  %><abbr class="dtstart" title="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(:plain_time) %></abbr><%
+  %><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(:plain_time) %></time><%
   unless event_end.blank?
-    %>-<abbr class="dtend" title="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time) %></abbr><%
+    %>-<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time) %></time><%
   end %>:
 <span class="summary"><%= link_to event.title, event %></span></h4>
 <%

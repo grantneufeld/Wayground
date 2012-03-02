@@ -9,6 +9,8 @@
 # @page_description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @site_section: lower-case string label for the active section of the website.
 # @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
+# @page_has_chunks: set true if the page content is in chunks (usually class="contentchunk" elements).
+# @page_main_class: a name to include in the class attribute of the id="main" wrapper around the page-specific content.
 
 # Blocks - all are optional. Called with ‘content_for :block_name do … end’.
 #
@@ -39,6 +41,9 @@ if @rich_text_editor
   %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
 <% # javascript_include_tag '/ckeditor/adapters/jquery.js'
 end -%>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
 <%= csrf_meta_tag %>
 <%
 if @browser_nocache
@@ -50,9 +55,12 @@ unless @page_description.blank?
 %><%= yield :head -%>
 </head><body>
 
-<div id="header">
+<header id="header" role="banner">
 <div id="headertitle">
-<p id="maintitle"><a href="/">Wayground</a></p>
+<%
+# If you don’t want a subtitle, remove that paragraph and take away the "maintitle" id from the heading.
+-%>
+<h1 id="maintitle"><a href="/"><img src="/apple-touch-icon-114x114.png" alt=" " id="logo" />Wayground</a></h1>
 <p id="subtitle">Tools for connecting, communicating and collaborating.</p>
 </div>
 <ul id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
@@ -69,12 +77,12 @@ unless @page_description.blank?
 		%></li><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li><%
 	end %>
 </ul>
-<form action="" method="get" accept-charset="utf-8" id="globalsearch">
+<form action="" method="get" accept-charset="utf-8" id="globalsearch" role="search">
 <p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
 </form>
-</div>
+</header>
 
-<ul id="navmenu">
+<nav role="navigation"><ul id="navmenu">
 <li<%= @site_section == 'Pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
 <li<%= @site_section == 'Events' ? ' class="current"'.html_safe : '' %>><%= link_to 'Events', events_path %></li>
 <li<%= @site_section == 'Admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
@@ -89,6 +97,8 @@ if @site_breadcrumbs && @site_breadcrumbs.size > 0
 	%></ul>
 <%
 end
+%></nav>
+<%
 
 if flash.length > 0 %>
 <div id="flash"<%= flash.length <= 0 ? ' class="hidden"'.html_safe : '' %>><%
@@ -99,11 +109,19 @@ if flash.length > 0
 end %></div>
 <% end -%>
 
-<div id="content">
+<%
+
+main_class = @page_has_chunks ? 'withchunks' : 'single'
+if @page_main_class.present?
+  main_class += ' ' + @page_main_class
+end
+
+%>
+<div id="main" class="<%= main_class %>" role="main">
 <%= yield %>
 </div>
 
-<div id="footer">
+<footer id="footer" role="contentinfo">
 <%
 if @versioned_item || content_for?(:actions)
 	%><p class="actions">
@@ -123,5 +141,5 @@ if @versioned_item || content_for?(:actions)
 <%= yield :footer -%>
 <p id="about"><a href="">About Wayground</a>.</p>
 <p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> Wayground.</p>
-</div>
+</footer>
 </body></html>

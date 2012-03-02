@@ -47,7 +47,7 @@ end
 
 Then /^I should see that the event starts on "([^\"]*)"$/ do |datetime_str|
   dt = DateTime.parse(datetime_str)
-  body.should match(/[ \t\r\n]class="dtstart"[ \t\r\n]title="#{dt.to_s(:microformat)}">/)
+  body.should match(/[ \t\r\n]class="dtstart"[ \t\r\n]datetime="#{dt.to_s(:microformat)}">/)
 end
 
 

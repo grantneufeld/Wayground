@@ -139,7 +139,7 @@ describe "layouts/application.html.erb" do
   it "content_for(:footer) should go at the top of the footer" do
     view.content_for(:footer) { 'Test Footer' }
     render
-    rendered.should match(/<div id="footer">[ \t\r\n]*Test Footer/)
+    rendered.should match(/<footer [^>]*id="footer"[^>]*>[ \t\r\n]*Test Footer/)
   end
 
 
