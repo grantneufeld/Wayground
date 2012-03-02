@@ -97,6 +97,14 @@ describe Page do
       page.update_attributes!(:filename => 'changed')
       page.sitepath.should eq '/changed'
     end
+    it "should create the path if the Page doesn’t have one" do
+      page = Factory.create(:page, :filename => 'original')
+      page.path.destroy
+      page.path = nil
+      page.filename = 'changed'
+      page.update_path
+      page.sitepath.should eq '/changed'
+    end
   end
 
   describe "#calculate_sitepath" do
