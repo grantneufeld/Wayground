@@ -19,12 +19,12 @@ describe "layouts/application.html.erb" do
     it "should be used for the title element if present" do
       @page_title = 'Test Title'
       render
-      rendered.should match(/<title>#{@page_title} \[Wayground\]<\/title>/)
+      rendered.should match(/<title>#{@page_title} \[#{Wayground::Application::NAME}\]<\/title>/)
     end
     it "should default to the site title if blank" do
       @page_title = nil
       render
-      rendered.should match(/<title>Wayground<\/title>/)
+      rendered.should match(/<title>#{Wayground::Application::NAME}<\/title>/)
     end
   end
 

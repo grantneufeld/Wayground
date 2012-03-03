@@ -38,5 +38,10 @@ module Wayground
 
 		# Configure sensitive parameters which will be filtered from the log file.
 		config.filter_parameters += [:password, :password_confirmation]
+
+    # These constants define the, surprise surpise, name and description of the website.
+    NAME = 'Wayground'
+    DESCRIPTION = 'Tools for connecting, communicating and collaborating.'
+
 	end
 end

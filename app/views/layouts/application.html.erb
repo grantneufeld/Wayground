@@ -22,9 +22,9 @@
 <html lang="en"><head><meta charset="utf-8">
 <title><%
 if @page_title.blank? or params[:url] == '/'
-	%>Wayground<%
+  %><%= Wayground::Application::NAME %><%
 else
-	%><%=h @page_title %> [Wayground]<%
+  %><%=h @page_title %> [<%= Wayground::Application::NAME %>]<%
 end
 %></title>
 <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -60,8 +60,8 @@ unless @page_description.blank?
 <%
 # If you don’t want a subtitle, remove that paragraph and take away the "maintitle" id from the heading.
 -%>
-<h1 id="maintitle"><a href="/"><img src="/apple-touch-icon-114x114.png" alt=" " id="logo" />Wayground</a></h1>
-<p id="subtitle">Tools for connecting, communicating and collaborating.</p>
+<h1 id="maintitle"><a href="/"><img src="/apple-touch-icon-114x114.png" alt=" " id="logo" /><%= Wayground::Application::NAME %></a></h1>
+<p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
 </div>
 <ul id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
 <%	if current_user.nil?
@@ -139,7 +139,7 @@ if @versioned_item || content_for?(:actions)
 </p>
 <% end -%>
 <%= yield :footer -%>
-<p id="about"><a href="">About Wayground</a>.</p>
-<p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> Wayground.</p>
+<p id="about"><a href="">About <%= Wayground::Application::NAME %></a>.</p>
+<p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.</p>
 </footer>
 </body></html>

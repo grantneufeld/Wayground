@@ -1,5 +1,7 @@
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Wayground//NONSGML Wayground//EN
+X-WR-CALNAME:<%= Wayground::Application::NAME %>
+X-WR-CALDESC:<%= Wayground::Application::DESCRIPTION %>
 <%= yield
 %>END:VCALENDAR
