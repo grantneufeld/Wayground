@@ -209,9 +209,15 @@ describe Event do
       end
     end
     describe "of description" do
+      it "should pass if description is the maximum length" do
+        event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'max length description',
+          :description => ('A' * 511)
+        )
+        event.valid?.should be_true
+      end
       it "should fail if description is too long" do
         event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'too long description',
-          :description => ('A' * 511)
+          :description => ('A' * 512)
         )
         event.valid?.should be_false
       end

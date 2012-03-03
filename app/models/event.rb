@@ -32,7 +32,7 @@ class Event < ActiveRecord::Base
   validates_length_of :province, :within => 0..31, :allow_blank => true
   validates_length_of :country, :within => 0..2, :allow_blank => true
   validates_length_of :location_url, :within => 0..255, :allow_blank => true
-  validates_length_of :description, :within => 0..255, :allow_blank => true
+  validates_length_of :description, :within => 0..511, :allow_blank => true
   validates_length_of :content, :within => 0..8191, :allow_blank => true
 
   default_scope order('start_at')
