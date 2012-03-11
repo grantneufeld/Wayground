@@ -37,7 +37,12 @@ class Event < ActiveRecord::Base
 
   default_scope order('start_at')
   scope :approved, where(:is_approved => true)
-  scope :upcoming, where('start_at >= ?', Time.current.beginning_of_day)
+  scope :upcoming, lambda { # use a lambda so the time is reloaded each time upcoming is called
+    where(
+      'start_at >= ? OR (end_at IS NOT NULL AND end_at >= ?)',
+      Time.current.beginning_of_day, Time.current.beginning_of_day
+    )
+  }
 
   before_save :approve_if_authority
   before_create :set_timezone
