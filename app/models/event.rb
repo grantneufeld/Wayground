@@ -21,7 +21,7 @@ class Event < ActiveRecord::Base
 
   validates_length_of :title, :within => 1..255
   validates_presence_of :start_at
-  validate :validate_end_at_after_start_at,
+  validate :validate_end_at_not_before_start_at,
     :validate_timezone,
     :validate_not_both_is_draft_and_is_approved
   validates_length_of :organizer, :within => 0..255, :allow_blank => true
@@ -48,9 +48,9 @@ class Event < ActiveRecord::Base
   before_create :set_timezone
   after_save :add_version
 
-  # An event cannot end before, or when, it begins.
-  def validate_end_at_after_start_at
-    unless start_at.blank? || end_at.blank? || (start_at.to_datetime < end_at.to_datetime)
+  # An event cannot end before it begins.
+  def validate_end_at_not_before_start_at
+    unless start_at.blank? || end_at.blank? || (start_at.to_datetime <= end_at.to_datetime)
       errors.add(:end_at, 'must be after the start date and time')
     end
   end

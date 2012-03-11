@@ -150,11 +150,11 @@ describe Event do
       end
     end
     describe "of end_at" do
-      it "should fail if end_at is equal to start_at" do
+      it "should pass if end_at is equal to start_at" do
         event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'end_at = start_at',
           :end_at => '2012-01-01 01:01:01'
         )
-        event.valid?.should be_false
+        event.valid?.should be_true
       end
       it "should fail if end_at is less than start_at" do
         event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'end_at < start_at',
