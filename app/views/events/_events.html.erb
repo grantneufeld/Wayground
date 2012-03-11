@@ -8,6 +8,7 @@ events.each do |event|
   event_start = event.start_at
   event_end = event.end_at
   event_date = event_start.to_date
+  is_multi_day = event_end && (event_end.to_date > event_date)
   if date_idx != event_date
     date_idx = event_date
     %><h3><%= event_start.to_s(:plain_date) %></h3>
@@ -19,10 +20,28 @@ events.each do |event|
     %><span class="status" title="CANCELLED">Cancelled:</span>
 <%
   end
-  %><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(:plain_time).strip %></time><%
-  unless event_end.blank?
-    %>—<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).strip %></time><%
-  end %>:
+  if event.is_allday
+    # TODO: change date to_s call to reflect untimed day
+    %><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>" />
+<%
+    if is_multi_day
+      # event spans more than one day
+      # TODO: change date to_s call to reflect untimed day
+      %><time class="dtend" datetime="<%= event_end.to_s(:microformat) %>">until <%= event_end.to_s(:plain_date).strip %></time>:
+<%
+    end
+  else
+    %><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(:plain_time).strip %></time><%
+    unless event_end.blank?
+      if is_multi_day
+        %> to <time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_datetime).strip %></time><%
+      else
+        %>—<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).strip %></time><%
+      end
+    end %>:
+<%
+  end
+-%>
 <span class="summary"><%= link_to event.title, event %></span></h4>
 <%
   event_location = event.location

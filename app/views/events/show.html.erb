@@ -15,10 +15,19 @@ if @event.is_cancelled
 end
 %><%= @event.title %></h2>
 
-<p><time class="dtstart" datetime="<%= @event.start_at.to_s(:microformat) %>"><%= @event.start_at.to_s(:plain_datetime) %></time><%
+<%
+time_format = @event.is_allday ? :plain_date : :plain_datetime
+event_start = @event.start_at
+%><p><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(time_format) %></time><%
   event_end = @event.end_at
-  unless event_end.blank?
-    %>-<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).lstrip! %></time><%
+  unless event_end.blank? || event_end == event_start
+    is_multi_day = event_end && (event_end.to_date > event_start.to_date)
+    if is_multi_day
+      %>
+<br />to <time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(time_format) %></time><%
+    elsif !(@event.is_allday)
+      %>-<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).lstrip! %></time><%
+    end
   end %>
 <br /><%= link_to 'Download to your calendar.', event_path(@event, :format => 'ics'), :class => 'ics', :title => 'Download a file, with this event’s details, compatible with most calendar applications' %></p>
 <p class="location"><%
