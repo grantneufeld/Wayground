@@ -30,18 +30,46 @@ event_start = @event.start_at
     end
   end %>
 <br /><%= link_to 'Download to your calendar.', event_path(@event, :format => 'ics'), :class => 'ics', :title => 'Download a file, with this event’s details, compatible with most calendar applications' %></p>
-<p class="location"><%
-  if @event.location_url?
-    %><%= link_to @event.location, @event.location_url, :class => 'fn org' %><%
-  else
-    %><span class="fn org"><%= @event.location %></span><%
-  end %>
-<br /><span class="adr">
-<span class="street-address"><%= @event.address %></span>
-<br /><span class="locality"><%= @event.city %></span>, <span class="region"><%= @event.province %></span>, <span class="country-name"><%= @event.country %></span>
-</span></p>
-
 <%
+
+loc_location = @event.location
+loc_address = @event.address
+loc_city = @event.city
+if loc_location.present? || loc_address.present? || loc_city.present?
+  %><p class="location"><%
+  loc_url = @event.location_url
+  if loc_location.present?
+    if loc_url.present?
+      %><%= link_to loc_location, loc_url, :class => 'fn org' %><%
+    else
+      %><span class="fn org"><%= loc_location %></span><%
+    end %>
+<%  if loc_address.present?
+      %><br /><span class="adr">
+<span class="street-address"><%= loc_address %></span>
+<%  end
+  elsif loc_address.present?
+    %><span class="adr"><%
+    if loc_url.present?
+      %><%= link_to loc_address, loc_url, :class => 'street-address' %><%
+    else
+      %><span class="street-address"><%= loc_address %></span><%
+    end
+    %>
+<%
+  else
+    %><%= link_to 'location', loc_url %>
+<span class="adr">
+<%
+  end
+  if loc_city.present?
+    %><br /><span class="locality"><%= loc_city %></span>, <span class="region"><%= @event.province %></span>, <span class="country-name"><%= @event.country %></span>
+<%
+  end
+%></span></p>
+<%
+end
+
 event_organizer = @event.organizer
 if event_organizer.present?
   %><p>Presented by <%
