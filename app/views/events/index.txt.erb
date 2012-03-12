@@ -1,0 +1,96 @@
+<% # encoding: utf-8
+%><%
+
+%><%= Wayground::Application::NAME %>
+Events List
+http://<%= request.host_with_port %>/
+
+<%
+
+date_idx = nil
+@events.each do |event|
+  unless event.is_cancelled?
+    event_start = event.start_at
+    event_end = event.end_at
+    event_date = event_start.to_date
+    is_multi_day = event_end && (event_end.to_date > event_date)
+    if date_idx != event_date
+      date_idx = event_date
+      date_hdr = event_start.to_s(:plain_date).gsub(/  +/, ' ')
+      %><%= '_' * date_hdr.size %>
+<%= date_hdr %>
+
+<%
+    end
+    if event.is_allday
+      if is_multi_day
+        # event spans more than one day
+        # TODO: change date to_s call to reflect untimed day
+        %>until <%= event_end.to_s(:plain_date).gsub(/  +/, ' ') %>:
+<%    else
+        %>All day:
+<%    end
+    else
+      %><%= event_start.to_s(:plain_time).strip %><%
+      unless event_end.blank?
+        if is_multi_day
+          %> to <%= event_end.to_s(:plain_datetime).gsub(/  +/, ' ') %><%
+        else
+          %>—<%= event_end.to_s(:plain_time).strip %><%
+        end
+      end %>:
+<%
+    end
+
+
+    %><%= event.title %>
+<%
+
+    event_location = event.location
+    event_address = event.address? ? event.address : nil
+    # modify the address to include the city, province, country - if they aren’t the defaults
+    event_city = event.city? ? event.city : nil
+    event_province = event.province? ? event.province : nil
+    event_country = event.country? ? event.country : nil
+    if event.country == Wayground::Application::DEFAULT_COUNTRY
+      event_country = nil
+      if event.province == Wayground::Application::DEFAULT_PROVINCE
+        event_province = nil
+        if event.city == Wayground::Application::DEFAULT_CITY
+          event_city = nil
+        end
+      end
+    end
+    if event_city
+      event_address = [event_address, event_city, event_province, event_country].compact.join(', ')
+    end
+
+    if event_location.present?
+      %>  <%= event.location %><%
+      if event_address.present?      
+        %> (<%= event_address %>)<%
+      end
+      %>
+<%  elsif event_address.present?
+      %>  <%= event_address %>
+<%  end
+
+
+    if event.description?
+      # compress linebreaks and insert double space at beginning of each line
+      %><%= event.description.gsub(/[\r\n]+/, "\n").gsub(/^/, '  ') %>
+<%
+    end
+
+
+    event_organizer = event.organizer
+    if event_organizer.present?
+      %>  Presented by <%= event_organizer %>.
+<%  end
+
+%>
+  <%= event_url(event) %>
+
+<%
+  end
+end %>

@@ -1,0 +1,101 @@
+<% # encoding: utf-8
+%><%
+
+
+if @event.is_cancelled?
+  %>CANCELLED:
+<%
+end
+%><%= @event.title %>
+
+<%
+time_format = @event.is_allday? ? :plain_date : :plain_datetime
+event_start = @event.start_at
+event_end = @event.end_at
+%><%= event_start.to_s(time_format) %><%
+unless event_end.blank? || event_end == event_start
+  is_multi_day = event_end && (event_end.to_date > event_start.to_date)
+  if is_multi_day
+    %>
+to <%= event_end.to_s(time_format) %><%
+  elsif !(@event.is_allday?)
+    %>-<%= event_end.to_s(:plain_time).lstrip! %><%
+  end
+end %>
+
+<%
+
+loc_location = @event.location
+loc_address = @event.address
+loc_city = @event.city
+if true
+  %>Location:
+<%
+  if loc_location.present?
+    %><%= loc_location %><%
+    if loc_address.present?
+      %> (<%= loc_address %>)<%
+    end %>
+<%
+  elsif loc_address.present?
+    %><%= loc_address %>
+<%
+  end
+  if loc_city.present?
+    %><%= [loc_city, @event.province, @event.country].join(', ') %>
+<%
+  end
+  loc_url = @event.location_url
+  if loc_url.present?
+    %><%= loc_url %>
+<%
+  end
+  %>
+
+<%
+end
+
+
+if @event.organizer?
+  %>Presented by <%= @event.organizer %>.
+<%
+  if @event.organizer_url?
+    %><%= @event.organizer_url %>
+<%
+  end
+  %>
+
+<%
+end
+
+
+%>
+
+<%
+
+
+if @event.description?
+  %><%= @event.description %>
+
+<%
+end
+if @event.content?
+  %><%= @event.content %>
+
+<%
+end
+
+%>
+
+<%= event_url(@event) %>
+<%
+
+if @event.external_links.count > 0
+  @event.external_links.each do |external_link|
+    %><%= external_link.title %>:
+<%= external_link.url %>
+    <%
+  end
+end
+
+%>

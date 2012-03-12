@@ -43,5 +43,10 @@ module Wayground
     NAME = 'Wayground'
     DESCRIPTION = 'Tools for connecting, communicating and collaborating.'
 
+    # Default location
+    DEFAULT_CITY = 'Calgary'
+    DEFAULT_PROVINCE = 'Alberta'
+    DEFAULT_COUNTRY = 'CA'
+
 	end
 end
