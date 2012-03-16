@@ -42,7 +42,7 @@ describe "events/index.ics.erb" do
   it "renders the expected text" do
     render
     rendered.should match(
-    /\ABEGIN:VEVENT(\r\n?|\n)UID:123-event@wayground.ca(\r\n?|\n)CREATED;TZID=America\/Denver:20010203T040506(\r\n?|\n)DTSTAMP;TZID=America\/Denver:20010202T210506(\r\n?|\n)DTSTART;TZID=America\/Denver:20110203T040506(\r\n?|\n)SUMMARY:Event One(\r\n?|\n)CLASS:PUBLIC(\r\n?|\n)URL:http:\/\/[a-z0-9\.]+\/events\/123(\r\n?|\n)STATUS:CANCELLED(\r\n?|\n)SEQUENCE:1(\r\n?|\n)END:VEVENT(\r\n?|\n)BEGIN:VEVENT(\r\n?|\n)UID:234-event@wayground.ca(\r\n?|\n)CREATED;TZID=America\/Denver:20010203T040506(\r\n?|\n)DTSTAMP;TZID=America\/Denver:20010202T210506(\r\n?|\n)DTSTART;TZID=America\/Denver:20110203T040506(\r\n?|\n)SUMMARY:Event Two(\r\n?|\n)CLASS:PUBLIC(\r\n?|\n)URL:http:\/\/[a-z0-9\.]+\/events\/234(\r\n?|\n)STATUS:TENTATIVE(\r\n?|\n)SEQUENCE:1(\r\n?|\n)END:VEVENT[\r\n]*\z/
+    /\ABEGIN:VEVENT\r\nUID:123-event@wayground.ca\r\nCREATED;TZID=America\/Denver:20010203T040506\r\nDTSTAMP;TZID=America\/Denver:20010202T210506\r\nDTSTART;TZID=America\/Denver:20110203T040506\r\nSUMMARY:Event One\r\nCLASS:PUBLIC\r\nURL:http:\/\/[a-z0-9\.]+\/events\/123\r\nSTATUS:CANCELLED\r\nSEQUENCE:1\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:234-event@wayground.ca\r\nCREATED;TZID=America\/Denver:20010203T040506\r\nDTSTAMP;TZID=America\/Denver:20010202T210506\r\nDTSTART;TZID=America\/Denver:20110203T040506\r\nSUMMARY:Event Two\r\nCLASS:PUBLIC\r\nURL:http:\/\/[a-z0-9\.]+\/events\/234\r\nSTATUS:TENTATIVE\r\nSEQUENCE:1\r\nEND:VEVENT(\r\n)?\z/
     )
   end
 end

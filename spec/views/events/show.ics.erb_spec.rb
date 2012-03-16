@@ -65,26 +65,26 @@ describe "events/show.ics.erb" do
 
   it "renders the expected text" do
     render
-    rendered.should match(/\ABEGIN:VEVENT$/)
-    rendered.should match(/^UID:123-event@wayground.ca$/)
-    rendered.should match(/^CREATED;TZID=America\/Denver:20010203T040506$/)
-    rendered.should match(/^DTSTAMP;TZID=America\/Denver:20010202T210506$/)
-    rendered.should match(/^DTSTART;TZID=America\/Denver:20110203T040506$/)
-    rendered.should match(/^DTEND;TZID=America\/Denver:20110708T091011$/)
+    rendered.should match(/\ABEGIN:VEVENT\r/)
+    rendered.should match(/^UID:123-event@wayground.ca\r/)
+    rendered.should match(/^CREATED;TZID=America\/Denver:20010203T040506\r/)
+    rendered.should match(/^DTSTAMP;TZID=America\/Denver:20010202T210506\r/)
+    rendered.should match(/^DTSTART;TZID=America\/Denver:20110203T040506\r/)
+    rendered.should match(/^DTEND;TZID=America\/Denver:20110708T091011\r/)
     rendered.should match(
-      /^SUMMARY:A Title That Extends Beyond Seventy-Five Characters So We Can Test (\r\n?|\n) Line Folding$/
+      /^SUMMARY:A Title That Extends Beyond Seventy-Five Characters So We Can Test (\r\n?|\n) Line Folding\r/
     )
     rendered.should match(
-      /^DESCRIPTION:A description that goes on, and on, so it can exceed two lines (\r\n?|\n) of seventy-five characters\. This should serve as a good test of the line f(\r\n?|\n) olding\. At least, that’s what I hope\.$/
+      /^DESCRIPTION:A description that goes on, and on, so it can exceed two lines (\r\n?|\n) of seventy-five characters\. This should serve as a good test of the line f(\r\n?|\n) olding\. At least, that’s what I hope\.\r/
     )
-    rendered.should match(/^CLASS:PUBLIC$/)
-    rendered.should match(/^URL:http:\/\/[a-z0-9\.]+\/events\/123$/)
-    rendered.should match(/^LOCATION:Location \(Address\)$/)
-    rendered.should match(/^STATUS:CONFIRMED$/)
-    rendered.should match(/^ORGANIZER;CN=Organizer:http:\/\/organizer\.tld\/$/)
-    #rendered.should match(/^ATTACH:http:\/\/1st\.external\.link\/$/)
-    #rendered.should match(/^ATTACH:http:\/\/2nd\.external\.link\/$/)
-    rendered.should match(/^SEQUENCE:1$/)
+    rendered.should match(/^CLASS:PUBLIC\r/)
+    rendered.should match(/^URL:http:\/\/[a-z0-9\.]+\/events\/123\r/)
+    rendered.should match(/^LOCATION:Location \(Address\)\r/)
+    rendered.should match(/^STATUS:CONFIRMED\r/)
+    rendered.should match(/^ORGANIZER;CN=Organizer:http:\/\/organizer\.tld\/\r/)
+    #rendered.should match(/^ATTACH:http:\/\/1st\.external\.link\/\r/)
+    #rendered.should match(/^ATTACH:http:\/\/2nd\.external\.link\/\r/)
+    rendered.should match(/^SEQUENCE:1\r/)
     rendered.should match(/^END:VEVENT[\r\n]*\z/)
   end
 end
