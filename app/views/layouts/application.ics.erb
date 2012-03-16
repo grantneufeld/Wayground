@@ -2,8 +2,8 @@
 %>BEGIN:VCALENDAR<%= "\r\n"
 %>VERSION:2.0<%= "\r\n"
 %>PRODID:-//Wayground//NONSGML Wayground//EN<%= "\r\n"
-%>X-WR-CALNAME:<%= Wayground::Application::NAME %><%= "\r\n"
-%>X-WR-CALDESC:<%= Wayground::Application::DESCRIPTION %><%= "\r\n"
+%>X-WR-CALNAME:<%= Wayground::Application::NAME.icalendar_encoding.fold!(75,13).html_safe %><%= "\r\n"
+%>X-WR-CALDESC:<%= Wayground::Application::DESCRIPTION.icalendar_encoding.fold!(75,13).html_safe %><%= "\r\n"
 %><%= yield
 %>END:VCALENDAR<%= "\r\n"
 %>

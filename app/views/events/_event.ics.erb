@@ -1,22 +1,22 @@
 # encoding: utf-8 <%
 %>BEGIN:VEVENT<%= "\r\n"
 %>UID:<%= event.id %>-event@wayground.ca<%= "\r\n"
-%>CREATED<%= event.created_at.icalendar_with_zone %><%= "\r\n"
-%>DTSTAMP<%= event.updated_at.icalendar_with_zone %><%= "\r\n"
+%>CREATED:<%= event.created_at.utc.to_s(:icalendar_utc) %><%= "\r\n"
+%>DTSTAMP:<%= event.updated_at.utc.to_s(:icalendar_utc) %><%= "\r\n"
 %>DTSTART<%= event.start_at.icalendar_with_zone %><%= "\r\n"
 %><% if event.end_at?
   %>DTEND<%= event.end_at.icalendar_with_zone %><%= "\r\n"
 %><% end
-%>SUMMARY:<%= event.title.gsub(/(\r\n?|\n)/, "\\r\\n").fold!(75,8) %><%= "\r\n"
+%>SUMMARY:<%= event.title.icalendar_encoding.fold!(75,8).html_safe %><%= "\r\n"
 %><% if event.description?
-  %>DESCRIPTION:<%= event.description.gsub(/(\r\n?|\n)/, "\\r\\n").fold!(75,12) %><%= "\r\n"
+  %>DESCRIPTION:<%= event.description.icalendar_encoding.fold!(75,12).html_safe %><%= "\r\n"
 %><% end
 %>CLASS:PUBLIC<%= "\r\n"
-%>URL:<%= event_url(event).fold!(75,4) %><%= "\r\n"
+%>URL:<%= event_url(event).icalendar_encoding.fold!(75,4).html_safe %><%= "\r\n"
 %><% if event.location? || event.address?
   # TODO: handle city, province, country, location_url.
   location = event.location + (event.address? ? " (#{event.address})" : '')
-  %>LOCATION:<%= location.fold!(75,9) %><%= "\r\n"
+  %>LOCATION:<%= location.icalendar_encoding.fold!(75,9).html_safe %><%= "\r\n"
 %><% end
 %>STATUS:<%
 if event.is_tentative? || !(event.is_approved?)
@@ -28,22 +28,20 @@ else
 end %><%= "\r\n"
 %><%
 if event.organizer?
+  organizer = ";CN=#{event.organizer.icalendar_encoding.gsub(':', '-')}:"
   if event.organizer_url?
-    organizer = ";CN=#{event.organizer}:#{event.organizer_url}"
-  else
-    organizer = ":CN=#{event.organizer}"
+    organizer += event.organizer_url.icalendar_encoding
   end
-  %>ORGANIZER<%= organizer.fold!(75,9) %><%= "\r\n"
+  %>ORGANIZER<%= organizer.fold!(75,9).html_safe %><%= "\r\n"
 %><%
 elsif event.organizer_url?
-  %>ORGANIZER:<%= event.organizer_url.fold!(75,10) %><%= "\r\n"
+  %>ORGANIZER:<%= event.organizer_url.fold!(75,10).html_safe %><%= "\r\n"
 %><%
 end
 
 #if event.external_links.count > 0
 #  event.external_links.each do |el|
-#    nil
-#    % >ATTACH:< %= el.url.fold!(75,7) % >
+#    % >ATTACH:< %= el.url.icalendar_encoding.fold!(75,7) % >
 #< %
 #  end
 #end

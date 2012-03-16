@@ -28,4 +28,15 @@ class String
       self
     end
   end
+
+  # Encode restricted characters for icalendar.
+  def icalendar_encoding
+    self.
+      # backslash-escape backslash, comma, and semi-colon
+      gsub('\\', '\\\\\\').gsub(',', "\\,").gsub(';', "\\;").
+      # convert linebreaks to the string backslash-n ('\n')
+      gsub(/(\r\n?|\n)/, "\\n").
+      # convert double-quote to fancy-quotes to avoid the restriction on the '"' char
+      gsub(/\"([^\"]*)\"/, '“\1”').gsub(/\"/, '“')
+  end
 end
