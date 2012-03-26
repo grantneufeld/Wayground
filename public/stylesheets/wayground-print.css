@@ -7,7 +7,7 @@ ol + *, ul + *{margin-top:0.5em;}
 ol, ul{padding-left:1.75em;}
 a:link, a:visited{text-decoration:none; border-bottom:thin dotted rgba(0,0,255,0.3);}
 #header a, #footer a{border:0em none;}
-#usermenu, #globalsearch, #navmenu, #breadcrumb, #about{display:none;}
+#usermenu, #globalsearch, #navmenu, #subnavmenu, #breadcrumb, #about{display:none;}
 #header, #header *{color:gray; text-align:right;}
 #maintitle{font-size:2.95em; text-indent:0em;}
 #maintitle:after{content:'.ca'; text-transform:lowercase;}
@@ -15,7 +15,7 @@ a:link, a:visited{text-decoration:none; border-bottom:thin dotted rgba(0,0,255,0
 #subtitle{text-indent:0em;}
 #subtitle{font-size:1.1875em;}
 #header{border-bottom:thin solid gray; padding-bottom:0.5em;}
-#flash > *{background:#EEE; padding:0.5em 1em; border:thin dotted lightgray; border-radius:0.25em;}
+#flash > *{background:#EEE; padding:0.5em 1em; border:thin dotted lightgray; -moz-border-radius:0.25em; border-radius:0.25em;}
 #flash .notice{background:#FFE;}
 #flash .alert{background:#FFF8F8;}
 #footer{margin:2em 4em 0em; border-top:thin solid gray; padding:0.5em 1em 0em; font-size:80%;}
