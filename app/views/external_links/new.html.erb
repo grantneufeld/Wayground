@@ -1,0 +1,5 @@
+<% # encoding: utf-8
+
+%><h1>New External Link for <%= link_to @item.title, @item %></h1>
+
+<%= render 'form', {:item => @item, :external_link => @external_link} %>

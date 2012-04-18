@@ -1,0 +1,17 @@
+<h1>External Links for <%= link_to @item.title, @item %></h1>
+<% if @external_links.count > 0
+  %><ul>
+<%
+  @external_links.each do |external_link|
+    %><%= render 'external_link', {:user => @user, :item => @item, :external_link => external_link} %>
+<%
+  end
+%></ul>
+<% else
+  %><p>No external links for this item.</p>
+<% end -%>
+<%
+if @user.present?
+  %><p class="actions"><%= link_to 'New External Link', new_event_external_link_path(@item), :class => 'action' %></p>
+<%
+end -%>

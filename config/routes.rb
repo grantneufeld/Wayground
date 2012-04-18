@@ -38,6 +38,10 @@ Wayground::Application.routes.draw do
   resources :events do
     get 'delete', :on => :member
     delete 'delete' => 'events#destroy', :on => :member
+    resources :external_links do
+      get 'delete', :on => :member
+      delete 'delete' => 'external_links#destroy', :on => :member
+    end
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
 

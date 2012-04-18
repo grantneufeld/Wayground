@@ -1,0 +1,8 @@
+<% # encoding: utf-8
+
+%><h1>Delete “<%= link_to @external_link.title, [@item, @external_link] %>” External Link
+<br />from <%= link_to @item.title, @item %>?</h1>
+
+<%= form_tag([@item, @external_link], :method => :delete) do %>
+<p><%= submit_tag "Delete External Link" %></p>
+<% end %>

@@ -1,0 +1,13 @@
+<h1>External Link for <%= link_to @item.title, @item %></h1>
+<p><%= link_to @external_link.title, @external_link.url, :class => "url #{(@external_link.site)}".rstrip!, :target => '_blank' %></p>
+<%
+if @external_link.has_authority_for_user_to?(@user, :can_update)
+  %><p>
+<%= link_to 'Edit', edit_event_external_link_path(@item, @external_link), :class => 'action' %>
+<%
+  if @external_link.has_authority_for_user_to?(@user, :can_delete)
+    %><%= link_to 'Delete', delete_event_external_link_path(@item, @external_link), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
+<%
+  end %></p>
+<%
+end -%>

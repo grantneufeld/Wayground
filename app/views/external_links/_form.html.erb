@@ -1,0 +1,11 @@
+<%= form_for([item, external_link]) do |f| %>
+<%= show_errors(external_link) %>
+<table><tbody>
+<tr><th><%= f.label :url, 'Weblink' %></th>
+  <td><%= f.url_field :url %></td></tr>
+<tr><th><%= f.label :title %></th>
+  <td><%= f.text_field :title %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save External Link') %></td></tr></tfoot>
+</table>
+<% end %>

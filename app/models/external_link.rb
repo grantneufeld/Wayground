@@ -3,7 +3,7 @@
 # External weblinks representing an item in our system.
 # E.g., a link to an event listing on another website might be for the same Event as listed on our site.
 class ExternalLink < ActiveRecord::Base
-  acts_as_authority_controlled :authority_area => 'Content'
+  acts_as_authority_controlled :authority_area => 'Content', :inherits_from => :item
   attr_accessible :title, :url
 
   belongs_to :item, :polymorphic => true

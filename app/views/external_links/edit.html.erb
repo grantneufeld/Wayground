@@ -1,0 +1,6 @@
+<% # encoding: utf-8
+
+%><h1>Editing External Link “<%= link_to @external_link.title, [@item, @external_link] %>”
+<br />for <%= link_to @item.title, @item %></h1>
+
+<%= render 'form', {:item => @item, :external_link => @external_link} %>
