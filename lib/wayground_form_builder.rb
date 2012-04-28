@@ -18,7 +18,7 @@ class WaygroundFormBuilder < ActionView::Helpers::FormBuilder
   def datetime_field(method, options={})
     datetime = @object.send(method)
     unless datetime.blank? || datetime.is_a?(String)
-      options[:value] ||= datetime.getlocal.to_s(:form_field_datetimetime)
+      options[:value] ||= datetime.getlocal.to_s(:form_field_datetime)
     end
     text_field(method, objectify_options(options))
   end
