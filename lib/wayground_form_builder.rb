@@ -8,7 +8,7 @@ class WaygroundFormBuilder < ActionView::Helpers::FormBuilder
   def date_field(method, options={})
     date = @object.send(method)
     unless date.blank? || date.is_a?(String)
-      options[:value] ||= date.getlocal.to_s(:form_field_date)
+      options[:value] ||= date.to_s(:form_field_date)
     end
     text_field(method, objectify_options(options))
   end
@@ -16,9 +16,9 @@ class WaygroundFormBuilder < ActionView::Helpers::FormBuilder
   # A date & time text field that presents the datetime in plain text.
   # TODO: Integrate (optional) pop-up calendar selector.
   def datetime_field(method, options={})
-    date = @object.send(method)
-    unless date.blank? || date.is_a?(String)
-      options[:value] ||= date.getlocal.to_s(:form_field_datetime)
+    datetime = @object.send(method)
+    unless datetime.blank? || datetime.is_a?(String)
+      options[:value] ||= datetime.getlocal.to_s(:form_field_datetimetime)
     end
     text_field(method, objectify_options(options))
   end
