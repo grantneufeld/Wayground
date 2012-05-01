@@ -33,6 +33,25 @@ describe SettingsController do
     controller.stub!(:current_user).and_return(@user_normal)
   end
 
+  describe "GET initialize_defaults" do
+    it "requires the user to have authority" do
+      set_logged_in_user
+      get :initialize_defaults
+      response.status.should eq 403
+    end
+    it "initializes the default settings" do
+      Setting.destroy_all
+      set_logged_in_admin
+      get :initialize_defaults
+      Setting[:global_start_date].should eq(Time.now.to_date.to_s)
+    end
+    it "redirects to the settings index" do
+      set_logged_in_admin
+      get :initialize_defaults
+      response.should redirect_to(settings_url)
+    end
+  end
+
   describe "GET index" do
     it "requires the user to have authority" do
       set_logged_in_user

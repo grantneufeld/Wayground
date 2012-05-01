@@ -5,6 +5,8 @@ class Setting < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Admin', :item_authority_flag_field => :always_private
   validates_presence_of :key
 
+  default_scope order('key')
+
   # Key-indexed accessor for the values of settings.
   def self.[](k)
     setting = self.find_by_key(k)

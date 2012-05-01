@@ -18,6 +18,7 @@ Wayground::Application.routes.draw do
   end
   # SETTINGS
   resources :settings do
+    get 'initialize_defaults', :on => :collection
     get 'delete', :on => :member
   end
 

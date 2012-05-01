@@ -3,6 +3,10 @@ require "spec_helper"
 describe SettingsController do
   describe "routing" do
 
+    it "routes to #initialize_defaults" do
+      get("/settings/initialize_defaults").should route_to("settings#initialize_defaults")
+    end
+
     it "routes to #index" do
       get("/settings").should route_to("settings#index")
     end

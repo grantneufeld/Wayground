@@ -1,13 +1,23 @@
 # encoding: utf-8
 
 class SettingsController < ApplicationController
-  before_filter :set_setting, :except => [:index, :new, :create]
+  before_filter :set_setting, :except => [:initialize_defaults, :index, :new, :create]
   before_filter :requires_view_authority, :only => [:index, :show]
-  before_filter :requires_create_authority, :only => [:new, :create]
+  before_filter :requires_create_authority, :only => [:initialize_defaults, :new, :create]
   before_filter :requires_update_authority, :only => [:edit, :update]
   before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_section
   before_filter :set_new_setting, :only => [:new, :create]
+
+  # Setup default Settings for the system as a whole.
+  # Currently, just the global_start_date.
+  def initialize_defaults
+    Setting.set_defaults(
+      {:global_start_date => Time.now.to_date}.merge((params[:settings] || {}))
+    )
+    flash.notice = 'Settings have been initialized to defaults (where not already set).'
+    redirect_to settings_url
+  end
 
   # GET /settings
   # GET /settings.xml

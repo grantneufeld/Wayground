@@ -1,14 +1,9 @@
-<p id="notice"><%= notice %></p>
-
-<p><b>Key:</b>
-<%= @setting.key %>
-</p>
-
-<p><b>Value:</b>
-<%= @setting.value %>
-</p>
+<h1>Setting: <%= @setting.key %></h1>
+<table><tbody>
+<tr><th>Value:</th> <td><%= @setting.value %></td></tr>
+</tbody></table>
 
 <p class="actions">
-<%= link_to 'Edit', edit_setting_path(@setting) %>
-<%= link_to 'Delete', delete_setting_path(@setting) %>
+<%= link_to 'Edit', edit_setting_path(@setting), :class => 'action' %>
+<%= link_to 'Delete', delete_setting_path(@setting), :class => 'action' %>
 </p>
