@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 12) do
+ActiveRecord::Schema.define(:version => 13) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -149,6 +149,32 @@ ActiveRecord::Schema.define(:version => 12) do
 
   add_index "paths", ["item_type", "item_id"], :name => "item_idx"
   add_index "paths", ["sitepath"], :name => "sitepath", :unique => true
+
+  create_table "projects", :force => true do |t|
+    t.integer  "parent_id"
+    t.integer  "creator_id",                                :null => false
+    t.integer  "owner_id",                                  :null => false
+    t.boolean  "is_visible",             :default => false, :null => false
+    t.boolean  "is_public_content",      :default => false, :null => false
+    t.boolean  "is_visible_member_list", :default => false, :null => false
+    t.boolean  "is_joinable",            :default => false, :null => false
+    t.boolean  "is_members_can_invite",  :default => false, :null => false
+    t.boolean  "is_not_unsubscribable",  :default => false, :null => false
+    t.boolean  "is_moderated",           :default => false, :null => false
+    t.boolean  "is_only_admin_posts",    :default => false, :null => false
+    t.boolean  "is_no_comments",         :default => false, :null => false
+    t.string   "filename"
+    t.string   "name",                                      :null => false
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "projects", ["creator_id"], :name => "creator"
+  add_index "projects", ["filename"], :name => "index_projects_on_filename"
+  add_index "projects", ["name", "is_visible"], :name => "index_projects_on_name_and_is_visible"
+  add_index "projects", ["owner_id"], :name => "owner"
+  add_index "projects", ["parent_id"], :name => "parent"
 
   create_table "settings", :force => true do |t|
     t.string   "key"

@@ -1,0 +1,60 @@
+<h1><%= @project.name %></h1>
+
+<p><%= @project.description %></p>
+<table><tbody>
+<% parent = @project.parent
+if parent
+  %><tr><th>Parent Project:</th> <td><%= link_to parent.name, project_smart_path(parent) %></td></tr>
+<%
+end
+unless @project.creator == @project.owner
+  %><tr><th>Created by:</th> <td><%= @project.creator.name %></td></tr>
+<%
+end
+%><tr><th>Admin:</th> <td><%= @project.owner.name %></td></tr>
+<tr><th>Filename:</th> <td><%= @project.filename %></td></tr>
+<tr><th>Settings:</th> <td><%
+if @project.is_visible
+  %>The project is public and can be seen by non-members.<%
+else
+  %>The project is private and cannot be seen by non-members.<%
+end %>
+<br /><%
+if @project.is_public_content
+  %>The project’s content is publicly viewable.
+<br /><%
+end
+if @project.is_visible_member_list
+  %>The list of members is viewable.
+<br /><%
+end
+if @project.is_joinable
+  %>Open project — users can add themselves to the project without an invitation.
+<br /><%
+end
+if @project.is_members_can_invite
+  %>Members can invite others to join the project.<%
+else
+  %>Only the admin can invite people to join the project.<%
+end %>  
+<br /><%
+if @project.is_not_unsubscribable
+  %>Project members cannot remove themselves.
+<br /><%
+end
+if @project.is_moderated
+  %>Submissions are moderated before posting.
+<br /><%
+end
+if @project.is_only_admin_posts
+  %>Only the admin can post.
+<br /><%
+end
+if @project.is_no_comments
+  %>Commenting is disabled.<%
+end %></td></tr>
+</tbody></table>
+
+<p class="actions">
+<%= link_to 'Edit', edit_project_path(@project), :class => 'action' %>
+</p>

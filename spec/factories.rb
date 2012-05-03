@@ -90,6 +90,15 @@ Factory.define :redirect_path, :parent => :path do |f|
   f.redirect {'/'}
 end
 
+Factory.define :project do |f|
+  f.creator { Factory(:user) }
+  f.owner { Factory(:user) }
+  f.is_visible { true }
+  f.sequence(:filename) {|n| "factory_project_#{n}"}
+  f.sequence(:name) {|n| "Factory Project #{n}"}
+  f.sequence(:description) {|n| "Factory-generated project ##{n}."}
+end
+
 Factory.define :setting do |f|
   f.sequence(:key) {|n| "factory_key_#{n}"}
   f.sequence(:value) {|n| "From factory (#{n})."}

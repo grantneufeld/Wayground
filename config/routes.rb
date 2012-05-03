@@ -46,6 +46,13 @@ Wayground::Application.routes.draw do
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
 
+  # PROJECTS
+  resources :projects do
+    get 'delete', :on => :member
+    delete 'delete' => 'projects#destroy', :on => :member
+  end
+  get 'project/*projecturl' => 'projects#show', :as => :project_name
+
   root :to => "paths#sitepath", :via => :get, :defaults => { :url => '/' }
   get '*url' => "paths#sitepath"
 end

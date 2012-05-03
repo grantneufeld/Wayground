@@ -85,6 +85,7 @@ unless @page_description.blank?
 <nav role="navigation"><ul id="navmenu">
 <li<%= @site_section == 'Pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
 <li<%= @site_section == 'Events' ? ' class="current"'.html_safe : '' %>><%= link_to 'Events', events_path %></li>
+<li<%= @site_section == 'Projects' ? ' class="current"'.html_safe : '' %>><%= link_to 'Projects', projects_path %></li>
 <li<%= @site_section == 'Admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
 <li<%= @site_section == 'Settings' ? ' class="current"'.html_safe : '' %>><%= link_to 'Settings', settings_path %></li>
 <li<%= @site_section == 'Documents' ? ' class="current"'.html_safe : '' %>><%= link_to 'Documents', documents_path %></li>

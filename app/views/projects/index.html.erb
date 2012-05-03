@@ -1,0 +1,23 @@
+<h1>Projects</h1>
+
+<table>
+<thead><tr><th>Name</th> <th>Filename</th> <th>Description</th> <th></th></tr></thead>
+<tbody>
+<% @projects.each do |project| -%>
+<tr>
+<td><%= link_to project.name, project_smart_path(project) %><%
+  parent = project.parent
+  if parent
+    %><br />(Subproject of <%= link_to parent.name, project_smart_path(parent) %>)<%
+  end %></td>
+<td><%= project.filename %></td>
+<td><%= project.description %></td>
+<td><%= link_to 'Edit', edit_project_path(project), :class => 'action' %><span class="separator">,</span>
+<%= link_to 'Destroy', project, :confirm => 'Are you sure?', :method => :delete, :class => 'action' %></td>
+</tr>
+<% end -%>
+</tbody></table>
+
+<p class="actions">
+<%= link_to 'New Project', new_project_path, :class => 'action' %>
+</p>
