@@ -43,7 +43,7 @@ date_idx = nil
     end
 
 
-    %><%= event.title %>
+    %><%= event.title.html_safe %>
 <%
 
     event_location = event.location
@@ -66,30 +66,30 @@ date_idx = nil
     end
 
     if event_location.present?
-      %>  <%= event.location %><%
+      %>  <%= event.location.html_safe %><%
       if event_address.present?      
-        %> (<%= event_address %>)<%
+        %> (<%= event_address.html_safe %>)<%
       end
       %>
 <%  elsif event_address.present?
-      %>  <%= event_address %>
+      %>  <%= event_address.html_safe %>
 <%  end
 
 
     if event.description?
       # compress linebreaks and insert double space at beginning of each line
-      %><%= event.description.gsub(/[\r\n]+/, "\n").gsub(/^/, '  ') %>
+      %><%= event.description.gsub(/[\r\n]+/, "\n").gsub(/^/, '  ').html_safe %>
 <%
     end
 
 
     event_organizer = event.organizer
     if event_organizer.present?
-      %>  Presented by <%= event_organizer %>.
+      %>  Presented by <%= event_organizer.html_safe %>.
 <%  end
 
 %>
-  <%= event_url(event) %>
+  <%= event_url(event).html_safe %>
 
 <%
   end
