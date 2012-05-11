@@ -8,14 +8,11 @@ class DocumentsController < ApplicationController
   before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_section
 
-  # GET /download/:id/:filename
   def download
     @document.assign_headers(response)
-    render :text => @document.data #, :content_type => @document.content_type
+    render :text => @document.data
   end
 
-  # GET /documents
-  # GET /documents.xml
   def index
     @documents = paginate(Document.for_user(current_user))
     @page_title = 'Documents Index'
@@ -26,8 +23,6 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/1
-  # GET /documents/1.xml
   def show
     @page_title = "Document “#{@document.filename}”"
 
@@ -37,8 +32,6 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/new
-  # GET /documents/new.xml
   def new
     @document = Document.new
     @page_title = 'New Document'
@@ -49,8 +42,6 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # POST /documents
-  # POST /documents.xml
   def create
     @document = Document.new(params[:document])
     @document.user = current_user
@@ -67,13 +58,10 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/1/edit
   def edit
     @page_title = "Edit Document #{@document.filename}"
   end
 
-  # PUT /documents/1
-  # PUT /documents/1.xml
   def update
     respond_to do |format|
       if @document.update_attributes(params[:document])
@@ -87,13 +75,10 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/1/delete
   def delete
     @page_title = "Delete Document #{@document.filename}"
   end
 
-  # DELETE /documents/1
-  # DELETE /documents/1.xml
   def destroy
     @document.destroy
 

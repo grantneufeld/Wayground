@@ -22,7 +22,8 @@ describe DocumentsController do
   # Document. As you add validations to Document, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {:file => File.new("#{Rails.root}/spec/fixtures/files/sample.txt")}
+    file = Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/files/sample.txt", 'text/plain')
+    {file: file}
   end
 
   describe "GET download" do

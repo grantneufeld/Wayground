@@ -105,7 +105,7 @@ class Document < ActiveRecord::Base
   end
 
   def file=(file)
-    return unless file.is_a?(ActionDispatch::Http::UploadedFile) || file.is_a?(File)
+    return if file.blank? || file.is_a?(String)
     if filename.blank?
       self.filename = file.original_filename rescue file.path.match(/([^\/]+)$/)[1]
       cleanup_filename

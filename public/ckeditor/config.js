@@ -9,7 +9,7 @@ CKEDITOR.editorConfig = function( config )
 	config.coreStyles_bold = { element : 'strong', overrides : 'b' };
 	config.coreStyles_italic = { element : 'em', overrides : 'i' };
 
-	config.contentsCss = ['/stylesheets/wayground-all.css','/stylesheets/wayground-screen.css'];
+	config.contentsCss = ['/assets/wayground-all.css','/assets/wayground-screen.css'];
 	config.docType = '<!DOCTYPE html>';
 
 	config.disableNativeTableHandles = false;

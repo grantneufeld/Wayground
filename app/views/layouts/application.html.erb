@@ -31,11 +31,13 @@ end
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
 <!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
+<% #= stylesheet_link_tag 'application'
+-%>
 <%= stylesheet_link_tag 'wayground-all', :media => 'all' %>
 <%= stylesheet_link_tag 'wayground-print', :media => 'print' %>
 <%= stylesheet_link_tag 'wayground-screen', :media => 'screen' %>
 <% if @page_uses_javascript
-  %><%= javascript_include_tag :defaults %>
+  %><%= javascript_include_tag 'application' %>
 <% end
 if @rich_text_editor
   %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
@@ -44,7 +46,7 @@ end -%>
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
-<%= csrf_meta_tag %>
+<%= csrf_meta_tags %>
 <%
 if @browser_nocache
   %><meta name="robots" content="noindex" />
@@ -102,9 +104,10 @@ end
 %></nav>
 <%
 
-if flash.length > 0 %>
-<div id="flash"<%= flash.length <= 0 ? ' class="hidden"'.html_safe : '' %>><%
-if flash.length > 0
+flash_count = (flash && flash.count) || 0
+if flash_count > 0 %>
+<div id="flash"<%= flash_count <= 0 ? ' class="hidden"'.html_safe : '' %>><%
+if flash_count > 0
   flash.each do |key, msg|
     %><p class="<%= key %>"><%= msg %></p>
 <% end
