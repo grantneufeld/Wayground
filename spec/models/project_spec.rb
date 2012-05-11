@@ -23,12 +23,14 @@ describe Project do
 
   describe "attr_accessible" do
     it "should not allow user to be set" do
-      project = Project.new(:creator => @user_normal)
-      project.creator.should be_nil
+      expect {
+        project = Project.new(:creator => @user_normal)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow creator_id to be set" do
-      project = Project.new(:creator_id => @user_normal.id)
-      project.creator_id.should be_nil
+      expect {
+        project = Project.new(:creator_id => @user_normal.id)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should allow is_visible to be set" do
       project = Project.new(:is_visible => true)

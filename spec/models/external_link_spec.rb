@@ -18,25 +18,30 @@ describe ExternalLink do
       elink.url.should eq 'set url'
     end
     it "should not allow position to be set" do
-      elink = ExternalLink.new(:position => 123)
-      elink.position.should be_nil
+      expect {
+        elink = ExternalLink.new(:position => 123)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow item to be set" do
       item = FactoryGirl.build(:page)
-      elink = ExternalLink.new(:item => item)
-      elink.item.should be_nil
+      expect {
+        elink = ExternalLink.new(:item => item)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow item_type to be set" do
-      elink = ExternalLink.new(:item_type => 'Page')
-      elink.item_type.should be_nil
+      expect {
+        elink = ExternalLink.new(:item_type => 'Page')
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow item_id to be set" do
-      elink = ExternalLink.new(:item_id => 1)
-      elink.item_id.should be_nil
+      expect {
+        elink = ExternalLink.new(:item_id => 1)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow site to be set" do
-      elink = ExternalLink.new(:site => 'somesite')
-      elink.site.should be_nil
+      expect {
+        elink = ExternalLink.new(:site => 'somesite')
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
   end
 

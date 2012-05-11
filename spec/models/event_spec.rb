@@ -32,12 +32,14 @@ describe Event do
 
   describe "attr_accessible" do
     it "should not allow user to be set" do
-      event = Event.new(:user => @user_normal)
-      event.user.should be_nil
+      expect {
+        event = Event.new(:user => @user_normal)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow user_id to be set" do
-      event = Event.new(:user_id => @user_normal.id)
-      event.user_id.should be_nil
+      expect {
+        event = Event.new(:user_id => @user_normal.id)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should allow start_at to be set" do
       event = Event.new(:start_at => '2012-01-02 03:04:05')
@@ -60,8 +62,9 @@ describe Event do
       event.is_draft.should be_true
     end
     it "should not allow is_approved to be set" do
-      event = Event.new(:is_approved => true)
-      event.is_approved.should be_false
+      expect {
+        event = Event.new(:is_approved => true)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should allow is_wheelchair_accessible to be set" do
       event = Event.new(:is_wheelchair_accessible => true)
@@ -133,8 +136,9 @@ describe Event do
       event.external_links[0].url.should eq url
     end
     it "should not allow editor to be set" do
-      event = Event.new(:editor => @user_normal)
-      event.editor.should be_nil
+      expect {
+        event = Event.new(:editor => @user_normal)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should allow edit_comment to be set" do
       event = Event.new(:edit_comment => 'set edit_comment')

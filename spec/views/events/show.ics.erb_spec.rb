@@ -64,7 +64,7 @@ describe "events/show.ics.erb" do
   end
 
   it "renders the expected text" do
-    render :template => "events/show.ics.erb"
+    render
     rendered.should match(/\ABEGIN:VEVENT\r/)
     rendered.should match(/^UID:123-event@wayground.ca\r/)
     rendered.should match(/^CREATED:20010203T110506Z\r/)

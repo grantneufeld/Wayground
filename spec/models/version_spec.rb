@@ -13,19 +13,22 @@ describe Version do
       @user = FactoryGirl.create(:user)
     end
     it "should pass when all required fields are set" do
-      version = Version.new(:item => @page, :user => @user, :edited_at => Time.now)
+      version = @page.versions.new(:edited_at => Time.now)
+      version.user = @user
       version.valid?.should be_true
     end
     it "should require an item" do
-      version = Version.new(:user => @user, :edited_at => Time.now)
+      version = Version.new(:edited_at => Time.now)
+      version.user = @user
       version.valid?.should be_false
     end
     it "should require a user" do
-      version = Version.new(:item => @page, :edited_at => Time.now)
+      version = @page.versions.new(:edited_at => Time.now)
       version.valid?.should be_false
     end
     it "should require an edited at datetime" do
-      version = Version.new(:item => @page, :user => @user)
+      version = @page.versions.new
+      version.user = @user
       version.valid?.should be_false
     end
   end

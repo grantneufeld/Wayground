@@ -22,7 +22,8 @@ describe "authorities/edit.html.erb" do
 
     assert_select "form", :action => authorities_path(@authority), :method => "post" do
       assert_select "input#authority_user_proxy", :name => "authority[user_proxy]"
-      assert_select "input#authority_item", :name => "authority[item]"
+      assert_select "input#authority_item_type", :name => "authority[item_type]"
+      assert_select "input#authority_item_id", :name => "authority[item_id]"
       assert_select "input#authority_area", :name => "authority[area]"
       assert_select "input#authority_is_owner", :name => "authority[is_owner]"
       assert_select "input#authority_can_create", :name => "authority[can_create]"

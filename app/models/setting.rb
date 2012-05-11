@@ -3,6 +3,8 @@
 # System-wide settings.
 class Setting < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Admin', :item_authority_flag_field => :always_private
+  attr_accessible :key, :value
+
   validates_presence_of :key
 
   default_scope order('key')

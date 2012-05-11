@@ -8,7 +8,7 @@ class Path < ActiveRecord::Base
 
   belongs_to :item, :polymorphic => true
 
-  before_validation :clean_sitepath
+  before_validation :clean_sitepath, :clean_redirect
 
   validates_format_of :sitepath,
     :with=>/\A\/(([\w%_~\+\-]+\/?)+(\.[\w%_\-]+|\/)?)?\z/,
@@ -89,6 +89,11 @@ class Path < ActiveRecord::Base
   def clean_sitepath
     matches = self.sitepath.match /^(.+)\/$/
     self.sitepath = matches[1] if matches
+  end
+
+  # Clear any leading or trailing whitespace from the redirect.
+  def clean_redirect
+    self.redirect = redirect.strip if redirect?
   end
 
 end

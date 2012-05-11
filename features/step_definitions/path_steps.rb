@@ -24,8 +24,9 @@ Given /^(?:|I )have (some|[0-9]+) custom paths$/ do |quantity|
   end
 end
 
-Given /^(?:|I )have a custom path "([^\"]*)"$/ do |sitepath|
-  FactoryGirl.create(:path, :sitepath => sitepath, :redirect => '/')
+Given /^(?:|I )have a custom path "([^\"]*)"(?:| pointing to "([^\"]*)")$/ do |sitepath, redirect|
+  redirect ||= '/'
+  FactoryGirl.create(:path, :sitepath => sitepath, :redirect => redirect)
 end
 
 # ACTIONS

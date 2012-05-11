@@ -40,7 +40,7 @@ describe "events/index.ics.erb" do
   end
 
   it "renders the expected text" do
-    render :template => "events/index.ics.erb"
+    render
     rendered.should match(
     /\ABEGIN:VEVENT\r\nUID:123-event@wayground.ca\r\nCREATED:20010203T110506Z\r\nDTSTAMP:20010203T040506Z\r\nDTSTART;TZID=America\/Denver:20110203T040506\r\nSUMMARY:Event One\r\nCLASS:PUBLIC\r\nURL:http:\/\/[a-z0-9\.]+\/events\/123\r\nSTATUS:CANCELLED\r\nSEQUENCE:1\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:234-event@wayground.ca\r\nCREATED:20010203T110506Z\r\nDTSTAMP:20010203T040506Z\r\nDTSTART;TZID=America\/Denver:20110203T040506\r\nSUMMARY:Event Two\r\nCLASS:PUBLIC\r\nURL:http:\/\/[a-z0-9\.]+\/events\/234\r\nSTATUS:TENTATIVE\r\nSEQUENCE:1\r\nEND:VEVENT(\r\n)?\z/
     )
