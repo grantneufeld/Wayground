@@ -67,7 +67,7 @@ date_idx = nil
 
     if event_location.present?
       %>  <%= event.location.html_safe %><%
-      if event_address.present?      
+      if event_address.present?
         %> (<%= event_address.html_safe %>)<%
       end
       %>

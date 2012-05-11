@@ -4,8 +4,8 @@ Feature: Sign in
   A user
   Should be able to sign in
 
-  # most of these scenarios are derived from the ones that come from Clearance 
-  
+  # most of these scenarios are derived from the ones that come from Clearance
+
   Scenario: User is not signed up
     Given no user exists with an email of "test+email@wayground.ca"
     When I go to the sign in page

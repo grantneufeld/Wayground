@@ -3,7 +3,7 @@ Feature: Sign up
   In order to have a sustained identity and access controlled functions of the site
   A user
   Should be able to sign up to create an account
-  
+
   # some of these scenarios are derived from the ones that come from Clearance
 
   Scenario: User tries to sign up when already signed in

@@ -2,10 +2,10 @@
 
 tzoff_secs = Time.current.gmt_offset
 if tzoff_secs < 0
-	tzoff_negative = true
-	tzoff_secs *= -1
+  tzoff_negative = true
+  tzoff_secs *= -1
 else
-	tzoff_negative = false
+  tzoff_negative = false
 end
 tzoff_minutes = tzoff_secs / 60
 tzoff_hours = tzoff_minutes / 60

@@ -24,7 +24,7 @@ Feature: Testing system
     Given no TestModel records exist
     And a test_model exists
     Then I should have 1 test model
-  
+
   Scenario: Factory girl has built-in cucumber step for generating a bunch of objects at once
     Given no TestModel records exist
     And 5 test_models exist

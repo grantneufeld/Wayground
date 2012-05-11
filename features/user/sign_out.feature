@@ -4,7 +4,7 @@ Feature: Sign out
   A signed in user
   Should be able to sign out
 
-  # most of these scenarios are derived from the ones that come from Clearance 
+  # most of these scenarios are derived from the ones that come from Clearance
 
   Scenario: User signs out
     Given I am signed up and confirmed as "test+email@wayground.ca/password"

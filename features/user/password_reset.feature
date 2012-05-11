@@ -4,8 +4,8 @@ Feature: Password reset
   A user
   Should be able to reset it
 
-  # most of these scenarios are derived from the ones that come from Clearance 
-  
+  # most of these scenarios are derived from the ones that come from Clearance
+
   Scenario: User is not signed up
     Given no user exists with an email of "test+email@wayground.ca"
     When I request password reset link to be sent to "test+email@wayground.ca"

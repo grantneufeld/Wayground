@@ -60,7 +60,7 @@
 # model!(owner).send(association).should_not == model!(target)
 #end
 #
-## assert model.predicate? 
+## assert model.predicate?
 #Then(/^#{capture_model} should (?:be|have) (?:an? )?#{capture_predicate}$/) do |name, predicate|
 # if model!(name).respond_to?("has_#{predicate.gsub(' ', '_')}")
 #   model!(name).should send("have_#{predicate.gsub(' ', '_')}")

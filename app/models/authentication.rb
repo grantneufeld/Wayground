@@ -3,18 +3,18 @@
 # Authentications of Users from external services.
 # Based on Oauth transactions with other websites (such as Twitter).
 class Authentication < ActiveRecord::Base
-	belongs_to :user
-	attr_accessor :new_user
+  belongs_to :user
+  attr_accessor :new_user
 
-	def self.authenticate_callback!(auth, user = nil)
-		authentication = self.find_by_provider_and_uid(auth["provider"], auth["uid"])
-		if authentication.nil?
-			authentication = create_with_auth!(auth, user)
-		elsif user.present? && (user != authentication.user)
-			raise Wayground::WrongUserForAuthentication
-		end
-		authentication
-	end
+  def self.authenticate_callback!(auth, user = nil)
+    authentication = self.find_by_provider_and_uid(auth["provider"], auth["uid"])
+    if authentication.nil?
+      authentication = create_with_auth!(auth, user)
+    elsif user.present? && (user != authentication.user)
+      raise Wayground::WrongUserForAuthentication
+    end
+    authentication
+  end
 
   # Create a new Authentication, given an Oauth hash, for an optional user.
   def self.create_with_auth!(auth, user = nil)
@@ -40,21 +40,21 @@ class Authentication < ActiveRecord::Base
     }
   end
 
-	# figure out the user’s url on the service, if available
-	def self.url_from_provider_auth(auth)
-		case auth['provider']
-		when 'facebook'
-			auth['urls']['Facebook'] if auth['urls'].present?
-		when 'twitter'
-			"https://twitter.com/#{auth['user_info']['nickname']}" if auth['user_info'].present?
-		else
-			nil
-		end
-	end
+  # figure out the user’s url on the service, if available
+  def self.url_from_provider_auth(auth)
+    case auth['provider']
+    when 'facebook'
+      auth['urls']['Facebook'] if auth['urls'].present?
+    when 'twitter'
+      "https://twitter.com/#{auth['user_info']['nickname']}" if auth['user_info'].present?
+    else
+      nil
+    end
+  end
 
-	def new_user?
-		new_user
-	end
+  def new_user?
+    new_user
+  end
 
   def label
     (provider == 'twitter' ? '@' : '') + (nickname || name || uid)

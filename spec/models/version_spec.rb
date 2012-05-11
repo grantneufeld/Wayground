@@ -148,5 +148,5 @@ describe Version do
       middle_version.is_current?.should be_false
     end
   end
-  
+
 end

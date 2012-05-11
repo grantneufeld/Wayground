@@ -4,7 +4,7 @@
 # or to redirect local URLs to other local paths or to remote URLs.
 class Path < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content', :inherits_from => :item
-	attr_accessible :sitepath, :redirect
+  attr_accessible :sitepath, :redirect
 
   belongs_to :item, :polymorphic => true
 

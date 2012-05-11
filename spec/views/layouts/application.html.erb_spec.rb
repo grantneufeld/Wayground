@@ -149,7 +149,7 @@ describe "layouts/application.html.erb" do
     before do
       controller.stub!(:current_user).and_return(mock_model(User, :name => "Test Tester"))
     end
-    
+
     describe "via password" do
       before do
         render
@@ -167,7 +167,7 @@ describe "layouts/application.html.erb" do
         rendered.should match(/<a href="\/signout">Sign Out<\/a>/)
       end
     end
-    
+
     describe "via Twitter" do
       it "should show Twitter as the source" do
         session[:source] = 'twitter'

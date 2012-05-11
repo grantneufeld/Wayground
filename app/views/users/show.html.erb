@@ -1,9 +1,9 @@
 <h1><%
 user_name = @user.name
 if user_name.blank?
-	%>User: <%= @user.id %><%
+  %>User: <%= @user.id %><%
 else
-	%><%= user_name %><%
+  %><%= user_name %><%
 end
 %></h1>
 <p>Registered on <%= @user.created_at.to_s(:plain_date) %>.</p>
@@ -12,16 +12,16 @@ end
 <%
 sites = {}
 if @user.authentications.count == 0
-	%><p>Your account is not linked to any other websites.</p>
+  %><p>Your account is not linked to any other websites.</p>
 <%
 else
-	@user.authentications.each do |authentication|
-		sites[authentication.provider] = authentication
-	end
-	sites.keys.sort.each do |key|
-		authentication = sites[key]
-		%><p><%= link_to "Your #{authentication.provider.titleize} account — #{authentication.label}", authentication.url %>.</p>
-<%	end
+  @user.authentications.each do |authentication|
+    sites[authentication.provider] = authentication
+  end
+  sites.keys.sort.each do |key|
+    authentication = sites[key]
+    %><p><%= link_to "Your #{authentication.provider.titleize} account — #{authentication.label}", authentication.url %>.</p>
+<% end
 end
 %><h3>Link to your accounts on other websites</h3>
 <p><%= render :partial => 'sessions/authentication_links' %></p>

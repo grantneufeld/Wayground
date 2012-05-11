@@ -47,10 +47,10 @@ end -%>
 <%= csrf_meta_tag %>
 <%
 if @browser_nocache
-	%><meta name="robots" content="noindex" />
+  %><meta name="robots" content="noindex" />
 <% end
 unless @page_description.blank?
-	%><meta name="description" content="<%=h @page_description %>" />
+  %><meta name="description" content="<%=h @page_description %>" />
 <% end
 %><%= yield :head -%>
 </head><body>
@@ -64,18 +64,18 @@ unless @page_description.blank?
 <p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
 </div>
 <ul id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
-<%	if current_user.nil?
-		%><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li><%
-	else
-		%><li class="text">Signed in as <%= current_user.name %> <%
-		case session[:source]
-		when 'twitter'
-			%><%= image_tag('/icon/site/twitter.png', :alt => '(via Twitter)', :title => 'via Twitter', :size => '16x16') %><%
-		when 'facebook'
-			%>(via Facebook)<%
-		end
-		%></li><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li><%
-	end %>
+<% if current_user.nil?
+    %><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li><%
+  else
+    %><li class="text">Signed in as <%= current_user.name %> <%
+    case session[:source]
+    when 'twitter'
+      %><%= image_tag('/icon/site/twitter.png', :alt => '(via Twitter)', :title => 'via Twitter', :size => '16x16') %><%
+    when 'facebook'
+      %>(via Facebook)<%
+    end
+    %></li><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li><%
+  end %>
 </ul>
 <form action="" method="get" accept-charset="utf-8" id="globalsearch" role="search">
 <p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
@@ -92,11 +92,11 @@ unless @page_description.blank?
 </ul>
 <%
 if @site_breadcrumbs && @site_breadcrumbs.size > 0
-	%><ul id="breadcrumb">
-<%	@site_breadcrumbs.each do |breadcrumb|
-		%><li><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
-<% 	end
-	%></ul>
+  %><ul id="breadcrumb">
+<% @site_breadcrumbs.each do |breadcrumb|
+    %><li><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
+<% end
+  %></ul>
 <%
 end
 %></nav>
@@ -105,9 +105,9 @@ end
 if flash.length > 0 %>
 <div id="flash"<%= flash.length <= 0 ? ' class="hidden"'.html_safe : '' %>><%
 if flash.length > 0
-	flash.each do |key, msg|
-		%><p class="<%= key %>"><%= msg %></p>
-<%	end
+  flash.each do |key, msg|
+    %><p class="<%= key %>"><%= msg %></p>
+<% end
 end %></div>
 <% end -%>
 
@@ -126,7 +126,7 @@ end
 <footer id="footer" role="contentinfo">
 <%
 if @versioned_item || content_for?(:actions)
-	%><p class="actions">
+  %><p class="actions">
 <%
   if @versioned_item && @versioned_item.versions.count > 1
     if @versioned_item.is_a? Page
