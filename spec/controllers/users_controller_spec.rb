@@ -16,7 +16,7 @@ describe UsersController do
 	end
 
   describe "GET 'profile'" do
-    let(:user) { @user = Factory.create(:user) }
+    let(:user) { @user = FactoryGirl.create(:user) }
     it "should be successful" do
       get 'profile', :id => user.id
       response.should be_success
@@ -86,7 +86,7 @@ describe UsersController do
 		end
 		it "should create a new user record when valid form submitted" do
 		  # have an existing user so we don’t default to creating an admin
-		  Factory.create(:user)
+      FactoryGirl.create(:user)
 			post 'create', :user => {:email => 'test+new@wayground.ca',
 				:password => 'password', :password_confirmation => 'password'
 			}

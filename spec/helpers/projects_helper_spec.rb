@@ -2,8 +2,8 @@
 require 'spec_helper'
 
 describe ProjectsHelper do
-  let(:project) { $project = Factory(:project, :filename => nil) }
-  let(:named_project) { $named_project = Factory(:project, :filename => 'named') }
+  let(:project) { $project = FactoryGirl.create(:project, :filename => nil) }
+  let(:named_project) { $named_project = FactoryGirl.create(:project, :filename => 'named') }
   describe ".project_smart_path" do
     it "should use the named path when the project has a filename" do
       helper.project_smart_path(named_project).should eq "/project/named"

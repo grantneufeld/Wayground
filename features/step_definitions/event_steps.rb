@@ -6,15 +6,15 @@
 Given /^there are (\d+) upcoming events$/ do |count_str|
   count_total = count_str.to_i
   1..count_total.times do
-    Factory.create(:event_future)
+    FactoryGirl.create(:event_future)
   end
 end
 
 Given /^there is an event(?:| on "([^\"]*)")(?:| titled) "([^\"]*)"(?:| with link "([^\"]*)")$/ do |datetime_str, title, url|
   if datetime_str.present?
-    event = Factory.create(:event, :start_at => datetime_str, :title => title)
+    event = FactoryGirl.create(:event, :start_at => datetime_str, :title => title)
   else
-    event = Factory.create(:event, :title => title)
+    event = FactoryGirl.create(:event, :title => title)
   end
   if url.present?
     event.external_links.create!(:url => url)

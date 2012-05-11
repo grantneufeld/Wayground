@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe "events/show.ics.erb" do
   before(:each) do
-    @event = Factory.create(:event,
+    @event = FactoryGirl.create(:event,
       :id => 123,
       :user => nil,
       :start_at => Time.parse('2011-02-03 04:05:06 am MST'),
@@ -30,8 +30,8 @@ describe "events/show.ics.erb" do
       :created_at => Time.parse('2001-02-03 04:05:06 am MST'),
       :updated_at => Time.parse('2001-02-03 04:05:06 am UTC')
     )
-    Factory.create(:external_link, :url => 'http://1st.external.link/', :item => @event)
-    Factory.create(:external_link, :url => 'http://2nd.external.link/', :item => @event)
+    FactoryGirl.create(:external_link, :url => 'http://1st.external.link/', :item => @event)
+    FactoryGirl.create(:external_link, :url => 'http://2nd.external.link/', :item => @event)
     assign(:event, Event.find(123))
     #@event ||= assign(:event, stub_model(Event,
     #  :id => 123,
@@ -64,7 +64,7 @@ describe "events/show.ics.erb" do
   end
 
   it "renders the expected text" do
-    render
+    render :template => "events/show.ics.erb"
     rendered.should match(/\ABEGIN:VEVENT\r/)
     rendered.should match(/^UID:123-event@wayground.ca\r/)
     rendered.should match(/^CREATED:20010203T110506Z\r/)

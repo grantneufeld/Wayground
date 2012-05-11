@@ -38,8 +38,8 @@ describe ApplicationController do
       controller.params ||= {}
       controller.params.merge!({:page => '2', :max => '10'})
       Document.delete_all
-      user = Factory.create(:document).user
-      11.times { Factory.create(:document, :user => user) }
+      user = FactoryGirl.create(:document).user
+      11.times { FactoryGirl.create(:document, :user => user) }
       controller.send(:paginate, Document)
       assigns[:default_max].should eq 20
       assigns[:max].should eq 10

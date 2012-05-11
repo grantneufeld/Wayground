@@ -17,7 +17,7 @@ describe Authentication do
 			User.delete_all
 		end
 		before(:each) do
-			@authentication = Factory.build(:authentication)
+      @authentication = FactoryGirl.build(:authentication)
 			@authentication.save!
 			@auth = {'provider' => @authentication.provider, 'uid' => @authentication.uid}
 		end
@@ -38,7 +38,7 @@ describe Authentication do
 		end
 		describe "with no existing authentication" do
 			it "should add the authentication to the given user" do
-				given_user = Factory.create :user
+        given_user = FactoryGirl.create :user
 				authentication = Authentication.authenticate_callback!(mock_auth, given_user)
 				given_user.authentications[0].should_not be_nil
 			end
@@ -51,7 +51,7 @@ describe Authentication do
 
 	describe ".create_with_auth!" do
 		it "should add the authentication to the given user" do
-			given_user = Factory.create :user
+      given_user = FactoryGirl.create :user
 			authentication = Authentication.create_with_auth!(mock_auth, given_user)
 			given_user.authentications[0].should_not be_nil
 		end
@@ -105,7 +105,7 @@ describe Authentication do
 
 	describe "#new_user?" do
 		it "should be false if an authentication was created for an existing user" do
-			authentication = Authentication.create_with_auth!(mock_auth, Factory.build(:user))
+      authentication = Authentication.create_with_auth!(mock_auth, FactoryGirl.build(:user))
 			authentication.new_user?.should be_false
 		end
 		it "should be true if the user was created for the authentication" do

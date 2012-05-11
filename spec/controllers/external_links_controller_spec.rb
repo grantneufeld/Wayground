@@ -9,11 +9,10 @@ describe ExternalLinksController do
     Authority.destroy_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = Factory.create(:user, :name => 'Admin User')
-    @user_normal = Factory.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
     # create some extraneous ExternalLinks to make sure we’re not loading :all when we want a subset
-    Factory.create(:external_link)
-    Factory.create(:external_link)
+    FactoryGirl.create_list(:external_link, 2)
   end
 
   def set_logged_in_admin
@@ -31,12 +30,12 @@ describe ExternalLinksController do
   end
 
   let(:event) do
-    $event = Factory.create(:event)
+    $event = FactoryGirl.create(:event)
     # create an extra ExternalLink on the event
-    Factory.create(:external_link, :item => $event, :position => 1)
+    FactoryGirl.create(:external_link, :item => $event, :position => 1)
     $event
   end
-  let(:external_link) { $external_link = Factory.create(:external_link, :item => event, :position => 99)}
+  let(:external_link) { $external_link = FactoryGirl.create(:external_link, :item => event, :position => 99)}
 
   describe "GET 'index'" do
     it "returns http success" do
@@ -223,7 +222,7 @@ describe ExternalLinksController do
 
     it "destroys the requested external_link" do
       set_logged_in_admin
-      delete_this = Factory.create(:external_link, :item => event)
+      delete_this = FactoryGirl.create(:external_link, :item => event)
       expect {
         delete :destroy, :event_id => event.id, :id => delete_this.id
       }.to change(event.external_links, :count).by(-1)
@@ -231,7 +230,7 @@ describe ExternalLinksController do
 
     it "redirects to the containing item" do
       set_logged_in_admin
-      delete_this = Factory.create(:external_link, :item => event)
+      delete_this = FactoryGirl.create(:external_link, :item => event)
       delete :destroy, :event_id => event.id, :id => delete_this.id
       response.should redirect_to(event)
     end

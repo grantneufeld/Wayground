@@ -22,8 +22,8 @@ describe SettingsController do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = Factory.create(:user, :name => 'Admin User')
-    @user_normal = Factory.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
   end
 
   def set_logged_in_admin
@@ -68,7 +68,7 @@ describe SettingsController do
   end
 
   describe "GET show" do
-    let(:setting) { Factory.create(:setting) }
+    let(:setting) { FactoryGirl.create(:setting) }
     it "assigns the requested setting as @setting" do
       set_logged_in_admin
       get :show, {:id => setting.to_param}, valid_session
@@ -127,7 +127,7 @@ describe SettingsController do
   end
 
   describe "GET edit" do
-    let(:setting) { Factory.create(:setting) }
+    let(:setting) { FactoryGirl.create(:setting) }
     it "assigns the requested setting as @setting" do
       set_logged_in_admin
       get :edit, {:id => setting.to_param}, valid_session
@@ -136,7 +136,7 @@ describe SettingsController do
   end
 
   describe "PUT update" do
-    let(:setting) { Factory.create(:setting) }
+    let(:setting) { FactoryGirl.create(:setting) }
     describe "with valid params" do
       it "updates the requested setting" do
         set_logged_in_admin
@@ -181,7 +181,7 @@ describe SettingsController do
   end
 
   describe "GET delete" do
-    let(:setting) { Factory.create(:setting) }
+    let(:setting) { FactoryGirl.create(:setting) }
     it "assigns the requested setting as @setting" do
       set_logged_in_admin
       get :delete, {:id => setting.to_param}, valid_session
@@ -190,7 +190,7 @@ describe SettingsController do
   end
 
   describe "DELETE destroy" do
-    let(:setting) { Factory.create(:setting) }
+    let(:setting) { FactoryGirl.create(:setting) }
     it "destroys the requested setting" do
       set_logged_in_admin
       setting # make sure it's loaded before the next block so the count will actually count it

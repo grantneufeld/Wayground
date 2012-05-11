@@ -11,8 +11,8 @@ describe Project do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = Factory.create(:user, :name => 'Admin User')
-    @user_normal = Factory.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
   end
 
   describe "acts_as_authority_controlled" do
@@ -147,7 +147,7 @@ describe Project do
       end
       it "should not allow duplicate filenames" do
         filename = 'no_duplicate'
-        Factory.create(:project, :filename => filename)
+        FactoryGirl.create(:project, :filename => filename)
         project = Project.new(minimum_valid_params.merge(:filename => filename))
         project.creator = project.owner = @user_admin
         project.valid?.should be_false
@@ -164,10 +164,10 @@ describe Project do
     describe "default_scope" do
       it "should order by name by default" do
         Project.delete_all
-        project3 = Factory.create(:project, :name => 'Dog')
-        project1 = Factory.create(:project, :name => 'Aardvark')
-        project4 = Factory.create(:project, :name => 'Rabbit')
-        project2 = Factory.create(:project, :name => 'Cat')
+        project3 = FactoryGirl.create(:project, :name => 'Dog')
+        project1 = FactoryGirl.create(:project, :name => 'Aardvark')
+        project4 = FactoryGirl.create(:project, :name => 'Rabbit')
+        project2 = FactoryGirl.create(:project, :name => 'Cat')
         Project.all.should eq [project1, project2, project3, project4]
       end
     end

@@ -29,7 +29,7 @@ describe Path do
         path.valid?.should be_true
       end
       it "should reject a duplicate sitepath" do
-        Factory.create(:path, :sitepath => '/duplciate', :redirect => '/')
+        FactoryGirl.create(:path, :sitepath => '/duplciate', :redirect => '/')
         path = Path.new(:sitepath => '/duplciate', :redirect => '/dupe')
         path.valid?.should be_false
       end
@@ -62,7 +62,7 @@ describe Path do
     context ":for_sitepath" do
       before(:all) do
         Path.delete_all
-        @path = Factory.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
+        @path = FactoryGirl.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
       end
       it "should return nil when no matching Path" do
         Path.for_sitepath('/non-existant').should eq []
@@ -79,7 +79,7 @@ describe Path do
         Path.home.should be_nil
       end
       it "should return the home Path" do
-        home = Factory.create(:path, :sitepath => '/', :redirect => '/home')
+        home = FactoryGirl.create(:path, :sitepath => '/', :redirect => '/home')
         Path.home.should eq home
       end
     end
@@ -89,14 +89,14 @@ describe Path do
         Page.delete_all
         Path.delete_all
         Authority.delete_all
-        @admin = Factory.create(:user)
+        @admin = FactoryGirl.create(:user)
         @admin.make_admin!
-        @user = Factory.create(:user)
-        @admin_path = Factory.create(:page, :filename => 'admin', :is_authority_controlled => true).path
-        @controlled_path = Factory.create(:page, :filename => 'controlled', :is_authority_controlled => true).path
+        @user = FactoryGirl.create(:user)
+        @admin_path = FactoryGirl.create(:page, :filename => 'admin', :is_authority_controlled => true).path
+        @controlled_path = FactoryGirl.create(:page, :filename => 'controlled', :is_authority_controlled => true).path
         @user.set_authority_on_item(@controlled_path.item)
-        @public_path = Factory.create(:redirect_path, :sitepath => '/public')
-        @user_path = Factory.create(:page, :filename => 'user', :is_authority_controlled => true, :editor => @user).path
+        @public_path = FactoryGirl.create(:redirect_path, :sitepath => '/public')
+        @user_path = FactoryGirl.create(:page, :filename => 'user', :is_authority_controlled => true, :editor => @user).path
         @user.set_authority_on_item(@user_path.item)
       end
       it "should find everything for admins" do
@@ -119,7 +119,7 @@ describe Path do
   describe ".find_for_path" do
     before(:all) do
       Path.delete_all
-      @path = Factory.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
+      @path = FactoryGirl.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
     end
     it "should return nil if no matching path" do
       Path.find_for_path('/non-existant').should be_nil

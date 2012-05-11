@@ -23,7 +23,7 @@ def users_named(name_list, password = nil)
         params[:password] = password
         params[:password_confirmation] = password
       end
-      users << Factory.create(:user, params)
+      users << FactoryGirl.create(:user, params)
     end
   end
   users
@@ -50,38 +50,41 @@ end
 Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
   user = User.find_by_email(email)
   unless user
-    user = Factory :user,
-    :email                 => email,
-    :password              => password,
-    :password_confirmation => password
+    user = FactoryGirl.create(:user,
+      :email                 => email,
+      :password              => password,
+      :password_confirmation => password
+    )
   end
 end
 
 #Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
 #  user = User.find_by_email(email)
 #  unless user
-#    user = Factory :email_confirmed_user,
-#    :id                    => id.to_i,
-#    :email                 => email,
-#    :password              => password,
-#    :password_confirmation => password
+#    user = FactoryGirl.create(:email_confirmed_user,
+#      :id                    => id.to_i,
+#      :email                 => email,
+#      :password              => password,
+#      :password_confirmation => password
+#    )
 #  end
 #end
 
 Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
   user = User.find_by_email(email)
   unless user
-    user = Factory :email_confirmed_user,
-    :email                 => email,
-    :password              => password,
-    :password_confirmation => password
+    user = FactoryGirl.create(:email_confirmed_user,
+      :email                 => email,
+      :password              => password,
+      :password_confirmation => password
+    )
   end
 end
 
 When /^(?:|I )sign up as "([^\"]*)"(?:| with password "([^\"]*)")$/ do |user_name, password|
   password = 'password' if password.blank?
   visit '/signup'
-  fill_in('user_email', :with => Factory.next(:email))
+  fill_in('user_email', :with => FactoryGirl.generate(:email))
   fill_in('user_password', :with => password)
   fill_in('user_password_confirmation', :with => password)
   fill_in('user_name', :with => user_name)
@@ -204,7 +207,7 @@ end
 #end
 
 Given /^(?:|I )have signed in$/ do
-  user = Factory(:user, :password => 'password')
+  user = FactoryGirl.create(:user, :password => 'password')
   step "I have signed in with my email #{user.email} and password \"password\""
 end
 Given /^(?:|I )have signed in with "(.*)\/(.*)"$/ do |email, password|

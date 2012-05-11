@@ -52,8 +52,8 @@ end
 Given /^(?:|there is )a secure ([A-Za-z]+) "([^\"]+)"$/ do |class_name, label|
   class_name.downcase!
   klass = 'user' if class_name == 'item'
-  item = Factory.create!(class_name.downcase.to_sym, :label => label, :is_authority_controlled => true)
-  authority = Factory.create!(:authority, :item => item)
+  item = FactoryGirl.create!(class_name.downcase.to_sym, :label => label, :is_authority_controlled => true)
+  authority = FactoryGirl.create!(:authority, :item => item)
 end
 
 Given /^(?:|the user )"([^\"]*)" has (?:|the )authority to ([a-z]+) (.+)$/ do |user_name, action_label, area_label|
@@ -64,13 +64,13 @@ Given /^(?:|the user )"([^\"]*)" has (?:|the )authority to ([a-z]+) (.+)$/ do |u
 end
 
 Given /^(?:|I )have signed in as an admin$/ do
-  user = Factory.create(:user, :password => 'password')
+  user = FactoryGirl.create(:user, :password => 'password')
   user.make_admin!
   step %{I sign in with email #{user.email} and password "#{user.password}"}
 end
 
 Given /^(?:|I am )authorized to (?:manage web pages|upload documents)$/ do
-  user = Factory.create(:user, :password => 'password')
+  user = FactoryGirl.create(:user, :password => 'password')
   user.set_authority_on_area('Content', :is_owner)
   step %{I sign in with email #{user.email} and password "#{user.password}"}
 end

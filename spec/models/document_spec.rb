@@ -110,14 +110,14 @@ describe Document do
       User.delete_all
       Document.delete_all
       Authority.delete_all
-      @admin = Factory.create(:user)
+      @admin = FactoryGirl.create(:user)
       @admin.make_admin!
-      @user = Factory.create(:user)
-      @admin_doc = Factory.create(:document, :filename => 'admin', :is_authority_controlled => true)
-      @controlled_doc = Factory.create(:document, :filename => 'controlled', :is_authority_controlled => true)
+      @user = FactoryGirl.create(:user)
+      @admin_doc = FactoryGirl.create(:document, :filename => 'admin', :is_authority_controlled => true)
+      @controlled_doc = FactoryGirl.create(:document, :filename => 'controlled', :is_authority_controlled => true)
       @user.set_authority_on_item(@controlled_doc)
-      @public_doc = Factory.create(:document, :filename => 'public')
-      @user_doc = Factory.create(:document, :filename => 'user', :is_authority_controlled => true, :user => @user)
+      @public_doc = FactoryGirl.create(:document, :filename => 'public')
+      @user_doc = FactoryGirl.create(:document, :filename => 'user', :is_authority_controlled => true, :user => @user)
     end
     it "should find everything for admins" do
       Document.for_user(@admin).order(:filename).should eq [
@@ -151,7 +151,7 @@ describe Document do
 
   describe "#generate_path" do
     it "should be called when the Document is saved" do
-      container = Factory.create(:page).path
+      container = FactoryGirl.create(:page).path
       document = Document.new(:custom_filename => 'document')
       document.content_type = 'text/plain'
       document.data = ''
@@ -163,7 +163,7 @@ describe Document do
 
   describe "#update_path" do
     before(:all) do
-      @container = Factory.create(:page, :filename => 'container').path
+      @container = FactoryGirl.create(:page, :filename => 'container').path
     end
     it "should destroy the path if the Document’s container_path is removed" do
       document = Document.new(:custom_filename => 'original')
@@ -194,7 +194,7 @@ describe Document do
       document.sitepath.should eq '/container/changed'
     end
     it "should add a path if a container_path is added" do
-      document = Factory.create(:document, :filename => 'original')
+      document = FactoryGirl.create(:document, :filename => 'original')
       document.container_path = @container
       document.update_path
       document.sitepath.should eq '/container/original'
@@ -208,7 +208,7 @@ describe Document do
       document.calculate_sitepath.should be_nil
     end
     it "should have be the container’s sitepath plus a slash and the filename" do
-      container = Factory.create(:page, :filename => 'contain').path
+      container = FactoryGirl.create(:page, :filename => 'contain').path
       document = Document.new(:custom_filename => 'document.txt')
       document.content_type = 'text/plain'
       document.container_path = container
@@ -218,14 +218,14 @@ describe Document do
 
   describe "#sitepath" do
     it "should return nil when the Document does not have a container_path" do
-      document = Factory.create(:document)
+      document = FactoryGirl.create(:document)
       document.sitepath.should be_nil
     end
     it "should be the path’s sitepath" do
       document = Document.new(:custom_filename => 'testdoc')
       document.content_type = 'text/plain'
       document.data = ''
-      document.container_path = Factory.create(:page, :filename => 'container').path
+      document.container_path = FactoryGirl.create(:page, :filename => 'container').path
       document.save!
       document.sitepath.should eq '/container/testdoc'
     end

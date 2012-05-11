@@ -22,7 +22,7 @@ describe ExternalLink do
       elink.position.should be_nil
     end
     it "should not allow item to be set" do
-      item = Factory.build(:page)
+      item = FactoryGirl.build(:page)
       elink = ExternalLink.new(:item => item)
       elink.item.should be_nil
     end
@@ -42,7 +42,7 @@ describe ExternalLink do
 
   describe "validation" do
     before(:all) do
-      @item = Factory.create(:page)
+      @item = FactoryGirl.create(:page)
     end
     it "should pass if all required values are set" do
       elink = ExternalLink.new(:title => 'A', :url => 'http://validation.test/all/required/values')
@@ -113,7 +113,7 @@ describe ExternalLink do
 
   describe "#set_default_position" do
     before(:each) do
-      @item = Factory.create(:page)
+      @item = FactoryGirl.create(:page)
     end
     it "should set position to 1 if no other ExternalLinks are on the item" do
       @elink = ExternalLink.new
@@ -122,9 +122,9 @@ describe ExternalLink do
       @elink.position.should eq 1
     end
     it "should set position to come after all other ExternalLinks on the item" do
-      @elink = Factory.create(:external_link, :item => @item, :position => 36)
-      @elink = Factory.create(:external_link, :item => @item, :position => 72)
-      @elink = Factory.create(:external_link, :item => @item, :position => 45)
+      @elink = FactoryGirl.create(:external_link, :item => @item, :position => 36)
+      @elink = FactoryGirl.create(:external_link, :item => @item, :position => 72)
+      @elink = FactoryGirl.create(:external_link, :item => @item, :position => 45)
       @elink = ExternalLink.new
       @elink.item = @item
       @elink.set_default_position

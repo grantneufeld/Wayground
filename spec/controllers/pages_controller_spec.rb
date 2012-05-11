@@ -66,7 +66,7 @@ describe PagesController do
 
     it "assigns the parent page if given" do
       set_logged_in_admin
-      parent_page = Factory.create(:page)
+      parent_page = FactoryGirl.create(:page)
       get :new, :parent => parent_page.id.to_s
       assigns(:page).parent.should eq parent_page
     end
@@ -88,8 +88,8 @@ describe PagesController do
 
       it "assigns the parent page if given" do
         set_logged_in_admin
-        parent_page = Factory.create(:page)
-        parent_page.path ||= Factory.create(:path, :item => parent_page)
+        parent_page = FactoryGirl.create(:page)
+        parent_page.path ||= FactoryGirl.create(:path, :item => parent_page)
         post :create, :parent => parent_page.id.to_s, :page => {:filename => 'spec_create_with_parent', :title => 'test'}
         assigns(:page).parent.should eq parent_page
       end
@@ -121,7 +121,7 @@ describe PagesController do
 
   describe "GET edit" do
     it "requires the user to have authority" do
-      test_page = Factory.create(:page)
+      test_page = FactoryGirl.create(:page)
       get :edit, :id => test_page.id.to_s
       response.status.should eq 403
     end
@@ -136,7 +136,7 @@ describe PagesController do
 
   describe "PUT update" do
     it "requires the user to have authority" do
-      test_page = Factory.create(:page)
+      test_page = FactoryGirl.create(:page)
       put :update, :id => test_page.id.to_s
       response.status.should eq 403
     end
@@ -183,7 +183,7 @@ describe PagesController do
 
   describe "GET delete" do
     it "requires the user to have authority" do
-      test_page = Factory.create(:page)
+      test_page = FactoryGirl.create(:page)
       get :delete, :id => test_page.id.to_s
       response.status.should eq 403
     end
@@ -198,7 +198,7 @@ describe PagesController do
 
   describe "DELETE destroy" do
     it "requires the user to have authority" do
-      test_page = Factory.create(:page)
+      test_page = FactoryGirl.create(:page)
       delete :destroy, :id => test_page.id.to_s
       response.status.should eq 403
     end

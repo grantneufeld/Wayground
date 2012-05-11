@@ -16,16 +16,16 @@ Given /^(?:|I )have (some|[0-9]+) custom paths$/ do |quantity|
   private_quantity = rand(quantity - 2) + 1
   public_quantity = quantity - private_quantity
   public_quantity.times do
-    Factory(:path, :redirect => '/')
+    FactoryGirl.create(:path, :redirect => '/')
   end
   private_quantity.times do
-    page = Factory.create(:page, :is_authority_controlled => true)
-    Factory.create(:path, :item => page)
+    page = FactoryGirl.create(:page, :is_authority_controlled => true)
+    FactoryGirl.create(:path, :item => page)
   end
 end
 
 Given /^(?:|I )have a custom path "([^\"]*)"$/ do |sitepath|
-  Factory.create(:path, :sitepath => sitepath, :redirect => '/')
+  FactoryGirl.create(:path, :sitepath => sitepath, :redirect => '/')
 end
 
 # ACTIONS

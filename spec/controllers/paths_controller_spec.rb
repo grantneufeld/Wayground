@@ -46,13 +46,13 @@ describe PathsController do
       response.should render_template('missing')
     end
     it "redirects if the Path is a redirect" do
-      path = Factory.create(:path, {:redirect => '/'})
+      path = FactoryGirl.create(:path, {:redirect => '/'})
       get :sitepath, {:url => path.sitepath}
       response.should redirect_to('/')
     end
     it "shows the Page if the Path’s item is a Page" do
-      page = Factory.create(:page)
-      path = Factory.create(:path, {:item => page})
+      page = FactoryGirl.create(:page)
+      path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
       response.status.should eq 200
       response.should render_template('page')
@@ -60,21 +60,21 @@ describe PathsController do
     end
     it "shows the 501 unimplemented error if the Path’s item is not supported" do
       set_logged_in_admin
-      item = Factory.create(:user)
-      path = Factory.create(:path, {:item => item})
+      item = FactoryGirl.create(:user)
+      path = FactoryGirl.create(:path, {:item => item})
       get :sitepath, {:url => path.sitepath}
       response.status.should eq 501
     end
     it "shows the 404 missing error if the Path’s item requires authority to view" do
-      page = Factory.create(:page, {:is_authority_controlled => true})
-      path = Factory.create(:path, {:item => page})
+      page = FactoryGirl.create(:page, {:is_authority_controlled => true})
+      path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
       response.status.should eq 404
     end
     it "allows an authorized user to access an authority controlled item" do
       set_logged_in_admin
-      page = Factory.create(:page, {:is_authority_controlled => true})
-      path = Factory.create(:path, {:item => page})
+      page = FactoryGirl.create(:page, {:is_authority_controlled => true})
+      path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
       response.status.should eq 200
     end
@@ -153,7 +153,7 @@ describe PathsController do
 
   describe "GET edit" do
     it "requires the user to have authority" do
-      path = Factory.create(:path, {:redirect => '/'})
+      path = FactoryGirl.create(:path, {:redirect => '/'})
       get :edit, :id => path.id.to_s
       response.status.should eq 403
     end
@@ -168,7 +168,7 @@ describe PathsController do
 
   describe "PUT update" do
     it "requires the user to have authority" do
-      path = Factory.create(:path, {:redirect => '/'})
+      path = FactoryGirl.create(:path, {:redirect => '/'})
       put :update, :id => path.id.to_s
       response.status.should eq 403
     end
@@ -215,7 +215,7 @@ describe PathsController do
 
   describe "GET delete" do
     it "requires the user to have authority" do
-      path = Factory.create(:path, {:redirect => '/'})
+      path = FactoryGirl.create(:path, {:redirect => '/'})
       get :delete, :id => path.id.to_s
       response.status.should eq 403
     end
@@ -229,7 +229,7 @@ describe PathsController do
 
   describe "DELETE destroy" do
     it "requires the user to have authority" do
-      path = Factory.create(:path, {:redirect => '/'})
+      path = FactoryGirl.create(:path, {:redirect => '/'})
       delete :destroy, :id => path.id.to_s
       response.status.should eq 403
     end

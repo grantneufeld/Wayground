@@ -114,7 +114,7 @@ describe User do
 			user.valid?.should be_false
 		end
 		it "should validate when there is an authentication and no email/pass" do
-			authentication = Factory.build(:authentication)
+      authentication = FactoryGirl.build(:authentication)
 			user = authentication.user
 			user.valid?.should be_true
 		end
@@ -123,9 +123,9 @@ describe User do
   describe ".find_by_string" do
     before(:all) do
       User.delete_all
-      Factory.create(:user)
-      @user = Factory.create(:user, {:name => 'Bob', :email => 'bob@bob.tld'})
-      Factory.create(:user)
+      FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user, {:name => 'Bob', :email => 'bob@bob.tld'})
+      FactoryGirl.create(:user)
     end
     it "should return nil given an empty string" do
       User.find_by_string('').should be_nil
@@ -153,7 +153,7 @@ describe User do
   describe ".create_from_authentication!" do
 		it "should create a new user with the authentication" do
 			#authentication = mock_auth({:name => 'User From Auth', :email => 'test+fromauth@wayground.ca', :user= => nil, :to_ary => []})
-			authentication = Factory.create(:authentication,
+      authentication = FactoryGirl.create(:authentication,
 				{:name => 'User From Auth', :email => 'test+fromauth@wayground.ca'}
 			)
 			user = User.create_from_authentication!(authentication)
@@ -223,7 +223,7 @@ describe User do
 
   context '#generate_remember_token' do
     it "should create a unique token" do
-      user = Factory.build(:user)
+      user = FactoryGirl.build(:user)
       user.generate_remember_token
       user.save!
       user.remember_token.present?.should be_true
@@ -238,7 +238,7 @@ describe User do
       user.remember_token_hash.should match /^.+\/123/
     end
     it "should generate a remember_token if blank" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       user.remember_token = nil
       user.remember_token_hash
       user.remember_token.present?.should be_true
@@ -259,7 +259,7 @@ describe User do
 
   context "#admin?" do
     before(:all) do
-      @user = Factory.create(:user)
+      @user = FactoryGirl.create(:user)
     end
     it "should be true for a user with global is_owner authority" do
       @user.make_admin!
@@ -280,7 +280,7 @@ describe User do
     before(:each) do
       Authority.delete_all
       User.delete_all
-      @user = Factory.create(:user)
+      @user = FactoryGirl.create(:user)
     end
     it "should create one authority for first user" do
       Authority.count.should == 1
@@ -288,7 +288,7 @@ describe User do
     it "should do nothing if more than one user" do
       Authority.count.should == 1
       User.count.should == 1
-      second_user = Factory.create(:user)
+      second_user = FactoryGirl.create(:user)
       Authority.count.should == 1
     end
   end
@@ -297,49 +297,49 @@ describe User do
     before(:each) do
       Authority.delete_all
       User.delete_all
-      @admin = Factory.create(:user)
+      @admin = FactoryGirl.create(:user)
     end
     it "should upgrade a pre-existing global authority" do
-      authority = Factory.create(:authority, {:area => 'global'})
+      authority = FactoryGirl.create(:authority, {:area => 'global'})
       user = authority.user
       user.make_admin!
       user.authorizations.for_area_or_global('global').for_action(:is_owner).first.should_not be_nil
     end
     it "should upgrade a pre-existing specific area authority" do
-      authority = Factory.create(:authority, {:area => 'Content'})
+      authority = FactoryGirl.create(:authority, {:area => 'Content'})
       user = authority.user
       user.make_admin!('Content')
       user.authorizations.for_area_or_global('Content').for_action(:is_owner).first.should_not be_nil
     end
     it "should not change the authorizing user when authorizing user not provided for a pre-existing authority" do
-      authority = Factory.create(:authority, {:area => 'global', :authorized_by => @admin})
+      authority = FactoryGirl.create(:authority, {:area => 'global', :authorized_by => @admin})
       user = authority.user
       user.make_admin!
       user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == @admin
     end
     it "should assign the authorizing user when provided for a pre-existing authority" do
-      authority = Factory.create(:authority, {:area => 'global', :authorized_by => @admin})
+      authority = FactoryGirl.create(:authority, {:area => 'global', :authorized_by => @admin})
       user = authority.user
       user.make_admin!('global', user)
       user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == user
     end
     it "should create a global admin Authority for a previously authority-less user" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       user.make_admin!()
       user.authorizations.for_area_or_global('global').for_action(:is_owner).first.should_not be_nil
     end
     it "should create an area-specific Authority for a user not previously authorized for a specific area" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       user.make_admin!('Content')
       user.authorizations.for_area_or_global('Content').for_action(:is_owner).first.should_not be_nil
     end
     it "should set the authorizing user to self when authorizing user not provided" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       user.make_admin!()
       user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == user
     end
     it "should change the authorizing user when provided" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       user.make_admin!('global', @admin)
       user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == @admin
     end
@@ -347,13 +347,13 @@ describe User do
 
 	describe "#set_authority_on_area" do
 	  it "should create an authority" do
-	    user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
 	    user.set_authority_on_area('global', :can_update)
 	    user.has_authority_for_area('global', :can_update).should be_true
     end
     it "should ammend an existing authority" do
-	    user = Factory.create(:user)
-	    authority = Factory.build(:authority, :user => user, :area => 'global', :can_view => true)
+      user = FactoryGirl.create(:user)
+      authority = FactoryGirl.build(:authority, :user => user, :area => 'global', :can_view => true)
       user.authorizations << authority
 	    user.save!
 	    user.set_authority_on_area('global', :can_update)
@@ -365,9 +365,9 @@ describe User do
 
 	describe "#set_authority_on_item" do
 		before(:each) do
-      @admin = Factory.create(:user)
-			@user = Factory.create(:user)
-      @item = Factory.create(:page)
+      @admin = FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user)
+      @item = FactoryGirl.create(:page)
 		end
 	  it "should create an authority" do
       @user.authorizations.delete_all
@@ -375,7 +375,7 @@ describe User do
       @item.has_authority_for_user_to?(@user, :can_update).should be_true
     end
     it "should ammend an existing authority" do
-	    authority = Factory.build(:authority, :user => @user, :item => @item, :can_view => true)
+      authority = FactoryGirl.build(:authority, :user => @user, :item => @item, :can_view => true)
       @user.authorizations << authority
 	    @user.save!
 	    @user.set_authority_on_item(@item, :can_update)
@@ -387,11 +387,11 @@ describe User do
 
   describe "#has_authority_for_area" do
     before(:all) do
-      @admin = Factory.create(:user)
-      @user = Factory.create(:user)
-      @auth_content = Factory.create(:authority, {:user => @user, :area => 'Content', :is_owner => true})
-      @auth_user = Factory.create(:authority, {:user => @user, :area => 'User', :can_update => true})
-      @auth_global = Factory.create(:authority, {:user => @user, :area => 'global', :can_view => true})
+      @admin = FactoryGirl.create(:user)
+      @user = FactoryGirl.create(:user)
+      @auth_content = FactoryGirl.create(:authority, {:user => @user, :area => 'Content', :is_owner => true})
+      @auth_user = FactoryGirl.create(:authority, {:user => @user, :area => 'User', :can_update => true})
+      @auth_global = FactoryGirl.create(:authority, {:user => @user, :area => 'global', :can_view => true})
     end
     it "should default to the view authority for the area" do
       @user.has_authority_for_area('global').should == @auth_global

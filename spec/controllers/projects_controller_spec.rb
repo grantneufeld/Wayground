@@ -6,8 +6,8 @@ describe ProjectsController do
     Authority.delete_all
     User.delete_all
     # first user is automatically an admin
-    @user_admin = Factory.create(:user, :name => 'Admin User')
-    @user_normal = Factory.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
   end
 
   # This should return the minimal set of attributes required to create a valid
@@ -34,7 +34,7 @@ describe ProjectsController do
 
   describe "GET index" do
     it "assigns all projects as @projects" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       #set_logged_in_admin
       get :index #, {}, valid_session
       assigns(:projects).should eq([project])
@@ -43,19 +43,19 @@ describe ProjectsController do
 
   describe "GET show" do
     it "assigns the requested project as @project" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       #set_logged_in_admin
       get :show, {:id => project.to_param} #, valid_session
       assigns(:project).should eq(project)
     end
     it "assigns the requested project from a projecturl" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin, :filename => 'test')
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin, :filename => 'test')
       get :show, {:projecturl => 'test'}
       assigns(:project).should eq(project)
     end
     it "assigns the requested project from a projecturl set to the id" do
       Project.delete_all
-      project = Factory.create(:project, :id => 1234, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :id => 1234, :creator => @user_admin, :owner => @user_admin)
       get :show, {:projecturl => project.id.to_s}
       assigns(:project).should eq(project)
     end
@@ -76,14 +76,14 @@ describe ProjectsController do
 
   describe "GET edit" do
     it "fails if not authorized to update the project" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       set_logged_in_user
       get :edit, {:id => project.to_param} #, valid_session
       response.status.should eq 403
     end
 
     it "assigns the requested project as @project" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       set_logged_in_admin
       get :edit, {:id => project.to_param}, valid_session
       assigns(:project).should eq(project)
@@ -135,7 +135,7 @@ describe ProjectsController do
   describe "PUT update" do
     describe "with valid params" do
       it "updates the requested project" do
-        project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Assuming there are no other projects in the database, this
         # specifies that the Project created on the previous line
         # receives the :update_attributes message with whatever params are
@@ -146,14 +146,14 @@ describe ProjectsController do
       end
 
       it "assigns the requested project as @project" do
-        project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
         put :update, {:id => project.to_param, :project => valid_attributes}, valid_session
         assigns(:project).should eq(project)
       end
 
       it "redirects to the project" do
-        project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
         put :update, {:id => project.to_param, :project => valid_attributes}, valid_session
         response.should redirect_to(project_name_url(project.filename))
@@ -162,7 +162,7 @@ describe ProjectsController do
 
     describe "with invalid params" do
       it "assigns the project as @project" do
-        project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
@@ -171,7 +171,7 @@ describe ProjectsController do
       end
 
       it "re-renders the 'edit' template" do
-        project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
@@ -183,7 +183,7 @@ describe ProjectsController do
 
   describe "DELETE destroy" do
     it "destroys the requested project" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       expect {
         set_logged_in_admin
         delete :destroy, {:id => project.to_param}, valid_session
@@ -191,7 +191,7 @@ describe ProjectsController do
     end
 
     it "redirects to the projects list" do
-      project = Factory.create(:project, :creator => @user_admin, :owner => @user_admin)
+      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       set_logged_in_admin
       delete :destroy, {:id => project.to_param}, valid_session
       response.should redirect_to(projects_url)

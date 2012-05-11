@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Page do
   before(:all) do
-    @editor = Factory.create(:user)
+    @editor = FactoryGirl.create(:user)
   end
 
   describe "acts_as_authority_controlled" do
@@ -88,17 +88,17 @@ describe Page do
 
   describe "#update_path" do
     it "should make no change to the path if the Page’s filename did not change" do
-      page = Factory.create(:page, :filename => 'original')
+      page = FactoryGirl.create(:page, :filename => 'original')
       page.update_attributes!(:description => 'Not changing the filename.')
       page.sitepath.should eq '/original'
     end
     it "should update the path if the Page’s filename changed" do
-      page = Factory.create(:page, :filename => 'original')
+      page = FactoryGirl.create(:page, :filename => 'original')
       page.update_attributes!(:filename => 'changed')
       page.sitepath.should eq '/changed'
     end
     it "should create the path if the Page doesn’t have one" do
-      page = Factory.create(:page, :filename => 'original')
+      page = FactoryGirl.create(:page, :filename => 'original')
       page.path.destroy
       page.path = nil
       page.filename = 'changed'
@@ -112,7 +112,7 @@ describe Page do
       Page.new(:filename => 'page', :title => 'Page').calculate_sitepath.should eq '/page'
     end
     it "should have be the parent’s sitepath plus a slash and the filename" do
-      parent = Factory.create(:page, :filename => 'parent')
+      parent = FactoryGirl.create(:page, :filename => 'parent')
       page = Page.new(:filename => 'page', :title => 'Page')
       page.parent = parent
       page.calculate_sitepath.should eq '/parent/page'
@@ -127,14 +127,14 @@ describe Page do
       Page.new.breadcrumbs.should eq []
     end
     it "should point to the parent, if there is one" do
-      parent = Factory.create(:page, :filename => 'parent', :title => 'Parent')
+      parent = FactoryGirl.create(:page, :filename => 'parent', :title => 'Parent')
       page = Page.new(:filename => 'page', :title => 'Page')
       page.parent = parent
       page.breadcrumbs.should eq [{:text => 'Parent', :url => '/parent'}]
     end
     it "should point to the parents, if there is more than one in the parent chain" do
-      grandparent = Factory.create(:page, :filename => 'grandparent', :title => 'Grandparent')
-      parent = Factory.create(:page, :parent => grandparent, :filename => 'parent', :title => 'Parent')
+      grandparent = FactoryGirl.create(:page, :filename => 'grandparent', :title => 'Grandparent')
+      parent = FactoryGirl.create(:page, :parent => grandparent, :filename => 'parent', :title => 'Parent')
       page = Page.new(:filename => 'page', :title => 'Page')
       page.parent = parent
       page.breadcrumbs.should eq [

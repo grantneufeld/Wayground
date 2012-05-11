@@ -1,11 +1,11 @@
 # encoding: utf-8
 
 Given /^a document "([^\"]*)"$/ do |filename|
-  Factory.create(:document, :filename => filename)
+  FactoryGirl.create(:document, :filename => filename)
 end
 
 Given /^a document "([^\"]*)" requiring access authority$/ do |filename|
-  Factory.create(:document, :filename => filename, :is_authority_controlled => true)
+  FactoryGirl.create(:document, :filename => filename, :is_authority_controlled => true)
 end
 
 Given /^there are (\d+) documents$/ do |required_count|
@@ -13,7 +13,7 @@ Given /^there are (\d+) documents$/ do |required_count|
   doc_total = Document.for_user(nil).count
   if doc_total < required_count
     # add documents until we have the required count
-    (required_count - doc_total).times { Factory.create(:document) }
+    (required_count - doc_total).times { FactoryGirl.create(:document) }
   elsif doc_total > required_count
     # remove documents until we have the required count
     (doc_total - required_count).times { Document.for_user(nil).first.destroy }

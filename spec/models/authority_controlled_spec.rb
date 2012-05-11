@@ -34,15 +34,15 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_update).should be_false
     end
     it "should refer to authority_area authorities for change actions when not set as authority_controlled" do
-      item = Factory.create(:authority, :area => 'test')
-      user = Factory.create(:user)
-      a = Factory.create(:authority, :user => user, :area => 'Authority', :can_update => true)
+      item = FactoryGirl.create(:authority, :area => 'test')
+      user = FactoryGirl.create(:user)
+      a = FactoryGirl.create(:authority, :user => user, :area => 'Authority', :can_update => true)
       item.has_authority_for_user_to?(user, :can_update).should be_true
     end
     it "should fall back to global authorities for change actions when not set as authority_controlled" do
-      item = Factory.create(:authority, :area => 'test')
-      user = Factory.create(:user)
-      a = Factory.create(:authority, :user => user, :area => 'global', :can_update => true)
+      item = FactoryGirl.create(:authority, :area => 'test')
+      user = FactoryGirl.create(:user)
+      a = FactoryGirl.create(:authority, :user => user, :area => 'global', :can_update => true)
       item.has_authority_for_user_to?(user, :can_update).should be_true
     end
   end
@@ -50,32 +50,30 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
     describe "nil user, :can_view" do
       it "should return all items for models that are not authority_controlled" do
         # create a couple of authentications so the search will have something to find
-        Factory.create(:authentication)
-        Factory.create(:authentication)
+        FactoryGirl.create_list(:authentication, 2)
         NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 2
       end
       it "should return non-flagged items for models that are selectively authority_controlled" do
         # create a couple of pages so the search will have something to find
         Page.delete_all
         Path.delete_all
-        Factory.create(:page)
-        Factory.create(:page, :is_authority_controlled => true)
+        FactoryGirl.create(:page)
+        FactoryGirl.create(:page, :is_authority_controlled => true)
         SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 1
       end
       it "should return no items for models that are all private authority_controlled" do
         # create a couple of users so the search will have something to find
-        Factory.create(:user)
-        Factory.create(:user)
+        FactoryGirl.create_list(:user, 2)
         PRIVATE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 0
       end
     end
     describe "nil user, non-view action" do
       it "should return no items for models that are not authority_controlled" do
-        Factory.create(:authentication)
+        FactoryGirl.create(:authentication)
         NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size.should eq 0
       end
       it "should return no items for models that are authority_controlled" do
-        Factory.create(:page)
+        FactoryGirl.create(:page)
         SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size.should eq 0
       end
     end
@@ -83,14 +81,14 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       it "should return all items user has authority for" do
         Page.delete_all
         Path.delete_all
-        Factory.create(:page, :is_authority_controlled => true)
-        page = Factory.create(:page, :is_authority_controlled => true)
-        user = Factory.create(:authority, :item => page, :can_update => true).user
+        FactoryGirl.create(:page, :is_authority_controlled => true)
+        page = FactoryGirl.create(:page, :is_authority_controlled => true)
+        user = FactoryGirl.create(:authority, :item => page, :can_update => true).user
         SELECTIVE_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
       end
       it "should return all items user has authority for for non-authority-controlled models" do
-        auth = Factory.create(:authentication)
-        user = Factory.create(:authority, :item => auth, :can_update => true).user
+        auth = FactoryGirl.create(:authentication)
+        user = FactoryGirl.create(:authority, :item => auth, :can_update => true).user
         NO_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
       end
     end
@@ -146,16 +144,16 @@ describe "authority_controlled class" do
   end
   describe "#set_authority_for!" do
     it "should assign access to a user for an item" do
-      item = Factory.create(:user)
-      new_accessor = Factory.create(:user)
+      item = FactoryGirl.create(:user)
+      new_accessor = FactoryGirl.create(:user)
       item.has_authority_for_user_to?(new_accessor, :can_view).should be_false
       item.set_authority_for!(new_accessor, :can_view)
       item.has_authority_for_user_to?(new_accessor, :can_view).should be_true
     end
     it "should extend an existing authority" do
-      item = Factory.create(:user)
-      user = Factory.create(:user)
-      Factory.create(:authority, :user => user, :item => item, :can_update => true)
+      item = FactoryGirl.create(:user)
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:authority, :user => user, :item => item, :can_update => true)
       item.set_authority_for!(user, :can_delete)
       authority = item.has_authority_for_user_to?(user, :can_delete)
       (authority.can_update && authority.can_delete).should be_true
@@ -192,11 +190,11 @@ describe "authority_controlled class" do
   end
   describe "#has_authority_for_user_to?" do
     before(:all) do
-      @item = Factory.create(:user)
-      @owner = Factory.create(:user)
-      @viewer = Factory.create(:user)
-      Factory.create(:authority, :user => @owner, :item => @item, :is_owner => true)
-      Factory.create(:authority, :user => @viewer, :item => @item, :can_view => true)
+      @item = FactoryGirl.create(:user)
+      @owner = FactoryGirl.create(:user)
+      @viewer = FactoryGirl.create(:user)
+      FactoryGirl.create(:authority, :user => @owner, :item => @item, :is_owner => true)
+      FactoryGirl.create(:authority, :user => @viewer, :item => @item, :can_view => true)
     end
     it "should have authority for the owner" do
       @item.has_authority_for_user_to?(@owner, :can_update).should be_true
@@ -208,7 +206,7 @@ describe "authority_controlled class" do
       @item.has_authority_for_user_to?(@viewer, :can_update).should be_false
     end
     it "should not allow an unauthorized user" do
-      unauthorized = Factory.create(:user)
+      unauthorized = FactoryGirl.create(:user)
       @item.has_authority_for_user_to?(unauthorized).should be_false
     end
   end
@@ -230,7 +228,7 @@ describe "inherited authority model" do
     it "should not allow unauthorized users to access restricted items" do
     end
     it "should allow area-authorized users access when no item to inherit from" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       user.set_authority_on_area(INHERITED_AUTHORITY_CLASS.authority_area, :can_update)
       item = INHERITED_AUTHORITY_CLASS.create!(:sitepath => '/spec/authority/inherited/no_item', :redirect => '/')
       item.has_authority_for_user_to?(user, :can_update).should be_true

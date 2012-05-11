@@ -7,8 +7,8 @@ describe Event do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = Factory.create(:user, :name => 'Admin User')
-    @user_normal = Factory.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
   end
 
   describe "acts_as_authority_controlled" do
@@ -300,23 +300,23 @@ describe Event do
     describe "default_scope" do
       it "should order by start date & time by default" do
         Event.delete_all
-        event2 = Factory.create(:event, :start_at => '2002-02-02 02:02:02')
-        event4 = Factory.create(:event, :start_at => '2004-04-04 04:04:04')
-        event3 = Factory.create(:event, :start_at => '2003-03-03 03:03:03')
-        event1 = Factory.create(:event, :start_at => '2001-01-01 01:01:01')
+        event2 = FactoryGirl.create(:event, :start_at => '2002-02-02 02:02:02')
+        event4 = FactoryGirl.create(:event, :start_at => '2004-04-04 04:04:04')
+        event3 = FactoryGirl.create(:event, :start_at => '2003-03-03 03:03:03')
+        event1 = FactoryGirl.create(:event, :start_at => '2001-01-01 01:01:01')
         Event.all.should eq [event1, event2, event3, event4]
       end
     end
     describe ".approved" do
       it "should return only events where is_approved" do
         Event.delete_all
-        event1 = Factory.build(:event)
+        event1 = FactoryGirl.build(:event)
         event1.is_approved = true
         event1.save!
-        event2 = Factory.build(:event)
+        event2 = FactoryGirl.build(:event)
         event2.is_approved = false
         event2.save!
-        event3 = Factory.build(:event)
+        event3 = FactoryGirl.build(:event)
         event3.is_approved = true
         event3.save!
         Event.approved.should eq [event1, event3]
@@ -326,17 +326,17 @@ describe Event do
       it "should return only events that are active on, or after, the current current date & time" do
         Event.delete_all
         # create some past events
-        Factory.create(:event, :start_at => 1.day.ago)
-        Factory.create(:event, :start_at => 2.weeks.ago)
-        Factory.create(:event, :start_at => 3.months.ago)
+        FactoryGirl.create(:event, :start_at => 1.day.ago)
+        FactoryGirl.create(:event, :start_at => 2.weeks.ago)
+        FactoryGirl.create(:event, :start_at => 3.months.ago)
         # create an event that occurred earlier today
-        event1 = Factory.create(:event, :start_at => Time.current.beginning_of_day)
+        event1 = FactoryGirl.create(:event, :start_at => Time.current.beginning_of_day)
         # create an event happening in just a minute
-        event2 = Factory.create(:event, :start_at => Time.current.advance(:minutes => 1))
+        event2 = FactoryGirl.create(:event, :start_at => Time.current.advance(:minutes => 1))
         # create some future events
-        event3 = Factory.create(:event, :start_at => 1.hour.from_now)
-        event4 = Factory.create(:event, :start_at => 2.days.from_now)
-        event5 = Factory.create(:event, :start_at => 3.months.from_now)
+        event3 = FactoryGirl.create(:event, :start_at => 1.hour.from_now)
+        event4 = FactoryGirl.create(:event, :start_at => 2.days.from_now)
+        event5 = FactoryGirl.create(:event, :start_at => 3.months.from_now)
         Event.upcoming.should eq [event1, event2, event3, event4, event5]
       end
     end
@@ -358,8 +358,8 @@ describe Event do
     end
     it "should set is_approved to true when user has authority" do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'admin created event')
-      event.user = Factory.create(:user)
-      authority = Factory.create(:owner_authority, :area => 'Calendar', :user => event.user)
+      event.user = FactoryGirl.create(:user)
+      authority = FactoryGirl.create(:owner_authority, :area => 'Calendar', :user => event.user)
       # TESTING:
       event.user.has_authority_for_area('Calendar', :is_owner).should be_true
       # actual tests:
@@ -382,7 +382,7 @@ describe Event do
     it "should set the timezone based on the user" do
       tz_str = 'Central Time (US & Canada)'
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'user’s timezone')
-      event.user = Factory.build(:user, :timezone => tz_str)
+      event.user = FactoryGirl.build(:user, :timezone => tz_str)
       event.set_timezone
       event.timezone.should eq tz_str
     end
@@ -399,7 +399,7 @@ describe Event do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'preset timezone',
         :timezone => 'Saskatchewan'
       )
-      event.user = Factory.build(:user, :timezone => 'UTC')
+      event.user = FactoryGirl.build(:user, :timezone => 'UTC')
       event.set_timezone
       event.timezone.should eq 'Saskatchewan'
     end
@@ -421,20 +421,20 @@ describe Event do
 
   describe "#add_version" do
     it "should add a Version" do
-      event = Factory.create(:event, :editor => @user_admin, :edit_comment => 'add a version')
+      event = FactoryGirl.create(:event, :editor => @user_admin, :edit_comment => 'add a version')
       expect { event.add_version }.to change{event.versions.count}.by(1)
     end
     it "should fail if editor has not been set" do
-      event = Factory.create(:event, :editor => @user_admin, :edit_comment => 'without editor')
+      event = FactoryGirl.create(:event, :editor => @user_admin, :edit_comment => 'without editor')
       event.editor = nil
       expect { event.add_version }.to raise_error
     end
     it "should be called after an event is created" do
-      event = Factory.build(:event, :editor => @user_admin, :edit_comment => 'add_version after save')
+      event = FactoryGirl.build(:event, :editor => @user_admin, :edit_comment => 'add_version after save')
       expect { event.save! }.to change{event.versions.count}.by(1)
     end
     it "should be called after an event is updated" do
-      event = Factory.create(:event, :editor => @user_admin, :edit_comment => 'add_version after update')
+      event = FactoryGirl.create(:event, :editor => @user_admin, :edit_comment => 'add_version after update')
       expect { event.update_attributes(:title => 'updated version') }.to change{event.versions.count}.by(1)
     end
   end

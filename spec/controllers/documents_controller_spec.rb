@@ -27,7 +27,7 @@ describe DocumentsController do
 
   describe "GET download" do
     it "returns the requested document" do
-      document = Factory.create(:document)
+      document = FactoryGirl.create(:document)
       get :download, {:id => document.id.to_s, :filename => document.filename}
       response.status.should eq 200
       response['Content-Type'].should eq(document.content_type)
@@ -39,7 +39,7 @@ describe DocumentsController do
       response.should render_template('missing')
     end
     it "doesn’t care what filename is specified" do
-      document = Factory.create(:document, :filename => 'test')
+      document = FactoryGirl.create(:document, :filename => 'test')
       get :download, {:id => document.id.to_s, :filename => 'madeupname.pdf'}
       response.status.should eq 200
       response['Content-Type'].should eq(document.content_type)
@@ -48,7 +48,7 @@ describe DocumentsController do
 
     context "authority controlled document" do
       before(:all) do
-        @document = Factory.create(:document, :is_authority_controlled => true)
+        @document = FactoryGirl.create(:document, :is_authority_controlled => true)
       end
       it "requires the user to have authority when access controlled" do
         get :download, {:id => @document.id.to_s, :filename => @document.filename}
@@ -67,10 +67,10 @@ describe DocumentsController do
       Document.delete_all
       Authority.delete_all
       # create 11 public documents and 1 private
-      document = Factory.create(:document)
+      document = FactoryGirl.create(:document)
       # create a document that should nto be viewable without authority
-      @private_doc = Factory.create(:document, :is_authority_controlled => true)
-      10.times { Factory.create(:document, :user => document.user) }
+      @private_doc = FactoryGirl.create(:document, :is_authority_controlled => true)
+      FactoryGirl.create_list(:document, 10, :user => document.user)
     end
     it "assigns all viewable documents as @documents" do
       get :index, {:max => '100'}
@@ -88,13 +88,13 @@ describe DocumentsController do
 
   describe "GET show" do
     it "requires the user to have authority" do
-      document = Factory.create(:document, :is_authority_controlled => true)
+      document = FactoryGirl.create(:document, :is_authority_controlled => true)
       get :show, :id => document.id.to_s
       response.status.should eq 403
     end
 
     it "assigns the requested document as @document" do
-      document = Factory.create(:document)
+      document = FactoryGirl.create(:document)
       get :show, :id => document.id.to_s
       assigns(:document).should eq(document)
     end
@@ -165,7 +165,7 @@ describe DocumentsController do
 
   describe "GET edit" do
     before(:each) do
-      @document = Factory.create(:document)
+      @document = FactoryGirl.create(:document)
     end
 
     it "requires the user to have authority" do
@@ -182,7 +182,7 @@ describe DocumentsController do
 
   describe "PUT update" do
     before(:each) do
-      @document = Factory.create(:document)
+      @document = FactoryGirl.create(:document)
     end
 
     context "as anonymous user" do
@@ -237,7 +237,7 @@ describe DocumentsController do
 
   describe "GET delete" do
     it "requires the user to have authority" do
-      test_document = Factory.create(:document)
+      test_document = FactoryGirl.create(:document)
       get :delete, :id => test_document.id.to_s
       response.status.should eq 403
     end
@@ -253,7 +253,7 @@ describe DocumentsController do
   describe "DELETE destroy" do
     context "as anonymous user" do
       it "requires the user to have authority" do
-        test_document = Factory.create(:document)
+        test_document = FactoryGirl.create(:document)
         delete :destroy, :id => test_document.id.to_s
         response.status.should eq 403
       end
@@ -262,7 +262,7 @@ describe DocumentsController do
     context "as an authorized user" do
       before(:each) do
         set_logged_in_admin
-        @document = Factory.create(:document)
+        @document = FactoryGirl.create(:document)
       end
       it "destroys the requested document" do
         expect {

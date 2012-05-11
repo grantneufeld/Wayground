@@ -38,7 +38,7 @@ describe SessionsController do
     end
     context "with a valid user sign in" do
       before(:all) do
-        @user = Factory.create(:user, :email => 'test+session@wayground.ca', :password => 'password')
+        @user = FactoryGirl.create(:user, :email => 'test+session@wayground.ca', :password => 'password')
         User.stub!(:authenticate).and_return(@user)
       end
       it "should sign in the user" do
@@ -94,7 +94,7 @@ describe SessionsController do
     end
     context "with a valid user to sign out" do
       before(:all) do
-        @user = Factory.create(:user)
+        @user = FactoryGirl.create(:user)
         User.stub!(:find).with(@user.id).and_return(@user)
       end
       it "should clear the remember_token cookie" do
@@ -134,13 +134,13 @@ describe SessionsController do
     end
 
     it "should sign in an existing authentication when not signed in" do
-      authentication = Factory.create(:authentication, :provider => 'twitter')
+      authentication = FactoryGirl.create(:authentication, :provider => 'twitter')
       set_mock_auth(authentication.provider, authentication.uid)
       get :oauth_callback, :provider => 'twitter'
       flash[:notice].should match /You are now signed in/
     end
     it "should change the signed in user’s sign in source to the oauth provider" do
-      authentication = Factory.create(:authentication, :provider => 'twitter')
+      authentication = FactoryGirl.create(:authentication, :provider => 'twitter')
       set_mock_auth(authentication.provider, authentication.uid)
       request.cookies['remember_token'] = authentication.user.remember_token_hash # user is signed in
       session[:source] = nil
@@ -148,16 +148,16 @@ describe SessionsController do
       session[:source].should eq 'twitter'
     end
     it "should give an error when an existing authentication is used by the wrong user" do
-      authentication = Factory.create(:authentication, :provider => 'twitter')
+      authentication = FactoryGirl.create(:authentication, :provider => 'twitter')
       set_mock_auth(authentication.provider, authentication.uid)
-      wrong_user = Factory.create(:user)
+      wrong_user = FactoryGirl.create(:user)
       request.cookies['remember_token'] = wrong_user.remember_token_hash # wrong user is signed in
       get :oauth_callback, :provider => 'twitter'
       flash[:alert].should match /ERROR: The authentication failed/
     end
     it "should add a new authentication to the signed in user" do
       set_mock_auth('new-provider', 'new-id')
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       request.cookies['remember_token'] = user.remember_token_hash # user is signed in
       get :oauth_callback, :provider => 'twitter'
       user.reload

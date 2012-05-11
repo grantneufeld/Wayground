@@ -9,10 +9,10 @@ describe VersionsController do
     Path.delete_all
     Event.delete_all
     User.delete_all
-    @user = Factory.create(:user)
-    @page = Factory.create(:page, :editor => @user)
+    @user = FactoryGirl.create(:user)
+    @page = FactoryGirl.create(:page, :editor => @user)
     @version = @page.versions.first
-    @event = Factory.create(:event, :user => @user, :editor => @user)
+    @event = FactoryGirl.create(:event, :user => @user, :editor => @user)
   end
 
   describe "GET index" do
@@ -21,18 +21,18 @@ describe VersionsController do
       assigns(:versions).should eq(@version.item.versions)
     end
     it "restricts access for versions of items that require authorization to authorized users" do
-      page = Factory.create(:page, :is_authority_controlled => true)
+      page = FactoryGirl.create(:page, :is_authority_controlled => true)
       version = page.versions.first
       user = version.user
-      Factory.create(:owner_authority, :item => page, :user => user)
-  		controller.stub!(:current_user).and_return(user)
+      FactoryGirl.create(:owner_authority, :item => page, :user => user)
+      controller.stub!(:current_user).and_return(user)
       get :index, :page_id => page.id
       assigns(:versions).should eq(page.versions)
     end
     it "restricts access for versions of items that require authorization" do
-      page = Factory.create(:page, :is_authority_controlled => true)
+      page = FactoryGirl.create(:page, :is_authority_controlled => true)
       get :index, :page_id => page.id
-			response.status.should eq 403
+      response.status.should eq 403
     end
   end
 

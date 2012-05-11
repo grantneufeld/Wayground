@@ -75,7 +75,7 @@ describe Authority do
     it "should instantiate a new authorization if no user provided" do
     end
     it "should instantiate a new authorization on the provided user" do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       authority = Authority.build_from_params({:user_proxy => user.email, :area => 'Content'})
       authority.user.should == user
     end
@@ -83,14 +83,14 @@ describe Authority do
 
   describe ".user_has_for_item" do
     before(:all) do
-      @item1 = Factory.create(:page)
-      @item2 = Factory.create(:page)
-      @item_user = Factory.create(:user)
+      @item1 = FactoryGirl.create(:page)
+      @item2 = FactoryGirl.create(:page)
+      @item_user = FactoryGirl.create(:user)
       # create a bunch of authorities
-      Factory.create(:authority, {:user => @item_user, :item => @item1, :is_owner => true})
-      Factory.create(:authority, {:user => @item_user, :item => @item2, :can_delete => true})
-      Factory.create(:authority, {:user => @item_user, :area => 'Content', :can_update => true})
-      Factory.create(:authority, {:user => @item_user, :area => 'global', :can_view => true})
+      FactoryGirl.create(:authority, {:user => @item_user, :item => @item1, :is_owner => true})
+      FactoryGirl.create(:authority, {:user => @item_user, :item => @item2, :can_delete => true})
+      FactoryGirl.create(:authority, {:user => @item_user, :area => 'Content', :can_update => true})
+      FactoryGirl.create(:authority, {:user => @item_user, :area => 'global', :can_view => true})
       #@item_user.reload
     end
     it "should return the user’s authority for the item when no action_type" do
@@ -111,7 +111,7 @@ describe Authority do
 
   describe "#user_proxy=" do
     before(:all) do
-      @proxy_user = Factory.create(:user)
+      @proxy_user = FactoryGirl.create(:user)
     end
     it "should make the user nil if item is blank" do
         authority = Authority.new
