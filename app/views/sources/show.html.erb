@@ -1,0 +1,25 @@
+<% # encoding: utf-8
+
+%><h1><%= @source.name %></h1>
+
+<table><tbody>
+<tr><th>Title</th> <td><%= @source.title %></td></tr>
+<tr><th>Description</th> <td><%= @source.description %></td></tr>
+<tr><th>Processor</th> <td><%= @source.processor %></td></tr>
+<tr><th>URL</th> <td><%= @source.url %></td></tr>
+<tr><th>Method</th> <td><%= @source.method %></td></tr>
+<tr><th>Post Args</th> <td><%= @source.post_args %></td></tr>
+<tr><th>Options</th> <td><%= @source.options %></td></tr>
+<tr><th>Last Updated</th> <td><%= @source.last_updated_at %></td></tr>
+<tr><th>Refresh After</th> <td><%= @source.refresh_after_at %></td></tr>
+</tbody></table>
+
+<p class="actions"><%
+if @source.has_authority_for_user_to?(@user, :can_update)
+  %><%= link_to 'Edit', edit_source_path(@source), :class => 'action' %><span class="separator">,</span>
+<%  if @source.has_authority_for_user_to?(@user, :can_delete)
+    %><%= link_to 'Delete', delete_source_path(@source), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><span class="separator">,</span>
+<%  end
+end
+%>
+<%= link_to 'New Source', new_source_path, :class => 'action' %></p>

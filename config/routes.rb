@@ -45,6 +45,9 @@ Wayground::Application.routes.draw do
     end
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
+  resources :sources do
+    get 'delete', :on => :member
+  end
 
   # PROJECTS
   resources :projects do

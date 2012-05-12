@@ -1,0 +1,18 @@
+<% # encoding: utf-8
+
+%><h2>Sources</h2>
+<table>
+<thead><tr><th>Title</th> <th>Description</th> <th>Processor</th> <th>URL</th> <th>Actions</th></tr></thead>
+<tbody>
+<%
+@sources.each do |source|
+  %><tr><td><%= source.title %></td> <td><%= source.description %></td> <td><%= source.processor %></td> <td><%= source.url %></td>
+<td><%= link_to 'Details', source, :class => 'action' %><span class="separator">,</span>
+<%= link_to 'Edit', edit_source_path(source), :class => 'action' %><span class="separator">,</span><%
+  if source.has_authority_for_user_to?(@user, :can_delete) %>
+<%= link_to 'Delete', delete_source_path(source), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><%
+    end %></td></tr>
+<% end -%>
+</tbody></table>
+
+<p class="actions"><%= link_to 'New Source', new_source_path, :class => 'action' %></p>

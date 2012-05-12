@@ -103,6 +103,13 @@ FactoryGirl.define do
     sequence(:value) {|n| "From factory (#{n})."}
   end
 
+  factory :source do
+    processor 'IcalProcessor'
+    url       'test://factory.tld/factory.ics'
+    method    'get'
+    sequence(:title) {|n| "Factory Source #{n}"}
+  end
+
   factory :user, aliases: [:creator, :editor, :owner] do
     email
     password              "password"

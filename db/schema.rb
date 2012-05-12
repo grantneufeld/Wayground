@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 13) do
+ActiveRecord::Schema.define(:version => 14) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -184,6 +184,28 @@ ActiveRecord::Schema.define(:version => 13) do
   end
 
   add_index "settings", ["key"], :name => "key", :unique => true
+
+  create_table "sources", :force => true do |t|
+    t.integer  "container_item_id"
+    t.string   "container_item_type"
+    t.integer  "datastore_id"
+    t.string   "processor",           :limit => 31,                      :null => false
+    t.string   "url",                 :limit => 511,                     :null => false
+    t.string   "method",              :limit => 7,    :default => "get", :null => false
+    t.string   "post_args",           :limit => 1023
+    t.datetime "last_updated_at"
+    t.datetime "refresh_after_at"
+    t.string   "title",               :limit => 127
+    t.string   "description",         :limit => 511
+    t.text     "options"
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+  end
+
+  add_index "sources", ["container_item_type", "container_item_id"], :name => "container"
+  add_index "sources", ["last_updated_at"], :name => "index_sources_on_last_updated_at"
+  add_index "sources", ["processor"], :name => "index_sources_on_processor"
+  add_index "sources", ["refresh_after_at"], :name => "index_sources_on_refresh_after_at"
 
   create_table "users", :force => true do |t|
     t.string   "email"
