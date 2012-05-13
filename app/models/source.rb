@@ -10,6 +10,7 @@ class Source < ActiveRecord::Base
 
   belongs_to :container_item, :polymorphic => true
   belongs_to :datastore
+  has_many :sourced_items, :dependent => :delete_all
 
   before_validation :set_defaults, :on => :create
 

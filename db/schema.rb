@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 14) do
+ActiveRecord::Schema.define(:version => 15) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -184,6 +184,22 @@ ActiveRecord::Schema.define(:version => 14) do
   end
 
   add_index "settings", ["key"], :name => "key", :unique => true
+
+  create_table "sourced_items", :force => true do |t|
+    t.integer  "source_id",                                  :null => false
+    t.integer  "item_id",                                    :null => false
+    t.string   "item_type",                                  :null => false
+    t.integer  "datastore_id"
+    t.string   "source_identifier"
+    t.datetime "last_sourced_at",                            :null => false
+    t.boolean  "has_local_modifications", :default => false, :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+  end
+
+  add_index "sourced_items", ["item_type", "item_id", "last_sourced_at"], :name => "index_sourced_items_on_item_type_and_item_id_and_last_sourced_at"
+  add_index "sourced_items", ["source_id"], :name => "index_sourced_items_on_source_id"
+  add_index "sourced_items", ["source_identifier"], :name => "index_sourced_items_on_source_identifier"
 
   create_table "sources", :force => true do |t|
     t.integer  "container_item_id"
