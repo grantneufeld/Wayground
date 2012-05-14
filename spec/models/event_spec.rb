@@ -300,6 +300,12 @@ describe Event do
     end
   end
 
+  #describe "updating as a sourced item" do
+  #  it "should set the has_local_modifications flag on any SourcedItems" do
+  #    # TODO: test for setting has_local_modifications on sourced items when updating an Event
+  #  end
+  #end
+
   describe "scopes" do
     describe "default_scope" do
       it "should order by start date & time by default" do
@@ -441,6 +447,68 @@ describe Event do
       event = FactoryGirl.create(:event, :editor => @user_admin, :edit_comment => 'add_version after update')
       expect { event.update_attributes(:title => 'updated version') }.to change{event.versions.count}.by(1)
     end
+  end
+
+  # icalendar source processing
+
+  def new_ievent(overrides = {})
+    e = Icalendar::Event.new
+    e.description = overrides[:description] || 'Spec description.'
+    e.dtstart = overrides[:dtstart] || 24.hours.from_now.to_datetime
+    e.dtend = overrides[:dtend] || 26.hours.from_now.to_datetime
+    e.klass = overrides[:klass] || 'PUBLIC'
+    e.location = overrides[:location] || 'Spec Town, 123 Spec Street'
+    e.organizer = overrides[:organizer] || 'Spec Organization'
+    e.summary = overrides[:summary] || 'Spec Event'
+    e.uid = overrides[:uid] || '123@spec'
+    e.url = overrides[:url] || 'http://spec.tld/spec/url'
+    e
+  end
+  let(:ievent) { $ievent = new_ievent }
+  let(:event) { $event = Event.create_from_icalendar(ievent) }
+
+  describe ".create_from_icalendar" do
+    it "should create a new event" do
+      event.class.should eq Event
+    end
+    context "with a given user" do
+      let(:user) { $user = @user_normal }
+      it "should set the version editor to the user" do
+        Event.create_from_icalendar(ievent, user).versions.first.user.should eq user
+      end
+    end
+  end
+
+  describe "#update_from_icalendar" do
+    context "with no local changes to the event" do
+      it "should overwrite any changed information" do
+        # make a slightly different ievent
+        start_time = 25.hours.ago
+        end_time = 24.hours.ago
+        changed_ievent = new_ievent({
+          attach: 'http://changed.tld/attach', description: 'Changed description.',
+          dtstart: start_time, dtend: end_time, location: 'Change Place',
+          organizer: 'Change Org', summary: 'Changed Summary',
+          url: 'http://change.tld/url'
+        })
+        # update the event using the different ievent
+        event.update_from_icalendar(changed_ievent)
+        [ event.description, event.start_at, event.end_at,
+          event.location, event.organizer, event.title
+        ].should eq([
+          'Changed description.', start_time, end_time,
+          'Change Place', 'Change Org', 'Changed Summary'
+        ])
+      end
+    end
+    # TODO: handle processing an update for an event with local changes
+    #context "with local changes to the event" do
+    #  it "should " do
+    #
+    #    #event.update_from_icalendar(changed_ievent, true) # has_local_modifications
+    #
+    #  end
+    #end
   end
 
 end
