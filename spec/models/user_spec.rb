@@ -130,6 +130,16 @@ describe User do
     end
   end
 
+  describe ".main_admin" do
+    it "should find the first admin" do
+      Authority.delete_all
+      User.delete_all
+      @admin = FactoryGirl.create(:user)
+      FactoryGirl.create_list(:user, 3)
+      User.main_admin.should eq @admin
+    end
+  end
+
   describe "#local_authentication_required?" do
   end
 

@@ -47,6 +47,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Get the first administrative User.
+  # Used for system generated items that require a User.
+  def self.main_admin
+    # TODO: come up with a better way to determine/set the main admin.
+    User.order(:id).first
+  end
+
   def local_authentication_required?
     authentications[0].nil?
   end
