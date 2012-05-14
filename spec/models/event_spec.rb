@@ -480,17 +480,19 @@ describe Event do
   end
 
   describe "#update_from_icalendar" do
+    let(:start_time) { $start_time = 25.hours.ago }
+    let(:end_time) { $end_time = 24.hours.ago }
+    let(:changed_ievent) do
+      $changed_ievent = new_ievent({
+        attach: 'http://changed.tld/attach', description: 'Changed description.',
+        dtstart: start_time, dtend: end_time, location: 'Change Place',
+        organizer: 'Change Org', summary: 'Changed Summary',
+        url: 'http://change.tld/url'
+      })
+    end
     context "with no local changes to the event" do
       it "should overwrite any changed information" do
         # make a slightly different ievent
-        start_time = 25.hours.ago
-        end_time = 24.hours.ago
-        changed_ievent = new_ievent({
-          attach: 'http://changed.tld/attach', description: 'Changed description.',
-          dtstart: start_time, dtend: end_time, location: 'Change Place',
-          organizer: 'Change Org', summary: 'Changed Summary',
-          url: 'http://change.tld/url'
-        })
         # update the event using the different ievent
         event.update_from_icalendar(changed_ievent)
         [ event.description, event.start_at, event.end_at,
@@ -501,14 +503,13 @@ describe Event do
         ])
       end
     end
-    # TODO: handle processing an update for an event with local changes
-    #context "with local changes to the event" do
-    #  it "should " do
-    #
-    #    #event.update_from_icalendar(changed_ievent, true) # has_local_modifications
-    #
-    #  end
-    #end
+    context "with local changes to the event" do
+      # TODO: handle processing an update for an event with local changes
+      it "should return false" do
+        # set the last arg to true (has_local_modifications)
+        Event.new.update_from_icalendar(changed_ievent, nil, true).should be_false
+      end
+    end
   end
 
 end

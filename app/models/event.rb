@@ -118,6 +118,7 @@ class Event < ActiveRecord::Base
 
   # iCalendar import processing
 
+  # Create a new Event from an icalendar event.
   def self.create_from_icalendar(ievent, ical_editor = nil)
     ical_editor ||= User.main_admin
     # TODO: split out location details, from icalendar events, into applicable fields
@@ -131,21 +132,26 @@ class Event < ActiveRecord::Base
     event
   end
 
+  # Given an iCalendar event, try to update this Event.
+  # If this Event has local modifications, return false.
   def update_from_icalendar(ievent, ical_editor = nil, has_local_modifications = false)
-    if ical_editor
-      self.editor = ical_editor
+    if has_local_modifications
+      # TODO: handle updating a locally modified, sourced event
+      false
     else
-      self.editor ||= User.main_admin
-    end
-    #if has_local_modifications
-    #  # TODO: handle updating a locally modified, sourced event
-    #else
+      # move this conditional to the start of the method when
+      # handling of has_local_modifications is updated above.
+      if ical_editor
+        self.editor = ical_editor
+      else
+        self.editor ||= User.main_admin
+      end
       # TODO: handle updating the associated url from the icalendar event (for external_links)
       self.update_attributes({
         description: ievent.description, start_at: ievent.dtstart, end_at: ievent.dtend,
         location: ievent.location, organizer: ievent.organizer, title: ievent.summary
       })
-    #end
+    end
   end
 
 end
