@@ -139,9 +139,17 @@ describe Source do
     end
   end
 
-  describe "#process" do
-    it "should do nothing for now" do
-      Source.new.process.should be_nil
+  describe "#run_processor" do
+    it "should do nothing when not a recognized processor" do
+      Source.new.run_processor.should be_nil
+    end
+    context "with the IcalProcessor" do
+      it "should run the process" do
+        source = FactoryGirl.create(:source,
+          processor: 'IcalProcessor', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
+        )
+        expect { source.run_processor(@user_normal) }.to change(Event, :count).by(2)
+      end
     end
   end
 

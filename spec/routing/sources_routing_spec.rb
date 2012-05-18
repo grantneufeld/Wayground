@@ -13,12 +13,12 @@ describe SourcesController do
     it "routes to #new" do
       get("/sources/new").should route_to("sources#new")
     end
-    it "routes to #edit" do
-      get("/sources/1/edit").should route_to("sources#edit", :id => "1")
-    end
-
     it "routes to #create" do
       post("/sources").should route_to("sources#create")
+    end
+
+    it "routes to #edit" do
+      get("/sources/1/edit").should route_to("sources#edit", :id => "1")
     end
     it "routes to #update" do
       put("/sources/1").should route_to("sources#update", :id => "1")
@@ -29,6 +29,13 @@ describe SourcesController do
     end
     it "routes to #destroy" do
       delete("/sources/1").should route_to("sources#destroy", :id => "1")
+    end
+
+    it "routes to #processor" do
+      get("/sources/1/processor").should route_to("sources#processor", :id => "1")
+    end
+    it "routes to #runprocessor" do
+      post("/sources/1/processor").should route_to("sources#runprocessor", :id => "1")
     end
 
   end

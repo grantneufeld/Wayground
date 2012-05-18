@@ -91,6 +91,7 @@ unless @page_description.blank?
 <li<%= @site_section == 'Admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
 <li<%= @site_section == 'Settings' ? ' class="current"'.html_safe : '' %>><%= link_to 'Settings', settings_path %></li>
 <li<%= @site_section == 'Documents' ? ' class="current"'.html_safe : '' %>><%= link_to 'Documents', documents_path %></li>
+<li<%= @site_section == 'Sources' ? ' class="current"'.html_safe : '' %>><%= link_to 'Sources', sources_path %></li>
 </ul>
 <%
 if @site_breadcrumbs && @site_breadcrumbs.size > 0

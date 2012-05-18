@@ -46,7 +46,11 @@ Wayground::Application.routes.draw do
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
   resources :sources do
-    get 'delete', :on => :member
+    member do
+      get 'delete'
+      get 'processor'
+      post 'processor' => 'sources#runprocessor'
+    end
   end
 
   # PROJECTS

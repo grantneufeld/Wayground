@@ -17,7 +17,9 @@ class Source < ActiveRecord::Base
   #validates_presence_of :processor
   validates_inclusion_of :processor, :in => %w( IcalProcessor )
   validates_inclusion_of :method, :in => %w( get post )
-  validates_format_of :url, :with => /\A[a-z]+:\/+[^ \r\n\t]+\z/,
+  # allow urls, or references to the testing fixture files
+  validates_format_of :url,
+    :with => /\A(([a-z]+:\/+[^ \r\n\t]+)|([\/A-Za-z0-9_]+\/)?spec\/fixtures\/files\/[a-z0-9_\-]+\.[a-z0-9]+)\z/,
     :message => 'must begin with a valid URL (starting with ‘http://’ or equivalent)'
   validate :validate_dates
 
@@ -43,12 +45,13 @@ class Source < ActiveRecord::Base
   end
 
   # Run the processor defined by this Source.
-  def process
+  def run_processor(user = nil)
     case processor
     when 'IcalProcessor'
-      #ical_processor = IcalProcessor.process_source(self)
-      #ical_processor.result
+      IcalProcessor.process_source(self, user)
+    else
+      nil
     end
-    nil
   end
+
 end

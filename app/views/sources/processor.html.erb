@@ -1,0 +1,13 @@
+<% # encoding: utf-8
+
+%><h1>Process Source: <%= link_to @source.name, @source %>?</h1>
+
+<%= form_tag(processor_source_path(@source), :method => :post) do %>
+<p>Are you sure you want to load the remote source?
+<br /><%= @source.url %>
+</p>
+<% if @source.last_updated_at?
+  %><p>Last processed: <%= @source.last_updated_at %>.</p>
+<% end -%>
+<p><%= submit_tag "Process Source" %></p>
+<% end %>

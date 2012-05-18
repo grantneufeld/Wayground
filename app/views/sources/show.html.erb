@@ -1,5 +1,7 @@
 <% # encoding: utf-8
 
+@sourced_items ||= @source.sourced_items
+
 %><h1><%= @source.name %></h1>
 
 <table><tbody>
@@ -16,10 +18,22 @@
 
 <p class="actions"><%
 if @source.has_authority_for_user_to?(@user, :can_update)
-  %><%= link_to 'Edit', edit_source_path(@source), :class => 'action' %><span class="separator">,</span>
-<%  if @source.has_authority_for_user_to?(@user, :can_delete)
-    %><%= link_to 'Delete', delete_source_path(@source), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><span class="separator">,</span>
-<%  end
+  %><%= link_to 'Process', processor_source_path(@source), :class => 'action' %><span class="separator">,</span>
+<%= link_to 'Edit', edit_source_path(@source), :class => 'action' %><%
+end
+if @source.has_authority_for_user_to?(@user, :can_delete)
+  %><span class="separator">,</span>
+<%= link_to 'Delete', delete_source_path(@source), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><%
 end
 %>
 <%= link_to 'New Source', new_source_path, :class => 'action' %></p>
+
+<h2><%= @sourced_items.count %> Sourced Items</h2>
+<ul>
+<% @sourced_items.each do |sourced_item|
+  item = sourced_item.item
+  %><li><%= item.class %>: <%
+  if sourced_item.has_local_modifications?
+     %>(<span title="This item has been modified from the original source.">modified</span>) <%
+  end %><%= link_to item.title, item %></li>
+<% end %></ul>

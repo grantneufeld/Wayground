@@ -230,4 +230,47 @@ describe SourcesController do
     end
   end
 
+  describe "GET processor" do
+    let(:source) { $source = FactoryGirl.create(:source) }
+
+    it "requires the user to have authority" do
+      set_logged_in_user
+      get :processor, :id => source.id
+      response.status.should eq 403
+    end
+
+    it "assigns the requested source as @source" do
+      set_logged_in_admin
+      get :processor, :id => source.id
+      assigns(:source).should eq(source)
+    end
+  end
+
+  describe "POST runprocessor" do
+    let(:source) do
+      $source = FactoryGirl.create(:source,
+        processor: 'IcalProcessor', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
+      )
+    end
+
+    it "requires the user to have authority" do
+      set_logged_in_user
+      post :runprocessor, :id => source.id
+      response.status.should eq 403
+    end
+
+    describe "with valid params" do
+      it "processess the requested source" do
+        SourcedItem.delete_all
+        Event.delete_all
+        # Assuming there are no other sources in the database, this
+        # specifies that the Source created on the previous line
+        # receives the :process message with the admin User as an arg.
+        Source.any_instance.should_receive(:run_processor).with(@user_admin).and_return(IcalProcessor.new)
+        set_logged_in_admin
+        post :runprocessor, :id => source.id
+      end
+    end
+  end
+
 end
