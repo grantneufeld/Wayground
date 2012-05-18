@@ -150,6 +150,39 @@ describe ExternalLink do
     end
   end
 
+  describe "#set_title" do
+    it "shoud do nothing when title is already set" do
+      elink = ExternalLink.new(:url => 'http://test.tld/', :title => 'Already Set')
+      elink.set_title
+      elink.title.should eq 'Already Set'
+    end
+    it "should default to using the domain name from the url" do
+      elink = ExternalLink.new(:url => 'http://test.tld/')
+      elink.set_title
+      elink.title.should eq 'test.tld'
+    end
+    it "should special-case Facebook event urls" do
+      elink = ExternalLink.new(:url => 'http://www.facebook.com/events/1234/')
+      elink.set_title
+      elink.title.should eq 'Facebook event'
+    end
+    it "should special-case Eventbrite urls" do
+      elink = ExternalLink.new(:url => 'http://test.eventbrite.com/')
+      elink.set_title
+      elink.title.should eq 'Event Registration (Eventbrite)'
+    end
+    it "should special-case Meetup event urls" do
+      elink = ExternalLink.new(:url => 'http://www.meetup.com/group/events/1234/')
+      elink.set_title
+      elink.title.should eq 'Meetup event'
+    end
+    it "should be called before validation" do
+      elink = ExternalLink.new(:url => 'http://test.tld/')
+      elink.valid?
+      elink.title.should eq 'test.tld'
+    end
+  end
+
   describe "#to_html" do
     before(:all) do
       @elink = ExternalLink.new(:title => 'ELink', :url => 'http://elink.tld/')

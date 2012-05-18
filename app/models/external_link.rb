@@ -44,8 +44,16 @@ class ExternalLink < ActiveRecord::Base
     if title.blank?
       # TODO: pull the title from the remote url
       unless url.blank?
-        # use the url’s domain
-        self.title = url.match(/^[a-z]+:\/*([^:\/]+)/)[1]
+        self.title = case url
+        when /^https?:\/\/(?:[a-z0-9\.]*\.)facebook.com\/events\/[0-9]+/
+          'Facebook event'
+        when /^https?:\/\/(?:[a-z0-9\.\-]*\.)eventbrite.com\//
+          'Event Registration (Eventbrite)'
+        when /^https?:\/\/(?:[a-z0-9\.]*\.)meetup.com\/(.+\/)?events\/[0-9]+/
+          'Meetup event'
+        when /^[a-z]+:\/*([^:\/]+)/
+          $1 # use the url’s domain
+        end
       end
     end
   end
