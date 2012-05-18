@@ -74,7 +74,7 @@ class Event < ActiveRecord::Base
   end
 
   def approve_if_authority
-    if !is_approved && user && user.has_authority_for_area('Calendar', :is_owner)
+    if !is_approved && user && user.has_authority_for_area('Calendar', :can_approve)
       self.is_approved = true
     end
   end
@@ -124,6 +124,21 @@ class Event < ActiveRecord::Base
       :content => data, :content_type => 'text/plain',
       :start_on => start_at.to_date, :end_on => (end_at? ? end_at.to_date : nil)
     )
+  end
+
+  def approve_by(user)
+    if is_approved?
+      true
+    elsif user && user.has_authority_for_area('Calendar', :can_approve)
+      self.is_sourcing = !(self.changed?)
+      self.is_approved = true
+      self.editor = user
+      success = self.save
+      self.is_sourcing = false
+      success
+    else
+      false
+    end
   end
 
   # iCalendar import processing
@@ -192,7 +207,7 @@ class Event < ActiveRecord::Base
   end
 
   # Create a new Event from an icalendar event.
-  def self.create_from_icalendar(ievent, ical_editor = nil)
+  def self.create_from_icalendar(ievent, ical_editor = nil, approve_by = nil)
     ical_editor ||= User.main_admin
     # TODO: split out location details, from icalendar events, into applicable fields
     external_links_attributes = {}
@@ -203,6 +218,9 @@ class Event < ActiveRecord::Base
       icalendar_field_mapping(ievent).merge(external_links_attributes)
     )
     event.editor = ical_editor
+    if !(approve_by.nil?) && !(approve_by.nil?) && approve_by.has_authority_for_area('Calendar', :can_approve)
+      event.is_approved = true
+    end
     event.is_sourcing = true
     event.save!
     event.is_sourcing = false

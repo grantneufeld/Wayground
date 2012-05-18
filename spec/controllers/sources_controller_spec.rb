@@ -266,7 +266,8 @@ describe SourcesController do
         # Assuming there are no other sources in the database, this
         # specifies that the Source created on the previous line
         # receives the :process message with the admin User as an arg.
-        Source.any_instance.should_receive(:run_processor).with(@user_admin).and_return(IcalProcessor.new)
+        Source.any_instance.should_receive(:run_processor).
+          with(@user_admin, false).and_return(IcalProcessor.new)
         set_logged_in_admin
         post :runprocessor, :id => source.id
       end

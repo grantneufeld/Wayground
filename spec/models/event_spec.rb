@@ -487,6 +487,38 @@ describe Event do
     end
   end
 
+  describe "#approve_by" do
+    let(:event) { $event = FactoryGirl.create(:event, is_approved: false) }
+    it "should return true if already approved" do
+      event.is_approved = true
+      event.approve_by(nil).should be_true
+    end
+    context "with an authorized user" do
+      it "should set is_approved" do
+        event.approve_by(@user_admin)
+        event.is_approved?.should be_true
+      end
+      it "should save the event" do
+        event.approve_by(@user_admin)
+        event.changed?.should be_false
+      end
+    end
+    it "should return false if user is nil" do
+      event.approve_by(nil).should be_false
+    end
+    it "should return false if user is unauthorized" do
+      event.approve_by(@user_normal).should be_false
+    end
+    it "should not set the locally modified flag on shared items" do
+      sourced_at = 1.hour.ago
+      sourced_item = event.sourced_items.new(last_sourced_at: sourced_at)
+      sourced_item.source = FactoryGirl.create(:source, last_updated_at: sourced_at)
+      sourced_item.save
+      event.approve_by(@user_admin)
+      event.sourced_items.first.has_local_modifications?.should be_false
+    end
+  end
+
   # icalendar source processing
 
   def new_ievent(overrides = {})
@@ -573,6 +605,14 @@ describe Event do
       let(:user) { $user = @user_normal }
       it "should set the version editor to the user" do
         Event.create_from_icalendar(ievent, user).versions.first.user.should eq user
+      end
+    end
+    context "with a user to use for approval" do
+      it "should flag created events as approved if the user can approve" do
+        Event.create_from_icalendar(ievent, nil, @user_admin).is_approved?.should be_true
+      end
+      it "should not flag created events as approved if the user cannot approve" do
+        Event.create_from_icalendar(ievent, nil, @user_normal).is_approved?.should be_false
       end
     end
   end

@@ -9,5 +9,7 @@
 <% if @source.last_updated_at?
   %><p>Last processed: <%= @source.last_updated_at %>.</p>
 <% end -%>
+<p><%= check_box_tag 'approve', 'all', :id => 'approve_check' %>
+<%= label_tag 'approve', 'Flag All As Approved' %></p>
 <p><%= submit_tag "Process Source" %></p>
 <% end %>

@@ -24,6 +24,13 @@ describe EventsController do
       put("/events/1").should route_to("events#update", :id => "1")
     end
 
+    it "routes to #approve" do
+      get("/events/1/approve").should route_to("events#approve", :id => "1")
+    end
+    it "routes to #set_approved" do
+      post("/events/1/approve").should route_to("events#set_approved", :id => "1")
+    end
+
     it "routes to #delete" do
       get("/events/1/delete").should route_to("events#delete", :id => "1")
     end

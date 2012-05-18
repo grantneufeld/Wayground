@@ -31,10 +31,17 @@ describe EventsController do
   end
 
   describe "GET index" do
-    it "assigns all events as @events" do
+    it "assigns all approved events as @events" do
       event = FactoryGirl.create(:event)
       get :index
       assigns(:events).should eq([event])
+    end
+    it "assigns all events, including unapproved, as @events for moderators" do
+      set_logged_in_admin
+      event = FactoryGirl.create(:event, start_at: 1.day.from_now)
+      event2 = FactoryGirl.create(:event, start_at: 2.days.from_now, is_approved: false)
+      get :index
+      assigns(:events).should eq([event, event2])
     end
   end
 
@@ -237,6 +244,57 @@ describe EventsController do
       event = FactoryGirl.create(:event)
       delete :destroy, :id => event.id
       response.should redirect_to(events_url)
+    end
+  end
+
+  describe "GET approve" do
+    let(:event) { $event = FactoryGirl.create(:event, is_approved: false) }
+
+    it "requires the user to have authority" do
+      set_logged_in_user
+      get :approve, :id => event.id
+      response.status.should eq 403
+    end
+
+    it "shows a form for confirming approval of an event" do
+      set_logged_in_admin
+      get :approve, :id => event.id
+      response.should render_template("approve")
+    end
+    it "should redirect to the event if already approved" do
+      event.approve_by(@user_admin)
+      set_logged_in_admin
+      get :approve, :id => event.id
+      response.should redirect_to(event)
+    end
+  end
+
+  describe "POST set_approved" do
+    let(:event) { $event = FactoryGirl.create(:event, is_approved: false) }
+    it "requires the user to have authority" do
+      set_logged_in_user
+      post :set_approved, :id => event.id
+      response.status.should eq 403
+    end
+
+    it "approves the requested event" do
+      set_logged_in_admin
+      post :set_approved, :id => event.id
+      event.reload
+      event.is_approved?.should be_true
+    end
+
+    it "redirects to the event" do
+      set_logged_in_admin
+      post :set_approved, :id => event.id
+      response.should redirect_to(event)
+    end
+
+    it "posts an alert flash if fails to approve" do
+      set_logged_in_admin
+      Event.any_instance.stub(:approve_by).and_return(false)
+      post :set_approved, :id => event.id
+      request.flash[:alert].should match /[Ff]ailed/
     end
   end
 

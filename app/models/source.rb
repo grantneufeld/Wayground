@@ -45,10 +45,10 @@ class Source < ActiveRecord::Base
   end
 
   # Run the processor defined by this Source.
-  def run_processor(user = nil)
+  def run_processor(user = nil, approve = false)
     case processor
     when 'IcalProcessor'
-      IcalProcessor.process_source(self, user)
+      IcalProcessor.process_source(self, user, approve)
     else
       nil
     end

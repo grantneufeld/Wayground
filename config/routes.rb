@@ -27,21 +27,31 @@ Wayground::Application.routes.draw do
     get 'delete', :on => :member
   end
   resources :pages do
-    get 'delete', :on => :member
-    delete 'delete' => 'pages#destroy', :on => :member
+    member do
+      get 'delete'
+      delete 'delete' => 'pages#destroy'
+    end
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
   resources :documents do
-    get 'delete', :on => :member
-    delete 'delete' => 'documents#destroy', :on => :member
+    member do
+      get 'delete'
+      delete 'delete' => 'documents#destroy'
+    end
   end
   get 'download/:id/*filename' => 'documents#download', :as => :download
   resources :events do
-    get 'delete', :on => :member
-    delete 'delete' => 'events#destroy', :on => :member
+    member do
+      get 'approve'
+      post 'approve' => 'events#set_approved'
+      get 'delete'
+      delete 'delete' => 'events#destroy'
+    end
     resources :external_links do
-      get 'delete', :on => :member
-      delete 'delete' => 'external_links#destroy', :on => :member
+      member do
+        get 'delete'
+        delete 'delete' => 'external_links#destroy'
+      end
     end
     resources :versions, :except => [:new, :create, :edit, :update, :destroy]
   end
@@ -55,8 +65,10 @@ Wayground::Application.routes.draw do
 
   # PROJECTS
   resources :projects do
-    get 'delete', :on => :member
-    delete 'delete' => 'projects#destroy', :on => :member
+    member do
+      get 'delete'
+      delete 'delete' => 'projects#destroy'
+    end
   end
   get 'project/*projecturl' => 'projects#show', :as => :project_name
 

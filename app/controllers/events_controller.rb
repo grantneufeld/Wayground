@@ -6,16 +6,20 @@ class EventsController < ApplicationController
   before_filter :requires_login, :only => [:new, :create]
   before_filter :requires_update_authority, :only => [:edit, :update]
   before_filter :requires_delete_authority, :only => [:delete, :destroy]
+  before_filter :requires_approve_authority, :only => [:approve, :set_approved]
   before_filter :set_section
   before_filter :set_new_event, :only => [:new, :create]
-  before_filter :set_editor, :only => [:create, :update, :destroy]
+  before_filter :set_editor, :only => [:create, :update, :destroy, :approve]
 
-  # GET /events
-  # GET /events.xml
   def index
     @page_title = 'Events'
-    #@events = paginate(Event.all)
-    @events = Event.all
+    # TODO: paginate Events#index
+    if @user && @user.has_authority_for_area(Event.authority_area, :can_approve)
+      # moderators see both approved and unapproved events
+      @events = Event.all
+    else
+      @events = Event.approved
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.ics # index.ics.erb
@@ -24,8 +28,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/1
-  # GET /events/1.xml
   def show
     @page_title = "#{@event.start_at.to_s(:simple_date)}: #{@event.title}"
     if @event.is_cancelled
@@ -39,8 +41,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/new
-  # GET /events/new.xml
   def new
     respond_to do |format|
       format.html # new.html.erb
@@ -48,8 +48,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # POST /events
-  # POST /events.xml
   def create
     @event.user = @user
 
@@ -69,13 +67,10 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/1/edit
   def edit
     @page_title = "Edit Event: #{@event.title}"
   end
 
-  # PUT /events/1
-  # PUT /events/1.xml
   def update
     @page_title = "Edit Event: #{@event.title}"
     respond_to do |format|
@@ -90,19 +85,36 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/1/delete
   def delete
     @page_title = "Delete Event: #{@event.title}"
   end
 
-  # DELETE /events/1
-  # DELETE /events/1.xml
   def destroy
     @event.destroy
 
     respond_to do |format|
       format.html { redirect_to(events_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  def approve
+    if @event.is_approved?
+      redirect_to(@event, :notice => 'The event has already been approved.')
+    else
+      @page_title = "Approve Event: #{@event.title}"
+    end
+  end
+
+  def set_approved
+    respond_to do |format|
+      if @event.approve_by(@user)
+        format.html { redirect_to(@event, notice: 'The event is now approved.') }
+        format.xml  { head :ok }
+      else
+        format.html { redirect_to(@event, alert: 'Failed to approve the event!') }
+        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+      end
     end
   end
 
@@ -127,6 +139,9 @@ class EventsController < ApplicationController
   end
   def requires_delete_authority
     requires_authority(:can_delete)
+  end
+  def requires_approve_authority
+    requires_authority(:can_approve)
   end
 
   def set_section

@@ -56,6 +56,7 @@ FactoryGirl.define do
     sequence(:start_at) {|n| n.days.from_now.to_datetime.to_s(:db)}
     sequence(:title)    {|n| "Factory Event #{n}"}
     editor
+    is_approved         true
     factory :event_future do
       # new events are in the future by default
     end

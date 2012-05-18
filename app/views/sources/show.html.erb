@@ -1,5 +1,6 @@
 <% # encoding: utf-8
 
+@page_uses_javascript = true
 @sourced_items ||= @source.sourced_items
 
 %><h1><%= @source.name %></h1>
@@ -35,5 +36,8 @@ end
   %><li><%= item.class %>: <%
   if sourced_item.has_local_modifications?
      %>(<span title="This item has been modified from the original source.">modified</span>) <%
-  end %><%= link_to item.title, item %></li>
+  end %><%= link_to item.title, item %><%
+  if !(item.is_approved?)
+    %> (<span title="This item has not yet been approved.">not approved</span>)<%
+  end %></li>
 <% end %></ul>

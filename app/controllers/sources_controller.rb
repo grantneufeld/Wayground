@@ -59,7 +59,7 @@ class SourcesController < ApplicationController
 
   def runprocessor
     @page_title = "Process Source: #{@source.name}"
-    processor = @source.run_processor(@user)
+    processor = @source.run_processor(@user, params[:approve] == 'all')
     msgs = ['Processing complete.']
     msgs << "#{processor.new_events.size} items were created." if processor.new_events.size > 0
     msgs << "#{processor.updated_events.size} items were updated." if processor.updated_events.size > 0
