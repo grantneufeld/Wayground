@@ -31,7 +31,7 @@ UID:2@sample.tld
 SUMMARY:Second Sample
 LOCATION:The Second Place
 URL:http://sample.tld/2
-DESCRIPTION:Second sample event.
+DESCRIPTION:Second sample event. (• With non-ascii.)
 CLASS:PUBLIC
 STATUS:CONFIRMED
 END:VEVENT

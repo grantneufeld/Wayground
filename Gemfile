@@ -24,7 +24,7 @@ gem 'capistrano', :require => false #, '2.12.0'
 
 #gem 'rake', '>= 0.9.2'
 
-gem 'icalendar', '>= 1.1.6'
+gem 'tzinfo', '>= 0.3.33'
 
 # Gems used only for assets and not required
 # in production environments by default.

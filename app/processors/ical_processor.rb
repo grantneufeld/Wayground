@@ -1,8 +1,6 @@
 # encoding: utf-8
+require 'icalendar_reader'
 require 'open-uri'
-
-# Relies on the icalendar gem.
-# https://github.com/sdague/icalendar
 
 # Read iCalendar format files and generate/update applicable Event records.
 class IcalProcessor
@@ -60,25 +58,31 @@ class IcalProcessor
   # Process an iCalendar format IO.
   # ical_processor.io must be set before this is called
   def process_data
-    calendars = Icalendar.parse(io)
+    calendars = IcalendarReader.new.parse(io)
     calendars.each do |calendar|
       process_icalendar(calendar)
     end
     self
   end
 
-  # Generate or update Events from the ICalendar::Events in an Icalendar::Calendar.
+  # Generate or update Events from the VEVENTs in an iCalendar.
   def process_icalendar(icalendar)
-    icalendar.events.each do |ievent|
-      process_event(ievent)
+    if icalendar['VEVENT']
+      icalendar['VEVENT'].each do |ievent|
+        process_event(ievent)
+      end
     end
     self
   end
 
-  # Generate or update an Event from an ICalendar::Event.
+  # Generate or update an Event from a VEVENT (iCalendar event).
   def process_event(ievent)
-    # check for pre-existing Event matching the ievent.uid
-    sourced_item = source.sourced_items.find_by_source_identifier(ievent.uid)
+    uid = ievent['UID'] ? ievent['UID'][:value] : nil
+    sourced_item = nil
+    if uid
+      # check for pre-existing Event matching the ievent.uid
+      sourced_item = source.sourced_items.find_by_source_identifier(uid)
+    end
     if sourced_item
       if sourced_item.item.update_from_icalendar(ievent, editor, sourced_item.has_local_modifications)
         updated_events << sourced_item.item
@@ -89,11 +93,12 @@ class IcalProcessor
       event = Event.create_from_icalendar(ievent, editor)
       new_events << event
       sourced_item = source.sourced_items.new(
-        source_identifier: ievent.uid, last_sourced_at: source.last_updated_at
+        source_identifier: uid, last_sourced_at: source.last_updated_at
       )
       sourced_item.item = event
       sourced_item.save!
     end
     self
   end
+
 end

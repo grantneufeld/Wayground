@@ -118,14 +118,79 @@ class Event < ActiveRecord::Base
 
   # iCalendar import processing
 
+  # Map the fields from an icalendar VEVENT for use in an Event.
+  def self.icalendar_field_mapping(ievent)
+    hash = {}
+    # Title (summary)
+    if ievent['SUMMARY']
+      title = ievent['SUMMARY'][:value]
+      title.force_encoding('UTF-8') if title.encoding.name.match /ASCII/
+      hash[:title] = title
+    end
+    # Description
+    if ievent['DESCRIPTION']
+      description = ievent['DESCRIPTION'][:value]
+      description.force_encoding('UTF-8') if description.encoding.name.match /ASCII/
+      # Make sure to keep the description within our size limits
+      if description.size > 510
+        # TODO: split long icalendar event descriptions into description and content fields
+        # find the first paragraph break after the first 100 characters
+        line_break_idx = description.index "\n", 100
+        content_idx = nil
+        if line_break_idx.nil? || line_break_idx > 509
+          # first paragraph of description is waaaay too long.
+          # Find last sentence break, instead.
+          line_break_idx = description.rindex(/[\.\!\?]/, 509)
+          line_break_idx += 1 if line_break_idx
+        end
+        if line_break_idx.nil? || line_break_idx > 509
+          # There’s not even a sentence break before the 510th character.
+          # So, find last space, instead.
+          line_break_idx = description.rindex(' ', 509)
+        end
+        if line_break_idx.nil? || line_break_idx > 509
+          # There’s not even a sentence break before the 510th character.
+          # So, arbitrarily break it a short way in...
+          line_break_idx = 100
+        end
+        # copy the description
+        hash[:description] = description[0..(line_break_idx - 1)].strip
+        # copy the content portion from the description
+        hash[:content] = description[line_break_idx..-1].strip
+      else
+        hash[:description] = description
+      end
+    end
+    # Location
+    if ievent['LOCATION']
+      location = ievent['LOCATION'][:value]
+      location.force_encoding('UTF-8') if location.encoding.name.match /ASCII/
+      hash[:location] = location
+    end
+    # Organizer
+    if ievent['ORGANIZER']
+      organizer = ievent['ORGANIZER']['CN'] || ievent['ORGANIZER'][:value]
+      organizer.force_encoding('UTF-8') if organizer.encoding.name.match /ASCII/
+      hash[:organizer] = organizer
+    end
+    # Dates & Times
+    hash[:start_at] = ievent['DTSTART'][:value] if ievent['DTSTART']
+    hash[:end_at] = ievent['DTEND'][:value] if ievent['DTEND']
+
+    # The hash of field mappings to ical values:
+    hash
+  end
+
   # Create a new Event from an icalendar event.
   def self.create_from_icalendar(ievent, ical_editor = nil)
     ical_editor ||= User.main_admin
     # TODO: split out location details, from icalendar events, into applicable fields
+    external_links_attributes = {}
+    if ievent['URL']
+      external_links_attributes[:external_links_attributes] = [{url: ievent['URL'][:value]}]
+    end
     event = Event.new(
-      description: ievent.description, start_at: ievent.dtstart, end_at: ievent.dtend,
-      location: ievent.location, organizer: ievent.organizer, title: ievent.summary,
-      external_links_attributes: [{url: ievent.url.to_s}]
+      icalendar_field_mapping(ievent).merge(external_links_attributes)
     )
     event.editor = ical_editor
     event.save!
@@ -147,10 +212,7 @@ class Event < ActiveRecord::Base
         self.editor ||= User.main_admin
       end
       # TODO: handle updating the associated url from the icalendar event (for external_links)
-      self.update_attributes({
-        description: ievent.description, start_at: ievent.dtstart, end_at: ievent.dtend,
-        location: ievent.location, organizer: ievent.organizer, title: ievent.summary
-      })
+      self.update_attributes(self.class.icalendar_field_mapping(ievent))
     end
   end
 

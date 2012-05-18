@@ -452,20 +452,80 @@ describe Event do
   # icalendar source processing
 
   def new_ievent(overrides = {})
-    e = Icalendar::Event.new
-    e.description = overrides[:description] || 'Spec description.'
-    e.dtstart = overrides[:dtstart] || 24.hours.from_now.to_datetime
-    e.dtend = overrides[:dtend] || 26.hours.from_now.to_datetime
-    e.klass = overrides[:klass] || 'PUBLIC'
-    e.location = overrides[:location] || 'Spec Town, 123 Spec Street'
-    e.organizer = overrides[:organizer] || 'Spec Organization'
-    e.summary = overrides[:summary] || 'Spec Event'
-    e.uid = overrides[:uid] || '123@spec'
-    e.url = overrides[:url] || 'http://spec.tld/spec/url'
-    e
+    {
+      'DESCRIPTION' => {value: 'Spec description.'},
+      'DTSTART' => {value: 24.hours.from_now.to_datetime},
+      'DTEND' => {value: 26.hours.from_now.to_datetime},
+      'KLASS' => {value: 'PUBLIC'},
+      'LOCATION' => {value: 'Spec Town, 123 Spec Street'},
+      'ORGANIZER' => {value: 'Spec Organization'},
+      'SUMMARY' => {value: 'Spec Event'},
+      'UID' => {value: '123@spec'},
+      'URL' => {value: 'http://spec.tld/spec/url'}
+    }.merge(overrides)
   end
   let(:ievent) { $ievent = new_ievent }
   let(:event) { $event = Event.create_from_icalendar(ievent) }
+
+  describe ".icalendar_field_mapping" do
+    it "should use SUMMARY as the title" do
+      Event.icalendar_field_mapping(new_ievent)[:title].should eq 'Spec Event'
+    end
+    it "should use DESCRIPTION as the description" do
+      Event.icalendar_field_mapping(new_ievent)[:description].should eq 'Spec description.'
+    end
+    it "should split the description after the first paragraph after 100 chars if too long" do
+      event = Event.icalendar_field_mapping(
+        new_ievent('DESCRIPTION' => {:value => ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) })
+      )
+      [event[:description], event[:content]].should eq [
+        ('A' * 99) + "\n" + ('B' * 100),
+        'Etc.' + ('C' * 350)
+      ]
+    end
+    it "should split the description on the last sentence break in a too long paragraph" do
+      event = Event.icalendar_field_mapping(
+        new_ievent('DESCRIPTION' => {:value => ('A' * 200) + '. ' + ('B' * 200) + '! ' + ('C' * 200) + '?' })
+      )
+      [event[:description], event[:content]].should eq [
+        ('A' * 200) + '. ' + ('B' * 200) + '!',
+        ('C' * 200) + '?'
+      ]
+    end
+    it "should split the description on the last space in a too long sentence" do
+      event = Event.icalendar_field_mapping(
+        new_ievent('DESCRIPTION' => {:value => ('A' * 200) + ' ' + ('B' * 200) + ' ' + ('C' * 200) + ' ' })
+      )
+      [event[:description], event[:content]].should eq [
+        ('A' * 200) + ' ' + ('B' * 200),
+        ('C' * 200)
+      ]
+    end
+    it "should split the description after the 100th char if an unbroken blob of characters" do
+      event = Event.icalendar_field_mapping(
+        new_ievent('DESCRIPTION' => {:value => ('A' * 100) + 'B' + ('C' * 411)})
+      )
+      [event[:description], event[:content]].should eq ['A' * 100, 'B' + ('C' * 411)]
+    end
+    it "should use LOCATION as the location" do
+      Event.icalendar_field_mapping(new_ievent)[:location].should eq 'Spec Town, 123 Spec Street'
+    end
+    it "should use ORGANIZER as the organizer" do
+      Event.icalendar_field_mapping(new_ievent)[:organizer].should eq 'Spec Organization'
+    end
+    it "should use DTSTART as the start_at date & time" do
+      date = '2001-02-03 04:05:06 MST'.to_datetime
+      Event.icalendar_field_mapping(
+        new_ievent('DTSTART' => {:value => date})
+      )[:start_at].should eq date
+    end
+    it "should use DTEND as the end_at date & time" do
+      date = '2001-02-03 04:05:06 MST'.to_datetime
+      Event.icalendar_field_mapping(
+        new_ievent('DTEND' => {:value => date})
+      )[:end_at].should eq date
+    end
+  end
 
   describe ".create_from_icalendar" do
     it "should create a new event" do
@@ -483,12 +543,17 @@ describe Event do
     let(:start_time) { $start_time = 25.hours.ago }
     let(:end_time) { $end_time = 24.hours.ago }
     let(:changed_ievent) do
-      $changed_ievent = new_ievent({
-        attach: 'http://changed.tld/attach', description: 'Changed description.',
-        dtstart: start_time, dtend: end_time, location: 'Change Place',
-        organizer: 'Change Org', summary: 'Changed Summary',
-        url: 'http://change.tld/url'
-      })
+      $changed_ievent = {
+        'ATTACH' => {value: 'http://changed.tld/attach'},
+        'DESCRIPTION' => {value: 'Changed description.'},
+        'DTSTART' => {value: start_time},
+        'DTEND' => {value: end_time},
+        'LOCATION' => {value: 'Change Place'},
+        'ORGANIZER' => {value: 'Change Org'},
+        'SUMMARY' => {value: 'Changed Summary'},
+        'URL' => {value: 'http://change.tld/url'},
+        'UID' => {value: '123@spec'}
+      }
     end
     context "with no local changes to the event" do
       it "should overwrite any changed information" do
@@ -501,6 +566,10 @@ describe Event do
           'Changed description.', start_time, end_time,
           'Change Place', 'Change Org', 'Changed Summary'
         ])
+      end
+      it "should accept an editor" do
+        # TODO: text passing an editor to Event#update_from_icalendar
+        #pending
       end
     end
     context "with local changes to the event" do
