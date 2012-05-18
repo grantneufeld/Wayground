@@ -133,6 +133,7 @@ class Event < ActiveRecord::Base
       self.is_sourcing = !(self.changed?)
       self.is_approved = true
       self.editor = user
+      self.edit_comment = "Approved by #{user.name}"
       success = self.save
       self.is_sourcing = false
       success
@@ -217,7 +218,13 @@ class Event < ActiveRecord::Base
     event = Event.new(
       icalendar_field_mapping(ievent).merge(external_links_attributes)
     )
-    event.editor = ical_editor
+    if ical_editor
+      event.editor = ical_editor
+      event.edit_comment = "Created from an iCalendar source by #{ical_editor.name}"
+    else
+      event.editor ||= User.main_admin
+      event.edit_comment = "Created from an iCalendar source"
+    end
     if !(approve_by.nil?) && !(approve_by.nil?) && approve_by.has_authority_for_area('Calendar', :can_approve)
       event.is_approved = true
     end
@@ -238,8 +245,10 @@ class Event < ActiveRecord::Base
       # handling of has_local_modifications is updated above.
       if ical_editor
         self.editor = ical_editor
+        self.edit_comment = "Updated from an iCalendar source by #{ical_editor.name}"
       else
         self.editor ||= User.main_admin
+        self.edit_comment = "Updated from an iCalendar source"
       end
       # TODO: handle updating the associated url from the icalendar event (for external_links)
       self.is_sourcing = true
