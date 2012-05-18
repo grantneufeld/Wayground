@@ -110,6 +110,13 @@ FactoryGirl.define do
     sequence(:title) {|n| "Factory Source #{n}"}
   end
 
+  factory :sourced_item do
+    source
+    association :item, factory: :event
+    last_sourced_at              { source.last_updated_at }
+    sequence(:source_identifier) {|n| "#{n}@sourced_item.factory"}
+  end
+
   factory :user, aliases: [:creator, :editor, :owner] do
     email
     password              "password"

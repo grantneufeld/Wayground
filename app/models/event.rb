@@ -3,7 +3,9 @@
 # Details of a calendar event
 class Event < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Calendar', :item_authority_flag_field => :always_viewable
-  attr_accessor :editor, :edit_comment
+  # editor and edit_comment are used for Version records
+  # is_sourcing is set when generating or updating from a Source (and SourcedItem)
+  attr_accessor :editor, :edit_comment, :is_sourcing
   attr_accessible(
     :start_at, :end_at, :timezone, :is_allday,
     :is_draft, :is_wheelchair_accessible, :is_adults_only, :is_tentative, :is_cancelled, :is_featured,
@@ -47,6 +49,7 @@ class Event < ActiveRecord::Base
 
   before_save :approve_if_authority
   before_create :set_timezone
+  after_update :flag_for_sourcing
   after_save :add_version
 
   # An event cannot end before it begins.
@@ -85,6 +88,13 @@ class Event < ActiveRecord::Base
       else
         self.timezone = Time.zone_default.name
       end
+    end
+  end
+
+  # called after save on update
+  def flag_for_sourcing
+    unless is_sourcing
+      sourced_items.each {|sourced_item| sourced_item.update_attributes(has_local_modifications: true) }
     end
   end
 
@@ -193,7 +203,9 @@ class Event < ActiveRecord::Base
       icalendar_field_mapping(ievent).merge(external_links_attributes)
     )
     event.editor = ical_editor
+    event.is_sourcing = true
     event.save!
+    event.is_sourcing = false
     event
   end
 
@@ -212,7 +224,10 @@ class Event < ActiveRecord::Base
         self.editor ||= User.main_admin
       end
       # TODO: handle updating the associated url from the icalendar event (for external_links)
-      self.update_attributes(self.class.icalendar_field_mapping(ievent))
+      self.is_sourcing = true
+      success = self.update_attributes(self.class.icalendar_field_mapping(ievent))
+      self.is_sourcing = false
+      success
     end
   end
 

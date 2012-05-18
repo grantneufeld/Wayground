@@ -429,6 +429,44 @@ describe Event do
     end
   end
 
+  describe "#flag_for_sourcing" do
+    let(:event) { $event = FactoryGirl.create(:event) }
+    let(:source) { $source = FactoryGirl.create(:source) }
+    let(:sourced_item) {
+      $sourced_item = FactoryGirl.create(:sourced_item, :item => event, :source => source)
+    }
+
+    it "should be called when updating an Event" do
+      sourced_item.has_local_modifications = false
+      sourced_item.save!
+      event.update_attributes(title: 'Updated')
+      sourced_item.reload
+      sourced_item.has_local_modifications?.should be_true
+    end
+    it "should set the has_local_modifications for all sourced_items" do
+      sourced_item.has_local_modifications = false
+      sourced_item.save!
+      source2 = FactoryGirl.create(:source)
+      sourced_item2 = event.sourced_items.new(last_sourced_at: source2.last_updated_at)
+      sourced_item2.source = source2
+      sourced_item2.save!
+      # should not have updated event yet
+      sourced_item.has_local_modifications?.should be_false
+      sourced_item2.has_local_modifications?.should be_false
+      # “update” the event
+      event.flag_for_sourcing
+      event.sourced_items[0].has_local_modifications?.should be_true
+      event.sourced_items[1].has_local_modifications?.should be_true
+    end
+    it "should not touch the sourced_items when is_sourcing is set true" do
+      sourced_item.has_local_modifications = false
+      sourced_item.save!
+      event.is_sourcing = true
+      event.flag_for_sourcing
+      event.sourced_items[0].has_local_modifications?.should be_false
+    end
+  end
+
   describe "#add_version" do
     it "should add a Version" do
       event = FactoryGirl.create(:event, :editor => @user_admin, :edit_comment => 'add a version')
