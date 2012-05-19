@@ -107,4 +107,28 @@ class Authority < ActiveRecord::Base
       self.save!
     end
   end
+
+  # Merge this authority into another authority (must be for the same user).
+  # The various permission fields are OR’d,
+  # the destination authority is saved,
+  # and then this authority is destroyed.
+  def merge_into!(destination_authority)
+    raise TypeError unless destination_authority.is_a? Authority
+    raise Wayground::WrongUserForAuthentication unless destination_authority.user == user
+    destination_authority.is_owner ||= is_owner
+    destination_authority.can_create ||= can_create
+    destination_authority.can_view ||= can_view
+    destination_authority.can_update ||= can_update
+    destination_authority.can_delete ||= can_delete
+    destination_authority.can_invite ||= can_invite
+    destination_authority.can_permit ||= can_permit
+    destination_authority.can_approve ||= can_approve
+    if destination_authority.save
+      self.destroy
+      true
+    else
+      false
+    end
+  end
+
 end

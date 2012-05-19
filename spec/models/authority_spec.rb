@@ -142,4 +142,63 @@ describe Authority do
       Authority.new.authority_area.should eq "Authority"
     end
   end
+
+  describe ".merge_into!" do
+    let(:item) { $item = FactoryGirl.create(:event) }
+    let(:user) { $user = FactoryGirl.create(:user) }
+    let(:authority1) { $authority1 = FactoryGirl.create(:authority, item: item, user: user) }
+
+    it "should reject anything for the destination authority that is not an Authority" do
+      expect { authority1.merge_into!(:not_an_authority) }.to raise_error(TypeError)
+    end
+
+    it "should reject a destination authority that doesn’t have the same user" do
+      authority2 = FactoryGirl.create(:authority, item: item)
+      expect { authority1.merge_into!(authority2) }.to raise_error(Wayground::WrongUserForAuthentication)
+    end
+
+    it "should logical-OR the boolean fields" do
+      authority1.update_attributes(is_owner: true, can_delete: true)
+      authority2 = FactoryGirl.create(:authority, user: user,
+        item: FactoryGirl.create(:event), can_view: true, can_update: true
+      )
+      authority1.merge_into!(authority2)
+      (
+        ( # these fields should be true
+          authority2.is_owner && authority2.can_delete &&
+          authority2.can_update && authority2.can_update
+        ) &&
+        !( # these fields should be false
+          authority2.can_create || authority2.can_invite ||
+          authority2.can_permit || authority2.can_approve
+        )
+      ).should be_true
+    end
+
+    it "should save the changes to the destination authority" do
+      authority1.is_owner = true
+      authority2 = FactoryGirl.create(:authority, user: user,
+        item: FactoryGirl.create(:event), can_view: true
+      )
+      authority1.merge_into!(authority2)
+      authority2.changed?.should be_false # no unsaved changes
+    end
+
+    it "should destroy the source authority" do
+      destroyed_id = authority1.id
+      authority2 = FactoryGirl.create(:authority, user: user, item: item)
+      authority1.merge_into!(authority2)
+      expect {
+        Authority.find(destroyed_id)
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "should not destroy the source authority if saving the destination fails" do
+      authority2 = FactoryGirl.create(:authority, user: user, item: item)
+      Authority.any_instance.should_receive(:save).and_return(false)
+      authority1.merge_into!(authority2)
+      Authority.find(authority1.id).should eq authority1
+    end
+  end
+
 end

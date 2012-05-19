@@ -4,6 +4,11 @@ require 'spec_helper'
 
 describe DocumentsController do
 
+  before(:all) do
+    Authority.delete_all
+    User.delete_all
+  end
+
   def set_logged_in_admin(stubs={})
     controller.stub!(:current_user).and_return(mock_admin(stubs))
   end
