@@ -144,11 +144,18 @@ describe Source do
       Source.new.run_processor.should be_nil
     end
     context "with the IcalProcessor" do
-      it "should run the process" do
-        source = FactoryGirl.create(:source,
+      let(:source) do
+        $source = FactoryGirl.create(:source,
           processor: 'IcalProcessor', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
         )
+      end
+      it "should run the process" do
         expect { source.run_processor(@user_normal) }.to change(Event, :count).by(2)
+      end
+      it "should update the last_updated_at stamp" do
+        source.last_updated_at = nil
+        source.run_processor(@user_normal)
+        source.last_updated_at.should be
       end
     end
   end

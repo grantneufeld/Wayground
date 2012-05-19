@@ -48,7 +48,10 @@ class Source < ActiveRecord::Base
   def run_processor(user = nil, approve = false)
     case processor
     when 'IcalProcessor'
-      IcalProcessor.process_source(self, user, approve)
+      processed = IcalProcessor.process_source(self, user, approve)
+      self.last_updated_at = Time.now
+      self.save
+      processed
     else
       nil
     end
