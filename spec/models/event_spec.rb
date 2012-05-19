@@ -665,4 +665,536 @@ describe Event do
     end
   end
 
+  describe ".merge_into!" do
+    let(:user) { $user = FactoryGirl.create(:user) }
+    let(:event1) { $event1 = FactoryGirl.create(:event, user: user, editor: user) }
+
+    it "should reject anything for the destination event that is not an Event" do
+      expect { event1.merge_into!(:not_an_event) }.to raise_error(TypeError)
+    end
+
+    it "should merge fields" do
+      event1.update_attributes(description: 'source')
+      event2 = FactoryGirl.create(:event, user: user, editor: user, description: nil)
+      event1.merge_into!(event2)
+      event2.description.should eq 'source'
+    end
+    it "should return a hash of field conflicts" do
+      event1.update_attributes(title: 'source')
+      event2 = FactoryGirl.create(:event, user: user, editor: user, title: 'destination')
+      conflicts = event1.merge_into!(event2)
+      conflicts[:title].should eq 'source'
+    end
+
+    it "should merge authorities" do
+      authority = FactoryGirl.create(:authority, user: user, item: event1, can_view: true)
+      event1.reload
+      event2 = FactoryGirl.create(:event, user: user, editor: user)
+      event1.merge_into!(event2)
+      event2.authorities.should eq [authority]
+    end
+
+    it "should merge external links" do
+      link = FactoryGirl.create(:external_link, item: event1)
+      event1.reload
+      event2 = FactoryGirl.create(:event, user: user, editor: user)
+      event1.merge_into!(event2)
+      event2.external_links.should eq [link]
+    end
+
+    it "should merge sourced items" do
+      sourced_item = FactoryGirl.create(:sourced_item, item: event1)
+      event1.reload
+      event2 = FactoryGirl.create(:event, user: user, editor: user)
+      event1.merge_into!(event2)
+      event2.sourced_items.should eq [sourced_item]
+    end
+
+    it "should merge versions" do
+      # events get a version when created, so just use that
+      version_id = event1.versions.first.id
+      event2 = FactoryGirl.create(:event, user: user, editor: user)
+      event1.merge_into!(event2)
+      event2.versions.find(version_id).should be
+    end
+
+    it "should delete the source event" do
+      event_id = event1.id
+      event2 = FactoryGirl.create(:event, user: user, editor: user)
+      event1.merge_into!(event2)
+      expect { Event.find(event_id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe ".merge_fields_into" do
+    let(:user) { $user = FactoryGirl.create(:user) }
+    let(:event1) { $event1 = FactoryGirl.create(:event, editor: user) }
+    let(:time) { $time = 1.hour.from_now }
+    let(:other_time) { $time = 1.day.from_now }
+
+    it "should reject anything for the destination event that is not an Event" do
+      expect { event1.merge_fields_into(:not_an_event) }.to raise_error(TypeError)
+    end
+
+    it "should set the user if destination user is blank" do
+      event = Event.new
+      event.user = user
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.user.should eq user
+    end
+
+    it "should set the start_at if destination start_at is blank" do
+      event = Event.new(start_at: time)
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.start_at.should eq time
+    end
+    it "should return the source start_at in the result if it doesn’t match the destination" do
+      event = Event.new(start_at: time)
+      event2 = Event.new(start_at: other_time)
+      result = event.merge_fields_into(event2)
+      result[:start_at].should eq time
+    end
+
+    it "should set the end_at if destination end_at is blank" do
+      event = Event.new(end_at: time)
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.end_at.should eq time
+    end
+    it "should return the source end_at in the result if it doesn’t match the destination" do
+      event = Event.new(end_at: time)
+      event2 = Event.new(end_at: other_time)
+      result = event.merge_fields_into(event2)
+      result[:end_at].should eq time
+    end
+
+    it "should set the timezone if destination timezone is blank" do
+      event = Event.new(timezone: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.timezone.should eq 'test'
+    end
+    it "should return the source timezone in the result if it doesn’t match the destination" do
+      event = Event.new(timezone: 'source')
+      event2 = Event.new(timezone: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:timezone].should eq 'source'
+    end
+
+    it "should set the is_allday flag if true and destination is_allday is false" do
+      event = Event.new(is_allday: true)
+      event2 = Event.new(is_allday: false)
+      event.merge_fields_into(event2)
+      event2.is_allday.should be_true
+    end
+    it "should leave the is_allday flag as false if both source and destination are false" do
+      event = Event.new(is_allday: false)
+      event2 = Event.new(is_allday: false)
+      event.merge_fields_into(event2)
+      event2.is_allday.should be_false
+    end
+    it "should leave the is_allday flag true if destination is_allday is true" do
+      event = Event.new(is_allday: false)
+      event2 = Event.new(is_allday: true)
+      event.merge_fields_into(event2)
+      event2.is_allday.should be_true
+    end
+
+    it "should leave the is_draft flag false if destination is_draft is false" do
+      event = Event.new(is_draft: true)
+      event2 = Event.new(is_draft: false)
+      event.merge_fields_into(event2)
+      event2.is_draft.should be_false
+    end
+    it "should leave the is_draft flag true if both source and destination are true" do
+      event = Event.new(is_draft: true)
+      event2 = Event.new(is_draft: true)
+      event.merge_fields_into(event2)
+      event2.is_draft.should be_true
+    end
+    it "should set the is_draft flag false if false and destination is_draft is true" do
+      event = Event.new(is_draft: false)
+      event2 = Event.new(is_draft: true)
+      event.merge_fields_into(event2)
+      event2.is_draft.should be_false
+    end
+
+    it "should set the is_approved flag if true and destination is_approved is false" do
+      event = Event.new
+      event.is_approved = true
+      event2 = Event.new
+      event2.is_approved = false
+      event.merge_fields_into(event2)
+      event2.is_approved.should be_true
+    end
+    it "should leave the is_approved flag as false if both source and destination are false" do
+      event = Event.new
+      event.is_approved = false
+      event2 = Event.new
+      event2.is_approved = false
+      event.merge_fields_into(event2)
+      event2.is_approved.should be_false
+    end
+    it "should leave the is_approved flag true if destination is_approved is true" do
+      event = Event.new
+      event.is_approved = false
+      event2 = Event.new
+      event2.is_approved = true
+      event.merge_fields_into(event2)
+      event2.is_approved.should be_true
+    end
+
+    it "should set the is_wheelchair_accessible flag if true and destination is_wheelchair_accessible is false" do
+      event = Event.new(is_wheelchair_accessible: true)
+      event2 = Event.new(is_wheelchair_accessible: false)
+      event.merge_fields_into(event2)
+      event2.is_wheelchair_accessible.should be_true
+    end
+    it "should leave the is_wheelchair_accessible flag as false if both source and destination are false" do
+      event = Event.new(is_wheelchair_accessible: false)
+      event2 = Event.new(is_wheelchair_accessible: false)
+      event.merge_fields_into(event2)
+      event2.is_wheelchair_accessible.should be_false
+    end
+    it "should leave the is_wheelchair_accessible flag true if destination is_wheelchair_accessible is true" do
+      event = Event.new(is_wheelchair_accessible: false)
+      event2 = Event.new(is_wheelchair_accessible: true)
+      event.merge_fields_into(event2)
+      event2.is_wheelchair_accessible.should be_true
+    end
+
+    it "should set the is_adults_only flag if true and destination is_adults_only is false" do
+      event = Event.new(is_adults_only: true)
+      event2 = Event.new(is_adults_only: false)
+      event.merge_fields_into(event2)
+      event2.is_adults_only.should be_true
+    end
+    it "should leave the is_adults_only flag as false if both source and destination are false" do
+      event = Event.new(is_adults_only: false)
+      event2 = Event.new(is_adults_only: false)
+      event.merge_fields_into(event2)
+      event2.is_adults_only.should be_false
+    end
+    it "should leave the is_adults_only flag true if destination is_adults_only is true" do
+      event = Event.new(is_adults_only: false)
+      event2 = Event.new(is_adults_only: true)
+      event.merge_fields_into(event2)
+      event2.is_adults_only.should be_true
+    end
+
+    it "should leave the is_tentative flag false if destination is_tentative is false" do
+      event = Event.new(is_tentative: true)
+      event2 = Event.new(is_tentative: false)
+      event.merge_fields_into(event2)
+      event2.is_tentative.should be_false
+    end
+    it "should leave the is_tentative flag true if both source and destination are true" do
+      event = Event.new(is_tentative: true)
+      event2 = Event.new(is_tentative: true)
+      event.merge_fields_into(event2)
+      event2.is_tentative.should be_true
+    end
+    it "should set the is_tentative flag false if false and destination is_tentative is true" do
+      event = Event.new(is_tentative: false)
+      event2 = Event.new(is_tentative: true)
+      event.merge_fields_into(event2)
+      event2.is_tentative.should be_false
+    end
+
+    it "should set the is_cancelled flag if true and destination is_cancelled is false" do
+      event = Event.new(is_cancelled: true)
+      event2 = Event.new(is_cancelled: false)
+      event.merge_fields_into(event2)
+      event2.is_cancelled.should be_true
+    end
+    it "should leave the is_cancelled flag as false if both source and destination are false" do
+      event = Event.new(is_cancelled: false)
+      event2 = Event.new(is_cancelled: false)
+      event.merge_fields_into(event2)
+      event2.is_cancelled.should be_false
+    end
+    it "should leave the is_cancelled flag true if destination is_cancelled is true" do
+      event = Event.new(is_cancelled: false)
+      event2 = Event.new(is_cancelled: true)
+      event.merge_fields_into(event2)
+      event2.is_cancelled.should be_true
+    end
+
+    it "should set the is_featured flag if true and destination is_featured is false" do
+      event = Event.new(is_featured: true)
+      event2 = Event.new(is_featured: false)
+      event.merge_fields_into(event2)
+      event2.is_featured.should be_true
+    end
+    it "should leave the is_featured flag as false if both source and destination are false" do
+      event = Event.new(is_featured: false)
+      event2 = Event.new(is_featured: false)
+      event.merge_fields_into(event2)
+      event2.is_featured.should be_false
+    end
+    it "should leave the is_featured flag true if destination is_featured is true" do
+      event = Event.new(is_featured: false)
+      event2 = Event.new(is_featured: true)
+      event.merge_fields_into(event2)
+      event2.is_featured.should be_true
+    end
+
+    it "should set the title if destination title is blank" do
+      event = Event.new(title: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.title.should eq 'test'
+    end
+    it "should return the source title in the result if it doesn’t match the destination" do
+      event = Event.new(title: 'source')
+      event2 = Event.new(title: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:title].should eq 'source'
+    end
+
+    it "should set the description if destination description is blank" do
+      event = Event.new(description: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.description.should eq 'test'
+    end
+    it "should return the source description in the result if it doesn’t match the destination" do
+      event = Event.new(description: 'source')
+      event2 = Event.new(description: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:description].should eq 'source'
+    end
+
+    it "should set the content if destination content is blank" do
+      event = Event.new(content: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.content.should eq 'test'
+    end
+    it "should return the source content in the result if it doesn’t match the destination" do
+      event = Event.new(content: 'source')
+      event2 = Event.new(content: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:content].should eq 'source'
+    end
+
+    it "should set the organizer if destination organizer is blank" do
+      event = Event.new(organizer: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.organizer.should eq 'test'
+    end
+    it "should return the source organizer in the result if it doesn’t match the destination" do
+      event = Event.new(organizer: 'source')
+      event2 = Event.new(organizer: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:organizer].should eq 'source'
+    end
+
+    it "should set the organizer_url if destination organizer_url is blank" do
+      event = Event.new(organizer_url: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.organizer_url.should eq 'test'
+    end
+    it "should return the source organizer_url in the result if it doesn’t match the destination" do
+      event = Event.new(organizer_url: 'source')
+      event2 = Event.new(organizer_url: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:organizer_url].should eq 'source'
+    end
+
+    it "should set the location if destination location is blank" do
+      event = Event.new(location: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.location.should eq 'test'
+    end
+    it "should return the source location in the result if it doesn’t match the destination" do
+      event = Event.new(location: 'source')
+      event2 = Event.new(location: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:location].should eq 'source'
+    end
+
+    it "should set the address if destination address is blank" do
+      event = Event.new(address: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.address.should eq 'test'
+    end
+    it "should return the source address in the result if it doesn’t match the destination" do
+      event = Event.new(address: 'source')
+      event2 = Event.new(address: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:address].should eq 'source'
+    end
+
+    it "should set the city if destination city is blank" do
+      event = Event.new(city: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.city.should eq 'test'
+    end
+    it "should return the source city in the result if it doesn’t match the destination" do
+      event = Event.new(city: 'source')
+      event2 = Event.new(city: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:city].should eq 'source'
+    end
+
+    it "should set the province if destination province is blank" do
+      event = Event.new(province: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.province.should eq 'test'
+    end
+    it "should return the source province in the result if it doesn’t match the destination" do
+      event = Event.new(province: 'source')
+      event2 = Event.new(province: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:province].should eq 'source'
+    end
+
+    it "should set the country if destination country is blank" do
+      event = Event.new(country: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.country.should eq 'test'
+    end
+    it "should return the source country in the result if it doesn’t match the destination" do
+      event = Event.new(country: 'source')
+      event2 = Event.new(country: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:country].should eq 'source'
+    end
+
+    it "should set the location_url if destination location_url is blank" do
+      event = Event.new(location_url: 'test')
+      event2 = Event.new
+      event.merge_fields_into(event2)
+      event2.location_url.should eq 'test'
+    end
+    it "should return the source location_url in the result if it doesn’t match the destination" do
+      event = Event.new(location_url: 'source')
+      event2 = Event.new(location_url: 'destination')
+      result = event.merge_fields_into(event2)
+      result[:location_url].should eq 'source'
+    end
+  end
+
+  describe ".merge_authorities_into" do
+    let(:event1) { $event1 = FactoryGirl.create(:event) }
+
+    it "should reject anything for the destination event that is not an Event" do
+      event1 = FactoryGirl.create(:event)
+      expect { event1.merge_authorities_into(:not_an_event) }.to raise_error(TypeError)
+    end
+
+    it "should move over any non-duplate authorities" do
+      authority = FactoryGirl.create(:authority, item: event1)
+      event1.reload
+      event2 = FactoryGirl.create(:event)
+      event1.merge_authorities_into(event2)
+      event2.authorities.should eq [authority]
+    end
+
+    it "should merge the details of any duplicate authorities" do
+      authority1 = FactoryGirl.create(:authority, item: event1, can_view: true, can_delete: true)
+      event2 = FactoryGirl.create(:event)
+      authority2 = FactoryGirl.create(:authority, item: event2, user: authority1.user, can_update: true)
+      event1.reload
+      event2.reload
+      event1.merge_authorities_into(event2)
+      event1.authorities.count.should eq 0
+      event2.authorities.count.should eq 1
+      merged_authority = event2.authorities.first
+      # check that all the boolean fields are as expected
+      (
+        ( # these fields should be true
+          merged_authority.can_view && merged_authority.can_delete &&
+          merged_authority.can_update
+        ) &&
+        !( # these fields should be false
+          merged_authority.is_owner || merged_authority.can_create ||
+          merged_authority.can_invite || merged_authority.can_permit ||
+          merged_authority.can_approve
+        )
+      ).should be_true
+    end
+  end
+
+  describe ".merge_external_links_into" do
+    let(:event1) { $event1 = FactoryGirl.create(:event) }
+
+    it "should reject anything for the destination event that is not an Event" do
+      event1 = FactoryGirl.create(:event)
+      expect { event1.merge_external_links_into(:not_an_event) }.to raise_error(TypeError)
+    end
+
+    it "should move over any non-duplate external links" do
+      external_link = event1.external_links.create(title: 'Link', url: 'http://merge.tld/')
+      event2 = FactoryGirl.create(:event)
+      event1.merge_external_links_into(event2)
+      event2.external_links.should eq [external_link]
+    end
+
+    it "should merge the details of any duplicate external links" do
+      external_link1 = event1.external_links.create(title: 'Link', url: 'http://merge.tld/')
+      event2 = FactoryGirl.create(:event)
+      external_link2 = event2.external_links.create(title: 'Link', url: 'http://merge.tld/')
+      event1.merge_external_links_into(event2)
+      event2.external_links.should eq [external_link2]
+    end
+  end
+
+  describe ".move_sourced_items_to" do
+    let(:source) { $source = FactoryGirl.create(:source) }
+    let(:event1) do
+      $event1 = FactoryGirl.create(:event)
+      sourced_item = $event1.sourced_items.new
+      sourced_item.source = source
+      sourced_item.save!
+      $event1
+    end
+
+    it "should reject anything for the destination event that is not an Event" do
+      expect { event1.move_sourced_items_to(:not_an_event) }.to raise_error(TypeError)
+    end
+
+    it "should reassign sourced_items to the other event" do
+      sourced_item = event1.sourced_items.first
+      event2 = FactoryGirl.create(:event)
+      event1.move_sourced_items_to(event2)
+      event2.sourced_items.should eq [sourced_item]
+    end
+
+    it "should set the has_local_modifications flag on the sourced items" do
+      sourced_item = event1.sourced_items.first
+      event2 = FactoryGirl.create(:event)
+      event1.move_sourced_items_to(event2)
+      event2.sourced_items.first.has_local_modifications.should be_true
+    end
+  end
+
+  describe ".move_versions_to" do
+    let(:event1) { $event1 = FactoryGirl.create(:event) }
+
+    it "should reject anything for the destination event that is not an Event" do
+      expect { event1.move_versions_to(:not_an_event) }.to raise_error(TypeError)
+    end
+
+    it "should reassign versions to the other event" do
+      versions = []
+      event1.update_attributes(:title => 'updated') # event1.versions.count == 2
+      event1.versions.each {|version| versions << version }
+      event2 = FactoryGirl.create(:event) # event2.versions.count == 1
+      event2.versions.each {|version| versions << version }
+      event1.move_versions_to(event2)
+      event2.versions.should eq versions
+    end
+  end
+
 end
