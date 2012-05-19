@@ -544,6 +544,12 @@ describe Event do
     it "should use DESCRIPTION as the description" do
       Event.icalendar_field_mapping(new_ievent)[:description].should eq 'Spec description.'
     end
+    it "should strip the URL from the end of the description" do
+      url = 'http://test.tld/'
+      Event.icalendar_field_mapping(
+        new_ievent('DESCRIPTION' => {value: "with url\n\t#{url}\n"}, 'URL' => {value: url})
+      )[:description].should eq 'with url'
+    end
     it "should split the description after the first paragraph after 100 chars if too long" do
       event = Event.icalendar_field_mapping(
         new_ievent('DESCRIPTION' => {:value => ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) })

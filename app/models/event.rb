@@ -157,6 +157,9 @@ class Event < ActiveRecord::Base
     if ievent['DESCRIPTION']
       description = ievent['DESCRIPTION'][:value]
       description.force_encoding('UTF-8') if description.encoding.name.match /ASCII/
+      # strip away the url from the description if it’s been appended to the end
+      url = ievent['URL'][:value]
+      description.sub!(/[ \t\r\n]*#{url.gsub('.', "\\.")}[ \t\r\n]*\z/, '') if url.present?
       # Make sure to keep the description within our size limits
       if description.size > 510
         # TODO: split long icalendar event descriptions into description and content fields
@@ -209,7 +212,6 @@ class Event < ActiveRecord::Base
 
   # Create a new Event from an icalendar event.
   def self.create_from_icalendar(ievent, ical_editor = nil, approve_by = nil)
-    ical_editor ||= User.main_admin
     # TODO: split out location details, from icalendar events, into applicable fields
     external_links_attributes = {}
     if ievent['URL']
