@@ -298,4 +298,59 @@ describe EventsController do
     end
   end
 
+  describe "GET merge" do
+    let(:event) { $event = FactoryGirl.create(:event) }
+
+    it "requires the user to have authority" do
+      set_logged_in_user
+      get :merge, :id => event.id
+      response.status.should eq 403
+    end
+
+    it "shows a form for merging with another event" do
+      set_logged_in_admin
+      get :merge, :id => event.id
+      response.should render_template("merge")
+    end
+  end
+
+  describe "POST perform_merge" do
+    let(:time) { $time = 1.hour.from_now }
+    let(:event) do
+      $event = FactoryGirl.create(
+        :event, user: @user_admin, editor: @user_admin, start_at: time, title: 'source'
+      )
+    end
+    let(:merge_with) do
+      $merge_with = FactoryGirl.create(
+        :event, user: @user_admin, editor: @user_admin, start_at: time, title: 'destination'
+      )
+    end
+
+    it "requires the user to have authority" do
+      set_logged_in_user
+      post :perform_merge, :id => event.id, :merge_with => merge_with.id
+      response.status.should eq 403
+    end
+
+    it "deletes the event" do
+      set_logged_in_admin
+      event_id = event.id
+      post :perform_merge, :id => event_id, :merge_with => merge_with.id
+      expect { Event.find(event_id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "assigns merge conflicts to @conflicts" do
+      set_logged_in_admin
+      post :perform_merge, :id => event.id, :merge_with => merge_with.id
+      assigns(:conflicts)[:title].should eq 'source'
+    end
+
+    it "shows the merge results to the event" do
+      set_logged_in_admin
+      post :perform_merge, :id => event.id, :merge_with => merge_with.id
+      response.should render_template("perform_merge")
+    end
+  end
+
 end

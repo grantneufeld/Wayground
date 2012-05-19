@@ -46,6 +46,8 @@ Wayground::Application.routes.draw do
       post 'approve' => 'events#set_approved'
       get 'delete'
       delete 'delete' => 'events#destroy'
+      get 'merge'
+      post 'merge' => 'events#perform_merge'
     end
     resources :external_links do
       member do

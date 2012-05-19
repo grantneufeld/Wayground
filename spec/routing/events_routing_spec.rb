@@ -24,13 +24,6 @@ describe EventsController do
       put("/events/1").should route_to("events#update", :id => "1")
     end
 
-    it "routes to #approve" do
-      get("/events/1/approve").should route_to("events#approve", :id => "1")
-    end
-    it "routes to #set_approved" do
-      post("/events/1/approve").should route_to("events#set_approved", :id => "1")
-    end
-
     it "routes to #delete" do
       get("/events/1/delete").should route_to("events#delete", :id => "1")
     end
@@ -39,6 +32,20 @@ describe EventsController do
     end
     it "routes to #destroy" do
       delete("/events/1").should route_to("events#destroy", :id => "1")
+    end
+
+    it "routes to #approve" do
+      get("/events/1/approve").should route_to("events#approve", :id => "1")
+    end
+    it "routes to #set_approved" do
+      post("/events/1/approve").should route_to("events#set_approved", :id => "1")
+    end
+
+    it "routes to #merge" do
+      get("/events/1/merge").should route_to("events#merge", :id => "1")
+    end
+    it "routes to #perform_merge" do
+      post("/events/1/merge").should route_to("events#perform_merge", :id => "1")
     end
 
   end

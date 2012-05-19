@@ -1,0 +1,13 @@
+<% # encoding: utf-8
+
+%><h1>Merge Event: “<%= link_to @event.title, @event %>”?</h1>
+
+<%= form_tag(merge_event_path(@event), :method => :post) do %>
+<table><tbody>
+<tr><th><%= label_tag 'merge_with', 'Merge Into Event ID:' %></th>
+<td><input type="number" name="merge_with" id="merge_with" autocomplete="off" autofocus="autofocus" min="1" step="1" /></td></tr>
+</tbody></table>
+<p>The two events will be merged as much as possible (any conflicts will be noted),
+and the current event (#<%= @event.id %>) will be removed in place of the event whose ID you specify above.</p>
+<p><%= submit_tag "Merge Events" %></p>
+<% end %>

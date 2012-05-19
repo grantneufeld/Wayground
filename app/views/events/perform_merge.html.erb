@@ -1,0 +1,22 @@
+<% # encoding: utf-8
+
+%><h1>Merged Event: <%= link_to @merge_with.title, @merge_with %></h1>
+<%
+if @conflicts.size > 0
+  %><h2>Conflicts</h2>
+<p>The following fields had non-matching values:</p>
+<table>
+<thead><tr><th>Field</th> <th>Old Value</th> <th>New Value</th></tr></thead>
+<tbody>
+<%
+  @conflicts.each do |key, value|
+    %><tr><th><%= key %></th> <td><%= value %></td> <td><%= @merge_with[key] %></td></tr>
+<%
+  end
+%></tbody>
+</table>
+<%
+else
+  %><p>The merge completed successfully with no conflicts.</p>
+<%
+end -%>

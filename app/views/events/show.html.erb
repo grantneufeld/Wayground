@@ -119,7 +119,11 @@ if @user.present?
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_delete)
-      %><%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><span class="separator">,</span>
+    if @event.has_authority_for_user_to?(@user, :can_update)
+      %><%= link_to 'Merge', merge_event_path(@event), :class => 'action', :title => 'Merge with another Event (you must know the event id)' %><span class="separator">,</span>
+<%
+    end
+    %><%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><span class="separator">,</span>
 <%
   end
   %><%= link_to 'New External Link', new_event_external_link_path(@event), :class => 'action' %><span class="separator">,</span>
