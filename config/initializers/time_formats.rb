@@ -25,6 +25,7 @@ Time::DATE_FORMATS[:icalendar_utc] = "%Y%m%dT%H%M%SZ"
 Time::DATE_FORMATS[:microformat] = "%Y-%m-%dT%H:%M:%S#{tzoff_negative ? '-' : '+'}#{sprintf("%02i:%02i", tzoff_hours, tzoff_minutes)}"
 Time::DATE_FORMATS[:microformat_date] = "%Y-%m-%d"
 Time::DATE_FORMATS[:microformat_time] = "%H:%M:%S#{tzoff_negative ? '-' : '+'}#{sprintf("%02i:%02i", tzoff_hours, tzoff_minutes)}"
+Time::DATE_FORMATS[:compact_date] = "%b %d, %Y"
 Time::DATE_FORMATS[:compact_datetime] = "%b %d, %Y, %l:%M:%S%p"
 
 class ActiveSupport::TimeWithZone < Object

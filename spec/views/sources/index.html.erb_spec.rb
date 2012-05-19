@@ -26,9 +26,6 @@ describe "sources/index.html.erb" do
 
   it "renders a list of sources" do
     render
-    assert_select "tr>td", :text => "The Title", :count => 2
-    assert_select "tr>td", :text => "The Processor", :count => 2
-    assert_select "tr>td", :text => "The URL", :count => 2
-    assert_select "tr>td", :text => "The Description", :count => 2
+    assert_select "tr>td", :text => "The Processor: The TitleThe URL", :count => 2
   end
 end

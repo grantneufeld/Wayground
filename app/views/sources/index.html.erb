@@ -2,11 +2,15 @@
 
 %><h2>Sources</h2>
 <table>
-<thead><tr><th>Title</th> <th>Description</th> <th>Processor</th> <th>URL</th> <th>Actions</th></tr></thead>
+<thead><tr><th>Source</th> <th>Last Updated</th> <th>Actions</th></tr></thead>
 <tbody>
 <%
 @sources.each do |source|
-  %><tr><td><%= source.title %></td> <td><%= source.description %></td> <td><%= source.processor %></td> <td><%= source.url %></td>
+  %><tr><td><%= source.processor %>: <b><%= source.title %></b><br /><%= source.url %></td> <td><%
+  if source.last_updated_at?
+    %><span title="<%= source.last_updated_at.to_s(:plain_datetime) %>"><%= source.last_updated_at.to_s(:compact_date) %></span><%
+  end
+  %></td>
 <td><%= link_to 'Details', source, :class => 'action' %><span class="separator">,</span><%
   if source.has_authority_for_user_to?(@user, :can_update) %>
 <%= link_to 'Process', processor_source_path(source), :class => 'action' %><span class="separator">,</span>
