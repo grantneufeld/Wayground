@@ -20,6 +20,7 @@ Time::DATE_FORMATS[:plain_date] = "%A, %B %e, %Y"
 Time::DATE_FORMATS[:plain_time] = "%l:%M %p" # 3:45 pm
 Time::DATE_FORMATS[:plain_datetime] = "%A, %B %e, %Y at %l:%M %p"
 Time::DATE_FORMATS[:http_header] = "%a, %d %b %Y %H:%M:%S %Z"
+Time::DATE_FORMATS[:icalendar_date] = "%Y%m%d"
 Time::DATE_FORMATS[:icalendar] = "%Y%m%dT%H%M%S"
 Time::DATE_FORMATS[:icalendar_utc] = "%Y%m%dT%H%M%SZ"
 Time::DATE_FORMATS[:microformat] = "%Y-%m-%dT%H:%M:%S#{tzoff_negative ? '-' : '+'}#{sprintf("%02i:%02i", tzoff_hours, tzoff_minutes)}"

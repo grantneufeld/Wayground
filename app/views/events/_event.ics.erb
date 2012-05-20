@@ -3,9 +3,12 @@
 %>UID:<%= event.id %>-event@wayground.ca<%= "\r\n"
 %>CREATED:<%= event.created_at.utc.to_s(:icalendar_utc) %><%= "\r\n"
 %>DTSTAMP:<%= event.updated_at.utc.to_s(:icalendar_utc) %><%= "\r\n"
-%>DTSTART<%= event.start_at.icalendar_with_zone %><%= "\r\n"
+# special case the start and end date when it’s an all-day event (no time, just dates)
+%>DTSTART<%= event.is_allday? ? ":#{event.start_at.to_s(:icalendar_date)}" : event.start_at.icalendar_with_zone %><%= "\r\n"
 %><% if event.end_at?
-  %>DTEND<%= event.end_at.icalendar_with_zone %><%= "\r\n"
+  # If it’s an all day event, we put the end date as the day after it’s over,
+  # because that's just how iCalendar rolls...
+  %>DTEND<%= event.is_allday? ? ":#{event.end_at.advance(days: 1).to_s(:icalendar_date)}" : event.end_at.icalendar_with_zone %><%= "\r\n"
 %><% end
 %>SUMMARY:<%= event.title.icalendar_encoding.fold!(75,8).html_safe %><%= "\r\n"
 %><% if event.description?
