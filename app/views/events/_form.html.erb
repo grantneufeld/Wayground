@@ -21,7 +21,7 @@ require 'wayground_form_builder'
 <tr><th><%= f.label :organizer %></th>
   <td><%= f.text_field :organizer, :size => 60, :maxlength => 255 %></td></tr>
 <tr><th><%= f.label :organizer_url, 'Organizer Weblink' %></th>
-  <td><%= f.url_field :organizer_url, :size => 60, :maxlength => 255 %></td></tr>
+  <td><%= f.url_field :organizer_url, :size => 60, :maxlength => 255, :placeholder => 'http://' %></td></tr>
 <tr class="heading"><th colspan="2">Location</th></tr>
 <tr><th><%= f.label :location, 'Location Name' %></th>
   <td><%= f.text_field :location, :size => 60, :maxlength => 255 %></td></tr>
@@ -34,7 +34,7 @@ require 'wayground_form_builder'
 <tr><th><%= f.label :country %></th>
   <td><%= f.text_field :country, :size => 3, :maxlength => 2 %></td></tr>
 <tr><th><%= f.label :location_url, 'Location Weblink' %></th>
-  <td><%= f.url_field :location_url, :size => 60, :maxlength => 255 %></td></tr>
+  <td><%= f.url_field :location_url, :size => 60, :maxlength => 255, :placeholder => 'http://' %></td></tr>
 <tr><th></th><td><%= f.check_box :is_wheelchair_accessible %><%= f.label :is_wheelchair_accessible, 'Wheelchair accessible' %></td></tr>
 <tr class="heading"><th colspan="2">Details</th></tr>
 <tr><th></th><td><%= f.check_box :is_adults_only %><%= f.label :is_adults_only, 'Adults only' %> (only for ages 18+)</td></tr>

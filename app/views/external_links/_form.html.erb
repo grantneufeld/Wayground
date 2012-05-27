@@ -2,7 +2,7 @@
 <%= show_errors(external_link) %>
 <table><tbody>
 <tr><th><%= f.label :url, 'Weblink' %></th>
-  <td><%= f.url_field :url %></td></tr>
+  <td><%= f.url_field :url, placeholder: 'http://' %></td></tr>
 <tr><th><%= f.label :title %></th>
   <td><%= f.text_field :title %></td></tr>
 </tbody>
