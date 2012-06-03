@@ -6,7 +6,7 @@ if @event.is_cancelled?
   %>CANCELLED:
 <%
 end
-%><%= @event.title %>
+%><%= @event.title.html_safe %>
 
 <%
 time_format = @event.is_allday? ? :plain_date : :plain_datetime
@@ -32,22 +32,22 @@ if true
   %>Location:
 <%
   if loc_location.present?
-    %><%= loc_location %><%
+    %><%= loc_location.html_safe %><%
     if loc_address.present?
-      %> (<%= loc_address %>)<%
+      %> (<%= loc_address.html_safe %>)<%
     end %>
 <%
   elsif loc_address.present?
-    %><%= loc_address %>
+    %><%= loc_address.html_safe %>
 <%
   end
   if loc_city.present?
-    %><%= [loc_city, @event.province, @event.country].join(', ') %>
+    %><%= [loc_city, @event.province, @event.country].join(', ').html_safe %>
 <%
   end
   loc_url = @event.location_url
   if loc_url.present?
-    %><%= loc_url %>
+    %><%= loc_url.html_safe %>
 <%
   end
   %>
@@ -57,10 +57,10 @@ end
 
 
 if @event.organizer?
-  %>Presented by <%= @event.organizer %>.
+  %>Presented by <%= @event.organizer.html_safe %>.
 <%
   if @event.organizer_url?
-    %><%= @event.organizer_url %>
+    %><%= @event.organizer_url.html_safe %>
 <%
   end
   %>
@@ -75,25 +75,25 @@ end
 
 
 if @event.description?
-  %><%= @event.description %>
+  %><%= @event.description.html_safe %>
 
 <%
 end
 if @event.content?
-  %><%= @event.content %>
+  %><%= @event.content.html_safe %>
 
 <%
 end
 
 %>
 
-<%= event_url(@event) %>
+<%= event_url(@event).html_safe %>
 <%
 
 if @event.external_links.count > 0
   @event.external_links.each do |external_link|
-    %><%= external_link.title %>:
-<%= external_link.url %>
+    %><%= external_link.title.html_safe %>:
+<%= external_link.url.html_safe %>
     <%
   end
 end
