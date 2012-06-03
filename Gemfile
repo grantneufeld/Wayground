@@ -54,14 +54,14 @@ group :test do
   gem 'cucumber', '>= 1.2.0'
   gem 'cucumber-rails', '~> 1.3.0'
   gem 'database_cleaner', '~> 0.7.2'
-  gem 'factory_girl', '~> 3.2.0'
-  gem 'factory_girl_rails', '~> 3.2.0'
+  gem 'factory_girl', '~> 3.3.0'
+  gem 'factory_girl_rails', '~> 3.3.0'
   gem 'launchy', '>= 2.1.0' # for opening saved html files in browser for review
-  gem 'pickle' #, '0.4.7', :require => false # additions for Cucumber
-  gem 'rspec', '~> 2.10.0' #, '2.5.0' # core testing framework
-  gem 'rspec-rails', '~> 2.10.1' #, '2.5.0'
+  gem 'pickle' #, :require => false # additions for Cucumber
+  gem 'rspec', '~> 2.10.0' # core testing framework
+  gem 'rspec-rails', '~> 2.10.1'
   gem 'simplecov', '>= 0.6.4', :require => false
   gem 'simplecov-html', '>= 0.4.3', :require => false
   gem 'timecop', '>= 0.3.5'
-  gem 'ZenTest', '>= 4.8.0', :require => false
+  gem 'ZenTest', '>= 4.8.1', :require => false
 end
