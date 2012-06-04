@@ -1,0 +1,145 @@
+body{background:#CCC url('/images/stripe.png'); color:black; -webkit-text-size-adjust:none;}
+
+body > header{background:#666; background:-webkit-gradient(linear, center top, center bottom, from(rgba(0,0,0,0.8)), color-stop(0.2, rgba(0,0,0,0.66)), to(rgba(0,0,0,0.66))); background:-moz-linear-gradient(top, rgba(0,0,0,0.8), rgba(0,0,0,0.66) 20%, rgba(0,0,0,0.66));
+background:linear-gradient(top, rgba(0,0,0,0.8), rgba(0,0,0,0.66) 20%, rgba(0,0,0,0.66)); color:white; position:fixed; top:0; left:0; height:2em;}
+body > header > h1{overflow:hidden;}
+body > header > h1 a{color:white; background:transparent; text-decoration:none;}
+body > header > h1 a:hover{background:transparent; color:#CCF; text-shadow:1px 1px 0em #00F;}
+body > header > h1 a:active{color:#FCC; text-shadow:-1px -1px 0em #900;}
+body > header + *{margin-top:2em !important;}
+body > header > #subtitle{margin:0.3em auto 0em 3em; padding:0.2em 0.4em; background:#FFC; color:black; display:none; font-weight:bold; max-width:28em;}
+body > header > h1:hover + #subtitle{display:block;}
+
+#usermenu{
+  position:fixed; top:0; right:0;
+
+  p{
+    margin:0em; padding:0.5em; white-space:nowrap;
+    font-size:0.9em; text-align:right;
+    &:before{content:'<'; padding-right:0.5em; color:#CCC;}
+  }
+  &:hover p{background:rgba(0,0,0,0.5);}
+
+  ul{
+    display:none; list-style-type:none; margin:0em; padding:0.5em;
+    background:#999; background:rgba(0,0,0,0.33);
+
+    li{
+      @include buttonListitem;
+      a:before{content:'<'; padding-right:0.5em; color:#999;}
+    }
+  }
+  &:hover ul, &.hover ul{display:block;}
+}
+
+nav{margin:0em; padding:0em;}
+nav > ul{list-style-type:none; margin:0em; padding:0.5em;}
+nav > ul > li{margin:0em; padding:0em;}
+nav > ul > li > a{background:$button_background_color; border:$button_border; border-top:0em none; display:block; margin:0em; padding:0.5em 0.75em 0.5em 1.5em; font-weight:bold; text-decoration:none; color:$button_text_color;}
+nav > ul > li:first-child > a{border-top:$button_border; border-top-left-radius:$button_radius; border-top-right-radius:$button_radius;}
+nav > ul > li:last-child > a{border-bottom-left-radius:$button_radius; border-bottom-right-radius:$button_radius;}
+nav > ul > li > a:after{content:'>'; float:right; color:#999;}
+nav > ul > li.current > a{border-left:0.25em solid #999; padding-left:0.25em;}
+nav > ul > li.current > a:before{content:"*"; float:left; color:#999; width:1em; text-align:center;} // '✓'
+nav > ul > li > a:hover{background:#DDD; color:#00C; text-shadow:1px 1px 0em white;}
+nav > ul > li > a:active{background:#00F; color:white; text-shadow:-1px -1px 0em black;}
+
+// flash
+#flash > p{background:#333; background:-webkit-gradient(linear, center top, center bottom, from(rgba(64,64,64,0.6)), color-stop(0.5, rgba(0,0,0,0.7)), to(rgba(0,0,0,0.9))); color:white; text-shadow:1px 1px 1px black;}
+#flash > p.alert{background:#600; background:-webkit-gradient(linear, center top, center bottom, from(rgba(255,0,0,0.6)), color-stop(0.5, rgba(0,0,0,0.7)), to(rgba(0,0,0,0.9)));}
+
+// breadcrumb
+#breadcrumb{background:white; border-bottom:thin solid #DDD;
+background:-webkit-gradient(linear, center top, center bottom, from(white), to(#EEE));
+background:-moz-linear-gradient(top, white, #EEE);
+background:linear-gradient(top, white, #EEE);
+}
+
+// sections
+section{
+  background:white; color:black;
+  box-shadow:0px 4px 4px rgba(0,0,0,0.25);
+
+  a:link{color:#009;}
+  a:visited{color:#606;}
+  a:link:hover, a:visited:hover{background:#FFC; background:rgba(255,255,0,0.2); color:#00F; text-decoration:none;}
+  a:link:active, a:visited:active{color:red;}
+}
+
+// actions
+.actions{background:#DDD;
+background:x-webkit-gradient(linear, center top, center bottom, from(#b4c0ce), color-stop(0.5, #8b9db5), color-stop(0.5, #8095b0), to(#6e83a2));
+color:black; @include mBorderRadius(0.3em); box-shadow:inset 0px 2px 6px rgba(0,0,0,0.2); padding:0.2em 0.5em; margin:0.5em 0em;}
+.action, .action:link, .action:visited{background:#999;
+background:-webkit-gradient(linear, center top, center bottom, from(#8ca1be), color-stop(0.5, #5877a5), color-stop(0.5, #476999), to(#4a6c9a));
+color:white; box-shadow:inset 0px 0px 2px rgba(0,0,0,0.75); text-decoration:none; @include mBorderRadius(0.15em); display:inline; margin:0em 0.25em; padding:0.15em 0.6em; font-weight:bold; text-shadow:0em -1px 0.1em black; line-height:1.6em; white-space:nowrap; vertical-align:middle;}
+.action:hover, .action:link:hover, .action:visited:hover{background:blue; color:white;
+background:-webkit-gradient(linear, center top, center bottom, from(#bdd2ef), color-stop(0.5, #89a8d6), color-stop(0.5, #789aca), to(#7b9dcb));
+}
+.action:active, .action:link:active, .action:visited:active{background:red; color:white;
+background:-webkit-gradient(linear, center top, center bottom, from(#7b9dcb), color-stop(0.5, #274674), color-stop(0.5, #163868), to(#193b69));
+}
+
+// tables
+table{background:#EEE; background:rgba(0,0,0,0.1);}
+// tbody > tr:nth-child(odd){background:#EEE; color:black;}
+// tbody > tr:nth-child(even){background:#DDD; color:black;}
+tfoot, tfoot > tr{background:#CCC; color:black;}
+td, th{
+  background:-webkit-gradient(linear, left center, right center, from(rgba(255,255,255,0.2)), color-stop(0.1, rgba(255,255,255,0)), color-stop(0.9, rgba(0,0,0,0)), to(rgba(0,0,0,0.01)));
+  background:-moz-linear-gradient(left, rgba(255,255,255,0.2), rgba(255,255,255,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.01));
+  background:linear-gradient(left, rgba(255,255,255,0.2), rgba(255,255,255,0) 10%, rgba(0,0,0,0) 90%, rgba(0,0,0,0.01));
+}
+
+// editor
+.wysiwygeditor{clear:both; background:white; color:black; margin:0em; padding:1.25em;}
+
+
+// changes as display area widens
+
+// iphone horizontal (up to 480px)
+//@media screen and (min-width:320px) {
+//}
+
+// up to 640px screen 
+@media screen and (min-width:481px) {
+body{-webkit-text-size-adjust:auto;}
+section > .actions{margin-left:-0.5em; margin-right:-0.5em;}
+}
+
+// up to 1024px screen
+@media (min-width:641px) {
+#usermenu{display:block; width:auto; height:2em; vertical-align:middle; padding:0.25em;}
+#usermenu p{display:inline; width:auto; vertical-align:bottom;}
+#usermenu p:before{content:'Signed in as'; vertical-align:bottom;}
+#usermenu.signed-out p:before{content:'';}
+#usermenu:hover p{background:transparent;}
+#usermenu ul{display:inline; list-style-type:none; margin:0em; padding:0em; background:transparent; vertical-align:middle;}
+#usermenu:hover ul{display:inline;}
+#usermenu ul li{display:inline; width:auto; vertical-align:middle;}
+#usermenu ul li > a{display:inline; height:2em; border:0em none; border-left:thin solid black; background:rgba(255,255,255,0.2); color:inherit; width:auto; padding:0.4em 0.5em; margin:0.25em 0em; vertical-align:middle; white-space:nowrap; font-size:0.9em;}
+#usermenu ul li:first-child > a{border-top:0em none; @include mBorderRadius(0em);}
+#usermenu ul li:last-child > a{@include mBorderRadius(0em);}
+#usermenu ul li > a:before{content:''; padding-right:0em;}
+#usermenu ul li > a:hover{background:#DDD; color:#00C; text-shadow:0px 0px 0em white;}
+#usermenu ul li > a:active{background:#00F; color:white; text-shadow:-1px -1px 0em black;}
+
+nav{overflow:hidden;}
+nav > ul{padding:0.35em 1em; background:-webkit-gradient(linear, center top, center bottom, from(rgba(0,0,0,0.3)), color-stop(0.8, rgba(0,0,0,0.4)), to(rgba(0,0,0,0.5)));}
+nav > ul > li{display:inline; white-space:nowrap;}
+nav > ul > li > a{display:inline; background:#EEE; background:rgba(255,255,255,0.6); border:0em none; margin:0em; padding:0.15em 0.5em; @include mBorderRadius(0.5em);}
+nav > ul > li:first-child > a{border-top:0em none;}
+nav > ul > li:last-child > a{}
+nav > ul > li > a:after{content:'';}
+nav > ul > li.current > a{background:white; @include mBorderRadius(0em); border:thin solid #666; border-bottom:0em none; padding-left:0.5em; padding-bottom:0.5em;}
+nav > ul > li.current > a:before{content:'';}
+nav > ul > li > a:hover{background:white; color:#00F; border-color:#00F; text-shadow:1px 1px 0em white;}
+nav > ul > li > a:active{background:#00F; color:white; text-shadow:-1px -1px 0em black;}
+}
+
+// wide display
+@media (min-width:1025px) {
+  body > header{height:3em;}
+  body > header > h1{font-size:2em;}
+  body > header + *{margin-top:3em !important;}
+}

@@ -139,7 +139,7 @@ describe "layouts/application.html.erb" do
   it "content_for(:footer) should go at the top of the footer" do
     view.content_for(:footer) { 'Test Footer' }
     render
-    rendered.should match(/<footer [^>]*id="footer"[^>]*>[ \t\r\n]*Test Footer/)
+    rendered.should match(/<footer( [^>]*)?>[ \t\r\n]*Test Footer/)
   end
 
 
@@ -155,16 +155,16 @@ describe "layouts/application.html.erb" do
         render
       end
       it "should flag the usermenu as signed-in" do
-        rendered.should match(/<ul id="usermenu" class="signed-in">/)
+        rendered.should match('<div id="usermenu" class="signed-in"')
       end
       it "should show the name of the signed-in user" do
-        rendered.should match(/<li[^>]*>Signed in as Test Tester/)
+        rendered.should match('<p id="username">Test Tester')
       end
       it "should link to the user’s account" do
-        rendered.should match(/<a href="\/account">Your Account<\/a>/)
+        rendered.should match('<a href="/account">Your Account</a>')
       end
       it "should have a Sign Out link" do
-        rendered.should match(/<a href="\/signout">Sign Out<\/a>/)
+        rendered.should match('<a href="/signout">Sign Out</a>')
       end
     end
 
@@ -180,7 +180,7 @@ describe "layouts/application.html.erb" do
   describe "signed-out user" do
     before { render }
     it "should flag the usermenu as signed-out" do
-      rendered.should match(/<ul id="usermenu" class="signed-out">/)
+      rendered.should match('<div id="usermenu" class="signed-out"')
     end
     it "should have a registration link" do
       rendered.should match(/<a href="\/signup">Register[^<]*<\/a>/)

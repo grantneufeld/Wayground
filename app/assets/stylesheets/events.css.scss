@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+// icons
+a.ics:before{content:url('../icon/file/ics.png'); max-height:1em; padding-right:0.3em;}
+a.ics{text-decoration:none;}
+
+// calendars
+.calendar{}
+.calendar > h3{border-top:1px dashed black; padding-top:0.5em;}
+section .vevent{margin:0.25em 0em 0em 1em; max-width:40em;}
+.vevent + .vevent{border-top:1px dotted gray; margin-top:0.5em; padding-top:0.25em;}
+.vevent h4 + *{margin-top:0em;}

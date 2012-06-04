@@ -1,0 +1,132 @@
+// font
+*{font-family:Helvetica,sans-serif;}
+body{font-size:12pt;}
+h1,h2,h3,h4,h5,h6,h1 *,h2 *,h3 *,h4 *,h5 *,h6 *{font-family:Ubuntu,Helvetica,sans-serif; font-weight:bold;}
+
+// spacing
+*{margin:0em; padding:0em;}
+* + *{margin-top:0.75em;}
+p,li,td,th{line-height:1.4em;}
+h1, h2{font-size:1.5em;}
+h3{font-size:1.15em;}
+h4{font-size:1.05em;}
+h5, h6{font-size:1em;}
+blockquote, li, p, td, th{font-size:0.9em;}
+p + p, * + ul{margin-top:0.5em;}
+ul{padding-left:1.5em;}
+li + li{margin-top:0.2em;}
+blockquote{padding:0em 2em;}
+textarea{width:98%;}
+
+// header
+body > header{margin:0em; padding:0em; width:100%; vertical-align:bottom;}
+body > header > *{vertical-align:bottom; margin-top:0em;}
+body > header > h1{font-size:1.25em; margin:0em; padding:0em 0em 0em 0.5em; max-height:100%;}
+body > header > h1 img{max-height:1.25em; vertical-align:bottom; border:0px none;}
+
+// flash
+#flash{margin:0em; padding:0.5em;}
+#flash > p{font-size:1em; margin:0em; padding:0.75em; @include mBorderRadius(0.25em); max-width:38em;}
+#flash > p + p{margin-top:0.5em;}
+
+#breadcrumb{list-style-type:none; margin:0em; padding:0em 1.25em;}
+#breadcrumb > li{display:inline; font-size:0.85em; font-weight:bold; white-space:nowrap;}
+#breadcrumb > li + li:before{content:'... ';}
+#breadcrumb:after{content:':';}
+#breadcrumb > li a{text-decoration:none;}
+
+section{margin:0em; padding:1em 0.5em; max-width:43em;}
+section + section{border-top:thin solid #CCC; border-color:rgba(0,0,0,0.15); margin-top:0em; padding-top:0.5em;}
+section > header + *{margin-top:0.5em;}
+section > .actions:last-child{margin-bottom:-0.5em;}
+
+footer{padding:1em 2em; clear:both;}
+footer > p{margin:0em; font-size:0.7em;}
+footer > p + p{margin-top:0.5em;}
+footer .actions{background:transparent; box-shadow:none;}
+
+// columns
+// TODO: This needs to be redone to use em measurements instead of px
+// TODO: This needs to be redone to mobile-first format (instead of widescreen-first)
+.simplecols2{-moz-column-count:2; -webkit-column-count:2; column-count:2;}
+.closeblock{clear:both; height:1px;}
+.columns, #content > .columns{margin:0em auto 0em 0em; border-collapse:collapse; border-spacing:0em;}
+.cols2, #content > .cols2, .featureblock > .cols2{max-width:1024px;}
+.cols3, #content > .cols3, .featureblock > .cols3{max-width:1536px;}
+.cols4, #content > .cols4, .featureblock > .cols4{max-width:2048px;}
+h1 + .columns{clear:right;}
+.columns > .column{float:left; min-width:8em;/*128px*/ max-width:30em;/*512px - 2em for padding*/}
+.cols2 > .column{max-width:47.5%;}
+.cols3 > .column{max-width:30.3%;}
+.cols4 > .column{max-width:22.5%;}
+.column{margin-top:0.625em; padding-right:1em; border-right:thin dotted gray; border-collapse:collapse; border-spacing:0em;}
+.column + .column{padding-left:0.9375em;}
+.lastcol{padding-right:0em; border-right:0em none;}
+@media all and (max-width:62.9375em/*1007px*/) {
+// reduce column width to not bump onto next line
+.cols4 > .column{max-width:22%;}
+}
+@media all and (max-width:56.25em/*900px*/) {
+// switch to 2-column when not enough room for 4
+.cols4 > .column{max-width:47.5%;}
+.cols4 > .col2{padding-right:0em; border-right:0em none;}
+.cols4 > .col3{clear:left; padding-left:0em;}
+}
+@media all and (max-width:50.5em/*808px*/) {
+// switch to 2-column when not enough room for 3
+.cols3 > .column{max-width:47.5%;}
+.cols3 > .col2{padding-right:0em; border-right:0em none;}
+.cols3 > .col3{clear:left; padding-left:0em; padding-right:1em; border-right:thin dotted gray;}
+}
+@media all and (max-width:43.125em/*690px*/) {
+// reduce column width to not bump onto next line
+.column, .cols2 > .column, .cols3 > .column, .cols4 > .column{max-width:45%;}
+}
+@media all and (max-width:32em/*512px*/) {
+// switch to single column when not enough room for 2
+.column, .cols2 > .column, .column, .cols3 > .column, .column, .cols4 > .column{float:none; padding:0em; border-right:0em none; max-width:none;}
+}
+
+// tables
+table, tr, th, td{border-spacing:0em;}
+table.full{width:100%;}
+thead, thead > tr, tr.heading > th{background:#999; color:white; text-shadow:0em 0em 0.2em black;}
+th, td{padding:0.2em 0.4em; vertical-align:top;}
+th{text-align:left;}
+thead > tr > th{text-align:center;}
+tr.heading > th{font-size:110%; text-align:left !important;}
+tbody > tr > th:first-child{text-align:right;}
+//tbody > tr:nth-child(odd){background:#EEE; color:black;}
+tbody > tr:nth-child(even){background:#DDD; background:rgba(0,0,0,0.1); color:black;}
+// no row/cell backgrounds for tables contained within tables
+table table, table table tr, table table th, table table td, table table tbody > tr:nth-child(odd), table table tbody > tr:nth-child(even){background:transparent;}
+td > table, th > table{width:100%;}
+
+// forms
+.error_messages{background:#FCC; background:rgba(255,128,128,0.5); color:black; margin:1em auto; padding:0.5em 1em;}
+.field_with_errors{display:inline;}
+.field_with_errors > input{outline:2px solid #900;}
+.field_with_errors > label{color:#900;}
+.charcounter{}
+.charcounter_warn{font-weight:bold; background:yellow;}
+.charcounter_over{font-weight:bold; background:yellow; color:red;}
+
+// general elements
+.button, .nowrap{white-space:nowrap;}
+.hidden{display:none;}
+.preview{background:white; color:black; border:thin solid #999; max-height:18em; overflow:auto; padding:1.2em;}
+.separator{display:none;}
+
+
+// changes as display area widens
+
+// up to 640px screen 
+@media (min-width:481px) {
+section{padding-left:1em; padding-right:1em;}
+}
+
+// up to 1024px screen
+@media (min-width:641px) {
+section{float:left; margin-right:0.5em; border-bottom-right-radius:0.25em;}
+section + section{margin-top:0.5em;}
+}

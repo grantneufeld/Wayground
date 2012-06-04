@@ -1,0 +1,27 @@
+body{background:white; color:black; margin:0em; padding:0em;}
+a, a:link, a:visited{background:transparent; color:black;}
+section{
+  blockquote, li, p, td, th{
+    font-family:Palatino,serif;
+    *{font-family:Palatino,serif;}
+  }
+}
+
+// hide interface elements that shouldn't be printed
+#usermenu, nav, .subnavmenu, .actions, .action, #about{display:none;}
+
+// links
+a:link, a:visited{text-decoration:none; border-bottom:thin dotted rgba(0,0,255,0.3);}
+header a:link, header a:visited, #breadcrumb > li a, footer a:link, footer a:visited{border-bottom:0em none;}
+
+// header
+body > header{border-bottom:thin solid #999; padding-bottom:0.5em;}
+body > header > h1 img{max-height:2em; float:left; padding:0em 0.2em 0em 0em;}
+body > header + *{clear:both;}
+
+// flash
+#flash p{background:#FFD; color:black; @include mBorderRadius(1em);}
+#flash p.alert{background:#FEE;}
+
+// footer
+footer{border-top:thin dotted #999; max-width:32em; margin:0em 1em; padding:0.2em 1em 0em;}

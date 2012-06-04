@@ -9,7 +9,6 @@
 # @page_description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @site_section: lower-case string label for the active section of the website.
 # @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
-# @page_has_chunks: set true if the page content is in chunks (usually class="contentchunk" elements).
 # @page_main_class: a name to include in the class attribute of the id="main" wrapper around the page-specific content.
 
 # Blocks - all are optional. Called with ‘content_for :block_name do … end’.
@@ -31,11 +30,11 @@ end
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
 <!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
-<% #= stylesheet_link_tag 'application', :media => 'all'
+<%= stylesheet_link_tag 'application', :media => 'all' %>
+<% #= stylesheet_link_tag 'screen', :media => 'screen'
 -%>
-<%= stylesheet_link_tag 'wayground-all', :media => 'all' %>
-<%= stylesheet_link_tag 'wayground-print', :media => 'print' %>
-<%= stylesheet_link_tag 'wayground-screen', :media => 'screen' %>
+<% #= stylesheet_link_tag 'print', :media => 'print'
+-%>
 <% if @page_uses_javascript
   %><%= javascript_include_tag 'application' %>
 <% end
@@ -55,54 +54,37 @@ unless @page_description.blank?
   %><meta name="description" content="<%=h @page_description %>" />
 <% end
 %><%= yield :head -%>
-</head><body>
+</head><body onTouchEnd="return true;">
 
-<header id="header" role="banner">
-<div id="headertitle">
+<header role="banner">
 <%
 # If you don’t want a subtitle, remove that paragraph and take away the "maintitle" id from the heading.
 -%>
-<h1 id="maintitle"><a href="/"><img src="/apple-touch-icon-114x114.png" alt=" " id="logo" /><%= Wayground::Application::NAME %></a></h1>
-<p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
-</div>
-<ul id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>">
+<h1><a href="/"><img src="/apple-touch-icon-114x114.png" alt=" " id="logo" /> <%= Wayground::Application::NAME %></a></h1>
+<% unless Wayground::Application::DESCRIPTION.blank?
+  %><p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
+<% end -%>
+<div id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>" onTouchEnd="return false;">
 <% if current_user.nil?
-    %><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li><%
+    %><p>Signed Out</p>
+<ul><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li></ul><%
   else
-    %><li class="text">Signed in as <%= current_user.name %> <%
+    %><p id="username"><%= current_user.name %><%
     case session[:source]
     when 'twitter'
       %><%= image_tag('/icon/site/twitter.png', :alt => '(via Twitter)', :title => 'via Twitter', :size => '16x16') %><%
     when 'facebook'
-      %>(via Facebook)<%
+      %><%= image_tag('/icon/site/facebook.png', :alt => '(via Facebook)', :title => 'via Facebook', :size => '16x16') %><%
     end
-    %></li><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li><%
+    %></p>
+<ul><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li></ul><%
   end %>
-</ul>
-<form action="" method="get" accept-charset="utf-8" id="globalsearch" role="search">
-<p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
-</form>
-</header>
-
-<nav role="navigation"><ul id="navmenu">
-<li<%= @site_section == 'Pages' ? ' class="current"'.html_safe : '' %>><%= link_to 'Pages', pages_path %></li>
-<li<%= @site_section == 'Events' ? ' class="current"'.html_safe : '' %>><%= link_to 'Events', events_path %></li>
-<li<%= @site_section == 'Projects' ? ' class="current"'.html_safe : '' %>><%= link_to 'Projects', projects_path %></li>
-<li<%= @site_section == 'Admin' ? ' class="current"'.html_safe : '' %>><a href="">Admin</a></li>
-<li<%= @site_section == 'Settings' ? ' class="current"'.html_safe : '' %>><%= link_to 'Settings', settings_path %></li>
-<li<%= @site_section == 'Documents' ? ' class="current"'.html_safe : '' %>><%= link_to 'Documents', documents_path %></li>
-<li<%= @site_section == 'Sources' ? ' class="current"'.html_safe : '' %>><%= link_to 'Sources', sources_path %></li>
-</ul>
+</div>
 <%
-if @site_breadcrumbs && @site_breadcrumbs.size > 0
-  %><ul id="breadcrumb">
-<% @site_breadcrumbs.each do |breadcrumb|
-    %><li><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
-<% end
-  %></ul>
-<%
-end
-%></nav>
+#<form action="" method="get" accept-charset="utf-8" id="globalsearch" role="search">
+#<p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
+#</form>
+%></header>
 <%
 
 flash_count = (flash && flash.count) || 0
@@ -115,19 +97,48 @@ if flash_count > 0
 end %></div>
 <% end -%>
 
+<nav role="navigation"><ul>
 <%
-
-main_class = @page_has_chunks ? 'withchunks' : 'single'
-if @page_main_class.present?
-  main_class += ' ' + @page_main_class
+[
+  {section: 'Pages', title: 'Pages', path: pages_path},
+  {section: 'Events', title: 'Events', path: events_path},
+  {section: 'Projects', title: 'Projects', path: projects_path},
+  {section: 'Settings', title: 'Admin', path: settings_path},
+  {section: 'Documents', title: 'Documents', path: documents_path},
+  {section: 'Sources', title: 'Sources', path: sources_path}
+].each do |nav_section|
+  if @site_section == nav_section[:section]
+    %><li class="current"><%
+  else
+    %><li><%
+  end
+  %><%= link_to nav_section[:title], nav_section[:path] %></li>
+<%
 end
+%></ul></nav>
+<%
+if @site_breadcrumbs && @site_breadcrumbs.size > 0
+  %><ul id="breadcrumb">
+<%
+  @site_breadcrumbs.each do |breadcrumb|
+    %><li><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
+<%
+  end
+  %></ul>
+<%
+end -%>
 
-%>
-<div id="main" class="<%= main_class %>" role="main">
+<section id="main" class="<%= @page_main_class %>" role="main">
 <%= yield %>
-</div>
+</section>
 
-<footer id="footer" role="contentinfo">
+<%
+# Additional sections may be included by making calls like:
+#   content_for(:other_sections) do ... end
+# Each section must be wrapped in its own <section> tags.
+%><%= yield :other_sections -%>
+
+<footer role="contentinfo">
 <%
 if @versioned_item || content_for?(:actions)
   %><p class="actions">
@@ -145,7 +156,7 @@ if @versioned_item || content_for?(:actions)
 </p>
 <% end -%>
 <%= yield :footer -%>
-<p id="about"><a href="">About <%= Wayground::Application::NAME %></a>.</p>
+<p id="about"><a href="/about">About <%= Wayground::Application::NAME %></a>.</p>
 <p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.</p>
 </footer>
 </body></html>

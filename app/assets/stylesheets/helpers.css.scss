@@ -1,0 +1,26 @@
+@mixin mBorderRadius($radius: 0em) {
+  border-radius:$radius; -moz-border-radius:$radius; -webkit-border-radius:$radius;
+}
+
+// iOS-style link lists
+$button_text_color: black;
+$button_background_color: white;
+$button_radius: 0.5em;
+$button_border: thin solid #999;
+@mixin buttonListitem {
+  margin:0em; padding:0em; width:100%;
+  a{
+    display:block; width:100%; padding:0.5em;
+    background:$button_background_color; color:$button_text_color;
+    border:$button_border; border-top:0em none;
+    font-weight:bold; text-decoration:none;
+    &:hover{background:#DDD; color:#00C; text-shadow:1px 1px 0em white;}
+    &:active{background:#00F; color:white; text-shadow:-1px -1px 0em black;}
+  }
+  &:first-child a{border-top:$button_border;
+    border-top-left-radius:$button_radius; border-top-right-radius:$button_radius;
+  }
+  &:last-child a{
+    border-bottom-left-radius:$button_radius; border-bottom-right-radius:$button_radius;
+  }
+}
