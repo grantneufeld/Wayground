@@ -12,3 +12,13 @@ function countChars(char_limit,field_id,count_display_id) {
     count_field.className = 'charcounter'
   }
 }
+
+// Make the nav element interactive so it can be compact
+$(document).ready(function(){
+	$("nav").addClass("interactive");
+	$("nav .more").click(function(event){
+		$("nav").toggleClass("clicked");
+		event.preventDefault();
+	});
+});
+

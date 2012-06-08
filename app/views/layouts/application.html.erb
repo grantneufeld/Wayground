@@ -3,12 +3,12 @@
 # Parameters - all are optional
 #
 # @page_title: Used in the <title> meta tag. If blank, defaults to the site title.
-# @page_uses_javascript: A boolean that determines whether to load the default javascript files.
 # @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
 # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
 # @page_description: Plain text string to be used as the value for the <meta name="description"> tag.
-# @site_section: lower-case string label for the active section of the website.
-# @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
+# @site_section: symbol for the active section of the website. E.g.: :events
+# @site_breadcrumbs: An array of hashes {text: ?, url: ?} describing the hierarchical navigation parentage of the current item.
+# @page_submenu_items: An array of hashes {title: ?, path: ?} to use to create links in the submenu for the page.
 # @page_main_class: a name to include in the class attribute of the id="main" wrapper around the page-specific content.
 
 # Blocks - all are optional. Called with ‘content_for :block_name do … end’.
@@ -35,9 +35,8 @@ end
 -%>
 <% #= stylesheet_link_tag 'print', :media => 'print'
 -%>
-<% if @page_uses_javascript
-  %><%= javascript_include_tag 'application' %>
-<% end
+<%= javascript_include_tag 'application' %>
+<%
 if @rich_text_editor
   %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
 <% # javascript_include_tag '/ckeditor/adapters/jquery.js'
@@ -85,29 +84,33 @@ unless @page_description.blank?
 #<p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
 #</form>
 %></header>
+
+<nav role="navigation"><%
+site_sections = {
+  :events => {title: 'Events', path: events_path},
+  :projects => {title: 'Projects', path: projects_path},
+  :pages => {title: 'Pages', path: pages_path},
+  :documents => {title: 'Documents', path: documents_path},
+  :sources => {title: 'Sources', path: sources_path},
+  :admin => {title: 'Admin', path: settings_path}
+}
+site_hidden_sections = {
+  :authorities => {title: 'Authorities', path: authorities_path},
+  :paths => {title: 'Paths', path: paths_path},
+  :settings => {title: 'Settings', path: settings_path}
+}
+if @site_section
+  current_section = site_sections[@site_section] || site_hidden_sections[@site_section]
+  if current_section
+    %><p><%= link_to current_section[:title], current_section[:path] %></p>
+<%
+  end
+end
+%><ul>
 <%
 
-flash_count = (flash && flash.count) || 0
-if flash_count > 0 %>
-<div id="flash"<%= flash_count <= 0 ? ' class="hidden"'.html_safe : '' %>><%
-if flash_count > 0
-  flash.each do |key, msg|
-    %><p class="<%= key %>"><%= msg %></p>
-<% end
-end %></div>
-<% end -%>
-
-<nav role="navigation"><ul>
-<%
-[
-  {section: 'Pages', title: 'Pages', path: pages_path},
-  {section: 'Events', title: 'Events', path: events_path},
-  {section: 'Projects', title: 'Projects', path: projects_path},
-  {section: 'Settings', title: 'Admin', path: settings_path},
-  {section: 'Documents', title: 'Documents', path: documents_path},
-  {section: 'Sources', title: 'Sources', path: sources_path}
-].each do |nav_section|
-  if @site_section == nav_section[:section]
+site_sections.each do |key, nav_section|
+  if @site_section == key
     %><li class="current"><%
   else
     %><li><%
@@ -115,8 +118,27 @@ end %></div>
   %><%= link_to nav_section[:title], nav_section[:path] %></li>
 <%
 end
-%></ul></nav>
+%><li class="more"></li>
+</ul></nav>
+<div id="headerspace"></div>
+
 <%
+
+
+flash_count = (flash && flash.count) || 0
+if flash_count > 0
+  %>
+<div id="flash"<%= flash_count <= 0 ? ' class="hidden"'.html_safe : '' %>><%
+if flash_count > 0
+  flash.each do |key, msg|
+    %><p class="<%= key %>"><%= msg %></p>
+<% end
+end %></div>
+
+<%
+end
+
+
 if @site_breadcrumbs && @site_breadcrumbs.size > 0
   %><ul id="breadcrumb">
 <%
@@ -125,6 +147,7 @@ if @site_breadcrumbs && @site_breadcrumbs.size > 0
 <%
   end
   %></ul>
+
 <%
 end -%>
 
@@ -137,6 +160,66 @@ end -%>
 #   content_for(:other_sections) do ... end
 # Each section must be wrapped in its own <section> tags.
 %><%= yield :other_sections -%>
+
+<%
+# An optional submenu. Normally styled to be fixed to the bottom of the page.
+case @site_section
+when :events
+  submenu_items = [
+    {title: 'New Event', path: new_event_path},
+    {title: 'Past Events', path: ''}
+  ]
+when :projects
+  submenu_items = [
+    {title: 'New Project', path: new_project_path}
+  ]
+when :sources
+  submenu_items = [
+    {title: 'New Source', path: new_source_path}
+  ]
+when :documents
+  submenu_items = [
+    {title: 'New Document', path: new_document_path}
+  ]
+when :pages
+  submenu_items = [
+    {title: 'New Page', path: new_page_path}
+  ]
+when :paths
+  submenu_items = [
+    {title: 'New Path', path: new_path_path}
+  ]
+when :settings
+  submenu_items = [
+    {title: 'New Setting', path: new_setting_path}
+  ]
+when :admin
+  submenu_items = [
+    {title: 'Settings', path: settings_path},
+    {title: 'Pages', path: pages_path},
+    {title: 'Paths', path: paths_path},
+    {title: 'Documents', path: documents_path},
+    {title: 'Sources', path: sources_path},
+    {title: 'Authorities', path: authorities_path}
+  ]
+when :authorities
+  submenu_items = [
+    {title: 'New Authority', path: new_authority_path}
+  ]
+else
+  submenu_items = []
+end
+submenu_items << @page_submenu_items if @page_submenu_items
+if submenu_items.size > 0
+  %><ul id="subnavmenu">
+<%
+  submenu_items.each do |submenu_item|
+    %><li><%= link_to submenu_item[:title], submenu_item[:path] %></li>
+<%
+  end
+%></ul>
+<%
+end -%>
 
 <footer role="contentinfo">
 <%

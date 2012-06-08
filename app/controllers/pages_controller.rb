@@ -115,7 +115,7 @@ class PagesController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Pages'
+    @site_section = :pages
   end
 
   # Most of the actions for this controller receive the id of a Page as a parameter.

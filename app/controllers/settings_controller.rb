@@ -130,7 +130,7 @@ class SettingsController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Admin'
+    @site_section = :settings
   end
 
   def set_new_setting

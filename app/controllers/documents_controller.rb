@@ -118,6 +118,6 @@ class DocumentsController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Documents'
+    @site_section = :documents
   end
 end

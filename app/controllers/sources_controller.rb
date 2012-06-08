@@ -101,7 +101,7 @@ class SourcesController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Sources'
+    @site_section = :sources
   end
 
   def set_new_source

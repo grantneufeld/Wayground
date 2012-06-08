@@ -156,7 +156,7 @@ class EventsController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Events'
+    @site_section = :events
   end
 
   def set_user

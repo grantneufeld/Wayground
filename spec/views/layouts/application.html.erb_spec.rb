@@ -28,20 +28,6 @@ describe "layouts/application.html.erb" do
     end
   end
 
-  # @page_uses_javascript: A boolean that determines whether to load the default javascript files.
-  describe "@page_uses_javascript" do
-    it "should include the script link(s) in the head if true" do
-      @page_uses_javascript = true
-      render
-      rendered.should match(/<script[^>]/)
-    end
-    it "should not include script links in the head if not set" do
-      @page_uses_javascript = nil
-      render
-      rendered.should_not match(/<script[^>]/)
-    end
-  end
-
   # @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
   describe "@rich_text_editor" do
     it "should include the ckeditor script if true" do
@@ -87,7 +73,7 @@ describe "layouts/application.html.erb" do
   # @site_section: lower-case string label for the active section of the website.
   describe "@site_section" do
     it "should set the class to current for the specified section in the navmenu if true" do
-      @site_section = 'Pages'
+      @site_section = :pages
       render
       rendered.should match(/<li class="current"><a href="\/pages">Pages<\/a><\/li>/)
     end

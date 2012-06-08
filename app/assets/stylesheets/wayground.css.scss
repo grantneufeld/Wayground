@@ -5,7 +5,7 @@ h1,h2,h3,h4,h5,h6,h1 *,h2 *,h3 *,h4 *,h5 *,h6 *{font-family:Ubuntu,Helvetica,san
 
 // spacing
 *{margin:0em; padding:0em;}
-* + *{margin-top:0.75em;}
+body * + *{margin-top:0.75em;}
 p,li,td,th{line-height:1.4em;}
 h1, h2{font-size:1.5em;}
 h3{font-size:1.15em;}
@@ -26,7 +26,7 @@ body > header > h1 img{max-height:1.25em; vertical-align:bottom; border:0px none
 
 // flash
 #flash{margin:0em; padding:0.5em;}
-#flash > p{font-size:1em; margin:0em; padding:0.75em; @include mBorderRadius(0.25em); max-width:38em;}
+#flash > p{font-size:1em; margin:0em; padding:0.75em; @include border-radius(0.25em); max-width:38em;}
 #flash > p + p{margin-top:0.5em;}
 
 #breadcrumb{list-style-type:none; margin:0em; padding:0em 1.25em;}
@@ -120,13 +120,13 @@ td > table, th > table{width:100%;}
 
 // changes as display area widens
 
-// up to 640px screen 
+// up to 640px screen
 @media (min-width:481px) {
-section{padding-left:1em; padding-right:1em;}
+  section{padding-left:1em; padding-right:1em;}
 }
 
 // up to 1024px screen
 @media (min-width:641px) {
-section{float:left; margin-right:0.5em; border-bottom-right-radius:0.25em;}
-section + section{margin-top:0.5em;}
+  section{float:left; margin-right:0.5em; border-bottom-right-radius:0.25em;}
+  section + section{margin-top:0.5em;}
 }

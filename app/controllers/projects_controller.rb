@@ -118,7 +118,7 @@ class ProjectsController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Projects'
+    @site_section = :projects
   end
 
   def set_new_project
