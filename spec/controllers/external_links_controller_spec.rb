@@ -73,46 +73,48 @@ describe ExternalLinksController do
   end
 
   describe "GET 'new'" do
-    it "fails if not logged in" do
+    it "fails if not sufficent authority" do
+      set_logged_in_user
       get :new, :event_id => event.id
       response.status.should eq 403
     end
 
     it "returns http success" do
-      set_logged_in_user
+      set_logged_in_admin
       get 'new', :event_id => event.id
       response.should be_success
     end
     it "assigns a new ExternalLink as @external_link" do
-      set_logged_in_user
+      set_logged_in_admin
       get :new, :event_id => event.id
       assigns(:external_link).should be_a_new(ExternalLink)
     end
   end
 
   describe "POST 'create'" do
-    it "fails if not logged in" do
+    it "fails if not sufficient authority" do
+      set_logged_in_user
       post :create, :event_id => event.id, :external_link => valid_attributes
       response.status.should eq 403
     end
 
     describe "with valid params" do
       it "creates a new Event" do
-        set_logged_in_user
+        set_logged_in_admin
         expect {
           post :create, :event_id => event.id, :external_link => valid_attributes
         }.to change(event.external_links, :count).by(1)
       end
 
       it "assigns a newly created ExternalLink as @external_link" do
-        set_logged_in_user
+        set_logged_in_admin
         post :create, :event_id => event.id, :external_link => valid_attributes
         assigns(:external_link).should be_a(ExternalLink)
         assigns(:external_link).should be_persisted
       end
 
       it "redirects to the created ExternalLink" do
-        set_logged_in_user
+        set_logged_in_admin
         post :create, :event_id => event.id, :external_link => valid_attributes
         response.should redirect_to([event, event.external_links.last])
       end
@@ -120,7 +122,7 @@ describe ExternalLinksController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved ExternalLink as @external_link" do
-        set_logged_in_user
+        set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         ExternalLink.any_instance.stub(:save).and_return(false)
         post :create, :event_id => event.id, :external_link => {}
@@ -128,7 +130,7 @@ describe ExternalLinksController do
       end
 
       it "re-renders the 'new' template" do
-        set_logged_in_user
+        set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         ExternalLink.any_instance.stub(:save).and_return(false)
         post :create, :event_id => event.id, :external_link => {}

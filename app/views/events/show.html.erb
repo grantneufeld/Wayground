@@ -115,7 +115,7 @@ if @user.present?
 <%
   end
   if !(@event.is_approved?) && @event.has_authority_for_user_to?(@user, :can_approve)
-    %><br /><%= link_to 'Approve', approve_event_path(@event), :confirm => "Are you sure you want to approve the event “#{@event.title}”?", :method => :post, :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Approve', approve_event_path(@event), :confirm => "Are you sure you want to approve the event “#{@event.title}”?", :method => :post, :class => 'action' %><span class="separator">,</span>
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_delete)
@@ -126,7 +126,10 @@ if @user.present?
     %><%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><span class="separator">,</span>
 <%
   end
-  %><%= link_to 'New External Link', new_event_external_link_path(@event), :class => 'action' %><span class="separator">,</span>
-<%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+  if @event.has_authority_for_user_to?(@user, :can_create)
+    %><%= link_to 'New External Link', new_event_external_link_path(@event), :class => 'action' %><span class="separator">,</span>
+<%
+  end
+  %><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
 <%
 end -%>

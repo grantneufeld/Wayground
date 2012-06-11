@@ -5,7 +5,7 @@ class ExternalLinksController < ApplicationController
   before_filter :set_user
   before_filter :set_item
   before_filter :set_external_link, :except => [:index, :new, :create]
-  before_filter :requires_login, :only => [:new, :create]
+  before_filter :requires_create_authority, :only => [:new, :create]
   before_filter :requires_update_authority, :only => [:edit, :update]
   before_filter :requires_delete_authority, :only => [:delete, :destroy]
   before_filter :set_new_external_link, :only => [:new, :create]
@@ -83,19 +83,19 @@ class ExternalLinksController < ApplicationController
     @user = current_user
   end
 
-  # The actions for this controller, other than viewing, require login and usually authorization.
-  def requires_login
-    unless @user
-      raise Wayground::LoginRequired
-    end
-  end
+  # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
     unless (
       (@external_link && @external_link.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(@external_link.authority_area, action))
+      (!@external_link && @item && @item.has_authority_for_user_to?(@user, action)) ||
+      (@user && @external_link && @user.has_authority_for_area(@external_link.authority_area, action)) ||
+      (@user && @user.has_authority_for_area(ExternalLink.authority_area, action))
     )
       raise Wayground::AccessDenied
     end
+  end
+  def requires_create_authority
+    requires_authority(:can_create)
   end
   def requires_update_authority
     requires_authority(:can_update)
