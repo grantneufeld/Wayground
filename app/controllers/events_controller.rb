@@ -56,6 +56,7 @@ class EventsController < ApplicationController
       flash.now.alert = 'This event has been cancelled.'
     end
     unless @event.is_approved?
+      @browser_nocache = true
       flash.now.alert = 'This event listing has not been approved by a moderator yet.'
     end
     respond_to do |format|
