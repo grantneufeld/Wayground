@@ -51,7 +51,7 @@ describe "events/new.html.erb" do
       assert_select "input#event_address", :name => "event[address]"
       assert_select "input#event_city", :name => "event[city]"
       assert_select "input#event_province", :name => "event[province]"
-      assert_select "input#event_country", :name => "event[country]"
+      assert_select "select#event_country", :name => "event[country]"
       assert_select "input#event_location_url", :name => "event[location_url]"
     end
   end

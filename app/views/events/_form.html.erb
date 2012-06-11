@@ -31,7 +31,8 @@ require 'wayground_form_builder'
 <tr><th><%= f.label :province %></th>
   <td><%= f.text_field :province, :size => 32, :maxlength => 31 %></td></tr>
 <tr><th><%= f.label :country %></th>
-  <td><%= f.text_field :country, :size => 3, :maxlength => 2 %></td></tr>
+  <td><%= f.select(:country, options_for_select(COUNTRY_CODES_SHORTLIST.invert.to_a, event.country),
+    include_blank: true) %></td></tr>
 <tr><th><%= f.label :location_url, 'Location Weblink' %></th>
   <td><%= f.url_field :location_url, :size => 60, :maxlength => 255, :placeholder => 'http://' %></td></tr>
 <tr><th></th><td><%= f.check_box :is_wheelchair_accessible %><%= f.label :is_wheelchair_accessible, 'Wheelchair accessible' %></td></tr>
