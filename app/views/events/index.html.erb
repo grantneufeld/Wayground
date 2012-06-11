@@ -6,10 +6,10 @@ content_for(:head) do
 end
 @page_main_class = 'calendar'
 
-%><h2>Events</h2>
+%><h2><%= @page_title %></h2>
 <p><%= link_to 'Subscribe to this calendar in your calendar application',
-  "webcal://#{request.host_with_port}#{events_path(:format => :ics)}", :class => 'ics',
-  :title => 'Calendar subscription link, compatible with most calendar applications' %>.</p>
+  "webcal://#{request.host_with_port}#{events_path(format: :ics, r: params[:r])}", class: 'ics',
+  title: 'Calendar subscription link, compatible with most calendar applications' %>.</p>
 <%= #show_pagination_header('events')
 -%>
 <%= #show_pagination_selector

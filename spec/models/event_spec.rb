@@ -352,6 +352,17 @@ describe Event do
     end
     describe ".past" do
       it "should return only events that ended before the current date & time" do
+        Event.delete_all
+        # past events
+        event1 = FactoryGirl.create(:event, :start_at => 2.weeks.ago)
+        event2 = FactoryGirl.create(:event, :start_at => 1.day.ago)
+        # create an event that occurred earlier today
+        FactoryGirl.create(:event, :start_at => Time.current.beginning_of_day)
+        # create an event happening in just a minute
+        FactoryGirl.create(:event, :start_at => Time.current.advance(:minutes => 1))
+        # create a future event
+        FactoryGirl.create(:event, :start_at => 1.day.from_now)
+        Event.past.should eq [event1, event2]
       end
     end
   end

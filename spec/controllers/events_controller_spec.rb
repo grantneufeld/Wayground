@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe EventsController do
 
-  before do
+  before(:all) do
     Event.destroy_all
     Authority.delete_all
     User.destroy_all
@@ -31,17 +31,43 @@ describe EventsController do
   end
 
   describe "GET index" do
-    it "assigns all approved events as @events" do
-      event = FactoryGirl.create(:event)
-      get :index
-      assigns(:events).should eq([event])
+    before(:all) do
+      Event.delete_all
+      @event1 = FactoryGirl.create(:event, start_at: 1.day.from_now)
+      @event2 = FactoryGirl.create(:event, start_at: 2.days.from_now, is_approved: false)
+      @event3 = FactoryGirl.create(:event, start_at: 1.day.ago)
+      @event4 = FactoryGirl.create(:event, start_at: 2.days.ago, is_approved: false)
     end
-    it "assigns all events, including unapproved, as @events for moderators" do
-      set_logged_in_admin
-      event = FactoryGirl.create(:event, start_at: 1.day.from_now)
-      event2 = FactoryGirl.create(:event, start_at: 2.days.from_now, is_approved: false)
+    it "assigns all approved upcoming events as @events" do
       get :index
-      assigns(:events).should eq([event, event2])
+      assigns(:events).should eq([@event1])
+    end
+    it "assigns all upcoming events, including unapproved, as @events for moderators" do
+      set_logged_in_admin
+      get :index
+      assigns(:events).should eq([@event1, @event2])
+    end
+    context "past events" do
+      it "assigns all approved past events as @events" do
+        get :index, {r: 'past'}
+        assigns(:events).should eq([@event3])
+      end
+      it "assigns all past events, including unapproved, as @events for moderators" do
+        set_logged_in_admin
+        get :index, {r: 'past'}
+        assigns(:events).should eq([@event4, @event3])
+      end
+    end
+    context "all events" do
+      it "assigns all approved past events as @events" do
+        get :index, {r: 'all'}
+        assigns(:events).should eq([@event3, @event1])
+      end
+      it "assigns all past events, including unapproved, as @events for moderators" do
+        set_logged_in_admin
+        get :index, {r: 'all'}
+        assigns(:events).should eq([@event4, @event3, @event1, @event2])
+      end
     end
   end
 
@@ -93,6 +119,7 @@ describe EventsController do
       end
 
       it "redirects to the created event" do
+        Event.delete_all
         set_logged_in_user
         post :create, :event => valid_attributes
         response.should redirect_to(Event.last)

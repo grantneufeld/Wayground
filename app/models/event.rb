@@ -42,8 +42,14 @@ class Event < ActiveRecord::Base
   scope :approved, where(:is_approved => true)
   scope :upcoming, lambda { # use a lambda so the time is reloaded each time upcoming is called
     where(
-      'start_at >= ? OR (end_at IS NOT NULL AND end_at >= ?)',
-      Time.current.beginning_of_day, Time.current.beginning_of_day
+      'start_at >= :day_start OR (end_at IS NOT NULL AND end_at >= :day_start)',
+      {day_start: Time.current.beginning_of_day}
+    )
+  }
+  scope :past, lambda { # use a lambda so the time is reloaded each time upcoming is called
+    where(
+      'start_at < :day_start AND (end_at IS NULL OR end_at < :day_start)',
+      {day_start: Time.current.beginning_of_day}
     )
   }
 

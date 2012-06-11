@@ -12,13 +12,35 @@ class EventsController < ApplicationController
   before_filter :set_editor, :only => [:create, :update, :destroy, :approve, :merge, :perform_merge]
 
   def index
-    @page_title = 'Events'
+    range = params[:r]
+    @page_title = case range
+    when 'all'
+      'Events'
+    when 'past'
+      'Events: Past'
+    else
+      'Events: Upcoming'
+    end
     # TODO: paginate Events#index
     if @user && @user.has_authority_for_area(Event.authority_area, :can_approve)
       # moderators see both approved and unapproved events
-      @events = Event.all
+      @events = case range
+      when 'all'
+        Event.all
+      when 'past'
+        Event.past
+      else
+        Event.upcoming
+      end
     else
-      @events = Event.approved
+      @events = case range
+      when 'all'
+        Event.approved
+      when 'past'
+        Event.past.approved
+      else
+        Event.upcoming.approved
+      end
     end
     respond_to do |format|
       format.html # index.html.erb

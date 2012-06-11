@@ -167,7 +167,9 @@ case @site_section
 when :events
   submenu_items = [
     {title: 'New Event', path: new_event_path},
-    {title: 'Past Events', path: ''}
+    {title: 'Upcoming Events', path: events_path},
+    {title: 'Past Events', path: events_path(r: 'past')},
+    {title: 'All Events', path: events_path(r: 'all')}
   ]
 when :projects
   submenu_items = [
