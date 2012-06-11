@@ -356,6 +356,25 @@ describe Event do
     end
   end
 
+  describe "initialize" do
+    it "should set the city, province and country" do
+      event = Event.new
+      [event.city, event.province, event.country].should eq ['Calgary', 'Alberta', 'CA']
+    end
+    it "should not set any location defaults if city is set" do
+      event = Event.new(city: 'Test')
+      [event.city, event.province, event.country].should eq ['Test', nil, nil]
+    end
+    it "should not set any location defaults if city is set" do
+      event = Event.new(province: 'Test')
+      [event.city, event.province, event.country].should eq [nil, 'Test', nil]
+    end
+    it "should not set any location defaults if country is set" do
+      event = Event.new(country: 'Test')
+      [event.city, event.province, event.country].should eq [nil, nil, 'Test']
+    end
+  end
+
   describe "approve_if_authority" do
     it "should not set is_approved if regular user" do
       event = Event.new(:start_at => '2012-01-01 01:01:01', :title => 'already approved')
@@ -1035,6 +1054,7 @@ describe Event do
     it "should set the city if destination city is blank" do
       event = Event.new(city: 'test')
       event2 = Event.new
+      event2.city = nil # override defaults
       event.merge_fields_into(event2)
       event2.city.should eq 'test'
     end
@@ -1048,6 +1068,7 @@ describe Event do
     it "should set the province if destination province is blank" do
       event = Event.new(province: 'test')
       event2 = Event.new
+      event2.province = nil # override defaults
       event.merge_fields_into(event2)
       event2.province.should eq 'test'
     end
@@ -1061,6 +1082,7 @@ describe Event do
     it "should set the country if destination country is blank" do
       event = Event.new(country: 'test')
       event2 = Event.new
+      event2.country = nil # override defaults
       event.merge_fields_into(event2)
       event2.country.should eq 'test'
     end

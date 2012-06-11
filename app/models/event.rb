@@ -52,6 +52,17 @@ class Event < ActiveRecord::Base
   after_update :flag_for_sourcing
   after_save :add_version
 
+  def initialize(*args)
+    super(*args)
+    # if city, province and country are all blank
+    if self.country.blank? && self.province.blank? && self.city.blank?
+      # use defaults
+      self.city ||= Wayground::Application::DEFAULT_CITY
+      self.province ||= Wayground::Application::DEFAULT_PROVINCE
+      self.country ||= Wayground::Application::DEFAULT_COUNTRY
+    end
+  end
+
   # VALIDATION METHODS
 
   # An event cannot end before it begins.
