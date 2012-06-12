@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'url_cleaner'
 
 # External weblinks representing an item in our system.
 # E.g., a link to an event listing on another website might be for the same Event as listed on our site.
@@ -56,6 +57,10 @@ class ExternalLink < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def url=(url_str)
+    write_attribute(:url, UrlCleaner.clean(url_str))
   end
 
   # Return an html anchor element using the ExternalLink’s url and title.

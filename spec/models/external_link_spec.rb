@@ -183,6 +183,24 @@ describe ExternalLink do
     end
   end
 
+  describe "#url=" do
+    it "should set the url attribute" do
+      elink = ExternalLink.new
+      elink.url = 'test'
+      elink.url.should eq 'test'
+    end
+    it "should clear the url attribute when nil is given" do
+      elink = ExternalLink.new(url: 'http://wayground.ca/')
+      elink.url = nil
+      elink.url.should be_nil
+    end
+    it "should try to clean up urls" do
+      elink = ExternalLink.new
+      elink.url = 'http://twitter.com/#!/wayground'
+      elink.url.should eq 'https://twitter.com/wayground'
+    end
+  end
+
   describe "#to_html" do
     before(:all) do
       @elink = ExternalLink.new(:title => 'ELink', :url => 'http://elink.tld/')
