@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'text_cleaner'
+require 'url_cleaner'
 
 # Details of a calendar event
 class Event < ActiveRecord::Base
@@ -148,6 +150,40 @@ class Event < ActiveRecord::Base
       :content => data, :content_type => 'text/plain',
       :start_on => start_at.to_date, :end_on => (end_at? ? end_at.to_date : nil)
     )
+  end
+
+  # Setters
+  # pre-flight cleaners for attributes passed in
+
+  def title=(title_str)
+    write_attribute(:title, TextCleaner.clean(title_str))
+  end
+  def description=(description_str)
+    write_attribute(:description, TextCleaner.clean(description_str))
+  end
+  def content=(content_str)
+    write_attribute(:content, TextCleaner.clean(content_str))
+  end
+  def organizer=(organizer_str)
+    write_attribute(:organizer, TextCleaner.clean(organizer_str))
+  end
+  def organizer_url=(organizer_url_str)
+    write_attribute(:organizer_url, UrlCleaner.clean(organizer_url_str))
+  end
+  def location=(location_str)
+    write_attribute(:location, TextCleaner.clean(location_str))
+  end
+  def address=(address_str)
+    write_attribute(:address, TextCleaner.clean(address_str))
+  end
+  def city=(city_str)
+    write_attribute(:city, TextCleaner.clean(city_str))
+  end
+  def province=(province_str)
+    write_attribute(:province, TextCleaner.clean(province_str))
+  end
+  def location_url=(location_url_str)
+    write_attribute(:location_url, UrlCleaner.clean(location_url_str))
   end
 
   # APPROVAL

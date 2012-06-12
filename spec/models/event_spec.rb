@@ -517,6 +517,177 @@ describe Event do
     end
   end
 
+  describe "#title=" do
+    it "should set the title attribute" do
+      event = Event.new
+      event.title = 'test'
+      event.title.should eq 'test'
+    end
+    it "should clear the title attribute when nil is given" do
+      event = Event.new(title: 'Test')
+      event.title = nil
+      event.title.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.title = " A  Messy \t String\t"
+      event.title.should eq 'A Messy String'
+    end
+  end
+  describe "#description=" do
+    it "should set the description attribute" do
+      event = Event.new
+      event.description = 'test'
+      event.description.should eq 'test'
+    end
+    it "should clear the description attribute when nil is given" do
+      event = Event.new(description: 'Test')
+      event.description = nil
+      event.description.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.description = " A  Messy \t String\t"
+      event.description.should eq 'A Messy String'
+    end
+  end
+  describe "#content=" do
+    it "should set the content attribute" do
+      event = Event.new
+      event.content = 'test'
+      event.content.should eq 'test'
+    end
+    it "should clear the content attribute when nil is given" do
+      event = Event.new(content: 'Test')
+      event.content = nil
+      event.content.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.content = " A  Messy \t String\t"
+      event.content.should eq 'A Messy String'
+    end
+  end
+  describe "#organizer=" do
+    it "should set the organizer attribute" do
+      event = Event.new
+      event.organizer = 'test'
+      event.organizer.should eq 'test'
+    end
+    it "should clear the organizer attribute when nil is given" do
+      event = Event.new(organizer: 'Test')
+      event.organizer = nil
+      event.organizer.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.organizer = " A  Messy \t String\t"
+      event.organizer.should eq 'A Messy String'
+    end
+  end
+  describe "#organizer_url=" do
+    it "should set the organizer_url attribute" do
+      event = Event.new
+      event.organizer_url = 'test'
+      event.organizer_url.should eq 'test'
+    end
+    it "should clear the organizer_url attribute when nil is given" do
+      event = Event.new(organizer_url: 'Test')
+      event.organizer_url = nil
+      event.organizer_url.should be_nil
+    end
+    it "should try to clean up the url passed in" do
+      event = Event.new
+      event.organizer_url = 'http://twitter.com/#!/wayground'
+      event.organizer_url.should eq 'https://twitter.com/wayground'
+    end
+  end
+  describe "#location=" do
+    it "should set the location attribute" do
+      event = Event.new
+      event.location = 'test'
+      event.location.should eq 'test'
+    end
+    it "should clear the location attribute when nil is given" do
+      event = Event.new(location: 'Test')
+      event.location = nil
+      event.location.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.location = " A  Messy \t String\t"
+      event.location.should eq 'A Messy String'
+    end
+  end
+  describe "#address=" do
+    it "should set the address attribute" do
+      event = Event.new
+      event.address = 'test'
+      event.address.should eq 'test'
+    end
+    it "should clear the address attribute when nil is given" do
+      event = Event.new(address: 'Test')
+      event.address = nil
+      event.address.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.address = " A  Messy \t String\t"
+      event.address.should eq 'A Messy String'
+    end
+  end
+  describe "#city=" do
+    it "should set the city attribute" do
+      event = Event.new
+      event.city = 'test'
+      event.city.should eq 'test'
+    end
+    it "should clear the city attribute when nil is given" do
+      event = Event.new(city: 'Test')
+      event.city = nil
+      event.city.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.city = " A  Messy \t String\t"
+      event.city.should eq 'A Messy String'
+    end
+  end
+  describe "#province=" do
+    it "should set the province attribute" do
+      event = Event.new
+      event.province = 'test'
+      event.province.should eq 'test'
+    end
+    it "should clear the province attribute when nil is given" do
+      event = Event.new(province: 'Test')
+      event.province = nil
+      event.province.should be_nil
+    end
+    it "should try to clean up the string passed in" do
+      event = Event.new
+      event.province = " A  Messy \t String\t"
+      event.province.should eq 'A Messy String'
+    end
+  end
+  describe "#location_url=" do
+    it "should set the location_url attribute" do
+      event = Event.new
+      event.location_url = 'test'
+      event.location_url.should eq 'test'
+    end
+    it "should clear the location_url attribute when nil is given" do
+      event = Event.new(location_url: 'Test')
+      event.location_url = nil
+      event.location_url.should be_nil
+    end
+    it "should try to clean up the url passed in" do
+      event = Event.new
+      event.location_url = 'http://twitter.com/#!/wayground'
+      event.location_url.should eq 'https://twitter.com/wayground'
+    end
+  end
+
   describe "#approve_by" do
     let(:event) { $event = FactoryGirl.create(:event, is_approved: false) }
     it "should return true if already approved" do
