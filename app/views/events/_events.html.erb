@@ -78,11 +78,11 @@ events.each do |event|
     %><br /><%= link_to 'Edit', edit_event_path(event), :class => 'action' %><%
     if !(event.is_approved?) && event.has_authority_for_user_to?(user, :can_approve)
       %><span class="separator">,</span>
-<%= link_to 'Approve', approve_event_path(event), :confirm => "Are you sure you want to approve the event “#{event.title}”?", :method => :post, :class => 'action' %><%
+<%= link_to 'Approve', approve_event_path(event), :data => {:confirm => "Are you sure you want to approve the event “#{event.title}”?"}, :method => :post, :class => 'action' %><%
     end
     if event.has_authority_for_user_to?(user, :can_delete)
       %><span class="separator">,</span>
-<%= link_to 'Delete', delete_event_path(event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %>
+<%= link_to 'Delete', delete_event_path(event), :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %>
 <%  end
   end
   %></p>

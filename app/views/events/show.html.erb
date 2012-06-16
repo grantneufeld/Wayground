@@ -59,8 +59,10 @@ if loc_location.present? || loc_address.present? || loc_city.present?
     %>
 <%
   else
-    %><%= link_to 'location', loc_url %>
-<span class="adr">
+    if loc_url.present?
+      %><%= link_to 'location', loc_url %>
+<%  end
+    %><span class="adr">
 <%
   end
   if loc_city.present?
@@ -115,7 +117,7 @@ if @user.present?
 <%
   end
   if !(@event.is_approved?) && @event.has_authority_for_user_to?(@user, :can_approve)
-    %><%= link_to 'Approve', approve_event_path(@event), :confirm => "Are you sure you want to approve the event “#{@event.title}”?", :method => :post, :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Approve', approve_event_path(@event), :data => {:confirm => "Are you sure you want to approve the event “#{@event.title}”?"}, :method => :post, :class => 'action' %><span class="separator">,</span>
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_delete)
@@ -123,7 +125,7 @@ if @user.present?
       %><%= link_to 'Merge', merge_event_path(@event), :class => 'action', :title => 'Merge with another Event (you must know the event id)' %><span class="separator">,</span>
 <%
     end
-    %><%= link_to 'Delete', delete_event_path(@event), :confirm => 'Are you sure?', :method => :delete, :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Delete', delete_event_path(@event), :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><span class="separator">,</span>
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_create)

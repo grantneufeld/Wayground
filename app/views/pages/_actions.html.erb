@@ -17,7 +17,7 @@ if user
 <% end
   if page.has_authority_for_user_to?(user, :can_delete)
     %><%= link_to 'Delete', page,
-      :confirm => "Are you sure you want to permanently delete the page “#{page.title}”?",
+      :data => {:confirm => "Are you sure you want to permanently delete the page “#{page.title}”?"},
       :method => :delete, :href => delete_page_path(page),
       :title => 'Permanently remove the page from the website', :class => 'action'
     %>

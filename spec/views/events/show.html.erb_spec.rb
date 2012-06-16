@@ -24,7 +24,7 @@ describe "events/show.html.erb" do
       :city => "City",
       :province => "Province",
       :country => "Country",
-      :location_url => "Location Url"
+      :location_url => "http://location.url.tld/"
     ))
   end
 
@@ -40,7 +40,7 @@ describe "events/show.html.erb" do
     rendered.should match(/City/)
     rendered.should match(/Province/)
     rendered.should match(/Country/)
-    rendered.should match(/href="Location Url"/)
+    rendered.should match('href="http://location.url.tld/"')
   end
 
   it "renders the Cancelled notice" do
