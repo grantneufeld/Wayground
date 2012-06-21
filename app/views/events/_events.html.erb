@@ -82,7 +82,7 @@ events.each do |event|
     end
     if event.has_authority_for_user_to?(user, :can_delete)
       %><span class="separator">,</span>
-<%= link_to 'Delete', delete_event_path(event), :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %>
+<%= link_to 'Delete', [:delete, event], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %>
 <%  end
   end
   %></p>

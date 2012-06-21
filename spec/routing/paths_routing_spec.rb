@@ -34,6 +34,9 @@ describe PathsController do
     it "recognizes and generates #delete" do
       { :get => "/paths/1/delete" }.should route_to(:controller => "paths", :action => "delete", :id => "1")
     end
+    it "routes to #destroy via delete" do
+      delete("/paths/1/delete").should route_to("paths#destroy", :id => "1")
+    end
     it "recognizes and generates #destroy" do
       { :delete => "/paths/1" }.should route_to(:controller => "paths", :action => "destroy", :id => "1")
     end

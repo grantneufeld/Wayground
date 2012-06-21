@@ -3,10 +3,10 @@
 <%
 if @external_link.has_authority_for_user_to?(@user, :can_update)
   %><p>
-<%= link_to 'Edit', edit_event_external_link_path(@item, @external_link), :class => 'action' %>
+<%= link_to 'Edit', [:delete, @item, @external_link], :class => 'action' %>
 <%
   if @external_link.has_authority_for_user_to?(@user, :can_delete)
-    %><%= link_to 'Delete', delete_event_external_link_path(@item, @external_link), :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %>
+    %><%= link_to 'Delete', [:delete, @item, @external_link], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %>
 <%
   end %></p>
 <%

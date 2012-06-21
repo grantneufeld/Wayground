@@ -27,6 +27,9 @@ describe PagesController do
     it "recognizes and generates #delete" do
       { :get => "/pages/1/delete" }.should route_to(:controller => "pages", :action => "delete", :id => "1")
     end
+    it "routes to #destroy via delete" do
+      delete("/pages/1/delete").should route_to("pages#destroy", :id => "1")
+    end
     it "recognizes and generates #destroy" do
       { :delete => "/pages/1" }.should route_to(:controller => "pages", :action => "destroy", :id => "1")
     end

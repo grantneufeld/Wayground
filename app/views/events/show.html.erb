@@ -125,7 +125,7 @@ if @user.present?
       %><%= link_to 'Merge', merge_event_path(@event), :class => 'action', :title => 'Merge with another Event (you must know the event id)' %><span class="separator">,</span>
 <%
     end
-    %><%= link_to 'Delete', delete_event_path(@event), :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Delete', [:delete, @event], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><span class="separator">,</span>
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_create)

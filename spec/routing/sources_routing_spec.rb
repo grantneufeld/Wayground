@@ -27,6 +27,9 @@ describe SourcesController do
     it "routes to #delete" do
       get("/sources/1/delete").should route_to("sources#delete", :id => "1")
     end
+    it "routes to #destroy via delete" do
+      delete("/sources/1/delete").should route_to("sources#destroy", :id => "1")
+    end
     it "routes to #destroy" do
       delete("/sources/1").should route_to("sources#destroy", :id => "1")
     end

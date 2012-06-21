@@ -23,7 +23,7 @@ if @source.has_authority_for_user_to?(@user, :can_update)
 end
 if @source.has_authority_for_user_to?(@user, :can_delete)
   %><span class="separator">,</span>
-<%= link_to 'Delete', delete_source_path(@source), :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><%
+<%= link_to 'Delete', [:delete, @source], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><%
 end
 %>
 <%= link_to 'New Source', new_source_path, :class => 'action' %></p>

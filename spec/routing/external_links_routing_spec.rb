@@ -14,18 +14,21 @@ describe ExternalLinksController do
       it "routes to #show" do
         get("/events/1/external_links/2").should route_to("external_links#show", :id => "2", :event_id => '1')
       end
+
       it "routes to #new" do
         get("/events/1/external_links/new").should route_to("external_links#new", :event_id => '1')
       end
       it "routes to #create" do
         post("/events/1/external_links").should route_to("external_links#create", :event_id => '1')
       end
+
       it "routes to #edit" do
         get("/events/1/external_links/2/edit").should route_to("external_links#edit", :id => "2", :event_id => '1')
       end
       it "routes to #update" do
         put("/events/1/external_links/2").should route_to("external_links#update", :id => "2", :event_id => '1')
       end
+
       it "routes to #delete" do
         get("/events/1/external_links/2/delete").should route_to("external_links#delete", :id => "2", :event_id => '1')
       end

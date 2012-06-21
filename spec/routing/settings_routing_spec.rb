@@ -31,6 +31,9 @@ describe SettingsController do
     it "routes to #delete" do
       get("/settings/1/delete").should route_to("settings#delete", :id => "1")
     end
+    it "routes to #destroy via delete" do
+      delete("/settings/1/delete").should route_to("settings#destroy", :id => "1")
+    end
     it "routes to #destroy" do
       delete("/settings/1").should route_to("settings#destroy", :id => "1")
     end

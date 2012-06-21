@@ -30,6 +30,9 @@ describe ProjectsController do
     it "routes to #delete" do
       get("/projects/1/delete").should route_to("projects#delete", :id => "1")
     end
+    it "routes to #destroy via delete" do
+      delete("/projects/1/delete").should route_to("projects#destroy", :id => "1")
+    end
     it "routes to #destroy" do
       delete("/projects/1").should route_to("projects#destroy", :id => "1")
     end
