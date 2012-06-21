@@ -39,6 +39,8 @@ group :assets do
 end
 
 group :development, :test do
+  # http://brakemanscanner.org/
+  gem 'brakeman', '>= 1.6.2'
   gem 'chronic', '>= 0.6.7'
   # metric_fu dropped because of messy dependencies interfering with some other gems
   #gem 'metric_fu', '>= 2.0.1', require: false

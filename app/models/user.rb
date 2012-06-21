@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, :if => :password_present?
   validates_presence_of :password_confirmation, :if => :password_present?
   validates_presence_of :email, :if => :local_authentication_required?
-  validates_format_of :email, :with => /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/, :allow_blank => true
+  validates_format_of :email, :with => /\A[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+\z/, :allow_blank => true
   validates_uniqueness_of :email, :case_sensitive => false, :if => :email_present?
   validate :validate_timezone
 

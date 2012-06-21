@@ -3,30 +3,37 @@
 You can use the ./preflight script before committing code changes, or follow the directions that follow.
 
 
-== Code quality review
-
-Generate and review the metrical reports:
-> metrical
-
-If there are no problems, or the “problems” identified in the report are acceptable, proceed to the next stage. Otherwise, go back and make appropriate changes to the code.
-
-
 == Tests pass, maintaining 100% code coverage
 
-Turn off autotest if it’s running.
+=== Run tests
 
-Clear the coverage cache.
-> rm coverage/resultset.yml
+For the rspec tests, you can keep autotest running whenever you are working on the code:
+> bundle exec autotest
+Otherwise, run the rake task:
+> bundle exec rake spec
 
-Run the test suites:
-> rake spec
-> rake cucumber
+For cucumber, run the rake task (when the rspec tests are not running):
+> bundle exec rake cucumber
 
-If you have less than 100% coverage,
-review the coverage report:
+=== Code coverage
+
+There should be a coverage line at the end of the test reports when running the rspec or cucumber tests.
+
+If the result is less than 100%, review the coverage report:
 > open coverage/index.html
 then edit your tests and code until you’re back to 100% coverage,
 then start the commit process over again.
+
+
+== Code quality review
+
+Run the brakeman tests for possible security issues:
+> bundle exec rake brakeman
+
+Run the rails best practices checker:
+> bundle exec rails_best_practices
+
+If there are no problems, or the “problems” identified in the report are acceptable, proceed to the next stage. Otherwise, go back and make appropriate changes to the code.
 
 
 == Commit changes to git

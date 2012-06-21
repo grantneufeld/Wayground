@@ -50,9 +50,11 @@ class SessionsController < ApplicationController
     end
     cookies[:remember_token] = user.remember_token_hash
     session[:source] = authentication.provider
-    redirect_to end_up_at_url, :notice => notice
+    redirect_to end_up_at_url, only_path: true, notice: notice
   rescue Wayground::WrongUserForAuthentication
-    redirect_to end_up_at_url, :alert => "ERROR: The authentication failed because the requested authentication is unavailable!"
+    redirect_to(end_up_at_url, only_path: true,
+      alert: "ERROR: The authentication failed because the requested authentication is unavailable!"
+    )
   end
 
 

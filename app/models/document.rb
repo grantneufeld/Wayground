@@ -25,7 +25,7 @@ class Document < ActiveRecord::Base
     :with=>/\A(\/|([\w_~\+\-]+)(\.[\w_]+)?\/?)\z/,
     :message=>'must only be letters, numbers, dashes and underscores, with an optional extension; e.g., “a-filename_1.txt”'
   validates_presence_of :content_type
-  validates_format_of :content_type, :with => /^[a-z\-]+\/[a-z\+\-]+$/,
+  validates_format_of :content_type, :with => /\A[a-z\-]+\/[a-z\+\-]+\z/,
     :message => "is not a valid content type"
   # require data to be set, but allow it to be empty
   validates_presence_of :datastore, :unless => Proc.new {|doc| doc.data == ''}

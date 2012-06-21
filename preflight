@@ -37,6 +37,9 @@ else
 	exit 1
 fi
 
+# report on possible code security issues
+bundle exec rake brakeman
+
 # # report on the code quality
 # echo "Generating Metric Fu reports..."
 # bundle exec rake metrics:all

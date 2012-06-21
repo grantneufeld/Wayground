@@ -1,6 +1,7 @@
 .bundle
 .DS_Store
 .sass-cache/*
+brakeman.html
 Capfile
 config/database.yml
 config/amazon_s3.yml
