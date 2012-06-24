@@ -12,7 +12,7 @@ require 'spec_helper'
 describe ApplicationHelper do
   describe "#show_errors" do
     it "displays errors (ActiveRecord-style) from an object" do
-      item = User.new({:email => 'invalid'})
+      item = User.new({email: 'invalid'})
       item.valid?
       helper.show_errors(item).should match /[0-9]+ errors? prevented this User from being saved:/i
     end
@@ -21,7 +21,7 @@ describe ApplicationHelper do
   ## Generate the pagination header, telling the user where they are in the pagination.
   ## item_plural: The pluralized name of the type of item (e.g., “documents”).
   #def show_pagination_header(item_plural = nil)
-  #  render :partial => 'layouts/pagination_header', :locals => {:item_plural => item_plural}
+  #  render partial: 'layouts/pagination_header', locals: {item_plural: item_plural}
   #end
   context "#show_pagination_header" do
     it "renders the pagination header partial" do
@@ -33,7 +33,7 @@ describe ApplicationHelper do
 
   ## Generate the pagination selector (links to numbered pages), if there is more than one page.
   #def show_pagination_selector
-  #  render :partial => 'layouts/pagination_selector'
+  #  render partial: 'layouts/pagination_selector'
   #end
   context "#show_pagination_selector" do
     it "renders the pagination selector partial" do
@@ -110,5 +110,15 @@ describe ApplicationHelper do
       helper.simple_text_to_html_breaks(str).html_safe?.should be_true
     end
   end
+
+  describe "#separator" do
+    it "should output an appropriate span element" do
+      helper.separator.should eq '<span class="separator">,</span>'
+    end
+    it "should output a span element using the given character(s)" do
+      helper.separator('test').should eq '<span class="separator">test</span>'
+    end
+  end
+
 
 end

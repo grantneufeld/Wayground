@@ -12,12 +12,12 @@
   end %></td>
 <td><%= project.filename %></td>
 <td><%= project.description %></td>
-<td><%= link_to 'Edit', edit_project_path(project), :class => 'action' %><span class="separator">,</span>
-<%= link_to 'Delete', [:delete, project], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %></td>
+<td><%= link_to 'Edit', edit_project_path(project), class: 'action' %><%= separator %>
+<%= link_to 'Delete', [:delete, project], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %></td>
 </tr>
 <% end -%>
 </tbody></table>
 
 <p class="actions">
-<%= link_to 'New Project', new_project_path, :class => 'action' %>
+<%= link_to 'New Project', new_project_path, class: 'action' %>
 </p>

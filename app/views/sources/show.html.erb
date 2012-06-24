@@ -18,15 +18,15 @@
 
 <p class="actions"><%
 if @source.has_authority_for_user_to?(@user, :can_update)
-  %><%= link_to 'Process', processor_source_path(@source), :class => 'action' %><span class="separator">,</span>
-<%= link_to 'Edit', edit_source_path(@source), :class => 'action' %><%
+  %><%= link_to 'Process', processor_source_path(@source), class: 'action' %><%= separator %>
+<%= link_to 'Edit', edit_source_path(@source), class: 'action' %><%
 end
 if @source.has_authority_for_user_to?(@user, :can_delete)
-  %><span class="separator">,</span>
-<%= link_to 'Delete', [:delete, @source], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><%
+  %><%= separator %>
+<%= link_to 'Delete', [:delete, @source], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%
 end
 %>
-<%= link_to 'New Source', new_source_path, :class => 'action' %></p>
+<%= link_to 'New Source', new_source_path, class: 'action' %></p>
 
 <h2><%= @sourced_items.count %> Sourced Items</h2>
 <ul>

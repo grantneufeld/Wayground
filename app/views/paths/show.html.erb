@@ -9,4 +9,5 @@ if @path.redirect? -%>
 <p><b>Redirects to:</b> <%= link_to @path.redirect, @path.redirect %></p>
 <% end -%>
 
-<p class="actions"><%= link_to 'Edit', edit_path_path(@path), :class => 'action' %><span class="separator">, </span><%= link_to 'Delete', delete_path_path(@path), :class => 'action' %></p>
+<p class="actions"><%= link_to 'Edit', edit_path_path(@path), class: 'action' %><%= separator %>
+<%= link_to 'Delete', delete_path_path(@path), class: 'action' %></p>

@@ -11,15 +11,15 @@
     %><span title="<%= source.last_updated_at.to_s(:plain_datetime) %>"><%= source.last_updated_at.to_s(:compact_date) %></span><%
   end
   %></td>
-<td><%= link_to 'Details', source, :class => 'action' %><span class="separator">,</span><%
+<td><%= link_to 'Details', source, class: 'action' %><%= separator %><%
   if source.has_authority_for_user_to?(@user, :can_update) %>
-<%= link_to 'Process', processor_source_path(source), :class => 'action' %><span class="separator">,</span>
-<%= link_to 'Edit', edit_source_path(source), :class => 'action' %><span class="separator">,</span><%
+<%= link_to 'Process', processor_source_path(source), class: 'action' %><%= separator %>
+<%= link_to 'Edit', edit_source_path(source), class: 'action' %><%= separator %><%
   end
   if source.has_authority_for_user_to?(@user, :can_delete) %>
-<%= link_to 'Delete', [:delete, source], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><%
+<%= link_to 'Delete', [:delete, source], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%
     end %></td></tr>
 <% end -%>
 </tbody></table>
 
-<p class="actions"><%= link_to 'New Source', new_source_path, :class => 'action' %></p>
+<p class="actions"><%= link_to 'New Source', new_source_path, class: 'action' %></p>

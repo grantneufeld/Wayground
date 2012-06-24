@@ -4,7 +4,7 @@
 @page_main_class = 'vevent'
 
 content_for(:head) do
-  %><link rel="alternate" href="<%= event_path(@event, :format => 'ics') %>" type="text/calendar" title="icalendar file for event" />
+  %><link rel="alternate" href="<%= event_path(@event, format: 'ics') %>" type="text/calendar" title="icalendar file for event" />
 <link rel="profile" href="http://microformats.org/profile/hcalendar" />
 <%
 end
@@ -30,7 +30,7 @@ unless event_end.blank? || event_end == event_start
     %>-<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).lstrip! %></time><%
   end
 end %>
-<br /><%= link_to 'Download to your calendar.', event_path(@event, :format => 'ics'), :class => 'ics', :title => "Download this event as a file compatible with most calendar applications" %></p>
+<br /><%= link_to 'Download to your calendar.', event_path(@event, format: 'ics'), class: 'ics', title: "Download this event as a file compatible with most calendar applications" %></p>
 <%
 
 loc_location = @event.location
@@ -41,7 +41,7 @@ if loc_location.present? || loc_address.present? || loc_city.present?
   loc_url = @event.location_url
   if loc_location.present?
     if loc_url.present?
-      %><%= link_to loc_location, loc_url, :class => 'fn org' %><%
+      %><%= link_to loc_location, loc_url, class: 'fn org' %><%
     else
       %><span class="fn org"><%= loc_location %></span><%
     end %>
@@ -52,7 +52,7 @@ if loc_location.present? || loc_address.present? || loc_city.present?
   elsif loc_address.present?
     %><span class="adr"><%
     if loc_url.present?
-      %><%= link_to loc_address, loc_url, :class => 'street-address' %><%
+      %><%= link_to loc_address, loc_url, class: 'street-address' %><%
     else
       %><span class="street-address"><%= loc_address %></span><%
     end
@@ -104,7 +104,7 @@ if @event.external_links.count > 0
 <ul>
 <%
   @event.external_links.each do |external_link|
-    %><%= render 'external_links/external_link', {:user => @user, :item => @event, :external_link => external_link} %><%
+    %><%= render 'external_links/external_link', {user: @user, item: @event, external_link: external_link} %><%
   end
 %></ul>
 
@@ -113,25 +113,25 @@ end
 if @user.present?
   %><p class="actions"><%
   if @event.has_authority_for_user_to?(@user, :can_update)
-    %><%= link_to 'Edit', edit_event_path(@event), :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Edit', edit_event_path(@event), class: 'action' %><%= separator %>
 <%
   end
   if !(@event.is_approved?) && @event.has_authority_for_user_to?(@user, :can_approve)
-    %><%= link_to 'Approve', approve_event_path(@event), :data => {:confirm => "Are you sure you want to approve the event “#{@event.title}”?"}, :method => :post, :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Approve', approve_event_path(@event), data: {confirm: "Are you sure you want to approve the event “#{@event.title}”?"}, method: :post, class: 'action' %><%= separator %>
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_delete)
     if @event.has_authority_for_user_to?(@user, :can_update)
-      %><%= link_to 'Merge', merge_event_path(@event), :class => 'action', :title => 'Merge with another Event (you must know the event id)' %><span class="separator">,</span>
+      %><%= link_to 'Merge', merge_event_path(@event), class: 'action', title: 'Merge with another Event (you must know the event id)' %><%= separator %>
 <%
     end
-    %><%= link_to 'Delete', [:delete, @event], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'Delete', [:delete, @event], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%= separator %>
 <%
   end
   if @event.has_authority_for_user_to?(@user, :can_create)
-    %><%= link_to 'New External Link', new_event_external_link_path(@event), :class => 'action' %><span class="separator">,</span>
+    %><%= link_to 'New External Link', new_event_external_link_path(@event), class: 'action' %><%= separator %>
 <%
   end
-  %><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+  %><%= link_to 'New Event', new_event_path, class: 'action' %></p>
 <%
 end -%>

@@ -3,18 +3,18 @@ module ApplicationHelper
   # item: the item to get the errors from
   # heading: the optional error message, shown as a heading above the list of errors
   def show_errors(item, heading=nil)
-    render :partial => 'layouts/errors', :locals => {:item => item, :heading => heading}
+    render partial: 'layouts/errors', locals: {item: item, heading: heading}
   end
 
   # Generate the pagination header, telling the user where they are in the pagination.
   # item_plural: The pluralized name of the type of item (e.g., “documents”).
   def show_pagination_header(item_plural = nil)
-    render :partial => 'layouts/pagination_header', :locals => {:item_plural => item_plural}
+    render partial: 'layouts/pagination_header', locals: {item_plural: item_plural}
   end
 
   # Generate the pagination selector (links to numbered pages), if there is more than one page.
   def show_pagination_selector
-    render :partial => 'layouts/pagination_selector'
+    render partial: 'layouts/pagination_selector'
   end
 
   # Generate an image tag for an icon based on a type of file (content_type).
@@ -41,6 +41,13 @@ module ApplicationHelper
       gsub(/(\r\n?(\r\n?)+|\n\n+)/, '<br /><br />'). # convert sequences of more than one line break to 2 br elements
       gsub(/[\r\n]+/, '<br />'). # convert remaining line breaks to single br elements
       html_safe
+  end
+
+  # Output a html separator element (`<span class="separator">,</span>`)
+  # that will be hidden in standard screen views,
+  # but used for separating links for increased accessibilty in assistive browsers.
+  def separator(sep_char = ',')
+    content_tag(:span, sep_char, class: 'separator')
   end
 
 end
