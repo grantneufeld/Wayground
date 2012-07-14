@@ -24,8 +24,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "url"
     t.string   "image_url"
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "authentications", ["provider", "uid"], :name => "auth", :unique => true
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.boolean  "can_invite"
     t.boolean  "can_permit"
     t.boolean  "can_approve"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   add_index "authorities", ["area", "user_id"], :name => "area"
@@ -68,8 +68,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "content_type",                                               :null => false
     t.string   "charset",                 :limit => 31
     t.string   "description",             :limit => 1023
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
   end
 
   add_index "documents", ["container_path_id", "filename"], :name => "pathname", :unique => true
@@ -101,8 +101,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "province",                 :limit => 31
     t.string   "country",                  :limit => 2
     t.string   "location_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                  :null => false
+    t.datetime "updated_at",                                                  :null => false
   end
 
   add_index "events", ["start_at", "end_at", "is_allday", "is_approved", "is_draft", "is_cancelled"], :name => "dates"
@@ -117,8 +117,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "site",       :limit => 31
     t.string   "title",                                         :null => false
     t.text     "url",        :limit => 1023,                    :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
   end
 
   add_index "external_links", ["item_type", "item_id"], :name => "index_external_links_on_item_type_and_item_id"
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "title",                                      :null => false
     t.text     "description"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
   end
 
   add_index "pages", ["parent_id", "filename"], :name => "path", :unique => true
@@ -143,8 +143,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "item_type"
     t.text     "sitepath",   :null => false
     t.text     "redirect"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "paths", ["item_type", "item_id"], :name => "item_idx"
@@ -166,8 +166,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "filename"
     t.string   "name",                                      :null => false
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
   end
 
   add_index "projects", ["creator_id"], :name => "creator"
@@ -179,8 +179,8 @@ ActiveRecord::Schema.define(:version => 15) do
   create_table "settings", :force => true do |t|
     t.string   "key"
     t.text     "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "settings", ["key"], :name => "key", :unique => true
@@ -197,6 +197,7 @@ ActiveRecord::Schema.define(:version => 15) do
     t.datetime "updated_at",                                 :null => false
   end
 
+  add_index "sourced_items", ["datastore_id"], :name => "index_sourced_items_on_datastore_id"
   add_index "sourced_items", ["item_type", "item_id", "last_sourced_at"], :name => "index_sourced_items_on_item_type_and_item_id_and_last_sourced_at"
   add_index "sourced_items", ["source_id"], :name => "index_sourced_items_on_source_id"
   add_index "sourced_items", ["source_identifier"], :name => "index_sourced_items_on_source_identifier"
@@ -219,6 +220,7 @@ ActiveRecord::Schema.define(:version => 15) do
   end
 
   add_index "sources", ["container_item_type", "container_item_id"], :name => "container"
+  add_index "sources", ["datastore_id"], :name => "index_sources_on_datastore_id"
   add_index "sources", ["last_updated_at"], :name => "index_sources_on_last_updated_at"
   add_index "sources", ["processor"], :name => "index_sources_on_processor"
   add_index "sources", ["refresh_after_at"], :name => "index_sources_on_refresh_after_at"
@@ -235,8 +237,8 @@ ActiveRecord::Schema.define(:version => 15) do
     t.string   "timezone",             :limit => 31
     t.string   "location"
     t.text     "about"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
   end
 
   add_index "users", ["email"], :name => "email", :unique => true

@@ -15,6 +15,7 @@ class CreateSources < ActiveRecord::Migration
       t.timestamps
     end
     add_index :sources, [:container_item_type, :container_item_id], :name => 'container'
+    add_index :sources, [:datastore_id]
     add_index :sources, [:processor]
     add_index :sources, [:last_updated_at]
     add_index :sources, [:refresh_after_at]

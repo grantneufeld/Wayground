@@ -11,6 +11,7 @@ class CreateSourcedItems < ActiveRecord::Migration
     end
     add_index :sourced_items, :source_id
     add_index :sourced_items, [:item_type, :item_id, :last_sourced_at]
+    add_index :sourced_items, [:datastore_id]
     add_index :sourced_items, :source_identifier
   end
 end
