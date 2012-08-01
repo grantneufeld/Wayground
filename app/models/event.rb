@@ -230,7 +230,7 @@ class Event < ActiveRecord::Base
       description.force_encoding('UTF-8') if description.encoding.name.match /ASCII/
       # strip away the url from the description if it’s been appended to the end
       url = ievent['URL'][:value]
-      description.sub!(/[ \t\r\n]*#{url.gsub('.', "\\.")}[ \t\r\n]*\z/, '') if url.present?
+      description.sub!(/([ \t\r\n]*Details:)?[ \t\r\n]*#{url.gsub('.', "\\.")}[ \t\r\n]*\z/, '') if url.present?
       # Make sure to keep the description within our size limits
       if description.size > 510
         # TODO: split long icalendar event descriptions into description and content fields
