@@ -42,10 +42,11 @@ group :development, :test do
   # http://brakemanscanner.org/
   gem 'brakeman', '>= 1.6.2'
   gem 'chronic', '>= 0.6.7'
+  gem 'debugger'
   # metric_fu dropped because of messy dependencies interfering with some other gems
   #gem 'metric_fu', '>= 2.0.1', require: false
   gem 'rails_best_practices', '>= 1.10.1', require: false
-  gem 'ruby-debug19', '>= 0.11.6', require: 'ruby-debug'
+  #gem 'ruby-debug19', '>= 0.11.6', require: 'ruby-debug'
 end
 
 group :test do
