@@ -3,13 +3,15 @@ require 'spec_helper'
 
 describe Event do
 
-  before do
+  before(:all) do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
   end
+
+  let(:source) { $source = FactoryGirl.create(:source) }
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Calendar” area" do
@@ -461,7 +463,6 @@ describe Event do
 
   describe "#flag_for_sourcing" do
     let(:event) { $event = FactoryGirl.create(:event) }
-    let(:source) { $source = FactoryGirl.create(:source) }
     let(:sourced_item) {
       $sourced_item = FactoryGirl.create(:sourced_item, :item => event, :source => source)
     }
@@ -722,114 +723,6 @@ describe Event do
 
   # icalendar source processing
 
-  def new_ievent(overrides = {})
-    {
-      'DESCRIPTION' => {value: 'Spec description.'},
-      'DTSTART' => {value: 24.hours.from_now.to_datetime},
-      'DTEND' => {value: 26.hours.from_now.to_datetime},
-      'KLASS' => {value: 'PUBLIC'},
-      'LOCATION' => {value: 'Spec Town, 123 Spec Street'},
-      'ORGANIZER' => {value: 'Spec Organization'},
-      'SUMMARY' => {value: 'Spec Event'},
-      'UID' => {value: '123@spec'},
-      'URL' => {value: 'http://spec.tld/spec/url'}
-    }.merge(overrides)
-  end
-  let(:ievent) { $ievent = new_ievent }
-  let(:event) { $event = Event.create_from_icalendar(ievent) }
-
-  describe ".icalendar_field_mapping" do
-    it "should use SUMMARY as the title" do
-      Event.icalendar_field_mapping(new_ievent)[:title].should eq 'Spec Event'
-    end
-    it "should use DESCRIPTION as the description" do
-      Event.icalendar_field_mapping(new_ievent)[:description].should eq 'Spec description.'
-    end
-    it "should strip the URL from the end of the description" do
-      url = 'http://test.tld/'
-      Event.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {value: "with url\n\t#{url}\n"}, 'URL' => {value: url})
-      )[:description].should eq 'with url'
-    end
-    it "should strip 'Details:' if it preceeds the URL at the end of the description" do
-      url = 'http://test.tld/'
-      Event.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {value: "description\nDetails: #{url}\n"}, 'URL' => {value: url})
-      )[:description].should eq 'description'
-    end
-    it "should split the description after the first paragraph after 100 chars if too long" do
-      event = Event.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) })
-      )
-      [event[:description], event[:content]].should eq [
-        ('A' * 99) + "\n" + ('B' * 100),
-        'Etc.' + ('C' * 350)
-      ]
-    end
-    it "should split the description on the last sentence break in a too long paragraph" do
-      event = Event.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 200) + '. ' + ('B' * 200) + '! ' + ('C' * 200) + '?' })
-      )
-      [event[:description], event[:content]].should eq [
-        ('A' * 200) + '. ' + ('B' * 200) + '!',
-        ('C' * 200) + '?'
-      ]
-    end
-    it "should split the description on the last space in a too long sentence" do
-      event = Event.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 200) + ' ' + ('B' * 200) + ' ' + ('C' * 200) + ' ' })
-      )
-      [event[:description], event[:content]].should eq [
-        ('A' * 200) + ' ' + ('B' * 200),
-        ('C' * 200)
-      ]
-    end
-    it "should split the description after the 100th char if an unbroken blob of characters" do
-      event = Event.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 100) + 'B' + ('C' * 411)})
-      )
-      [event[:description], event[:content]].should eq ['A' * 100, 'B' + ('C' * 411)]
-    end
-    it "should use LOCATION as the location" do
-      Event.icalendar_field_mapping(new_ievent)[:location].should eq 'Spec Town, 123 Spec Street'
-    end
-    it "should use ORGANIZER as the organizer" do
-      Event.icalendar_field_mapping(new_ievent)[:organizer].should eq 'Spec Organization'
-    end
-    it "should use DTSTART as the start_at date & time" do
-      date = '2001-02-03 04:05:06 MST'.to_datetime
-      Event.icalendar_field_mapping(
-        new_ievent('DTSTART' => {:value => date})
-      )[:start_at].should eq date
-    end
-    it "should use DTEND as the end_at date & time" do
-      date = '2001-02-03 04:05:06 MST'.to_datetime
-      Event.icalendar_field_mapping(
-        new_ievent('DTEND' => {:value => date})
-      )[:end_at].should eq date
-    end
-  end
-
-  describe ".create_from_icalendar" do
-    it "should create a new event" do
-      event.class.should eq Event
-    end
-    context "with a given user" do
-      let(:user) { $user = @user_normal }
-      it "should set the version editor to the user" do
-        Event.create_from_icalendar(ievent, user).versions.first.user.should eq user
-      end
-    end
-    context "with a user to use for approval" do
-      it "should flag created events as approved if the user can approve" do
-        Event.create_from_icalendar(ievent, nil, @user_admin).is_approved?.should be_true
-      end
-      it "should not flag created events as approved if the user cannot approve" do
-        Event.create_from_icalendar(ievent, nil, @user_normal).is_approved?.should be_false
-      end
-    end
-  end
-
   describe "#update_from_icalendar" do
     let(:start_time) { $start_time = 25.hours.ago }
     let(:end_time) { $end_time = 24.hours.ago }
@@ -849,6 +742,7 @@ describe Event do
     context "with no local changes to the event" do
       it "should overwrite any changed information" do
         # make a slightly different ievent
+        event = Event.new
         # update the event using the different ievent
         event.update_from_icalendar(changed_ievent)
         [ event.description, event.start_at, event.end_at,
@@ -867,7 +761,7 @@ describe Event do
       # TODO: handle processing an update for an event with local changes
       it "should return false" do
         # set the last arg to true (has_local_modifications)
-        Event.new.update_from_icalendar(changed_ievent, nil, true).should be_false
+        Event.new.update_from_icalendar(changed_ievent, has_local_modifications: true).should be_false
       end
     end
   end
