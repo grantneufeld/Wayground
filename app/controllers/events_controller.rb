@@ -152,7 +152,8 @@ class EventsController < ApplicationController
     @page_title = "Merge Event: #{@event.title}"
     @merge_with = Event.find(params[:merge_with])
     @merge_with.editor = @user
-    @conflicts = @event.merge_into!(@merge_with)
+    merger = Merger::EventMerger.new(@event)
+    @conflicts = merger.merge_into!(@merge_with)
   end
 
   protected
