@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe UsersController do
 
-  before do
+  before(:all) do
     User.destroy_all
   end
 

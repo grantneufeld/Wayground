@@ -6,6 +6,14 @@ describe User do
     @mock_auth = mock_model(Authentication, stubs)
   end
 
+  before(:all) do
+    User.delete_all
+    @admin = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, email: 'test+user@wayground.ca')
+    @bob = FactoryGirl.create(:user, {:name => 'Bob', :email => 'bob@bob.tld'})
+    @item = FactoryGirl.create(:page)
+  end
+
   describe "attr_accessible" do
     it "should allow timezone to be set" do
       tz_str = 'test timezone'
@@ -110,32 +118,22 @@ describe User do
   end
 
   describe ".find_by_string" do
-    before(:all) do
-      User.delete_all
-      FactoryGirl.create(:user)
-      @user = FactoryGirl.create(:user, {:name => 'Bob', :email => 'bob@bob.tld'})
-      FactoryGirl.create(:user)
-    end
     it "should return nil given an empty string" do
       User.find_by_string('').should be_nil
     end
     it "should find matching id, given a numeric string" do
-      User.find_by_string(@user.id.to_s).should == @user
+      User.find_by_string(@bob.id.to_s).should == @bob
     end
     it "should find matching email given an email string" do
-      User.find_by_string('bob@bob.tld').should == @user
+      User.find_by_string('bob@bob.tld').should == @bob
     end
     it "should find matching name given an arbitrary string" do
-      User.find_by_string('Bob').should == @user
+      User.find_by_string('Bob').should == @bob
     end
   end
 
   describe ".main_admin" do
     it "should find the first admin" do
-      Authority.delete_all
-      User.delete_all
-      @admin = FactoryGirl.create(:user)
-      FactoryGirl.create_list(:user, 3)
       User.main_admin.should eq @admin
     end
   end
@@ -151,7 +149,6 @@ describe User do
 
   describe ".create_from_authentication!" do
     it "should create a new user with the authentication" do
-      #authentication = mock_auth({:name => 'User From Auth', :email => 'test+fromauth@wayground.ca', :user= => nil, :to_ary => []})
       authentication = FactoryGirl.create(:authentication,
         {:name => 'User From Auth', :email => 'test+fromauth@wayground.ca'}
       )
@@ -164,13 +161,6 @@ describe User do
   end
 
   describe "password encryption" do
-    before(:each) do
-      @user = User.new
-      @user.email = 'test+newuser@wayground.ca'
-      @user.password_confirmation = @user.password = 'password'
-      @user.save!
-    end
-
     it "should save an encrypted version of a new user’s password" do
       @user.password_hash.present?.should be_true
     end
@@ -190,22 +180,14 @@ describe User do
   end
 
   describe "email code confirmation" do
-    before(:each) do
-      @user = User.new
-      @user.email = 'test+newuser@wayground.ca'
-      @user.password_confirmation = @user.password = 'password'
-      @user.save!
-    end
-
     it "should generate a confirmation token when creating a new user" do
-      @user.confirmation_token.blank?.should_not be
+      @user.confirmation_token.blank?.should_not be_true
     end
     it "should fail to confirm if the code parameter does not match the saved token" do
       @user.confirm_code!('invalid token').should be_false
     end
     it "should fail to confirm if the user’s email has already been confirmed" do
       @user.email_confirmed = true
-      @user.save!
       @user.confirm_code!(@user.confirmation_token).should be_false
     end
     it "should successfully flag the user’s email as confirmed" do
@@ -213,6 +195,7 @@ describe User do
       @user.email_confirmed.should be_true
     end
     it "should clear the confirmation token when the user’s email is confirmed" do
+      @user.email_confirmed = false
       @user.confirm_code!(@user.confirmation_token)
       @user.confirmation_token.should be_nil
     end
@@ -257,47 +240,35 @@ describe User do
   # AUTHORITIES
 
   context "#admin?" do
-    before(:all) do
-      @user = FactoryGirl.create(:user)
-    end
     it "should be true for a user with global is_owner authority" do
       @user.make_admin!
       @user.admin?.should be_true
     end
     it "should not be true for a user with global, but not is_owner, authority" do
-      @user.authorities.delete_all
+      @user.authorizations.delete_all
       @user.set_authority_on_area('global', :can_view)
       @user.admin?.should_not be_true
     end
     it "should not be true for a regular user" do
-      @user.authorities.delete_all
+      @user.authorizations.delete_all
       @user.admin?.should_not be_true
     end
   end
 
   describe "#first_user_is_admin" do
-    before(:each) do
-      Authority.delete_all
-      User.delete_all
-      @user = FactoryGirl.create(:user)
-    end
     it "should create one authority for first user" do
-      Authority.count.should == 1
+      @user.authorizations.delete_all
+      User.stub(:count).and_return(1)
+      expect { @user.first_user_is_admin }.to change(Authority, :count).by(1)
     end
     it "should do nothing if more than one user" do
-      Authority.count.should == 1
-      User.count.should == 1
-      second_user = FactoryGirl.create(:user)
-      Authority.count.should == 1
+      @user.authorizations.delete_all
+      User.stub(:count).and_return(2)
+      expect { @user.first_user_is_admin }.to_not change(Authority, :count)
     end
   end
 
   describe "#make_admin!" do
-    before(:each) do
-      Authority.delete_all
-      User.delete_all
-      @admin = FactoryGirl.create(:user)
-    end
     it "should upgrade a pre-existing global authority" do
       authority = FactoryGirl.create(:authority, {:area => 'global'})
       user = authority.user
@@ -363,11 +334,6 @@ describe User do
   end
 
   describe "#set_authority_on_item" do
-    before(:each) do
-      @admin = FactoryGirl.create(:user)
-      @user = FactoryGirl.create(:user)
-      @item = FactoryGirl.create(:page)
-    end
     it "should create an authority" do
       @user.authorizations.delete_all
       @user.set_authority_on_item(@item, :can_update)
@@ -386,8 +352,7 @@ describe User do
 
   describe "#has_authority_for_area" do
     before(:all) do
-      @admin = FactoryGirl.create(:user)
-      @user = FactoryGirl.create(:user)
+      @user.authorizations.delete_all
       @auth_content = FactoryGirl.create(:authority, {:user => @user, :area => 'Content', :is_owner => true})
       @auth_user = FactoryGirl.create(:authority, {:user => @user, :area => 'User', :can_update => true})
       @auth_global = FactoryGirl.create(:authority, {:user => @user, :area => 'global', :can_view => true})

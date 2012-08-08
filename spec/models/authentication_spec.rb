@@ -14,14 +14,12 @@ describe Authentication do
   describe ".authenticate_callback!" do
     before(:all) do
       Authentication.delete_all
-      User.delete_all
-    end
-    before(:each) do
-      @authentication = FactoryGirl.build(:authentication)
-      @authentication.save!
-      @auth = {'provider' => @authentication.provider, 'uid' => @authentication.uid}
     end
     describe "with existing authentication" do
+      before(:all) do
+        @authentication = FactoryGirl.create(:authentication)
+        @auth = {'provider' => @authentication.provider, 'uid' => @authentication.uid}
+      end
       it "should throw an error when the authentication’s user doesn’t match the given user" do
         expect {
           Authentication.authenticate_callback!(@auth, mock_user)

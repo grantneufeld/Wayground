@@ -2,6 +2,10 @@
 require 'spec_helper'
 
 describe ExternalLink do
+  before(:all) do
+    @item = FactoryGirl.create(:page)
+  end
+
   describe "acts_as_authority_controlled" do
     it "should be in the “Content” area" do
       ExternalLink.authority_area.should eq 'Content'
@@ -23,9 +27,8 @@ describe ExternalLink do
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow item to be set" do
-      item = FactoryGirl.build(:page)
       expect {
-        elink = ExternalLink.new(:item => item)
+        elink = ExternalLink.new(:item => @item)
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow item_type to be set" do
@@ -46,9 +49,6 @@ describe ExternalLink do
   end
 
   describe "validation" do
-    before(:all) do
-      @item = FactoryGirl.create(:page)
-    end
     it "should pass if all required values are set" do
       elink = ExternalLink.new(:title => 'A', :url => 'http://validation.test/all/required/values')
       elink.position = 1
@@ -117,36 +117,40 @@ describe ExternalLink do
   end
 
   describe "#set_default_position" do
-    before(:each) do
-      @item = FactoryGirl.create(:page)
-    end
     it "should set position to 1 if no other ExternalLinks are on the item" do
-      @elink = ExternalLink.new
-      @elink.item = @item
-      @elink.set_default_position
-      @elink.position.should eq 1
+      external_links = double('external links on item')
+      external_links.stub(order: external_links)
+      external_links.stub(first: nil)
+      @item.stub(external_links: external_links)
+      elink = ExternalLink.new
+      elink.item = @item
+      elink.set_default_position
+      elink.position.should eq 1
     end
     it "should set position to come after all other ExternalLinks on the item" do
-      @elink = FactoryGirl.create(:external_link, :item => @item, :position => 36)
-      @elink = FactoryGirl.create(:external_link, :item => @item, :position => 72)
-      @elink = FactoryGirl.create(:external_link, :item => @item, :position => 45)
-      @elink = ExternalLink.new
-      @elink.item = @item
-      @elink.set_default_position
-      @elink.position.should eq 73
+      mock_link = double('external link')
+      mock_link.stub(position: 72)
+      external_links = double('external links on item')
+      external_links.stub(order: external_links)
+      external_links.stub(first: mock_link)
+      @item.stub(external_links: external_links)
+      elink = ExternalLink.new
+      elink.item = @item
+      elink.set_default_position
+      elink.position.should eq 73
     end
     it "should automatically assign the position when creating an ExternalLink" do
-      @elink = ExternalLink.new(:title => 'New', :url => 'http://new.position.test/')
-      @elink.item = @item
-      @elink.save!
-      @elink.position.should eq 1
+      elink = ExternalLink.new(:title => 'New', :url => 'http://new.position.test/')
+      elink.item = @item
+      elink.save!
+      elink.position.should eq 1
     end
-    it "should not overwrite an existing position" do
-      @elink = ExternalLink.new
-      @elink.item = @item
-      @elink.position = 123
-      @elink.set_default_position
-      @elink.position.should eq 123
+    it "should not overwrite position if already set" do
+      elink = ExternalLink.new
+      elink.item = @item
+      elink.position = 123
+      elink.set_default_position
+      elink.position.should eq 123
     end
   end
 

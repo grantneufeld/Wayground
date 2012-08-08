@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Source do
-  before do
+  before(:all) do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin

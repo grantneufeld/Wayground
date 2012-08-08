@@ -16,6 +16,10 @@ INHERITED_AUTHORITY_CLASS = Path
 # in the database, unless I figure out how to stub out all the applicable parts of ActiveRecord.
 
 describe "authority_controlled extensions to ActiveRecord::Base" do
+  before(:all) do
+    Authentication.delete_all
+  end
+
   describe ".authority_area" do
     it "should default to the class name for ActiveRecord models that are not set as authority_controlled" do
       NO_AUTHORITY_CLASS.authority_area.should eq NO_AUTHORITY_CLASS.name

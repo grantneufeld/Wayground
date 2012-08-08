@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe SourcesController do
-  before do
+  before(:all) do
     Source.destroy_all
     Authority.delete_all
     User.destroy_all

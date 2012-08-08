@@ -7,6 +7,12 @@ describe DocumentsController do
   before(:all) do
     Authority.delete_all
     User.delete_all
+    Document.delete_all
+    # create 11 public documents and 1 private
+    @document = FactoryGirl.create(:document)
+    FactoryGirl.create_list(:document, 10, :user => @document.user)
+    # create a document that should nto be viewable without authority
+    @private_doc = FactoryGirl.create(:document, :is_authority_controlled => true)
   end
 
   def set_logged_in_admin(stubs={})
@@ -69,15 +75,6 @@ describe DocumentsController do
   end
 
   describe "GET index" do
-    before(:all) do
-      Document.delete_all
-      Authority.delete_all
-      # create 11 public documents and 1 private
-      document = FactoryGirl.create(:document)
-      # create a document that should nto be viewable without authority
-      @private_doc = FactoryGirl.create(:document, :is_authority_controlled => true)
-      FactoryGirl.create_list(:document, 10, :user => document.user)
-    end
     it "assigns all viewable documents as @documents" do
       get :index, {:max => '100'}
       assigns(:documents).should_not include @private_doc
@@ -133,6 +130,9 @@ describe DocumentsController do
       end
 
       context "with valid params" do
+        after(:each) do
+          Document.last.delete
+        end
         it "creates a new Document" do
           expect {
             post :create, :document => valid_attributes
@@ -170,10 +170,6 @@ describe DocumentsController do
   end
 
   describe "GET edit" do
-    before(:each) do
-      @document = FactoryGirl.create(:document)
-    end
-
     it "requires the user to have authority" do
       get :delete, :id => @document.id.to_s
       response.status.should eq 403
@@ -187,10 +183,6 @@ describe DocumentsController do
   end
 
   describe "PUT update" do
-    before(:each) do
-      @document = FactoryGirl.create(:document)
-    end
-
     context "as anonymous user" do
       it "requires the user to have authority" do
         put :update, :id => @document.id.to_s
@@ -213,13 +205,17 @@ describe DocumentsController do
         end
 
         it "assigns the requested document as @document" do
-          put :update, :id => @document.id, :document => valid_attributes
-          assigns(:document).should eq(@document)
+          document = FactoryGirl.create(:document)
+          put :update, :id => document.id, :document => valid_attributes
+          assigns(:document).should eq(document)
+          document.delete
         end
 
         it "redirects to the document" do
-          put :update, :id => @document.id, :document => valid_attributes
-          response.should redirect_to(@document)
+          document = FactoryGirl.create(:document)
+          put :update, :id => document.id, :document => valid_attributes
+          response.should redirect_to(document)
+          document.delete
         end
       end
 
@@ -243,8 +239,7 @@ describe DocumentsController do
 
   describe "GET delete" do
     it "requires the user to have authority" do
-      test_document = FactoryGirl.create(:document)
-      get :delete, :id => test_document.id.to_s
+      get :delete, :id => @private_doc.id.to_s
       response.status.should eq 403
     end
 
@@ -259,8 +254,7 @@ describe DocumentsController do
   describe "DELETE destroy" do
     context "as anonymous user" do
       it "requires the user to have authority" do
-        test_document = FactoryGirl.create(:document)
-        delete :destroy, :id => test_document.id.to_s
+        delete :destroy, :id => @document.id.to_s
         response.status.should eq 403
       end
     end
@@ -268,16 +262,16 @@ describe DocumentsController do
     context "as an authorized user" do
       before(:each) do
         set_logged_in_admin
-        @document = FactoryGirl.create(:document)
+        @delete_document = FactoryGirl.create(:document)
       end
       it "destroys the requested document" do
         expect {
-          delete :destroy, :id => @document.id.to_s
+          delete :destroy, :id => @delete_document.id.to_s
         }.to change(Document, :count).by(-1)
       end
 
       it "redirects to the documents list" do
-        delete :destroy, :id => @document.id.to_s
+        delete :destroy, :id => @delete_document.id.to_s
         response.should redirect_to(documents_url)
       end
     end

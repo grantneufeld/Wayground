@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe AuthoritiesController do
 
-  before do
+  before(:all) do
     Authority.delete_all
     User.destroy_all
   end
