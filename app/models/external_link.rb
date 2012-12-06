@@ -50,7 +50,7 @@ class ExternalLink < ActiveRecord::Base
           'Facebook event'
         when /^https?:\/\/(?:[a-z0-9\.\-]*\.)eventbrite.com\//
           'Event Registration (Eventbrite)'
-        when /^https?:\/\/(?:[a-z0-9\.]*\.)meetup.com\/(.+\/)?events\/[0-9]+/
+        when /^https?:\/\/(?:[a-z0-9\.]*\.)meetup.com\/(.+\/)?events\/.+/
           'Meetup event'
         when /^[a-z]+:\/*([^:\/]+)/
           $1 # use the url’s domain
