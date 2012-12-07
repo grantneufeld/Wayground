@@ -35,8 +35,12 @@ end
 
 group :development do
   # code analysis tools:
-  gem 'brakeman', '>= 1.8.3', require: false # http://brakemanscanner.org/
-  gem 'rails_best_practices', '>= 1.13.1', require: false
+  gem 'brakeman', require: false # http://brakemanscanner.org/
+  gem 'churn', require: false # https://github.com/danmayer/churn
+  gem 'flay', require: false # https://github.com/seattlerb/flay
+  gem 'flog', require: false # https://github.com/seattlerb/flog
+  gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
+  gem 'reek', require: false # https://github.com/troessner/reek/wiki
 end
 
 group :development, :test do

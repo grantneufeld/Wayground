@@ -38,15 +38,15 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_update).should be_false
     end
     it "should refer to authority_area authorities for change actions when not set as authority_controlled" do
-      item = FactoryGirl.create(:authority, :area => 'test')
+      item = FactoryGirl.create(:authority, area: 'test')
       user = FactoryGirl.create(:user)
-      a = FactoryGirl.create(:authority, :user => user, :area => 'Authority', :can_update => true)
+      a = FactoryGirl.create(:authority, user: user, area: 'Authority', can_update: true)
       item.has_authority_for_user_to?(user, :can_update).should be_true
     end
     it "should fall back to global authorities for change actions when not set as authority_controlled" do
-      item = FactoryGirl.create(:authority, :area => 'test')
+      item = FactoryGirl.create(:authority, area: 'test')
       user = FactoryGirl.create(:user)
-      a = FactoryGirl.create(:authority, :user => user, :area => 'global', :can_update => true)
+      a = FactoryGirl.create(:authority, user: user, area: 'global', can_update: true)
       item.has_authority_for_user_to?(user, :can_update).should be_true
     end
   end
@@ -62,7 +62,7 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
         Page.delete_all
         Path.delete_all
         FactoryGirl.create(:page)
-        FactoryGirl.create(:page, :is_authority_controlled => true)
+        FactoryGirl.create(:page, is_authority_controlled: true)
         SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 1
       end
       it "should return no items for models that are all private authority_controlled" do
@@ -85,14 +85,14 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       it "should return all items user has authority for" do
         Page.delete_all
         Path.delete_all
-        FactoryGirl.create(:page, :is_authority_controlled => true)
-        page = FactoryGirl.create(:page, :is_authority_controlled => true)
-        user = FactoryGirl.create(:authority, :item => page, :can_update => true).user
+        FactoryGirl.create(:page, is_authority_controlled: true)
+        page = FactoryGirl.create(:page, is_authority_controlled: true)
+        user = FactoryGirl.create(:authority, item: page, can_update: true).user
         SELECTIVE_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
       end
       it "should return all items user has authority for for non-authority-controlled models" do
         auth = FactoryGirl.create(:authentication)
-        user = FactoryGirl.create(:authority, :item => auth, :can_update => true).user
+        user = FactoryGirl.create(:authority, item: auth, can_update: true).user
         NO_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
       end
     end
@@ -105,7 +105,7 @@ describe "acts_as_authority_controlled" do
       PRIVATE_AUTHORITY_CLASS.new.is_authority_restricted?.should be_true
     end
     it "should, when using the default, restrict viewing records when the flag is set" do
-      SELECTIVE_AUTHORITY_CLASS.new(:is_authority_controlled => true).is_authority_restricted?.should be_true
+      SELECTIVE_AUTHORITY_CLASS.new(is_authority_controlled: true).is_authority_restricted?.should be_true
     end
     it "should, when using the default, allow viewing records when the flag is not set" do
       SELECTIVE_AUTHORITY_CLASS.new.is_authority_restricted?.should be_false
@@ -118,13 +118,13 @@ describe "acts_as_authority_controlled" do
   it "should not allow a class to be assigned to the ‘global’ authority_area" do
     expect {
       class TestAuthorityControlledCannotBeGlobal < ActiveRecord::Base
-        acts_as_authority_controlled :authority_area => 'global', :item_authority_flag_field => :always_private
+        acts_as_authority_controlled authority_area: 'global', item_authority_flag_field: :always_private
       end
     }.to raise_exception(Wayground::ModelAuthorityAreaCannotBeGlobal)
   end
   it "should allow a class to be assigned to a custom authority_area" do
     class TestAuthorityControlledCustomArea < ActiveRecord::Base
-      acts_as_authority_controlled :authority_area => 'Custom Area', :item_authority_flag_field => :always_private
+      acts_as_authority_controlled authority_area: 'Custom Area', item_authority_flag_field: :always_private
     end
     TestAuthorityControlledCustomArea.authority_area.should eq 'Custom Area'
   end
@@ -157,7 +157,7 @@ describe "authority_controlled class" do
     it "should extend an existing authority" do
       item = FactoryGirl.create(:user)
       user = FactoryGirl.create(:user)
-      FactoryGirl.create(:authority, :user => user, :item => item, :can_update => true)
+      FactoryGirl.create(:authority, user: user, item: item, can_update: true)
       item.set_authority_for!(user, :can_delete)
       authority = item.has_authority_for_user_to?(user, :can_delete)
       (authority.can_update && authority.can_delete).should be_true
@@ -197,8 +197,8 @@ describe "authority_controlled class" do
       @item = FactoryGirl.create(:user)
       @owner = FactoryGirl.create(:user)
       @viewer = FactoryGirl.create(:user)
-      FactoryGirl.create(:authority, :user => @owner, :item => @item, :is_owner => true)
-      FactoryGirl.create(:authority, :user => @viewer, :item => @item, :can_view => true)
+      FactoryGirl.create(:authority, user: @owner, item: @item, is_owner: true)
+      FactoryGirl.create(:authority, user: @viewer, item: @item, can_view: true)
     end
     it "should have authority for the owner" do
       @item.has_authority_for_user_to?(@owner, :can_update).should be_true
@@ -232,9 +232,12 @@ describe "inherited authority model" do
     it "should not allow unauthorized users to access restricted items" do
     end
     it "should allow area-authorized users access when no item to inherit from" do
+      # ensure there's an existing admin user
+      FactoryGirl.create(:user) if User.count == 0
+      # create our working user
       user = FactoryGirl.create(:user)
       user.set_authority_on_area(INHERITED_AUTHORITY_CLASS.authority_area, :can_update)
-      item = INHERITED_AUTHORITY_CLASS.create!(:sitepath => '/spec/authority/inherited/no_item', :redirect => '/')
+      item = INHERITED_AUTHORITY_CLASS.create!(sitepath: '/spec/authority/inherited/no_item', redirect: '/')
       item.has_authority_for_user_to?(user, :can_update).should be_true
       item.has_authority_for_user_to?(user, :can_delete).should be_false
     end

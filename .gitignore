@@ -1,7 +1,6 @@
 .bundle
 .DS_Store
 .sass-cache/*
-brakeman.html
 Capfile
 config/database.yml
 config/amazon_s3.yml
@@ -11,7 +10,6 @@ config/initializers/oauth_consumers.rb
 config/initializers/omniauth.rb
 config/initializers/secret_token.rb
 coverage/*
-coverage.data
 db/*.sqlite3
 db/*.sqlite3-journal
 db/development_structure.sql
@@ -22,7 +20,7 @@ public/ckeditor/_source/*
 public/ckeditor/*.asp
 public/ckeditor/*.php
 public/**/all.*
-rails_best_practices_output.html
+reports/*
 rerun.txt
 tmp/*
 tmp/**/*

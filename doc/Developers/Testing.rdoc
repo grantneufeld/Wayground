@@ -2,16 +2,9 @@
 
 These are instructions for testing the code, and guidelines for writing tests.
 
-Rspec is being used for unit tests. Cucumber for behavioural/feature tests. The Cucumber features are the priority for testing.
+Rspec is being used for unit tests. Cucumber for behavioural/feature/acceptance tests. The Cucumber features are the priority for testing.
 
 I am not using Rspec or TestUnit based integration testing, because that functionality is effectively covered using Cucumber feature testing.
-
-
-== Autotest
-
-While working on the code, you can have autotest continuously running in a terminal to alert you when a change you make causes a test to fail.
-
-> bundle exec autotest
 
 
 == Cucumber
@@ -19,12 +12,12 @@ While working on the code, you can have autotest continuously running in a termi
 The Cucumber features are the most critical piece of testing; code should not be written without being fully covered by Cucumber feature scripts (run the tests and then review coverage/index.html before doing a check-in).
 
 To run the cucumber feature scenarios:
-> rake cucumber
+> bundle exec rake cucumber
 
 There are two special tags to be used when writing feature scenarios. Tags are put on the line before a “Scenario:”, or on the first line of the feature file (to apply to all scenarios in the file).
 * ‘@future’: Have the scenario(s) ignored completely when running cucumber. This allows for using the feature files to describe future features in context (a sort of “to-do” list).
 * ‘@wip’: Work in progress. These are for the scenarios you are currently working on (in general, there should be no more than 3 of these active at a time). These scenarios will not run during the normal cucumber execution, since they are expected to fail (being incomplete). You can run just the @wip scenarios while your work is in progress:
-> rake cucumber:wip
+> bundle exec rake cucumber:wip
 
 If you need to test Javascript in the context of your features, you can tag scenarios with ‘@javascript’.
 Capybara also provides explicit @selenium, @culerity and @rack_test tags to define which handler to use.
@@ -35,7 +28,13 @@ Capybara also provides explicit @selenium, @culerity and @rack_test tags to defi
 There’s a tiny bit of testing code written using rspec (the test files are in the spec directory). Ideally, comprehensive unit tests should be written in rspec for at least all model classes and any utility libraries.
 
 To run the unit tests:
-> rake spec
+> bundle exec rspec
+
+=== Autotest
+
+While working on the code, you can have autotest continuously running in a terminal to alert you when a change you make causes a test to fail. I have it configured to run the rspec test suite.
+
+> bundle exec autotest
 
 
 == Metrics
@@ -54,20 +53,6 @@ before viewing the reports to get the combined results.
 
 === Code Quality Testing
 
-The rails-best-practices gem can be used to try to spot some sub-optimal coding.
+I’m using the `churn`, `flay`, `flog`, `rails_best_practices`, and `reek` gems to do code analysis metrics.
 
-To generate the html report (with editor links if you’re using TextMate):
-> rails_best_practices -f html --with-textmate --spec --features
-
-To generate a text report in the terminal:
-> rails_best_practices --spec --features
-
-More info: http://rails-bestpractices.com
-
-=== Metrical
-
-Metrical generates a bunch of different reports and provides a common interface to them all.
-
-To generate the metrical reports:
-> metrical
-That should automatically open up the reports index in your default web browser. If not, the index should be at ‘tmp/metric_fu/output/index.html’.
+They are all called from the `preflight` script in the project root.

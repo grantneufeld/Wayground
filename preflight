@@ -5,10 +5,14 @@
 # Requirements:
 # * git
 # * Ruby Gems
-# - cucumber
-# - metric_fu
 # - rspec
+# - cucumber
 # - simple_cov
+# - churn
+# - flay
+# - flog
+# - reek
+# - rails_best_practices
 #
 # simple_cov needs to be configured to generate the coverage/percentage.txt file,
 # which will just have the numeric percentage result.
@@ -22,8 +26,7 @@ if echo $gs | grep -q "^nothing to commit" ; then
 fi
 
 echo "Running test suites..."
-rm coverage/resultset.yml
-bundle exec rake spec
+bundle exec rspec -f progress -c --order random --fail-fast
 bundle exec rake cucumber
 
 # the following requires simple_cov to be configured to generate the coverage/percentage.txt file.
@@ -39,14 +42,29 @@ fi
 
 # report on possible code security issues
 echo "Generating Brakeman report..."
-bundle exec rake brakeman
-open brakeman.html
+bundle exec rake brakeman:run[reports/brakeman.html]
 echo ""
 
-# # report on the code quality
-echo "Generating Rails Best Practices report..."
-bundle exec rails_best_practices
+# report on the code quality
+echo "Generating churn report..."
+bundle exec churn > reports/churn.txt
 echo ""
+echo "Generating flay report..."
+bundle exec rake flay > reports/flay.txt
+echo ""
+echo "Generating flog report..."
+bundle exec flog -g -d -c -v app lib > reports/flog.txt
+echo ""
+echo "Generating reek report..."
+bundle exec reek app/models app/helpers app/processors lib > reports/reek.txt
+# TODO: strip lines endding in " -- 0 warnings" from the report
+echo ""
+echo "Generating Rails Best Practices report..."
+bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
+echo ""
+
+echo "Please review the reports found in the project's 'reports' directory."
+open reports
 
 # report the git status
 echo "Checking version control status..."
