@@ -3,6 +3,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path(File.dirname(__FILE__) + '/../config/simple_cov_config')
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'factory_girl'
+require 'factory_girl_rails'
 
 # To add capybara support:
 #require 'capybara/rspec'

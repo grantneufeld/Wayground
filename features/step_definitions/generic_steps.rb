@@ -47,7 +47,7 @@ Then /^(?:|I )should see errors for (.+)$/ do |field_names|
   field_names = field_names.split(/(?:, *|,? and )/)
   field_names.each do |field_name|
     # <div class="error_messages"><ul><li>field_name...
-    page.should have_selector('.error_messages > ul', :text => /^#{field_name} .*/)
+    page.should have_selector('.error_messages > ul > li', :text => /^#{field_name} .*/)
   end
 end
 

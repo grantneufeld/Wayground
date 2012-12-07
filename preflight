@@ -38,15 +38,15 @@ else
 fi
 
 # report on possible code security issues
+echo "Generating Brakeman report..."
 bundle exec rake brakeman
 open brakeman.html
+echo ""
 
 # # report on the code quality
-# echo "Generating Metric Fu reports..."
-# bundle exec rake metrics:all
-# open tmp/metric_fu/output/index.html
-# echo ""
-# FIXME: bring in some of the individual Metric Fu components, such as rails_best_practices.
+echo "Generating Rails Best Practices report..."
+bundle exec rails_best_practices
+echo ""
 
 # report the git status
 echo "Checking version control status..."

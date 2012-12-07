@@ -116,8 +116,8 @@ When /^(?:|I )(?:|try to )view the ([A-Za-z]+) "([^\"]+)"$/ do |class_name, labe
 end
 
 Then /^(?:|I )should see the authorities index$/ do
-  step 'I should see "Authorities" within "title"'
-  step 'I should see "List of Authorities" within "h1"'
+  step 'I should see "Authorities" in the element "title"'
+  step 'I should see "List of Authorities" in the element "h1"'
 end
 
 
@@ -141,12 +141,12 @@ end
 
 Then /^(?:|I )should be denied access$/ do
   #status_code.should eq 403
-  step 'I should see "Unauthorized" within "title"'
+  step 'I should see "Unauthorized" in the element "title"'
 end
 
 Then /^(?:|I )should be told to sign in$/ do
   #status_code.should eq 403
-  step 'I should see "Sign In Required" within "title"'
+  step 'I should see "Sign In Required" in the element "title"'
 end
 
 

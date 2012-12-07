@@ -14,7 +14,7 @@ Feature: Sign up
   Scenario: User tries to sign up with invalid data
     When I go to the sign up page
     And I fill in "Email" with "invalidemail"
-    And I fill in "Password" with "password"
+    And I fill in "user_password" with "password"
     And I fill in "Confirm Password" with ""
     And I fill in "Name" with ""
     And I press "Sign Up"
@@ -24,7 +24,7 @@ Feature: Sign up
     Given there is already a user "Someone Else"
     When I go to the sign up page
     And I fill in "Email" with "test+signup@wayground.ca"
-    And I fill in "Password" with "password"
+    And I fill in "user_password" with "password"
     And I fill in "Confirm Password" with "password"
     And I fill in "Name" with "A. Person"
     And I press "Sign Up"

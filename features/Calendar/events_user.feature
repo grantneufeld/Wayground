@@ -14,8 +14,8 @@ Feature: Events
     When I go to the event form
     And I fill in "Start at" with "January 1, 2020, 3:00 PM"
     And I fill in "End at" with "January 3, 2020, 3:00 AM"
-    And I fill in "Title" with "New User Event"
-    And I fill in "Description" with "This is an event, newly posted by a user."
+    And I fill in "event_title" with "New User Event"
+    And I fill in "event_description" with "This is an event, newly posted by a user."
     And I press "Save Event"
     Then I should see a notice that "The event has been submitted."
     And I should be on the page for the event "New User Event"

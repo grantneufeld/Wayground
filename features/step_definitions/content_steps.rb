@@ -16,5 +16,5 @@ end
 Then /^(?:|I )should see the web page for "([^\"]+)"$/ do |filename|
   path = Path.find_for_path(filename)
   the_page = path.item
-  page.should have_selector('title', :text => the_page.title)
+  page.body.should have_selector('title', :text => the_page.title)
 end

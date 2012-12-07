@@ -8,8 +8,8 @@ Feature: Events have External Links
     When I go to the event form
     And I fill in "Start at" with "February 23, 2014, 12:30 PM"
     And I fill in "End at" with "February 23, 2014, 12:45 PM"
-    And I fill in "Title" with "New Event With Link"
-    And I fill in "Description" with "This is an event, newly posted by an admin, that includes a link."
+    And I fill in "event_title" with "New Event With Link"
+    And I fill in "event_description" with "This is an event, newly posted by an admin, that includes a link."
     And I fill in "event_external_links_attributes_0_url" with "http://create.event.tld/"
     And I press "Save Event"
     Then the event "New Event With Link" should have the link "http://create.event.tld/"
@@ -19,7 +19,7 @@ Feature: Events have External Links
     And there is an event "Linkless Event"
     When I go to the page for the event "Linkless Event"
     And I follow "Edit"
-    And I fill in "Title" with "Linked Event"
+    And I fill in "event_title" with "Linked Event"
     And I fill in "event_external_links_attributes_0_url" with "http://addlink.event.tld/"
     And I press "Save Event"
     Then the event "Linked Event" should have the link "http://addlink.event.tld/"
@@ -29,7 +29,7 @@ Feature: Events have External Links
     And there is an event "Event With Link" with link ""
     When I go to the page for the event "Event With Link"
     And I follow "Edit"
-    And I fill in "Title" with "De-Linked Event"
+    And I fill in "event_title" with "De-Linked Event"
     And I check "event_external_links_attributes_0__destroy"
     And I press "Save Event"
     Then the event "De-Linked Event" should not have any links
