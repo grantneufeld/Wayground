@@ -23,11 +23,13 @@ SimpleCov.start do
   add_group "Short files" do |src_file|
     src_file.lines.count < 5
   end
+
+  coverage_dir 'reports/coverage'
 end
 
 SimpleCov.at_exit do
   SimpleCov.result.format!
-  path = 'coverage/percentage.txt'
+  path = 'reports/coverage/percentage.txt'
   if File.exist?(path)
     f = File.open(path, 'w')
   else

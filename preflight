@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# preflight.sh - Pre-flighting a Ruby project before a version commit.
+# preflight.sh - Pre-flighting a Ruby on Rails project before a version commit.
 #
 # Requirements:
 # * git
@@ -8,36 +8,37 @@
 # - rspec
 # - cucumber
 # - simple_cov
+# - brakeman (+ rake task)
 # - churn
-# - flay
+# - flay (+ rake task)
 # - flog
-# - reek
 # - rails_best_practices
+# - reek
 #
-# simple_cov needs to be configured to generate the coverage/percentage.txt file,
+# simple_cov needs to be configured to generate the reports/coverage/percentage.txt file,
 # which will just have the numeric percentage result.
 
 # checking for changes
 gs="$(git status | tail -n 1)"
-if echo $gs | grep -q "^nothing to commit" ; then
-	# no uncommitted changes - so nothing to commit
-	echo "Nothing to commit."
-	exit 2
+if echo $gs | grep --quiet "^nothing to commit" ; then
+  # no uncommitted changes - so nothing to commit
+  echo "Nothing to commit."
+  exit 2
 fi
 
 echo "Running test suites..."
-bundle exec rspec -f progress -c --order random --fail-fast
+bundle exec rspec --format progress --color --profile --order random --fail-fast
 bundle exec rake cucumber
 
-# the following requires simple_cov to be configured to generate the coverage/percentage.txt file.
-if cat coverage/percentage.txt | grep -q "^100\.0*$" ; then
-	# we have 100% coverage
-	echo ""
+# the following requires simple_cov to be configured to generate the reports/coverage/percentage.txt file.
+if cat reports/coverage/percentage.txt | grep --quiet "^100\.0*$" ; then
+  # we have 100% coverage
+  echo ""
 else
-	# we have < 100% coverage:
-	echo "Incomplete code test coverage ($(cat coverage/percentage.txt)%)."
-	open coverage/index.html
-	exit 1
+  # we have < 100% coverage:
+  echo "Incomplete code test coverage ($(cat reports/coverage/percentage.txt)%)."
+  open coverage/index.html
+  exit 1
 fi
 
 # report on possible code security issues
@@ -53,11 +54,10 @@ echo "Generating flay report..."
 bundle exec rake flay > reports/flay.txt
 echo ""
 echo "Generating flog report..."
-bundle exec flog -g -d -c -v app lib > reports/flog.txt
+bundle exec flog --group --details --continue --19 app > reports/flog.txt
 echo ""
 echo "Generating reek report..."
-bundle exec reek app/models app/helpers app/processors lib > reports/reek.txt
-# TODO: strip lines endding in " -- 0 warnings" from the report
+bundle exec reek --quiet app/controllers app/models app/helpers app/processors lib > reports/reek.txt
 echo ""
 echo "Generating Rails Best Practices report..."
 bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
@@ -68,16 +68,14 @@ open reports
 
 # report the git status
 echo "Checking version control status..."
-if echo $gs | grep -q "^no changes added to commit" ; then
-	# there are changes, but none have been staged for version control
-	git status
-	echo ""
-	echo "Nothing has been staged for commit. Please use 'git add <path>' to stage files for commit."
-	exit 3
+git status
+echo ""
+if echo $gs | grep --quiet "^no changes added to commit" ; then
+  # there are changes, but none have been staged for version control
+  echo "Nothing has been staged for commit. Please use 'git add <path>' to stage files for commit."
+  exit 3
 else
- 	# there are files to commit
-	git status
-	echo ""
-	echo "Ready for commit ('git commit')."
-	echo "Use 'git add <path>', first, if you want to add additional files for the commit."
+  # there are files to commit
+  echo "Ready for commit ('git commit')."
+  echo "Use 'git add <path>', first, if you want to add additional files for the commit."
 fi
