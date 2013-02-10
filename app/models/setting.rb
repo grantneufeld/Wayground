@@ -10,36 +10,31 @@ class Setting < ActiveRecord::Base
   default_scope order('key')
 
   # Key-indexed accessor for the values of settings.
-  def self.[](k)
-    setting = self.find_by_key(k)
+  def self.[](key)
+    setting = self.find_by_key(key)
     setting.nil? ? nil : setting.value
   end
 
-  # Key-indexed assignment for the values of settings
-  def self.[]=(k, v)
-    setting = self.find_by_key(k)
-    if setting.nil?
-      setting = self.new(:key => k)
-    end
-    setting.value = v.to_s
+  # Key-indexed assignment for the values of settings.
+  def self.[]=(key, value)
+    setting = self.find_by_key(key)
+    # create the setting if it doesn’t already exist
+    setting ||= self.new(key: key)
+    setting.value = value.to_s
     setting.save!
   end
 
   # Key-indexed removal of settings.
-  def self.destroy(k)
-    setting = self.find_by_key(k)
+  def self.destroy(key)
+    setting = self.find_by_key(key)
     setting.destroy unless setting.nil?
   end
 
   # Set the values of settings, but don’t overwrite existing values if present.
-  # @hash[Hash] - a hash whose key-value pairs are to be converted to settings
-  def self.set_defaults(hash)
-    hash.each do |k,v|
-      # do not set to default value if the setting already exists
-      unless self[k]
-        # the setting has not been set yet, so use the default value provided
-        self[k] = v.to_s
-      end
+  def self.set_defaults(key_value_pairs)
+    key_value_pairs.each do |key, value|
+      # if the setting has not been set yet, use the value provided
+      self[key] ||= value.to_s
     end
   end
 end
