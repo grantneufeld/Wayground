@@ -461,7 +461,7 @@ describe Event do
     end
   end
 
-  describe "#flag_for_sourcing" do
+  describe "#flag_as_modified_for_sourcing" do
     let(:event) { $event = FactoryGirl.create(:event) }
     let(:sourced_item) {
       $sourced_item = FactoryGirl.create(:sourced_item, :item => event, :source => source)
@@ -485,7 +485,7 @@ describe Event do
       sourced_item.has_local_modifications?.should be_false
       sourced_item2.has_local_modifications?.should be_false
       # “update” the event
-      event.flag_for_sourcing
+      event.flag_as_modified_for_sourcing
       event.sourced_items[0].has_local_modifications?.should be_true
       event.sourced_items[1].has_local_modifications?.should be_true
     end
@@ -493,7 +493,7 @@ describe Event do
       sourced_item.has_local_modifications = false
       sourced_item.save!
       event.is_sourcing = true
-      event.flag_for_sourcing
+      event.flag_as_modified_for_sourcing
       event.sourced_items[0].has_local_modifications?.should be_false
     end
   end

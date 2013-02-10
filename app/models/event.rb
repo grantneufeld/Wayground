@@ -57,7 +57,7 @@ class Event < ActiveRecord::Base
 
   before_create :set_timezone
   before_save :approve_if_authority
-  after_update :flag_for_sourcing
+  after_update :flag_as_modified_for_sourcing
   after_save :add_version
 
   def initialize(*args)
@@ -117,7 +117,7 @@ class Event < ActiveRecord::Base
   end
 
   # Called after save on update.
-  def flag_for_sourcing
+  def flag_as_modified_for_sourcing
     unless is_sourcing
       sourced_items.each {|sourced_item| sourced_item.update_attributes(has_local_modifications: true) }
     end
@@ -227,7 +227,7 @@ class Event < ActiveRecord::Base
   # If this Event has local modifications, return false.
   # (That previous bit should eventually change if we come up with a
   # good way to merge remote/sourced changes and local changes.)
-  def update_from_icalendar(ievent, params = {}) # :editor, :has_local_modifications
+  def update_from_icalendar(ievent, params = {}) # :editor, :has_local_modifications, :processor
     if params[:has_local_modifications]
       # TODO: handle updating a locally modified, sourced event
       false
