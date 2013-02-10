@@ -12,14 +12,11 @@ gem 'jquery-rails'
 # gem 'jbuilder'
 
 # To use ActiveModel has_secure_password
-gem 'bcrypt-ruby'
+gem 'bcrypt-ruby', '>= 3.0.0'
 # To support OAuth access
 gem 'omniauth', '~> 1.1.0'
 gem 'omniauth-facebook', '~> 1.3.0'
 gem 'omniauth-twitter', '>= 0.0.11'
-
-# Deploy with Capistrano
-gem 'capistrano', require: false
 
 gem 'tzinfo', '>= 0.3.33'
 
@@ -49,8 +46,8 @@ end
 
 group :test do
   # specs/testing:
-  gem 'rspec', '~> 2.11.0', require: false # core testing framework
-  gem 'rspec-rails', '~> 2.11.0', require: false
+  gem 'rspec', '>= 2.11.0', require: false # core testing framework
+  gem 'rspec-rails', '>= 2.11.0', require: false
   # features / acceptance tests:
   gem 'cucumber', '>= 1.2.1', require: false
   gem 'cucumber-rails', '>= 1.3.0', require: false
@@ -65,11 +62,11 @@ group :test do
   gem 'autotest-growl', '>= 0.2.9', require: false
   gem 'autotest-rails', '>= 4.1.2', require: false
   # data factories:
-  gem 'factory_girl', '~> 3.5.0', require: false
-  gem 'factory_girl_rails', '~> 3.5.0', require: false
+  gem 'factory_girl', '>= 3.5.0', require: false
+  gem 'factory_girl_rails', '>= 3.5.0', require: false
   # miscellaneous:
   gem 'capybara', require: false
   gem 'chronic', '>= 0.8.0', require: false
-  gem 'database_cleaner', '~> 0.8.0', require: false
+  gem 'database_cleaner', '>= 0.8.0', require: false
   gem 'timecop', '>= 0.5.4', require: false
 end
