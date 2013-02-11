@@ -5,6 +5,7 @@ describe ProjectsController do
   before(:all) do
     Authority.delete_all
     User.delete_all
+    Project.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
@@ -37,7 +38,7 @@ describe ProjectsController do
       project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       #set_logged_in_admin
       get :index #, {}, valid_session
-      assigns(:projects).should eq([project])
+      assigns(:projects).should include(project)
     end
   end
 
