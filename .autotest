@@ -30,4 +30,9 @@ Autotest.add_hook :initialize do |at|
   at.add_exception %r%.*\.tmproj$%
   # Ignore files in directories that are wrapped in brackets
   at.add_exception %r%^\./\(.*\)%
+
+  # Run the corresponding specs when files in the app/wayground directory are modified
+  at.add_mapping(/app\/wayground\/(?<source_name>.+)\.rb/) do |filepath, match_data|
+    at.files_matching(/wayground\/#{match_data[:source_name]}_spec\.rb/)
+  end
 end

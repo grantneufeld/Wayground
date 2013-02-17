@@ -1,0 +1,20 @@
+= File Structure for Wayground
+
+app/models
+  ActiveRecord models only.
+
+app/wayground
+  All the classes/models that are not tied to the Rails framework.
+  (I.e., not ActiveRecord models, controllers, or mailers.)
+
+features
+  Cucumber features. Should always be in categorized sub-directories.
+  (E.g., `features/User/reset_password.feature` and not `features/reset_password.feature`.)
+
+reports
+  Reports generated from code analysis/metrics tools.
+
+spec
+  Rspec tests — mostly correspond to directories under `app` and `lib`.
+
+All other directories follow Rails conventions.
