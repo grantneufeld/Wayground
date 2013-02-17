@@ -48,7 +48,7 @@ echo ""
 
 # report on the code quality
 echo "Generating churn report..."
-bundle exec churn > reports/churn.txt
+bundle exec churn --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,spec/factories.rb,README.rdoc" > reports/churn.txt
 echo ""
 echo "Generating flay report..."
 bundle exec rake flay > reports/flay.txt
