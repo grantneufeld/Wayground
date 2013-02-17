@@ -2,9 +2,17 @@
 
 These are instructions for testing the code, and guidelines for writing tests.
 
-Rspec is being used for unit tests. Cucumber for behavioural/feature/acceptance tests. The Cucumber features are the priority for testing.
 
-I am not using Rspec or TestUnit based integration testing, because that functionality is effectively covered using Cucumber feature testing.
+== Unit Testing With Rspec
+
+To run the unit tests:
+> bundle exec rspec
+
+=== Autotest
+
+While working on the code, you can have autotest continuously running in a terminal to alert you when a change you make causes a test to fail. I have it configured to run the rspec test suite.
+
+> bundle exec autotest
 
 
 == Cucumber
@@ -23,36 +31,23 @@ If you need to test Javascript in the context of your features, you can tag scen
 Capybara also provides explicit @selenium, @culerity and @rack_test tags to define which handler to use.
 
 
-== Unit Testing With Rspec
-
-There’s a tiny bit of testing code written using rspec (the test files are in the spec directory). Ideally, comprehensive unit tests should be written in rspec for at least all model classes and any utility libraries.
-
-To run the unit tests:
-> bundle exec rspec
-
-=== Autotest
-
-While working on the code, you can have autotest continuously running in a terminal to alert you when a change you make causes a test to fail. I have it configured to run the rspec test suite.
-
-> bundle exec autotest
-
-
 == Metrics
 
 === Code Coverage
 
-I’m using SimpleCov for code coverage analysis. In the current setup, the coverage reports are automatically updated when the test suites are run. See coverage/index.html for the report.
+I’m using SimpleCov for code coverage analysis. In the current setup, the coverage reports are automatically updated when the test suites are run. See `reports/coverage/index.html` for the report.
 
 https://github.com/colszowka/simplecov
 
-Note that you’ll want to run both:
-> rake spec
-and
-> rake cucumber
-before viewing the reports to get the combined results.
-
 === Code Quality Testing
 
-I’m using the `churn`, `flay`, `flog`, `rails_best_practices`, and `reek` gems to do code analysis metrics.
+I’m using the following gems to do code analysis and metrics.
+
+• brakeman: Detects possible security risks.
+• churn: Tracking how frequently given files, classes and methods change (based on check-ins).
+• flay: Detection of structural similarities across code (i.e.: possible duplication).
+• flog: Analyses overly complex (“tortured”) code.
+• rails_best_practices: Identifies code that is considered to violate “best practices” for rails programming.
+• reek: Detection of “code smells” — code that could likely benefit from clarification or refactoring.
 
 They are all called from the `preflight` script in the project root.
