@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'authority_controlled'
-require 'bcrypt'
+require 'crypted_password'
+require 'password'
 require 'authority'
 require 'active_support/values/time_zone'
 
@@ -11,7 +12,7 @@ class User < ActiveRecord::Base
   acts_as_authority_controlled :item_authority_flag_field => :always_private
 
   attr_accessible :email, :name, :password, :password_confirmation, :timezone
-  attr_accessor :password
+  attr_reader :password
 
   # cookie tokens for keeping the user logged in
   has_many :tokens, class_name: 'UserToken', dependent: :destroy
@@ -22,7 +23,6 @@ class User < ActiveRecord::Base
   # authorities: the Authority instances other users have to access this user.
   has_many :authorizations, :class_name => 'Authority', :dependent => :delete_all
 
-  before_save :encrypt_password
   before_create :generate_email_confirmation_token
   after_create :first_user_is_admin
 
@@ -85,17 +85,27 @@ class User < ActiveRecord::Base
 
   def self.authenticate(email, password)
     user = find_by_email(email)
-    if user && (BCrypt::Password.new(user.password_hash) == password)
+    if user && (user.password_hash == password)
       user
     else
       nil
     end
   end
 
-  def encrypt_password
-    if password.present?
-      self.password_hash = BCrypt::Password.create(password)
+  # Wrap the `password_hash` string attribute in a CryptedPassword object.
+  def password_hash
+    crypted_pass = read_attribute(:password_hash)
+    if crypted_pass.blank?
+      nil
+    else
+      Wayground::CryptedPassword.new(crypted_pass)
     end
+  end
+
+  # Generate the password hash when a password is assigned.
+  def password=(pass)
+    @password = pass
+    self.password_hash = Wayground::Password.new(pass).crypted_password.to_s
   end
 
   def generate_email_confirmation_token
