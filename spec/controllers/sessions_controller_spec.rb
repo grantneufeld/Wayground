@@ -51,31 +51,31 @@ describe SessionsController do
     end
     context "with a valid user sign in" do
       before(:all) do
-        @user = FactoryGirl.create(:user, :email => 'test+session@wayground.ca', :password => 'password')
+        @email = 'test+session@wayground.ca'
+        @user = FactoryGirl.create(:user, email: @email, password: 'password')
         @user_token = @user.tokens.create(token: 'valid user sign in token')
-        User.stub!(:authenticate).and_return(@user)
       end
       after(:all) do
         @user.delete
       end
       it "should sign in the user" do
-        post 'create', {:email => 'test+session@wayground.ca', :password => 'password'}
+        post 'create', {email: @email, password: 'password'}
         cookies['remember_token'].should match /.+\/#{@user.id}/
       end
       it "should take the user to the root page" do
-        post 'create', {:email => 'test+session@wayground.ca', :password => 'password'}
+        post 'create', {email: @email, password: 'password'}
         response.location.should eq root_url
       end
       it "should notify the user that they are signed in" do
-        post 'create', {:email => 'test+session@wayground.ca', :password => 'password'}
+        post 'create', {email: @email, password: 'password'}
         flash[:notice].should match /You are now signed in/
       end
       it "should set the remember_token cookie for the session" do
-        post 'create', {:email => 'test+session@wayground.ca', :password => 'password'}
+        post 'create', {email: @email, password: 'password'}
         cookies['remember_token'].should eq "#{@user_token.token}/#{@user.id}"
       end
       it "should set the remember_token permanent cookie when the user selects remember me" do
-        post 'create', {:email => 'test+session@wayground.ca', :password => 'password', :remember_me => '1'}
+        post 'create', {email: @email, password: 'password', remember_me: '1'}
         # FIXME: actually check whether the remember_token cookie is flagged as permanent
         cookies['remember_token'].should eq "#{@user_token.token}/#{@user.id}"
       end

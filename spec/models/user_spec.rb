@@ -162,19 +162,15 @@ describe User do
     end
   end
 
-  describe "password encryption" do
+  describe "password=" do
     it "should save an encrypted version of a new user’s password" do
-      @user.password_hash.present?.should be_true
+      user = User.new
+      user.password = 'encrypt this password'
+      expect( user.password_hash.present? ).to be_true
     end
-
-    describe ".authenticate" do
-      it "should fail to authenticate a user with a non-matching password" do
-        User.authenticate(@user.email, 'wrongpassword').should be_nil
-      end
-
-      it "should authenticate a user with a valid password" do
-        User.authenticate(@user.email, 'password').should eq @user
-      end
+    it "should be used in attribute mass assignment" do
+      user = User.new(password: 'encrypt this password')
+      expect( user.password_hash.present? ).to be_true
     end
   end
 

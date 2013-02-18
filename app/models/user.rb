@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
   before_create :generate_email_confirmation_token
   after_create :first_user_is_admin
 
+  # VALIDATION
+
   validates_presence_of :password, :on => :create, :if => :local_authentication_required?
   validates_length_of :password, :within => 8..63, :allow_blank => true
   validates_confirmation_of :password, :if => :password_present?
@@ -34,6 +36,27 @@ class User < ActiveRecord::Base
   validates_format_of :email, :with => /\A[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+\z/, :allow_blank => true
   validates_uniqueness_of :email, :case_sensitive => false, :if => :email_present?
   validate :validate_timezone
+
+  # validation conditionals
+  def local_authentication_required?
+    authentications[0].nil?
+  end
+  def password_present?
+    password.present?
+  end
+  def email_present?
+    email.present?
+  end
+
+  # If the timezone is set for a user, it must be valid.
+  # TODO: make this some kind of helper since it shows up in both the User and Event models.
+  def validate_timezone
+    if timezone.present? && ActiveSupport::TimeZone[timezone].nil?
+      errors.add(:timezone, 'must be a recognized timezone name')
+    end
+  end
+
+  # FINDERS
 
   # Returns user(s) that exactly match the string.
   # If string is an integer, searches by user.id.
@@ -58,23 +81,7 @@ class User < ActiveRecord::Base
     User.order(:id).first
   end
 
-  def local_authentication_required?
-    authentications[0].nil?
-  end
-  def password_present?
-    password.present?
-  end
-  def email_present?
-    email.present?
-  end
-
-  # If the timezone is set for a user, it must be valid.
-  # TODO: make this some kind of helper since it shows up in both the User and Event models.
-  def validate_timezone
-    if timezone.present? && ActiveSupport::TimeZone[timezone].nil?
-      errors.add(:timezone, 'must be a recognized timezone name')
-    end
-  end
+  # BUILDERS / FACTORIES
 
   def self.create_from_authentication!(authentication)
     user = self.new({:name => authentication.name, :email => authentication.email})
@@ -83,18 +90,14 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.authenticate(email, password)
-    user = find_by_email(email)
-    if user && (user.password_hash == password)
-      user
-    else
-      nil
-    end
-  end
+  # LOGIN
 
+  # label for the field used for logging in with a password (email)
   def self.login_name_attribute
     :email
   end
+
+  # PASSWORD
 
   # Wrap the `password_hash` string attribute in a CryptedPassword object.
   def password_hash
@@ -111,6 +114,8 @@ class User < ActiveRecord::Base
     @password = pass
     self.password_hash = Wayground::Password.new(pass).crypted_password.to_s
   end
+
+  # EMAIL CONFIRMATION
 
   def generate_email_confirmation_token
     unless email_confirmed || confirmation_token.present?

@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'user'
+require 'login/password_login'
 require 'authentication'
 
 # Actions for the user to sign-in or sign-out (establish/clear the user session).
@@ -11,7 +11,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.authenticate(params[:email], params[:password])
+    login = Wayground::Login::PasswordLogin.new(username: params[:email], password: params[:password])
+    user = login.user
     if user
       if params[:remember_me] == '1'
         cookie_set_remember_me_permanent(user)
