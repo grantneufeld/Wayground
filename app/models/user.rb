@@ -92,6 +92,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.login_name_attribute
+    :email
+  end
+
   # Wrap the `password_hash` string attribute in a CryptedPassword object.
   def password_hash
     crypted_pass = read_attribute(:password_hash)

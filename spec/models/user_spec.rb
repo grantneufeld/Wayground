@@ -178,6 +178,12 @@ describe User do
     end
   end
 
+  describe ".login_name_attribute" do
+    it "should return a label for the email field" do
+      expect( User.login_name_attribute ).to eq :email
+    end
+  end
+
   describe "#encrypt_password" do
   end
 
