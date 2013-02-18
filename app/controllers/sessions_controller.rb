@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'user'
+require 'authentication'
 
 # Actions for the user to sign-in or sign-out (establish/clear the user session).
 class SessionsController < ApplicationController
@@ -12,9 +14,9 @@ class SessionsController < ApplicationController
     user = User.authenticate(params[:email], params[:password])
     if user
       if params[:remember_me] == '1'
-        cookies.permanent[:remember_token] = user.remember_token_hash
+        cookie_set_remember_me_permanent(user)
       else
-        cookies[:remember_token] = user.remember_token_hash
+        cookie_set_remember_me(user)
       end
       session[:source] = nil
       redirect_to root_url, :notice => "You are now signed in."
@@ -48,7 +50,7 @@ class SessionsController < ApplicationController
       user = authentication.user
       notice = "You are now signed in."
     end
-    cookies[:remember_token] = user.remember_token_hash
+    cookie_set_remember_me(user)
     session[:source] = authentication.provider
     redirect_to end_up_at_url, only_path: true, notice: notice
   rescue Wayground::WrongUserForAuthentication

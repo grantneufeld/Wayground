@@ -1,14 +1,26 @@
+# encoding: utf-8
 require 'spec_helper'
+require 'project'
+require 'authority'
+require 'user'
+require 'user_token'
+require 'rememberer'
 
 describe ProjectsController do
 
   before(:all) do
     Authority.delete_all
     User.delete_all
+    UserToken.delete_all
     Project.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_admin_token = @user_admin.tokens.create(token: 'user admin token')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
+    @user_normal_token = @user_normal.tokens.create(token: 'user normal token')
+    @admin_project = FactoryGirl.create(:project,
+      creator: @user_admin, owner: @user_admin, filename: 'admin_project'
+    )
   end
 
   # This should return the minimal set of attributes required to create a valid
@@ -23,42 +35,38 @@ describe ProjectsController do
   # ProjectsController. Be sure to keep this updated too.
   def valid_session
     {}
-    #{:remember_token => @user_admin.remember_token_hash}
   end
 
   def set_logged_in_admin
-    request.cookies['remember_token'] = @user_admin.remember_token_hash
+    request.cookies['remember_token'] = Wayground::Rememberer.new(
+      remember: @user_admin, token: @user_admin_token
+    ).cookie_token
   end
   def set_logged_in_user
-    request.cookies['remember_token'] = @user_normal.remember_token_hash
+    request.cookies['remember_token'] = Wayground::Rememberer.new(
+      remember: @user_normal, token: @user_normal_token
+    ).cookie_token
   end
 
   describe "GET index" do
     it "assigns all projects as @projects" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
-      #set_logged_in_admin
-      get :index #, {}, valid_session
-      assigns(:projects).should include(project)
+      get :index
+      expect( assigns(:projects) ).to include(@admin_project)
     end
   end
 
   describe "GET show" do
     it "assigns the requested project as @project" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
-      #set_logged_in_admin
-      get :show, {:id => project.to_param} #, valid_session
-      assigns(:project).should eq(project)
+      get :show, {id: @admin_project.to_param}
+      expect( assigns(:project) ).to eq @admin_project
     end
     it "assigns the requested project from a projecturl" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin, :filename => 'test')
-      get :show, {:projecturl => 'test'}
-      assigns(:project).should eq(project)
+      get :show, {projecturl: 'admin_project'}
+      expect( assigns(:project)).to eq @admin_project
     end
     it "assigns the requested project from a projecturl set to the id" do
-      Project.delete_all
-      project = FactoryGirl.create(:project, :id => 1234, :creator => @user_admin, :owner => @user_admin)
-      get :show, {:projecturl => project.id.to_s}
-      assigns(:project).should eq(project)
+      get :show, {projecturl: @admin_project.id.to_s}
+      expect( assigns(:project) ).to eq @admin_project
     end
   end
 
@@ -70,29 +78,13 @@ describe ProjectsController do
 
     it "assigns a new project as @project" do
       set_logged_in_admin
-      get :new, {}, valid_session
+      get :new
       assigns(:project).should be_a_new(Project)
     end
   end
 
-  describe "GET edit" do
-    it "fails if not authorized to update the project" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
-      set_logged_in_user
-      get :edit, {:id => project.to_param} #, valid_session
-      response.status.should eq 403
-    end
-
-    it "assigns the requested project as @project" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
-      set_logged_in_admin
-      get :edit, {:id => project.to_param}, valid_session
-      assigns(:project).should eq(project)
-    end
-  end
-
   describe "POST create" do
-    describe "with valid params" do
+    context "with valid params" do
       it "creates a new Project" do
         expect {
           set_logged_in_admin
@@ -114,7 +106,7 @@ describe ProjectsController do
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "assigns a newly created but unsaved project as @project" do
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
@@ -133,8 +125,22 @@ describe ProjectsController do
     end
   end
 
+  describe "GET edit" do
+    it "fails if not authorized to update the project" do
+      set_logged_in_user
+      get :edit, {id: @admin_project.to_param}
+      expect( response.status ).to eq 403
+    end
+
+    it "assigns the requested project as @project" do
+      set_logged_in_admin
+      get :edit, {id: @admin_project.to_param}, valid_session
+      expect( assigns(:project) ).to eq @admin_project
+    end
+  end
+
   describe "PUT update" do
-    describe "with valid params" do
+    context "with valid params" do
       it "updates the requested project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Assuming there are no other projects in the database, this
@@ -161,22 +167,20 @@ describe ProjectsController do
       end
     end
 
-    describe "with invalid params" do
+    context "with invalid params" do
       it "assigns the project as @project" do
-        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, {:id => project.to_param, :project => {}}, valid_session
-        assigns(:project).should eq(project)
+        put :update, {id: @admin_project.to_param, project: {}}
+        expect( assigns(:project) ).to eq @admin_project
       end
 
       it "re-renders the 'edit' template" do
-        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, {:id => project.to_param, :project => {}}, valid_session
+        put :update, {id: @admin_project.to_param, project: {}}
         response.should render_template("edit")
       end
     end

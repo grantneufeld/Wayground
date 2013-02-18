@@ -1,5 +1,8 @@
 # encoding: utf-8
+require 'authority_controlled'
 require 'bcrypt'
+require 'authority'
+require 'active_support/values/time_zone'
 
 # Source References:
 # * http://railscasts.com/episodes/250-authentication-from-scratch
@@ -10,6 +13,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation, :timezone
   attr_accessor :password
 
+  # cookie tokens for keeping the user logged in
+  has_many :tokens, class_name: 'UserToken', dependent: :destroy
   # from oauth sources, so user can login from an external authenticating site
   has_many :authentications
   # WARNING: it is easy to confuse authorizations with authorities:
@@ -19,7 +24,6 @@ class User < ActiveRecord::Base
 
   before_save :encrypt_password
   before_create :generate_email_confirmation_token
-  before_create :generate_remember_token
   after_create :first_user_is_admin
 
   validates_presence_of :password, :on => :create, :if => :local_authentication_required?
@@ -73,7 +77,7 @@ class User < ActiveRecord::Base
   end
 
   def self.create_from_authentication!(authentication)
-    user = User.new({:name => authentication.name, :email => authentication.email})
+    user = self.new({:name => authentication.name, :email => authentication.email})
     user.authentications << authentication
     user.save!
     user
@@ -111,29 +115,6 @@ class User < ActiveRecord::Base
     else
       return false
     end
-  end
-
-  # REMEMBER ME
-
-  # Generate a unique token to be used to remember the user for future sessions.
-  def generate_remember_token
-    begin
-      self.remember_token = SecureRandom.urlsafe_base64
-    end while User.exists?(:remember_token => self.remember_token)
-  end
-
-  # Generate a secure hash, based on the remember token and user id, for use in cookies.
-  def remember_token_hash
-    if remember_token.blank?
-      generate_remember_token
-      save!
-    end
-    Digest::SHA1.hexdigest([remember_token,id].join('—')) + "/#{id}"
-  end
-
-  # Determines whether the given token_hash correctly identifies this user
-  def matches_token_hash?(token_hash)
-    token_hash == remember_token_hash
   end
 
   # AUTHORITIES

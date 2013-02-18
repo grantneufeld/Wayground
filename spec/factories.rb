@@ -127,6 +127,12 @@ FactoryGirl.define do
     email_confirmed true
   end
 
+  factory :user_token do
+    user
+    sequence(:token) {|n| "#{'x' * 63}#{n}"}
+    sequence(:expires_at) {|n| n.days.from_now}
+  end
+
   # item must be supplied
   factory :version do
     user

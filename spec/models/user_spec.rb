@@ -1,5 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'user'
+require 'authority'
 
 describe User do
   def mock_auth(stubs = {})
@@ -205,42 +207,6 @@ describe User do
       @user.confirmation_token = save_token #restore
     end
   end
-
-  # REMEMBER ME
-
-  context '#generate_remember_token' do
-    it "should create a unique token" do
-      user = FactoryGirl.build(:user)
-      user.generate_remember_token
-      user.save!
-      user.remember_token.present?.should be_true
-    end
-  end
-
-  context "#remember_token_hash" do
-    it "should produce a hash from the remember_token and user id" do
-      user = User.new
-      user.generate_remember_token
-      user.id = 123
-      user.remember_token_hash.should match /^.+\/123/
-    end
-    it "should generate a remember_token if blank" do
-      user = FactoryGirl.create(:user)
-      user.remember_token = nil
-      user.remember_token_hash
-      user.remember_token.present?.should be_true
-    end
-  end
-
-  context "#matches_token_hash?" do
-    it "should clear the token" do
-      user = User.new
-      user.generate_remember_token
-      token = user.remember_token_hash
-      user.matches_token_hash?(token).should be_true
-    end
-  end
-
 
   # AUTHORITIES
 

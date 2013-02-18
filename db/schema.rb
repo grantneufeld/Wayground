@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 15) do
+ActiveRecord::Schema.define(:version => 16) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -224,6 +224,20 @@ ActiveRecord::Schema.define(:version => 15) do
   add_index "sources", ["last_updated_at"], :name => "index_sources_on_last_updated_at"
   add_index "sources", ["processor"], :name => "index_sources_on_processor"
   add_index "sources", ["refresh_after_at"], :name => "index_sources_on_refresh_after_at"
+
+  create_table "user_tokens", :force => true do |t|
+    t.integer  "user_id",                     :null => false
+    t.string   "token",        :limit => 127, :null => false
+    t.datetime "expires_at"
+    t.datetime "last_used_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  add_index "user_tokens", ["expires_at"], :name => "index_user_tokens_on_expires_at"
+  add_index "user_tokens", ["last_used_at"], :name => "index_user_tokens_on_last_used_at"
+  add_index "user_tokens", ["token"], :name => "index_user_tokens_on_token"
+  add_index "user_tokens", ["user_id"], :name => "index_user_tokens_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email"

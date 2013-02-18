@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      cookies[:remember_token] = @user.remember_token_hash
+      cookie_set_remember_me(@user)
       if @user.admin?
         # an authority was created along with the user, so they must be an admin
         notice = "You are now registered as an administrator for this site."

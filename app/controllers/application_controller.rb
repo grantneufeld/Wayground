@@ -1,3 +1,7 @@
+# encoding: utf-8
+require 'user_token'
+require 'rememberer'
+
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
@@ -40,6 +44,16 @@ class ApplicationController < ActionController::Base
     @browser_nocache = true
   end
 
+  # set the remember me cookie for a user’s session
+  def cookie_set_remember_me(user)
+    cookies[:remember_token] = Wayground::Rememberer.new(remember: user).cookie_token
+  end
+
+  # set the remember me cookie for the user to be re-logged-in across sessions
+  def cookie_set_remember_me_permanent(user)
+    cookies.permanent[:remember_token] = Wayground::Rememberer.new(remember: user).cookie_token
+  end
+
   # Setup the pagination variables based on the params passed into the controller and the source class.
   # Returns the paginated items.
   # source: Must be an ActiveRecord-type relation (e.g., AREL) or ActiveRecord class.
@@ -65,21 +79,8 @@ class ApplicationController < ActionController::Base
   private
 
   def current_user
-    unless @current_user
-      token = cookies[:remember_token]
-      if token
-        token_parsed = token.match(/\/([0-9]+)$/)
-        if token_parsed
-          user_id = token_parsed[1].to_i
-          user = User.find(user_id)
-          @current_user = user if user.matches_token_hash?(token)
-        end
-      end
-    end
-  rescue ActiveRecord::RecordNotFound
-    nil
-  ensure
+    @current_user ||= UserToken.from_cookie_token(cookies[:remember_token]).user
     cookies.delete(:remember_token) unless @current_user
-    return @current_user
+    @current_user
   end
 end
