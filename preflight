@@ -43,12 +43,12 @@ fi
 
 # report on possible code security issues
 echo "Generating Brakeman report..."
-bundle exec rake brakeman:run[reports/brakeman.html]
+bundle exec brakeman --quiet --output reports/brakeman.html --message-limit 255 --routes --separate-models --confidence-level 1
 echo ""
 
 # report on the code quality
 echo "Generating churn report..."
-bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,spec/factories.rb,README.rdoc" > reports/churn.txt
+bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,preflight,spec/factories.rb,README.rdoc" > reports/churn.txt
 echo ""
 echo "Generating flay report..."
 bundle exec rake flay > reports/flay.txt
