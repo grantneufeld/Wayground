@@ -24,98 +24,100 @@ describe User do
     end
   end
 
-  describe "validations without authentications" do
-    it "should fail if there is no password" do
-      u = User.new
-      u.email = 'test@wayground.ca'
-      u.valid?.should be_false
+  describe "validations" do
+    context "of password" do
+      it "should fail if there is no password" do
+        u = User.new
+        u.email = 'test@wayground.ca'
+        u.valid?.should be_false
+      end
+      it "should fail if the password is less than 8 characters long" do
+        u = User.new
+        u.email = 'test@wayground.ca'
+        u.password_confirmation = u.password = '1234567'
+        u.valid?.should be_false
+      end
+      it "should fail if the password is more than 63 characters long" do
+        u = User.new
+        u.email = 'test@wayground.ca'
+        u.password_confirmation = u.password = 'a' * 64
+        u.valid?.should be_false
+      end
+      it "should fail if there is no password confirmation" do
+        u = User.new
+        u.email = 'test@wayground.ca'
+        u.password = 'password'
+        u.valid?.should be_false
+      end
+      it "should fail if the password confirmation is blank" do
+        u = User.new
+        u.email = 'test@wayground.ca'
+        u.password = 'password'
+        u.password_confirmation = ''
+        u.valid?.should be_false
+      end
+      it "should fail if the password confirmation does not match" do
+        u = User.new
+        u.email = 'test@wayground.ca'
+        u.password = 'password'
+        u.password_confirmation = 'missmatch'
+        u.valid?.should be_false
+      end
+      it "should fail if there is no email address" do
+        u = User.new
+        u.password_confirmation = u.password = 'password'
+        u.valid?.should be_false
+      end
+      it "should fail if the email address is not a proper email address" do
+        u = User.new
+        u.email = 'invalid@bad-email'
+        u.password_confirmation = u.password = 'password'
+        u.valid?.should be_false
+      end
+      it "should fail if there is already a user registered with the same email address" do
+        u = User.new
+        u.email = 'test+duplicate@wayground.ca'
+        u.password_confirmation = u.password = 'password'
+        u.save!
+        u2 = User.new
+        u2.email = 'test+duplicate@wayground.ca'
+        u2.password_confirmation = u2.password = 'another1'
+        u2.valid?.should be_false
+      end
+      it "should fail if there is already a user registered with the same email address but different case" do
+        u = User.new
+        u.email = 'test+duplicate@wayground.ca'
+        u.password_confirmation = u.password = 'password'
+        u.save!
+        u2 = User.new
+        u2.email = 'TEST+DUPLICATE@WAYGROUND.CA'
+        u2.password_confirmation = u2.password = 'another1'
+        u2.valid?.should be_false
+      end
+      it "should fail if invalid timezone specified" do
+        User.new(email: 'test+validtimezone@wayground.ca',
+          password: 'password', password_confirmation: 'password',
+          timezone: 'invalid timezone'
+        ).valid?.should be_false
+      end
+      it "should add a user record with valid parameters" do
+        u = User.new
+        u.email = 'test+good+parameters@wayground.ca'
+        u.password_confirmation = u.password = 'password'
+        u.save!
+        User.find_by_email(u.email).should == u
+      end
     end
-    it "should fail if the password is less than 8 characters long" do
-      u = User.new
-      u.email = 'test@wayground.ca'
-      u.password_confirmation = u.password = '1234567'
-      u.valid?.should be_false
+    context "with authentications" do
+      it "should validate when there is an authentication and no email/pass" do
+        authentication = FactoryGirl.build(:authentication)
+        user = authentication.user
+        user.valid?.should be_true
+      end
     end
-    it "should fail if the password is more than 63 characters long" do
-      u = User.new
-      u.email = 'test@wayground.ca'
-      u.password_confirmation = u.password = 'a' * 64
-      u.valid?.should be_false
-    end
-    it "should fail if there is no password confirmation" do
-      u = User.new
-      u.email = 'test@wayground.ca'
-      u.password = 'password'
-      u.valid?.should be_false
-    end
-    it "should fail if the password confirmation is blank" do
-      u = User.new
-      u.email = 'test@wayground.ca'
-      u.password = 'password'
-      u.password_confirmation = ''
-      u.valid?.should be_false
-    end
-    it "should fail if the password confirmation does not match" do
-      u = User.new
-      u.email = 'test@wayground.ca'
-      u.password = 'password'
-      u.password_confirmation = 'missmatch'
-      u.valid?.should be_false
-    end
-    it "should fail if there is no email address" do
-      u = User.new
-      u.password_confirmation = u.password = 'password'
-      u.valid?.should be_false
-    end
-    it "should fail if the email address is not a proper email address" do
-      u = User.new
-      u.email = 'invalid@bad-email'
-      u.password_confirmation = u.password = 'password'
-      u.valid?.should be_false
-    end
-    it "should fail if there is already a user registered with the same email address" do
-      u = User.new
-      u.email = 'test+duplicate@wayground.ca'
-      u.password_confirmation = u.password = 'password'
-      u.save!
-      u2 = User.new
-      u2.email = 'test+duplicate@wayground.ca'
-      u2.password_confirmation = u2.password = 'another1'
-      u2.valid?.should be_false
-    end
-    it "should fail if there is already a user registered with the same email address but different case" do
-      u = User.new
-      u.email = 'test+duplicate@wayground.ca'
-      u.password_confirmation = u.password = 'password'
-      u.save!
-      u2 = User.new
-      u2.email = 'TEST+DUPLICATE@WAYGROUND.CA'
-      u2.password_confirmation = u2.password = 'another1'
-      u2.valid?.should be_false
-    end
-    it "should fail if invalid timezone specified" do
-      User.new(email: 'test+validtimezone@wayground.ca',
-        password: 'password', password_confirmation: 'password',
-        timezone: 'invalid timezone'
-      ).valid?.should be_false
-    end
-    it "should add a user record with valid parameters" do
-      u = User.new
-      u.email = 'test+good+parameters@wayground.ca'
-      u.password_confirmation = u.password = 'password'
-      u.save!
-      User.find_by_email(u.email).should == u
-    end
-  end
-  describe "validations with authentications" do
     it "should fail to validate when no authentication and no email/pass" do
       user = User.new
       user.valid?.should be_false
-    end
-    it "should validate when there is an authentication and no email/pass" do
-      authentication = FactoryGirl.build(:authentication)
-      user = authentication.user
-      user.valid?.should be_true
     end
   end
 
@@ -149,19 +151,6 @@ describe User do
   describe "#email_present?" do
   end
 
-  describe ".create_from_authentication!" do
-    it "should create a new user with the authentication" do
-      authentication = FactoryGirl.create(:authentication,
-        {name: 'User From Auth', email: 'test+fromauth@wayground.ca'}
-      )
-      user = User.create_from_authentication!(authentication)
-      user.valid?.should be_true
-      user.name.should eq 'User From Auth'
-      user.email.should eq 'test+fromauth@wayground.ca'
-      user.authentications[0].should be authentication
-    end
-  end
-
   describe "password=" do
     it "should save an encrypted version of a new user’s password" do
       user = User.new
@@ -178,9 +167,6 @@ describe User do
     it "should return a label for the email field" do
       expect( User.login_name_attribute ).to eq :email
     end
-  end
-
-  describe "#encrypt_password" do
   end
 
   describe "email code confirmation" do

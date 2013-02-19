@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'login/password_login'
+require 'login/oauth_login'
 require 'authentication'
 
 # Actions for the user to sign-in or sign-out (establish/clear the user session).
@@ -38,26 +39,15 @@ class SessionsController < ApplicationController
   end
 
   def oauth_callback
-    auth = request.env["omniauth.auth"]
-    user = current_user
-    end_up_at_url = request.env['omniauth.origin'] || account_url
-    authentication = Authentication.authenticate_callback!(auth, user)
-    if user.present? # added an authentication to the user
-      notice = "Added authentication from #{auth['provider']}."
-    elsif authentication.new_user? # created a new user
-      user = authentication.user
-      notice = "You are now registered on this site."
-    else # signed in
-      user = authentication.user
-      notice = "You are now signed in."
-    end
+    env = request.env
+    login = Wayground::Login::OauthLogin.new(current_user: current_user, auth: env["omniauth.auth"])
+    user = login.user
+    self.current_user = user
     cookie_set_remember_me(user)
-    session[:source] = authentication.provider
-    redirect_to end_up_at_url, only_path: true, notice: notice
-  rescue Wayground::WrongUserForAuthentication
-    redirect_to(end_up_at_url, only_path: true,
-      alert: "ERROR: The authentication failed because the requested authentication is unavailable!"
-    )
+    provider = login.authentication.provider
+    session[:source] = provider
+    end_up_at_url = env['omniauth.origin'] || account_url
+    redirect_to end_up_at_url, only_path: true, notice: "You are now signed in via #{provider}."
   end
 
 

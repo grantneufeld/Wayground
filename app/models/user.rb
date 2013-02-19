@@ -81,15 +81,6 @@ class User < ActiveRecord::Base
     User.order(:id).first
   end
 
-  # BUILDERS / FACTORIES
-
-  def self.create_from_authentication!(authentication)
-    user = self.new({:name => authentication.name, :email => authentication.email})
-    user.authentications << authentication
-    user.save!
-    user
-  end
-
   # LOGIN
 
   # label for the field used for logging in with a password (email)
@@ -136,12 +127,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  # AUTHORITIES
-
-  # Shortcut for determining if the user has global authority.
-  def admin?
-    has_authority_for_area('global', :is_owner)
-  end
+  # AUTHORITIES ASSIGNMENT
 
   # The first user created is automatically an admin.
   def first_user_is_admin
@@ -187,6 +173,13 @@ class User < ActiveRecord::Base
       authority.item = item
       authority.save!
     end
+  end
+
+  # AUTHORITIES CHECKING
+
+  # Shortcut for determining if the user has global authority.
+  def admin?
+    has_authority_for_area('global', :is_owner)
   end
 
   def has_authority_for_area(area, action_type = :can_view)
