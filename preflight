@@ -48,7 +48,7 @@ echo ""
 
 # report on the code quality
 echo "Generating churn report..."
-bundle exec churn --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,spec/factories.rb,README.rdoc" > reports/churn.txt
+bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,spec/factories.rb,README.rdoc" > reports/churn.txt
 echo ""
 echo "Generating flay report..."
 bundle exec rake flay > reports/flay.txt
@@ -57,7 +57,7 @@ echo "Generating flog report..."
 bundle exec flog --group --details --continue --19 app > reports/flog.txt
 echo ""
 echo "Generating reek report..."
-bundle exec reek --quiet app/controllers app/models app/helpers app/processors lib > reports/reek.txt
+bundle exec reek --quiet --config config/reek.yml app/controllers app/models app/helpers app/processors lib > reports/reek.txt
 echo ""
 echo "Generating Rails Best Practices report..."
 bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
