@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'user'
 
 class Authority < ActiveRecord::Base
   attr_accessible :item_type, :item_id, :area, :is_owner, :can_create,
@@ -114,7 +115,7 @@ class Authority < ActiveRecord::Base
   # and then this authority is destroyed.
   def merge_into!(destination_authority)
     raise TypeError unless destination_authority.is_a? Authority
-    raise Wayground::WrongUserForAuthentication unless destination_authority.user == user
+    raise Wayground::UserMismatch unless destination_authority.user == user
     destination_authority.is_owner ||= is_owner
     destination_authority.can_create ||= can_create
     destination_authority.can_view ||= can_view

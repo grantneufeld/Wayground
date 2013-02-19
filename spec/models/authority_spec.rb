@@ -1,6 +1,7 @@
 # encoding: utf-8
-
 require 'spec_helper'
+require 'authority'
+require 'active_record'
 
 describe Authority do
   # == VALIDATIONS
@@ -154,7 +155,7 @@ describe Authority do
 
     it "should reject a destination authority that doesn’t have the same user" do
       authority2 = FactoryGirl.create(:authority, item: item)
-      expect { authority1.merge_into!(authority2) }.to raise_error(Wayground::WrongUserForAuthentication)
+      expect { authority1.merge_into!(authority2) }.to raise_error(Wayground::UserMismatch)
     end
 
     it "should logical-OR the boolean fields" do
