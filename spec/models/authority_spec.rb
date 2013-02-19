@@ -76,8 +76,12 @@ describe Authority do
     it "should instantiate a new authorization if no user provided" do
     end
     it "should instantiate a new authorization on the provided user" do
-      user = FactoryGirl.create(:user)
-      authority = Authority.build_from_params({:user_proxy => user.email, :area => 'Content'})
+      user = FactoryGirl.create(:user, name: 'authorize user')
+      authorizer = FactoryGirl.create(:user, name: 'authorizing user')
+      authority = Authority.build_from_params(
+        authority_params: {user_proxy: user.email, area: 'Content'},
+        authorized_by: authorizer
+      )
       authority.user.should == user
     end
   end

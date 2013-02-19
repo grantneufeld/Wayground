@@ -45,21 +45,15 @@ class AuthoritiesController < ApplicationController
   end
 
   # POST /authorities
-  # POST /authorities.xml
   def create
-    @authority = Authority.build_from_params(params[:authority])
-    @authority.authorized_by = current_user
+    @authority = Authority.build_from_params(authority_params: params[:authority], authorized_by: current_user)
     @user = @authority.user
     @page_title = "New Authority"
 
-    respond_to do |format|
-      if @authority.save
-        format.html { redirect_to(@authority, :notice => 'Authority was successfully created.') }
-        format.xml  { render :xml => @authority, :status => :created, :location => @authority }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @authority.errors, :status => :unprocessable_entity }
-      end
+    if @authority.save
+      redirect_to(@authority, notice: 'Authority was successfully created.')
+    else
+      render action: "new"
     end
   end
 

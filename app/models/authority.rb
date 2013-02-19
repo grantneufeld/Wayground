@@ -38,12 +38,15 @@ class Authority < ActiveRecord::Base
   scope :where_owner, where(:is_owner => true)
 
   def self.build_from_params(params)
-    user = User.find_by_string(params[:user_proxy])
-    if user.nil?
-      Authority.new(params)
+    authority_params = params[:authority_params] || {}
+    user = User.find_by_string(authority_params[:user_proxy])
+    if user
+      authority = user.authorizations.new(authority_params)
     else
-      user.authorizations.new(params)
+      authority = Authority.new(authority_params)
     end
+    authority.authorized_by = params[:authorized_by]
+    authority
   end
 
   # Find an Authority that gives the +user+ permission to perform the +action_type+ on the +item+.
