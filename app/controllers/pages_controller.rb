@@ -14,11 +14,6 @@ class PagesController < ApplicationController
   def index
     @page_title = 'Page Index'
     @pages = paginate(Page)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @pages }
-    end
   end
 
   # GET /pages/1
@@ -27,32 +22,20 @@ class PagesController < ApplicationController
     requires_authority(:can_view)
     @page_title = "Page “#{@page.title}”"
     @site_breadcrumbs = @page.breadcrumbs if @page.parent.present?
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @page }
-    end
   end
 
   # GET /pages/new
   # GET /pages/new.xml
   def new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @page }
-    end
   end
 
   # POST /pages
   # POST /pages.xml
   def create
-    respond_to do |format|
-      if @page.save
-        format.html { redirect_to(@page, :notice => 'Page was successfully created.') }
-        format.xml  { render :xml => @page, :status => :created, :location => @page }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
-      end
+    if @page.save
+      redirect_to(@page, notice: 'Page was successfully created.')
+    else
+      render action: "new"
     end
   end
 
@@ -64,15 +47,11 @@ class PagesController < ApplicationController
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
-    respond_to do |format|
-      if @page.update_attributes(params[:page])
-        format.html { redirect_to(@page, :notice => 'Page was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        @page_title = "Edit Page “#{@page.title}”"
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @page.errors, :status => :unprocessable_entity }
-      end
+    if @page.update_attributes(params[:page])
+      redirect_to(@page, notice: 'Page was successfully updated.')
+    else
+      @page_title = "Edit Page “#{@page.title}”"
+      render action: "edit"
     end
   end
 
@@ -86,11 +65,7 @@ class PagesController < ApplicationController
   # DELETE /pages/1.xml
   def destroy
     @page.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(pages_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to(pages_url)
   end
 
   protected

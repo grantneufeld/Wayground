@@ -16,45 +16,26 @@ class DocumentsController < ApplicationController
   def index
     @documents = paginate(Document.for_user(current_user))
     @page_title = 'Documents Index'
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @documents }
-    end
   end
 
   def show
     @page_title = "Document “#{@document.filename}”"
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @document }
-    end
   end
 
   def new
     @document = Document.new
     @page_title = 'New Document'
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @document }
-    end
   end
 
   def create
     @document = Document.new(params[:document])
     @document.user = current_user
 
-    respond_to do |format|
-      if @document.save
-        format.html { redirect_to(@document, :notice => 'Document was successfully created.') }
-        format.xml  { render :xml => @document, :status => :created, :location => @document }
-      else
-        @page_title = 'New Document'
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @document.errors, :status => :unprocessable_entity }
-      end
+    if @document.save
+      redirect_to(@document, notice: 'Document was successfully created.')
+    else
+      @page_title = 'New Document'
+      render action: "new"
     end
   end
 
@@ -63,15 +44,11 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @document.update_attributes(params[:document])
-        format.html { redirect_to(@document, :notice => 'Document was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        @page_title = "Edit Document #{@document.filename}"
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @document.errors, :status => :unprocessable_entity }
-      end
+    if @document.update_attributes(params[:document])
+      redirect_to(@document, notice: 'Document was successfully updated.')
+    else
+      @page_title = "Edit Document #{@document.filename}"
+      render action: "edit"
     end
   end
 
@@ -81,11 +58,7 @@ class DocumentsController < ApplicationController
 
   def destroy
     @document.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(documents_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to(documents_url)
   end
 
   protected

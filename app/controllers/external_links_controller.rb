@@ -15,36 +15,20 @@ class ExternalLinksController < ApplicationController
     #@external_links = paginate(@item.external_links)
     @external_links = @item.external_links
     @user = current_user
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml { render :xml => @external_links }
-    end
   end
 
   def show
     @page_title = "#{@item.title}: #{@external_link.title}"
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml { render :xml => @external_link }
-    end
   end
 
   def new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @external_link }
-    end
   end
 
   def create
-    respond_to do |format|
-      if @external_link.save
-        format.html { redirect_to([@item, @external_link], :notice => 'The external link has been saved.') }
-        format.xml  { render :xml => @external_link, :status => :created, :location => @external_link }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @external_link.errors, :status => :unprocessable_entity }
-      end
+    if @external_link.save
+      redirect_to([@item, @external_link], notice: 'The external link has been saved.')
+    else
+      render action: "new"
     end
   end
 
@@ -54,14 +38,10 @@ class ExternalLinksController < ApplicationController
 
   def update
     @page_title = "Edit External Link: #{@external_link.title}"
-    respond_to do |format|
-      if @external_link.update_attributes(params[:external_link])
-        format.html { redirect_to([@item, @external_link], :notice => 'The external link has been saved.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @external_link.errors, :status => :unprocessable_entity }
-      end
+    if @external_link.update_attributes(params[:external_link])
+      redirect_to([@item, @external_link], notice: 'The external link has been saved.')
+    else
+      render action: "edit"
     end
   end
 
@@ -71,10 +51,7 @@ class ExternalLinksController < ApplicationController
 
   def destroy
     @external_link.destroy
-    respond_to do |format|
-      format.html { redirect_to(@item) }
-      format.xml  { head :ok }
-    end
+    redirect_to(@item)
   end
 
   protected

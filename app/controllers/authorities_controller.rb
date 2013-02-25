@@ -14,22 +14,12 @@ class AuthoritiesController < ApplicationController
   def index
     @authorities = paginate(Authority)
     @page_title = "Authorities"
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @authorities }
-    end
   end
 
   # GET /authorities/1
   # GET /authorities/1.xml
   def show
     @page_title = "Authority"
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @authority }
-    end
   end
 
   # GET /authorities/new
@@ -37,11 +27,6 @@ class AuthoritiesController < ApplicationController
   def new
     @authority = Authority.new
     @page_title = "New Authority"
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @authority }
-    end
   end
 
   # POST /authorities
@@ -68,14 +53,10 @@ class AuthoritiesController < ApplicationController
     @authority.authorized_by = current_user
     @page_title = "Update Authority"
 
-    respond_to do |format|
-      if @authority.update_attributes(params[:authority])
-        format.html { redirect_to(@authority, :notice => 'Authority was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @authority.errors, :status => :unprocessable_entity }
-      end
+    if @authority.update_attributes(params[:authority])
+      redirect_to(@authority, notice: 'Authority was successfully updated.')
+    else
+      render action: "edit"
     end
   end
 
@@ -88,11 +69,7 @@ class AuthoritiesController < ApplicationController
   # DELETE /authorities/1.xml
   def destroy
     @authority.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(authorities_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to(authorities_url)
   end
 
   protected

@@ -24,43 +24,26 @@ class SettingsController < ApplicationController
   def index
     @settings = Setting.all
     @page_title = "Settings"
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @settings }
-    end
   end
 
   # GET /settings/1
   # GET /settings/1.xml
   def show
     @page_title = "Setting: #{@setting.key}"
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @setting }
-    end
   end
 
   # GET /settings/new
   # GET /settings/new.xml
   def new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @setting }
-    end
   end
 
   # POST /settings
   # POST /settings.xml
   def create
-    respond_to do |format|
-      if @setting.save
-        format.html { redirect_to(@setting, :notice => 'Setting was successfully created.') }
-        format.xml  { render :xml => @setting, :status => :created, :location => @setting }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @setting.errors, :status => :unprocessable_entity }
-      end
+    if @setting.save
+      redirect_to(@setting, notice: 'Setting was successfully created.')
+    else
+      render action: "new"
     end
   end
 
@@ -72,15 +55,11 @@ class SettingsController < ApplicationController
   # PUT /settings/1
   # PUT /settings/1.xml
   def update
-    respond_to do |format|
-      if @setting.update_attributes(params[:setting])
-        format.html { redirect_to(@setting, :notice => 'Setting was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        @page_title = "Edit Setting: #{@setting.key}"
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @setting.errors, :status => :unprocessable_entity }
-      end
+    if @setting.update_attributes(params[:setting])
+      redirect_to(@setting, notice: 'Setting was successfully updated.')
+    else
+      @page_title = "Edit Setting: #{@setting.key}"
+      render action: "edit"
     end
   end
 
@@ -93,11 +72,7 @@ class SettingsController < ApplicationController
   # DELETE /settings/1.xml
   def destroy
     @setting.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(settings_url, :notice => "The setting for “#{@setting.key}” has been removed.") }
-      format.xml  { head :ok }
-    end
+    redirect_to(settings_url, notice: "The setting for “#{@setting.key}” has been removed.")
   end
 
   protected

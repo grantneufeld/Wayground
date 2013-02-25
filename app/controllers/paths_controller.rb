@@ -16,10 +16,7 @@ class PathsController < ApplicationController
     @path = Path.find_for_path(sitepath)
     if @path.nil?
       if sitepath == '/'
-        respond_to do |format|
-          format.html { render :template=>'paths/default_home' }
-          format.xml  { render :xml => nil }
-        end
+        render template: 'paths/default_home'
       else
         missing
       end
@@ -39,43 +36,26 @@ class PathsController < ApplicationController
   def index
     @page_title = 'Custom Paths'
     @paths = paginate(Path.for_user(current_user))
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @paths }
-    end
   end
 
   # GET /paths/1
   # GET /paths/1.xml
   def show
     @page_title = "Custom Path: #{@path.sitepath}"
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @path }
-    end
   end
 
   # GET /paths/new
   # GET /paths/new.xml
   def new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @path }
-    end
   end
 
   # POST /paths
   # POST /paths.xml
   def create
-    respond_to do |format|
-      if @path.save
-        format.html { redirect_to(@path, :notice => 'Path was successfully created.') }
-        format.xml  { render :xml => @path, :status => :created, :location => @path }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @path.errors, :status => :unprocessable_entity }
-      end
+    if @path.save
+      redirect_to(@path, notice: 'Path was successfully created.')
+    else
+      render action: "new"
     end
   end
 
@@ -86,14 +66,10 @@ class PathsController < ApplicationController
   # PUT /paths/1
   # PUT /paths/1.xml
   def update
-    respond_to do |format|
-      if @path.update_attributes(params[:path])
-        format.html { redirect_to(@path, :notice => 'Path was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @path.errors, :status => :unprocessable_entity }
-      end
+    if @path.update_attributes(params[:path])
+      redirect_to(@path, notice: 'Path was successfully updated.')
+    else
+      render action: "edit"
     end
   end
 
@@ -106,11 +82,7 @@ class PathsController < ApplicationController
   # DELETE /paths/1.xml
   def destroy
     @path.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(paths_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to(paths_url)
   end
 
   protected
@@ -163,12 +135,7 @@ class PathsController < ApplicationController
     # TODO: handle use of Paths for items other than Pages
     #elsif item.is_a? ???
     else
-      respond_to do |format|
-        format.html do
-          render :template => 'paths/unimplemented', :status => '501 Not Implemented'
-        end
-        format.xml { render :xml => item }
-      end
+      render template: 'paths/unimplemented', status: '501 Not Implemented'
     end
   end
 
@@ -177,10 +144,6 @@ class PathsController < ApplicationController
       @page_title = @page.title
       @page_description = @page.description
       @site_breadcrumbs = @page.breadcrumbs
-#      page_nav_links(@page)
-      respond_to do |format|
-        format.html { render :template => 'paths/page' }
-        format.xml  { render :xml => @page }
-      end
+      render template: 'paths/page'
   end
 end

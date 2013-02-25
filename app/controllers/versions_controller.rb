@@ -11,11 +11,6 @@ class VersionsController < ApplicationController
   def index
     @versions = paginate(@item.versions)
     @page_title = "Revision history of “#{@item.title}”"
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @versions }
-    end
   end
 
   # GET /versions/1
@@ -23,11 +18,6 @@ class VersionsController < ApplicationController
   def show
     @version = @item.versions.find(params[:id])
     @page_title = "“#{@item.title}” (version from #{@version.edited_at.to_s(:compact_datetime)})"
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @version }
-    end
   end
 
   protected
