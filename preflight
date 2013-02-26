@@ -37,7 +37,7 @@ if cat reports/coverage/percentage.txt | grep --quiet "^100\.0*$" ; then
 else
   # we have < 100% coverage:
   echo "Incomplete code test coverage ($(cat reports/coverage/percentage.txt)%)."
-  open coverage/index.html
+  open reports/coverage/index.html
   exit 1
 fi
 
