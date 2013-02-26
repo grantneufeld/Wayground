@@ -1,4 +1,6 @@
 Wayground::Application.routes.draw do
+  root to: "paths#sitepath", via: :get, defaults: { url: '/' }
+
   # USERS
   get "signup" => "users#new", :as => :signup
   post "signup" => "users#create"
@@ -45,8 +47,7 @@ Wayground::Application.routes.draw do
 
   # PROJECTS
   resources :projects
-  get 'project/*projecturl' => 'projects#show', :as => :project_name
+  get 'project/*projecturl' => 'projects#show', as: :project_name, format: false
 
-  root to: "paths#sitepath", via: :get, defaults: { url: '/' }
-  get '*url' => "paths#sitepath"
+  get '*url' => "paths#sitepath", format: false
 end

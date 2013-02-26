@@ -9,6 +9,11 @@ describe PathsController do
     it "recognizes custom paths" do
       { :get => '/custom/path' }.should route_to(:controller => 'paths', :action => 'sitepath', :url => 'custom/path')
     end
+    it "recognizes custom paths with a filename extension" do
+      expect( {get: '/custom/path.extension'} ).to route_to(
+        controller: 'paths', action: 'sitepath', url: 'custom/path.extension'
+      )
+    end
 
     it "recognizes and generates #index" do
       { :get => "/paths" }.should route_to(:controller => "paths", :action => "index")
