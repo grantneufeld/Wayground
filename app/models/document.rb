@@ -107,7 +107,7 @@ class Document < ActiveRecord::Base
   def file=(file)
     return if file.blank? || file.is_a?(String)
     if filename.blank?
-      self.filename = file.original_filename rescue file.path.match(/([^\/]+)$/)[1]
+      self.filename = file.original_filename rescue file.path.match(/([^\/]+)\z/)[1]
       cleanup_filename
     end
     if content_type.blank?

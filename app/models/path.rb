@@ -23,7 +23,7 @@ class Path < ActiveRecord::Base
 
   scope :for_sitepath, lambda {|searchpath|
     # strip trailing slash, if present
-    matches = searchpath.match(/^(.+)\/$/)
+    matches = searchpath.match(/\A(.+)\/\z/)
     where({:sitepath => (matches ? matches[1] : searchpath)})
   }
   scope :in_order, order(:sitepath)
@@ -40,9 +40,9 @@ class Path < ActiveRecord::Base
           # use parent item for linking to authorities
           "LEFT OUTER JOIN pages " +
           # match the parent item for the item
-          "ON #{table_name}.item_type = 'Page' AND pages.id = #{table_name}.item_id "
+          "ON paths.item_type = 'Page' AND pages.id = paths.item_id "
         ).
-        where("pages.is_authority_controlled = ? OR #{table_name}.item_type IS NULL", false)
+        where("pages.is_authority_controlled = ? OR paths.item_type IS NULL", false)
     elsif user.has_authority_for_area(authority_area)
       # if user has admin view authority on the Content area, allow all documents
     else
@@ -53,7 +53,7 @@ class Path < ActiveRecord::Base
           # use parent item for linking to authorities
           "LEFT OUTER JOIN pages " +
           # match the parent item for the item
-          "ON #{table_name}.item_type = 'Page' AND pages.id = #{table_name}.item_id "
+          "ON paths.item_type = 'Page' AND pages.id = paths.item_id "
         ).
         joins(sanitize_sql_array([
           # check against the authorities table
@@ -66,7 +66,7 @@ class Path < ActiveRecord::Base
         ])).
         where([
           # show all items without a parent item
-          "#{table_name}.item_id IS NULL " +
+          "paths.item_id IS NULL " +
           # show public, not authority-controlled, items
           "OR pages.is_authority_controlled = ? " +
           # and items that have an appropriate matching authority for the user
@@ -87,7 +87,7 @@ class Path < ActiveRecord::Base
 
   # The sitepath should not end in a slash, except for the root/home path.
   def clean_sitepath
-    matches = self.sitepath.match /^(.+)\/$/
+    matches = self.sitepath.match /\A(.+)\/\z/
     self.sitepath = matches[1] if matches
   end
 
