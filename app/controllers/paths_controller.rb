@@ -12,7 +12,7 @@ class PathsController < ApplicationController
 
   # process arbitrary paths
   def sitepath
-    sitepath = params[:url]
+    sitepath = params[:url].to_s
     @path = Path.find_for_path(sitepath)
     if @path.nil?
       if sitepath == '/'

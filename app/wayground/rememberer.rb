@@ -43,7 +43,7 @@ module Wayground
       token_class = self.token_class
       begin
         token_string = get_random_token_string
-      end while token_class.exists?(token: token_string)
+      end while token_class.exists?(token: token_string.to_s)
       token_string
     end
 
