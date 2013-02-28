@@ -14,8 +14,8 @@ gem 'jquery-rails'
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '>= 3.0.0'
 # To support OAuth access
-gem 'omniauth', '~> 1.1.0'
-gem 'omniauth-facebook', '~> 1.3.0'
+gem 'omniauth', '>= 1.1.0'
+gem 'omniauth-facebook', '>= 1.3.0'
 gem 'omniauth-twitter', '>= 0.0.11'
 
 gem 'tzinfo', '>= 0.3.33'
@@ -38,6 +38,8 @@ group :development do
   gem 'flog', require: false # https://github.com/seattlerb/flog
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
   gem 'reek', require: false # https://github.com/troessner/reek/wiki
+  # gem validation
+  gem 'bundler-audit' # https://github.com/postmodern/bundler-audit
 end
 
 group :development, :test do

@@ -42,6 +42,9 @@ else
 fi
 
 # report on possible code security issues
+echo "Auditing bundle for missing security patches..."
+bundle exec bundle-audit
+echo ""
 echo "Generating Brakeman report..."
 bundle exec brakeman --quiet --output reports/brakeman.html --message-limit 255 --routes --separate-models --confidence-level 1
 echo ""
@@ -65,6 +68,7 @@ echo ""
 
 echo "Please review the reports found in the project's 'reports' directory."
 open reports
+echo ""
 
 # report the git status
 echo "Checking version control status..."
