@@ -11,13 +11,13 @@ class Setting < ActiveRecord::Base
 
   # Key-indexed accessor for the values of settings.
   def self.[](key)
-    setting = self.find_by_key(key)
+    setting = self.where(key: key).first
     setting.nil? ? nil : setting.value
   end
 
   # Key-indexed assignment for the values of settings.
   def self.[]=(key, value)
-    setting = self.find_by_key(key)
+    setting = self.where(key: key).first
     # create the setting if it doesn’t already exist
     setting ||= self.new(key: key)
     setting.value = value.to_s
@@ -26,7 +26,7 @@ class Setting < ActiveRecord::Base
 
   # Key-indexed removal of settings.
   def self.destroy(key)
-    setting = self.find_by_key(key)
+    setting = self.where(key: key).first
     setting.destroy unless setting.nil?
   end
 

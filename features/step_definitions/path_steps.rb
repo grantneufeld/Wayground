@@ -43,14 +43,14 @@ When /^(?:|I )create a custom path "([^\"]*)" that redirects to "([^\"]*)"$/ do 
 end
 
 When /^(?:|I )update the custom path "([^\"]*)" to "([^\"]*)"$/ do |sitepath, newpath|
-  path = Path.find_by_sitepath(sitepath)
+  path = Path.where(sitepath: sitepath).first
   visit edit_path_path(path)
   fill_in 'Sitepath', :with => newpath
   click_button 'Save Path'
 end
 
 When /^(?:|I )fill out the form to edit a custom path "([^\"]*)" with invalid data$/ do |sitepath|
-  path = Path.find_by_sitepath(sitepath)
+  path = Path.where(sitepath: sitepath).first
   visit edit_path_path(path)
   fill_in 'Sitepath', :with => 'invalid path'
   fill_in 'Redirect', :with => 'invalid url'
@@ -58,12 +58,12 @@ When /^(?:|I )fill out the form to edit a custom path "([^\"]*)" with invalid da
 end
 
 When /^(?:|I )delete the custom path "([^\"]*)"$/ do |sitepath|
-  path = Path.find_by_sitepath(sitepath)
+  path = Path.where(sitepath: sitepath).first
   visit delete_path_path(path)
   click_button 'Delete Path'
 end
 When /^(?:|I )try to delete the custom path "([^\"]*)"$/ do |sitepath|
-  path = Path.find_by_sitepath(sitepath)
+  path = Path.where(sitepath: sitepath).first
   visit path_path(path), :delete
 end
 
@@ -91,12 +91,12 @@ Then /^(?:|I )should be able to see the all paths for the website$/ do
 end
 
 Then /^(?:|I )should not have a custom path "([^\"]*)"$/ do |sitepath|
-  path = Path.find_by_sitepath(sitepath) rescue ActiveRecord::RecordNotFound
+  path = Path.where(sitepath: sitepath).first
   path.should be_nil
 end
 
 Then /^(?:|I )should have a custom path "([^\"]*)"$/ do |sitepath|
-  path = Path.find_by_sitepath(sitepath)
+  path = Path.where(sitepath: sitepath).first
   path.sitepath.should eq sitepath
 end
 

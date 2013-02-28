@@ -83,7 +83,7 @@ class IcalProcessor
     sourced_item = nil
     if uid
       # check for pre-existing Event matching the ievent.uid
-      sourced_item = source.sourced_items.find_by_source_identifier(uid)
+      sourced_item = source.sourced_items.where(source_identifier: uid).first
     end
     if sourced_item
       if sourced_item.item.update_from_icalendar(

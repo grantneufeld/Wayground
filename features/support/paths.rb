@@ -31,7 +31,7 @@ module NavigationHelpers
     when /^the (?:|custom )path form$/
       '/paths/new'
     when /^the edit form for custom path "([^\"]+)"$/
-      path = Path.find_by_sitepath($1)
+      path = Path.where(sitepath: $1).first
       edit_path_path(path)
     when /^"(\/.*)"$/
       $1
@@ -44,13 +44,13 @@ module NavigationHelpers
     when /^the event form$/
       '/events/new'
     when /^the page for the event "(.+)"$/
-      event = Event.find_by_title($1)
+      event = Event.where(title: $1).first
       event_path(event)
     when /^the edit page for the event "(.+)"$/
-      event = Event.find_by_title($1)
+      event = Event.where(title: $1).first
       edit_event_path(event)
     when /^the delete page for the event "(.+)"$/
-      event = Event.find_by_title($1)
+      event = Event.where(title: $1).first
       delete_event_path(event)
 
     # the following are examples using path_to_pickle
@@ -71,7 +71,7 @@ module NavigationHelpers
     # Here is an example that pulls values out of the Regexp:
     #
     #   when /^(.*)'s profile page$/i
-    #     user_profile_path(User.find_by_login($1))
+    #     user_profile_path(User.where(login: $1).first)
 
     else
       begin

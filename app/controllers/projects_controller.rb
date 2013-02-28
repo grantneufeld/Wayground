@@ -87,7 +87,7 @@ class ProjectsController < ApplicationController
       if params[:projecturl].match /\A[0-9]+\z/
         @project = Project.find(params[:projecturl].to_i)
       else
-        @project = Project.find_by_filename(params[:projecturl])
+        @project = Project.where(filename: params[:projecturl]).first
       end
     else
       @project = Project.find(params[:id])

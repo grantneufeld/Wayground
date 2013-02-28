@@ -63,18 +63,18 @@ describe Setting do
       key = 'destroy this'
       Setting.create(:key => key, :value => 'to be removed')
       Setting.destroy(key)
-      Setting.find_by_key(key).should be_nil
+      expect( Setting.where(key: key).first ).to be_nil
     end
     it "should do nothing if there is no setting for the key" do
       key = 'no setting for key'
       Setting.destroy(key)
-      Setting.find_by_key(key).should be_nil
+      expect( Setting.where(key: key).first ).to be_nil
     end
     it "should accept symbols for keys" do
       key = 'symboldestroy'
       Setting.create(:key => key, :value => 'destroy via symbol')
       Setting.destroy(:symboldestroy)
-      Setting.find_by_key(key).should be_nil
+      expect( Setting.where(key: key).first ).to be_nil
     end
   end
 

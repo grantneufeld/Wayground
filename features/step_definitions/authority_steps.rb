@@ -9,7 +9,7 @@ def class_from_item_string(class_name)
 end
 def item_from_class_and_item_strings(class_name, label)
   klass = class_from_item_string(class_name)
-  return klass.find_by_label(label)
+  return klass.where(label: label).first
 end
 
 def action_type_from_label(action_label)

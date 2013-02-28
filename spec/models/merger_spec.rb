@@ -68,8 +68,10 @@ describe Merger::Base do
       dest = double('destination')
       dest.stub(id: 0)
       destination_authority = double('destination authority')
+      dest_authorities_where = double('authorities where')
+      dest_authorities_where.stub(:first).and_return(destination_authority)
       dest_authorities = double('authorities')
-      dest_authorities.stub(:find_by_user_id).with(234).and_return(destination_authority)
+      dest_authorities.stub(:where).with(user_id: 234).and_return(dest_authorities_where)
       dest.stub(authorities: dest_authorities)
       # What we’re testing for:
       source_authority.should_receive(:merge_into!).with(destination_authority)
@@ -107,8 +109,10 @@ describe Merger::Base do
       dest = double('destination')
       dest.stub(id: 0)
       destination_link = double('destination link')
+      dest_links_where = double('links where')
+      dest_links_where.stub(:first).and_return(destination_link)
       dest_links = double('links')
-      dest_links.stub(:find_by_url).with('url').and_return(destination_link)
+      dest_links.stub(:where).with(url: 'url').and_return(dest_links_where)
       dest.stub(external_links: dest_links)
       # What we’re testing for:
       source_link.should_receive(:delete)

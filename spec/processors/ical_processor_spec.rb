@@ -133,8 +133,11 @@ describe IcalProcessor do
           sourced_item = double('sourced item')
           sourced_item.stub(has_local_modifications: true)
           sourced_item.stub(item: item)
+          sourced_items_where = double('sourced items where')
+          sourced_items_where.stub(:first).and_return(sourced_item)
           sourced_items = double('sourced items')
-          sourced_items.stub(:find_by_source_identifier).with(ievent['UID'][:value]).and_return(sourced_item)
+          sourced_items.stub(:where).with(source_identifier: ievent['UID'][:value]).
+            and_return(sourced_items_where)
           source = double('source')
           source.stub(sourced_items: sourced_items)
           # prepare processor

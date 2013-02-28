@@ -35,11 +35,11 @@ Then /^I should see the event "([^\"]*)"$/ do |title|
 end
 
 Then /^there should be an event "([^\"]*)"$/ do |title|
-  Event.find_by_title(title).should be
+  expect( Event.where(title: title).first ).to be
 end
 
 Then /^there should not be an event "([^\"]*)"$/ do |title|
-  Event.find_by_title(title).should be_nil
+  expect( Event.where(title: title).first ).to be_nil
 end
 
 
@@ -54,9 +54,9 @@ end
 # Testing ExternalLinks attached to Events
 
 Then /^the event "([^\"]*)" should have the link "([^\"]*)"$/ do |title, url|
-  Event.find_by_title(title).external_links.find_by_url(url).should be
+  expect( Event.where(title: title).first.external_links.where(url: url).first ).to be
 end
 
 Then /^the event "([^\"]*)" should not have any links$/ do |title|
-  Event.find_by_title(title).external_links.count.should eq 0
+  expect( Event.where(title: title).first.external_links.count ).to eq 0
 end

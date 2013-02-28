@@ -14,7 +14,7 @@ def users_named(name_list, password = nil)
   # get the users
   users = []
   names.each do |name|
-    user_with_name = User.find_by_name(name)
+    user_with_name = User.where(name: name).first
     if user_with_name
       users << user_with_name
     else
@@ -34,9 +34,9 @@ end
 
 Given /^no user exists with an email of "(.*)"$/ do |email|
   if User.respond_to? :should
-    User.find_by_email(email).should be_nil
+    User.where(email: email).first.should be_nil
   else
-    assert_nil User.find_by_email(email)
+    assert_nil User.where(email: email).first
   end
 end
 
@@ -48,7 +48,7 @@ Given /^there is (?:|already )a user "([^\"]*)"(?:| with password "([^\"]*)")$/ 
 end
 
 Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   unless user
     user = FactoryGirl.create(:user,
       :email                 => email,
@@ -59,7 +59,7 @@ Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
 end
 
 #Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
-#  user = User.find_by_email(email)
+#  user = User.where(email: email).first
 #  unless user
 #    user = FactoryGirl.create(:email_confirmed_user,
 #      :id                    => id.to_i,
@@ -71,7 +71,7 @@ end
 #end
 
 Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   unless user
     user = FactoryGirl.create(:email_confirmed_user,
       :email                 => email,
@@ -230,7 +230,7 @@ end
 # Emails
 
 Then /^a confirmation message should be sent to "(.*)"$/ do |email|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   sent = ActionMailer::Base.deliveries.first
   if response.respond_to? :should
     sent.to.should eq [user.email]
@@ -246,7 +246,7 @@ Then /^a confirmation message should be sent to "(.*)"$/ do |email|
 end
 
 When /^(?:|I )follow the confirmation link sent to "(.*)"$/ do |email|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   visit "/account/confirm/#{user.confirmation_token}"
 end
 
@@ -271,7 +271,7 @@ class User < ActiveRecord::Base
   end
 end
 When /^(?:|I )follow the confirmation link sent to "(.*)" with a failure$/ do |email|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   User.test_fail_confirm_code = true
   visit "/account/confirm/#{user.confirmation_token}"
   # Because of the ugliness between rack test and capybara’s default domains (example.org vs. example.com),
@@ -285,7 +285,7 @@ When /^(?:|I )try to confirm my email with "(.*)"$/ do |confirmation_code|
 end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   sent = ActionMailer::Base.deliveries.first
   if response.respond_to? :should
     sent.to.should eq [user.email]
@@ -301,13 +301,13 @@ Then /^a password reset message should be sent to "(.*)"$/ do |email|
 end
 
 When /^(?:|I )follow the password reset link sent to "(.*)"$/ do |email|
-  user = User.find_by_email(email)
+  user = User.where(email: email).first
   visit edit_user_password_path(:user_id => user,
   :token   => user.confirmation_token)
 end
 
 #When /^(?:|I )try to change the password of "(.*)" without token$/ do |email|
-#  user = User.find_by_email(email)
+#  user = User.where(email: email).first
 #  visit edit_user_password_path(:user_id => user)
 #end
 #

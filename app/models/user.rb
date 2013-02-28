@@ -68,9 +68,9 @@ class User < ActiveRecord::Base
     elsif str.match /\A[0-9]+\z/
       find(str.to_i)
     elsif str.match /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/
-      find_by_email(str)
+      where(email: str).first
     else
-      find_by_name(str)
+      where(name: str).first
     end
   end
 

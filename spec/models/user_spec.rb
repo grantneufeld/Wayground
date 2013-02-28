@@ -105,7 +105,7 @@ describe User do
         u.email = 'test+good+parameters@wayground.ca'
         u.password_confirmation = u.password = 'password'
         u.save!
-        User.find_by_email(u.email).should == u
+        expect( User.where(email: u.email).first ).to eq u
       end
     end
     context "with authentications" do

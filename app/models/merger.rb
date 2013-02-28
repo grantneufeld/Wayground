@@ -37,7 +37,7 @@ module Merger
     # Merge the permissions of any duplicates, then remove the source duplicate.
     def merge_authorities_into(destination)
       @source.authorities.each do |authority|
-        duplicate_authority = destination.authorities.find_by_user_id(authority.user.id)
+        duplicate_authority = destination.authorities.where(user_id: authority.user.id).first
         if duplicate_authority
           # this merge will delete the authority,
           # keeping the one for the destination
@@ -50,7 +50,7 @@ module Merger
     # Move non-duplicate external link records associated with this event to another event.
     def merge_external_links_into(destination)
       @source.external_links.each do |external_link|
-        if destination.external_links.find_by_url(external_link.url)
+        if destination.external_links.where(url: external_link.url).first
           # dispose of the link if it has a duplicate in the destination
           external_link.delete
         end
