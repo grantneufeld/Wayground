@@ -121,18 +121,21 @@ describe User do
     end
   end
 
-  describe ".find_by_string" do
+  describe ".from_string" do
     it "should return nil given an empty string" do
-      User.find_by_string('').should be_nil
+      expect( User.from_string('') ).to be_nil
     end
     it "should find matching id, given a numeric string" do
-      User.find_by_string(@bob.id.to_s).should == @bob
+      expect( User.from_string(@bob.id.to_s) ).to eq @bob
+    end
+    it "should return nil given an id that does not exist" do
+      expect( User.from_string('0') ).to be_nil
     end
     it "should find matching email given an email string" do
-      User.find_by_string('bob@bob.tld').should == @bob
+      expect( User.from_string('bob@bob.tld') ).to eq @bob
     end
     it "should find matching name given an arbitrary string" do
-      User.find_by_string('Bob').should == @bob
+      expect( User.from_string('Bob') ).to eq @bob
     end
   end
 

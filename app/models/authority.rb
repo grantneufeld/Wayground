@@ -39,7 +39,7 @@ class Authority < ActiveRecord::Base
 
   def self.build_from_params(params)
     authority_params = params[:authority_params] || {}
-    user = User.find_by_string(authority_params[:user_proxy].to_s)
+    user = User.from_string(authority_params[:user_proxy].to_s)
     if user
       authority = user.authorizations.new(authority_params)
     else
@@ -91,7 +91,7 @@ class Authority < ActiveRecord::Base
     if item.blank?
       self.user = nil
     elsif item.is_a? String
-      self.user = User.find_by_string(item)
+      self.user = User.from_string(item)
     else
       self.user = item
     end

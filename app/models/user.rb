@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   # If string is an integer, searches by user.id.
   # If string is an email address, searches by user.email.
   # Otherwise, searches by user.name.
-  def self.find_by_string(str)
+  def self.from_string(str)
     if str.blank?
       nil
     elsif str.match /\A[0-9]+\z/
@@ -72,6 +72,8 @@ class User < ActiveRecord::Base
     else
       where(name: str).first
     end
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   # Get the first administrative User.
