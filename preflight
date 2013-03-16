@@ -53,11 +53,16 @@ echo ""
 echo "Generating churn report..."
 bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,preflight,spec/factories.rb,README.rdoc" > reports/churn.txt
 echo ""
-echo "Generating flay report..."
-bundle exec rake flay > reports/flay.txt
+echo "Generating flay reports..."
+bundle exec rake flay:app > reports/flay-app.txt
+bundle exec rake flay:spec > reports/flay-spec.txt
+bundle exec rake flay:features > reports/flay-features.txt
 echo ""
 echo "Generating flog report..."
 bundle exec flog --group --details --continue --19 app > reports/flog.txt
+echo ""
+echo "Extracting notes embedded in the code..."
+bundle exec rake notes > reports/notes.txt
 echo ""
 echo "Generating reek report..."
 bundle exec reek --quiet --config config/reek.yml app/controllers app/models app/helpers app/processors lib > reports/reek.txt
