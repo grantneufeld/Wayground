@@ -1,7 +1,7 @@
 <% # encoding: utf-8
 
 @versioned_item = @event # let the application template know we’re looking at an item with versions
-@page_main_class = 'vevent'
+set_main_section_class 'vevent'
 
 content_for(:head) do
   %><link rel="alternate" href="<%= event_path(@event, format: 'ics') %>" type="text/calendar" title="icalendar file for event" />

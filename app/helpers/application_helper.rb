@@ -6,6 +6,11 @@ module ApplicationHelper
     render partial: 'layouts/errors', locals: {item: item, heading: heading}
   end
 
+  # Set the class of the main section of the page.
+  def set_main_section_class(html_class)
+    @page_main_class = html_class
+  end
+
   # Generate the pagination header, telling the user where they are in the pagination.
   # item_plural: The pluralized name of the type of item (e.g., “documents”).
   def show_pagination_header(item_plural = nil)

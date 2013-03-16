@@ -4,7 +4,7 @@ content_for(:head) do
 <link rel="profile" href="http://microformats.org/profile/hcalendar" />
 <%
 end
-@page_main_class = 'calendar'
+set_main_section_class 'event-list'
 
 %><h2><%= @page_title %></h2>
 <p><%= link_to 'Subscribe to this calendar in your calendar application',

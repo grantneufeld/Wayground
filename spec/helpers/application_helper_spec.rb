@@ -18,6 +18,13 @@ describe ApplicationHelper do
     end
   end
 
+  describe "#set_main_section_class" do
+    it "should set the instance variable" do
+      helper.set_main_section_class('helper-test')
+      expect( helper.instance_variable_get(:@page_main_class) ).to eq 'helper-test'
+    end
+  end
+
   ## Generate the pagination header, telling the user where they are in the pagination.
   ## item_plural: The pluralized name of the type of item (e.g., “documents”).
   #def show_pagination_header(item_plural = nil)
