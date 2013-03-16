@@ -367,6 +367,29 @@ describe Event do
         Event.past.should eq [event1, event2]
       end
     end
+    context "with dates in the year 2000" do
+      before(:all) do
+        Event.delete_all
+        @event1 = FactoryGirl.create(:event, start_at: '2000-01-01 23:59:99', title: '2000 day 1')
+        @event2 = FactoryGirl.create(:event, start_at: '2000-01-02 00:00:00', title: '2000 day 2')
+        @event3 = FactoryGirl.create(:event, start_at: '2000-01-03 23:59:99', title: '2000 day 3')
+        @event4 = FactoryGirl.create(:event, start_at: '2000-01-04 00:00:00', title: '2000 day 4')
+        @event4_2 = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:99', title: '2000 day 4, #2')
+        @event5 = FactoryGirl.create(:event, start_at: '2000-01-05 00:00:00', title: '2000 day 5')
+      end
+      describe ".falls_between_dates" do
+        it "should return the events that occur within the specified period" do
+          result = Event.falls_between_dates('2000-01-02'.to_date, '2000-01-03'.to_date)
+          expect( result.sort ).to eq( [@event2, @event3].sort )
+        end
+      end
+      describe ".falls_on_date" do
+        it "should return the events that occur on the specified date" do
+          result = Event.falls_on_date('2000-01-04'.to_date)
+          expect( result.sort ).to eq( [@event4, @event4_2].sort )
+        end
+      end
+    end
   end
 
   describe "initialize" do
@@ -686,6 +709,27 @@ describe Event do
       event = Event.new
       event.location_url = 'http://twitter.com/#!/wayground'
       event.location_url.should eq 'https://twitter.com/wayground'
+    end
+  end
+
+  describe "#is_multi_day" do
+    let(:event) { $event = Event.new(start_at: '2004-05-06 7:08am')}
+    context "with no end time" do
+      it "should return false" do
+        expect( event.is_multi_day ).to be_false
+      end
+    end
+    context "with an end time on the same date as the start time" do
+      it "should return false" do
+        event.end_at = event.start_at + 1.hour
+        expect( event.is_multi_day ).to be_false
+      end
+    end
+    context "with an end time on a later date" do
+      it "should return true" do
+        event.end_at = event.start_at + 1.week
+        expect( event.is_multi_day ).to be_true
+      end
     end
   end
 

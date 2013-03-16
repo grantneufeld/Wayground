@@ -54,6 +54,29 @@ class Event < ActiveRecord::Base
       {day_start: Time.current.beginning_of_day}
     )
   }
+  scope :falls_between_dates, ->(start_date, end_date) {
+    start_time = Time.zone.local(start_date.year, start_date.month, start_date.day, 0, 0, 0)
+    end_time = Time.zone.local(end_date.year, end_date.month, end_date.day, 0, 0, 0) + 1.day
+    where(
+      # matches if event#start_at falls within the given dates
+      '(start_at >= :start_time AND start_at < :end_time)' +
+      # matches if event#end_at is set and falls within the given dates
+      ' OR (end_at IS NOT NULL AND end_at > :start_time AND end_at < :end_time)' +
+      # matches if event#start_at is before the dates and event#end_at is after the dates
+      ' OR (end_at IS NOT NULL AND start_at < :start_time AND end_at >= :end_time)',
+      {start_time: start_time, end_time: end_time}
+    )
+  }
+  scope :falls_on_date, ->(the_date) {
+    start_time = Time.zone.local(the_date.year, the_date.month, the_date.day, 0, 0, 0)
+    end_time = start_time + 1.day
+    where(
+      '(start_at >= :start_time AND start_at < :end_time)' +
+      ' OR ' +
+      '(end_at IS NOT NULL AND start_at < :end_time AND end_at >= :start_time)',
+      {start_time: start_time, end_time: end_time}
+    )
+  }
 
   before_create :set_timezone
   before_save :approve_if_authority
@@ -185,6 +208,13 @@ class Event < ActiveRecord::Base
   def location_url=(location_url_str)
     write_attribute(:location_url, UrlCleaner.clean(location_url_str))
   end
+
+  # VALUES
+
+  def is_multi_day
+    end_at? && start_at.to_date != end_at.to_date
+  end
+
 
   # APPROVAL
 
