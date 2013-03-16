@@ -12,22 +12,22 @@ tzoff_hours = tzoff_minutes / 60
 tzoff_minutes = tzoff_minutes % 60
 
 Time::DATE_FORMATS[:db] = "%Y-%m-%d %H:%M:%S"
-Time::DATE_FORMATS[:time_date] = "%l:%M:%S %p on %A, %B %d, %Y"
-Time::DATE_FORMATS[:simple_date] = "%B %e, %Y"
-Time::DATE_FORMATS[:form_field_date] = "%B %e, %Y"
-Time::DATE_FORMATS[:form_field_datetime] = "%B %e, %Y at %l:%M %p"
-Time::DATE_FORMATS[:plain_date] = "%A, %B %e, %Y"
-Time::DATE_FORMATS[:plain_time] = "%l:%M %p" # 3:45 pm
-Time::DATE_FORMATS[:plain_datetime] = "%A, %B %e, %Y at %l:%M %p"
+Time::DATE_FORMATS[:time_date] = "%-l:%M:%S %p on %A, %B %-e, %Y" # 3:45:00 PM on Friday, March 1, 2013
+Time::DATE_FORMATS[:simple_date] = "%B %-e, %Y" # April 1, 2005
+Time::DATE_FORMATS[:form_field_date] = "%B %-e, %Y" # June 2, 2011
+Time::DATE_FORMATS[:form_field_datetime] = "%B %-e, %Y at %-l:%M %p" # May 5, 2018 at 4:56 PM
+Time::DATE_FORMATS[:plain_date] = "%A, %B %-e, %Y" # Friday, March 1, 2013
+Time::DATE_FORMATS[:plain_time] = "%-l:%M %p" # 3:45 PM
+Time::DATE_FORMATS[:plain_datetime] = "%A, %B %-e, %Y at %-l:%M %p" # Friday, March 1, 2013 at 3:45 PM
 Time::DATE_FORMATS[:http_header] = "%a, %d %b %Y %H:%M:%S %Z"
 Time::DATE_FORMATS[:icalendar_date] = "%Y%m%d"
 Time::DATE_FORMATS[:icalendar] = "%Y%m%dT%H%M%S"
 Time::DATE_FORMATS[:icalendar_utc] = "%Y%m%dT%H%M%SZ"
-Time::DATE_FORMATS[:microformat] = "%Y-%m-%dT%H:%M:%S#{tzoff_negative ? '-' : '+'}#{sprintf("%02i:%02i", tzoff_hours, tzoff_minutes)}"
+Time::DATE_FORMATS[:microformat] = "%Y-%m-%dT%H:%M:%S%:z" # 2012-05-02T13:45:00-06:00
 Time::DATE_FORMATS[:microformat_date] = "%Y-%m-%d"
-Time::DATE_FORMATS[:microformat_time] = "%H:%M:%S#{tzoff_negative ? '-' : '+'}#{sprintf("%02i:%02i", tzoff_hours, tzoff_minutes)}"
-Time::DATE_FORMATS[:compact_date] = "%b %d, %Y"
-Time::DATE_FORMATS[:compact_datetime] = "%b %d, %Y, %l:%M:%S%p"
+Time::DATE_FORMATS[:microformat_time] = "%H:%M:%S%:z" # 13:45:00-06:00
+Time::DATE_FORMATS[:compact_date] = "%b %-e, %Y" # Oct 2, 2003
+Time::DATE_FORMATS[:compact_datetime] = "%b %-e, %Y, %-l:%M:%S%p" # Oct 2, 2003, 5:43:00PM
 
 class ActiveSupport::TimeWithZone < Object
   # Return a string representation of the date & time in iCalendar format,

@@ -16,7 +16,7 @@ date_idx = nil
     is_multi_day = event_end && (event_end.to_date > event_date)
     if date_idx != event_date
       date_idx = event_date
-      date_hdr = event_start.to_s(:plain_date).gsub(/  +/, ' ')
+      date_hdr = event_start.to_s(:plain_date)
       %><%= '_' * date_hdr.size %>
 <%= date_hdr %>
 
@@ -26,7 +26,7 @@ date_idx = nil
       if is_multi_day
         # event spans more than one day
         # TODO: change date to_s call to reflect untimed day
-        %>until <%= event_end.to_s(:plain_date).gsub(/  +/, ' ') %>:
+        %>until <%= event_end.to_s(:plain_date) %>:
 <%    else
         %>All day:
 <%    end
@@ -34,7 +34,7 @@ date_idx = nil
       %><%= event_start.to_s(:plain_time).strip %><%
       unless event_end.blank?
         if is_multi_day
-          %> to <%= event_end.to_s(:plain_datetime).gsub(/  +/, ' ') %><%
+          %> to <%= event_end.to_s(:plain_datetime) %><%
         else
           %>—<%= event_end.to_s(:plain_time).strip %><%
         end

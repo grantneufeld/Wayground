@@ -4,7 +4,7 @@ describe "events/edit.html.erb" do
   before(:each) do
     @event = assign(:event, stub_model(Event,
       :user => nil,
-      :start_at => Time.parse('June 12, 2015 at 11:30 AM'),
+      :start_at => Time.zone.parse('June 12, 2015 at 11:30 AM'),
       :end_at => "",
       :is_allday => false,
       :is_draft => false,
