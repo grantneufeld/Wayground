@@ -8,8 +8,6 @@ Autotest.add_hook :initialize do |at|
   at.add_exception %r%^\./\.git%
   # Ignore Mac directory files
   at.add_exception '.DS_Store'
-  # Ignore files in coverage/
-  at.add_exception %r%^\./coverage%
   # Ignore files in doc/
   at.add_exception %r%^\./doc%
   # Ignore files in log/
@@ -20,8 +18,6 @@ Autotest.add_hook :initialize do |at|
   at.add_exception %r%^\./reports%
   # Ignore files in tmp/
   at.add_exception %r%^\./tmp%
-  # Ignore rails_best_practices report
-  at.add_exception 'rails_best_practices_output.html'
   # Ignore rerun.txt
   at.add_exception 'rerun.txt'
   # Ignore webrat files
@@ -31,6 +27,10 @@ Autotest.add_hook :initialize do |at|
   # Ignore files in directories that are wrapped in brackets
   at.add_exception %r%^\./\(.*\)%
 
+  # Run the corresponding specs when files in the app/presenters directory are modified
+  at.add_mapping(/app\/presenters\/(?<source_name>.+)\.rb/) do |filepath, match_data|
+    at.files_matching(/presenters\/#{match_data[:source_name]}_spec\.rb/)
+  end
   # Run the corresponding specs when files in the app/wayground directory are modified
   at.add_mapping(/app\/wayground\/(?<source_name>.+)\.rb/) do |filepath, match_data|
     at.files_matching(/wayground\/#{match_data[:source_name]}_spec\.rb/)
