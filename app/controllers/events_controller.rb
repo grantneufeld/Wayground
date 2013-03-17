@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'event/day_events'
 
 class EventsController < ApplicationController
   before_filter :set_user
@@ -114,6 +115,9 @@ class EventsController < ApplicationController
 
   def merge
     @page_title = "Merge Event: #{@event.title}"
+    @day_events = Wayground::Event::DayEvents.new(
+      events: Event.falls_on_date(@event.start_at).where('id != ?', @event.id)
+    )
   end
 
   def perform_merge

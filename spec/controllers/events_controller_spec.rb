@@ -331,7 +331,7 @@ describe EventsController do
   end
 
   describe "GET merge" do
-    let(:event) { $event = FactoryGirl.create(:event) }
+    let(:event) { $event = Event.first || FactoryGirl.create(:event) }
 
     it "requires the user to have authority" do
       set_logged_in_user
@@ -343,6 +343,19 @@ describe EventsController do
       set_logged_in_admin
       get :merge, :id => event.id
       response.should render_template("merge")
+    end
+
+    it "shows a list of other events on the same day" do
+      start = event.start_at
+      events = []
+      events << FactoryGirl.create(:event, start_at: start, title: 'Same Day and Time')
+      events << FactoryGirl.create(:event,
+        start_at: start - 2.days, end_at: start + 2.days, title: 'Multi-day Overlap'
+      )
+      events.sort_by! {|e| e.id }
+      set_logged_in_admin
+      get :merge, :id => event.id
+      expect( assigns(:day_events).events.sort_by {|e| e.id} ).to eq events
     end
   end
 
