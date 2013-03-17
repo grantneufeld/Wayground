@@ -1,90 +1,20 @@
 <%
+require 'event_presenter'
+
 # EXPECTS:
 # events: an array (or ActiveRecord equivalent) of Event objects.
 # user: the current user, if any
 
 date_idx = nil
 events.each do |event|
+  # Show the date heading only before the first event listed on a given date
   event_start = event.start_at
-  event_end = event.end_at
   event_date = event_start.to_date
-  is_multi_day = event_end && (event_end.to_date > event_date)
   if date_idx != event_date
     date_idx = event_date
     %><h3><%= event_start.to_s(:plain_date) %></h3>
 <%
   end
-  %><div class="vevent">
-<h4><%
-  if event.is_cancelled
-    %><span class="status" title="CANCELLED">Cancelled:</span>
-<%
-  end
-  if event.is_allday
-    # TODO: change date to_s call to reflect untimed day
-    %><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>" />
-<%
-    if is_multi_day
-      # event spans more than one day
-      # TODO: change date to_s call to reflect untimed day
-      %><time class="dtend" datetime="<%= event_end.to_s(:microformat) %>">until <%= event_end.to_s(:plain_date).strip %></time>:
-<%
-    end
-  else
-    %><time class="dtstart" datetime="<%= event_start.to_s(:microformat) %>"><%= event_start.to_s(:plain_time).strip %></time><%
-    unless event_end.blank?
-      if is_multi_day
-        %> to <time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_datetime).strip %></time><%
-      else
-        %>—<time class="dtend" datetime="<%= event_end.to_s(:microformat) %>"><%= event_end.to_s(:plain_time).strip %></time><%
-      end
-    end %>:
-<%
-  end
--%>
-<span class="summary"><%= link_to event.title, event %></span></h4>
-<%
-  event_location = event.location
-  event_address = event.address -%>
-<p><%
-  unless event_location.blank? && event_address.blank?
-    %><span class="location"><%
-    unless event_location.blank?
-      %><span class="fn org"><%= event.location %></span>
-<%  end
-    unless event_address.blank?
-      %>(<span class="adr"><span class="street-address"><%= event_address %></span></span>)<%
-    end
-    %></span>
-<br /><%
-  end
-  if event.description?
-    %><span class="description"><%= simple_text_to_html_breaks(event.description) %></span>
-<%
-  end
-  event_organizer = event.organizer
-  if event_organizer.present?
-    %><br />Presented by <%
-    event_organizer_url = event.organizer_url
-    if event_organizer_url.present?
-      %><a href="<%= event_organizer_url %>" class="organizer"><%= event_organizer %></a><%
-    else
-      %><span class="organizer"><%= event_organizer %></span><%
-    end
-    %>.<%
-  end %>
-<%
-  if event.has_authority_for_user_to?(user, :can_update)
-    %><br /><%= link_to 'Edit', edit_event_path(event), class: 'action' %><%
-    if !(event.is_approved?) && event.has_authority_for_user_to?(user, :can_approve)
-      %><%= separator %>
-<%= link_to 'Approve', approve_event_path(event), data: {confirm: "Are you sure you want to approve the event “#{event.title}”?"}, method: :post, class: 'action' %><%
-    end
-    if event.has_authority_for_user_to?(user, :can_delete)
-      %><%= separator %>
-<%= link_to 'Delete', [:delete, event], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %>
-<%  end
-  end
-  %></p>
-</div>
-<% end -%>
+  presenter = EventPresenter.new(view: self, event: event, user: user)
+  %><%= presenter.present_in_list %><%
+end -%>
