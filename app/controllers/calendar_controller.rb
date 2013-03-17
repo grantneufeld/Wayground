@@ -66,7 +66,7 @@ class CalendarController < ApplicationController
   end
 
   def set_section
-    @site_section = 'Events'
+    @site_section = :calendar
   end
 
 end

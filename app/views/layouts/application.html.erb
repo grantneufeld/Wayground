@@ -86,8 +86,9 @@ unless @page_description.blank?
 %></header>
 
 <nav role="navigation"><%
+today = Date.today
 site_sections = {
-  :events => {title: 'Events', path: events_path},
+  :calendar => {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))},
   :projects => {title: 'Projects', path: projects_path},
   :pages => {title: 'Pages', path: pages_path},
   :documents => {title: 'Documents', path: documents_path},
@@ -95,6 +96,7 @@ site_sections = {
   :admin => {title: 'Admin', path: settings_path}
 }
 site_hidden_sections = {
+  :events => {title: 'Events', path: events_path},
   :authorities => {title: 'Authorities', path: authorities_path},
   :paths => {title: 'Paths', path: paths_path},
   :settings => {title: 'Settings', path: settings_path}
