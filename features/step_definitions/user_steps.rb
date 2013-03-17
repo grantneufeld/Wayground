@@ -58,18 +58,6 @@ Given /^(?:|I )signed up with "(.*)\/(.*)"$/ do |email, password|
   end
 end
 
-#Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)" with id ([0-9]+)$/ do |email, password, id|
-#  user = User.where(email: email).first
-#  unless user
-#    user = FactoryGirl.create(:email_confirmed_user,
-#      :id                    => id.to_i,
-#      :email                 => email,
-#      :password              => password,
-#      :password_confirmation => password
-#    )
-#  end
-#end
-
 Given /^(?:|I )am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
   user = User.where(email: email).first
   unless user
