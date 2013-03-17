@@ -49,5 +49,15 @@ Wayground::Application.routes.draw do
   resources :projects
   get 'project/*projecturl' => 'projects#show', as: :project_name, format: false
 
+  # Calendar
+  month_regexp = /0[1-9]|1[0-2]/
+  year_regexp = /\d{4}/
+  get "calendar/:year/:month/:day" => 'calendar#day', as: :calendar_day,
+    constraints: { year: year_regexp, month: month_regexp, day: /0[1-9]|[1-3]\d/ }
+  get "calendar/:year/:month" => 'calendar#month', as: :calendar_month,
+    constraints: { year: year_regexp, month: month_regexp }
+  get "calendar/:year" => 'calendar#year', as: :calendar_year,
+    constraints: { year: year_regexp }
+
   get '*url' => "paths#sitepath", format: false
 end

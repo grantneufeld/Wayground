@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+section.calendar{
+  max-width:none; padding:0em 0em 1em;
+  > *{margin-left:1em; margin-right:1em;}
+  > .calendar{margin-left:0em; margin-right:0em;}
+}
+
+// The previous & next link buttons for navigating between periods in the calendar.
+.calendar-nav{
+  list-style-type:none; margin:0em; padding:0em;
+  .prev, .next{
+    display:block; font-weight:bold; text-decoration:none; padding:0.25em 1em; border:1px solid #CCF;
+  }
+  .prev{
+    float:left; border-top-left-radius:0.75em; border-bottom-left-radius:0.75em;
+  }
+  .next{
+    float:right; border-top-right-radius:0.75em; border-bottom-right-radius:0.75em;
+  }
+}
+
+.calendar h1{text-align:center; margin:0em; line-height:normal;}
+
+// A 7-day-wide calendar grid.
+table.calendar{
+  background:white; color:black; border-collapse:collapse; border-spacing:0em; width:100%; margin:0em;
+  td, th{
+    background:transparent; color:inherit; border:thin solid #333; width:14.2857143%;
+  }
+  > thead {
+    > tr {
+      background:white; color:black; text-shadow:none;
+      > th{padding:0.2em 0.5em; vertical-align:middle;}
+    }
+    // The column headers that display the day of the week.
+    > tr.day-names{background:#555; color:white;}
+  }
+  > tbody {
+    > tr:nth-child(even){
+      // Turn off the alternating row colors from the main stylesheet.
+      background:transparent; color:inherit;
+    }
+    > tr, > tr > td{min-height:3em;}
+    // Table rows represent weeks.
+    > tr {
+      // Table cells represent individual dates within a month.
+      > td{
+        padding:0em; vertical-align:top;
+        p{margin:0em; padding:0.2em 0.5em; white-space:nowrap; overflow:hidden;}
+        ul{
+          list-style-type:none; margin:0em; padding:0em;
+          > li{
+            > a:link, > a:visited{
+            	display:block; max-height:2.9em; overflow:hidden;
+            	padding:0.2em 1em;
+            	border-top:thin dotted #CCC;
+            	text-decoration:none; text-indent:-0.5em;
+            }
+            > a:link          {background:transparent; color:#009;}
+            > a:visited       {background:transparent; color:#606;}
+            > a:link:hover    {background:#DEF;        color:#00F;}
+            > a:visited:hover {background:#EDF;        color:#909;}
+            > a:link:active, > a:visited:active{background:yellow; color:red;}
+          }
+        }
+        // Container for information shown in a given date’s box. Used to constrain the size.
+        > .date_content{
+          clear:right; max-height:8em; overflow:auto; margin:0em; padding:0em;
+          p{border-top:thin solid #CCC;}
+        }
+      }
+      // Grey out the boxes for dates that fall outside of the current month.
+      > td.outside_month{
+        background:#CCC; color:#333;
+        .day{background:#779; color:#DDD;}
+        .day.empty{background:#888; color:#DDD;}
+      }
+    }
+  }
+  // The little box displaying the number for the day of the month.
+  .day{
+    display:block; float:right; min-width:1.2em; padding:0.1em 0.25em;
+    background:#66B; color:white;
+  	border-bottom-left-radius:0.33em;
+  	font-weight:bold; text-align:right; text-decoration:none;
+  }
+  .day:link:hover, .day:visited:hover{background:#CCF; color:#009;}
+  .day:link:active, .day:visited:active{background:#DDF; color:red;}
+  // Modify the display of the day of the month when there are zero events.
+  .day.empty{background:#779; color:white;}
+}
+
+

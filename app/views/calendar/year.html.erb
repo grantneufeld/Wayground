@@ -1,0 +1,31 @@
+<% # encoding: utf-8
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcalendar" />
+<%
+end
+
+prev_year = @date.year - 1
+next_year = @date.year + 1
+%><div class="calendar">
+<ul class="calendar-nav">
+<li><%= link_to '<', calendar_year_path(prev_year), title: prev_year.to_s, class: 'prev' %></li>
+<li><%= link_to '>', calendar_year_path(next_year), title: next_year.to_s, class: 'next' %></li>
+</ul>
+<h1><%= @total_event_count %> event<%= @total_event_count == 1 ? '' : 's' %> in <%= @date.year %></h1>
+<ul>
+<%
+months = (1..12).to_a
+months.each do |month|
+  month_event_count = @event_counts[month]
+  %><li><%= link_to Date::MONTHNAMES[month], calendar_month_path(year: @date.year, month: format('%02d', month)) %>: <%= month_event_count %> event<%= month_event_count == 1 ? '' : 's' %>.</li>
+<%
+end
+-%>
+</ul>
+<p class="smallprint">(The total for the year may not match the sum of the months because some events may span multiple months and be counted multiple times.)</p>
+</div>
+<%
+if @user.present?
+  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+end -%>

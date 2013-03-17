@@ -1,0 +1,35 @@
+<% # encoding: utf-8
+require 'date'
+require 'event/day_events'
+require 'event_presenter'
+
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcalendar" />
+<%
+end
+set_main_section_class 'calendar'
+
+date = @date # Date.new(@date.year, @date.month, @date.day)
+prev_date = date - 1.day
+next_date = date + 1.day
+%><ul class="calendar-nav">
+<li><%= link_to '<', calendar_day_path_for_date(prev_date), title: prev_date.to_time.to_s(:simple_date), class: 'prev' %></li>
+<li><%= link_to '>', calendar_day_path_for_date(next_date), title: next_date.to_time.to_s(:simple_date), class: 'next' %></li>
+</ul>
+<%
+
+event_count = @events.count
+%><h1><%= event_count %> event<%= event_count == 1 ? '' : 's' %> on <%= date.strftime('%A') %>, <%= link_to @date.strftime('%B'), calendar_month_path(year: @date.year, month: @date.strftime('%m')) %> <%= @date.day %>, <%= link_to @date.year, calendar_year_path(year: @date.year) %></h1>
+
+<%
+events = Wayground::Event::DayEvents.new(day: date, events: @events)
+events.all.each do |event|
+  presenter = EventPresenter.new(view: self, event: event, user: @user)
+  %><%= presenter.present_in_list %><%
+end
+%>
+<%
+if @user.present?
+  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+end -%>

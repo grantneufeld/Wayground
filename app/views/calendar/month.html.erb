@@ -1,0 +1,30 @@
+<% # encoding: utf-8
+require 'calendar_month_presenter'
+
+set_main_section_class 'calendar'
+
+this_month = @date # Date.new(@date.year, @date.month, 1)
+prev_month = this_month.prev_month
+next_month = this_month.next_month
+%><table class="calendar">
+<thead><tr><th colspan="7">
+<ul class="calendar-nav">
+<li><%= link_to '<', calendar_month_path(year: prev_month.year, month: prev_month.strftime('%m')), title: prev_month.strftime('%B %Y'), class: 'prev' %></li>
+<li><%= link_to '>', calendar_month_path(year: next_month.year, month: next_month.strftime('%m')), title: next_month.strftime('%B %Y'), class: 'next' %></li>
+</ul>
+<h1><%= @date.strftime('%B') %> <%= link_to @date.year, calendar_year_path(year: @date.year) %></h1>
+</th></tr>
+<tr class="day-names"><th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th></tr>
+</thead>
+<tbody>
+<%
+presenter = CalendarMonthPresenter.new(view: self, month: @date.month, year: @date.year, events: @events)
+%><%= presenter.present_weeks -%>
+</tbody>
+</table>
+
+<%
+if @user.present?
+  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
+<%
+end -%>
