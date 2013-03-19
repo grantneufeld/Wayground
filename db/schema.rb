@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(:version => 16) do
   add_index "authorities", ["user_id", "item_id", "item_type", "area"], :name => "user_map", :unique => true
 
   create_table "datastores", :force => true do |t|
-    t.binary "data", :limit => 133169152, :null => false
+    t.binary "data", :null => false
   end
 
   create_table "documents", :force => true do |t|
@@ -79,20 +79,20 @@ ActiveRecord::Schema.define(:version => 16) do
 
   create_table "events", :force => true do |t|
     t.integer  "user_id"
-    t.datetime "start_at",                                                    :null => false
+    t.datetime "start_at",                                                   :null => false
     t.datetime "end_at"
     t.string   "timezone",                 :limit => 31
-    t.boolean  "is_allday",                                :default => false, :null => false
-    t.boolean  "is_draft",                                 :default => false, :null => false
-    t.boolean  "is_approved",                              :default => false, :null => false
-    t.boolean  "is_wheelchair_accessible",                 :default => false, :null => false
-    t.boolean  "is_adults_only",                           :default => false, :null => false
-    t.boolean  "is_tentative",                             :default => false, :null => false
-    t.boolean  "is_cancelled",                             :default => false, :null => false
-    t.boolean  "is_featured",                              :default => false, :null => false
-    t.string   "title",                                                       :null => false
+    t.boolean  "is_allday",                               :default => false, :null => false
+    t.boolean  "is_draft",                                :default => false, :null => false
+    t.boolean  "is_approved",                             :default => false, :null => false
+    t.boolean  "is_wheelchair_accessible",                :default => false, :null => false
+    t.boolean  "is_adults_only",                          :default => false, :null => false
+    t.boolean  "is_tentative",                            :default => false, :null => false
+    t.boolean  "is_cancelled",                            :default => false, :null => false
+    t.boolean  "is_featured",                             :default => false, :null => false
+    t.string   "title",                                                      :null => false
     t.string   "description",              :limit => 511
-    t.text     "content",                  :limit => 8191
+    t.text     "content"
     t.string   "organizer"
     t.string   "organizer_url"
     t.string   "location"
@@ -101,8 +101,8 @@ ActiveRecord::Schema.define(:version => 16) do
     t.string   "province",                 :limit => 31
     t.string   "country",                  :limit => 2
     t.string   "location_url"
-    t.datetime "created_at",                                                  :null => false
-    t.datetime "updated_at",                                                  :null => false
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
   end
 
   add_index "events", ["start_at", "end_at", "is_allday", "is_approved", "is_draft", "is_cancelled"], :name => "dates"
@@ -110,15 +110,15 @@ ActiveRecord::Schema.define(:version => 16) do
   add_index "events", ["user_id"], :name => "index_events_on_user_id"
 
   create_table "external_links", :force => true do |t|
-    t.integer  "item_id",                                       :null => false
-    t.string   "item_type",                                     :null => false
-    t.boolean  "is_source",                  :default => false, :null => false
+    t.integer  "item_id",                                     :null => false
+    t.string   "item_type",                                   :null => false
+    t.boolean  "is_source",                :default => false, :null => false
     t.integer  "position"
     t.string   "site",       :limit => 31
-    t.string   "title",                                         :null => false
-    t.text     "url",        :limit => 1023,                    :null => false
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.string   "title",                                       :null => false
+    t.text     "url",                                         :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
   end
 
   add_index "external_links", ["item_type", "item_id"], :name => "index_external_links_on_item_type_and_item_id"
@@ -198,7 +198,7 @@ ActiveRecord::Schema.define(:version => 16) do
   end
 
   add_index "sourced_items", ["datastore_id"], :name => "index_sourced_items_on_datastore_id"
-  add_index "sourced_items", ["item_type", "item_id", "last_sourced_at"], :name => "index_sourced_items_on_item_type_and_item_id_and_last_sourced_at"
+  add_index "sourced_items", ["item_type", "item_id"], :name => "index_sourced_items_on_item_type_and_item_id"
   add_index "sourced_items", ["source_id"], :name => "index_sourced_items_on_source_id"
   add_index "sourced_items", ["source_identifier"], :name => "index_sourced_items_on_source_identifier"
 

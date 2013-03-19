@@ -48,7 +48,7 @@ module Wayground
     end
 
     def get_random_token_string
-      SecureRandom.urlsafe_base64(64 + rand(64))
+      SecureRandom.urlsafe_base64(64 + rand(64))[0..126]
     end
 
     def token_class

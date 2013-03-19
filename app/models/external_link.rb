@@ -9,6 +9,8 @@ class ExternalLink < ActiveRecord::Base
 
   belongs_to :item, :polymorphic => true
 
+  default_scope order(:item_type, :item_id, :position)
+
   # can’t require the item to be set before initial save when using nested attribute forms
   validates_presence_of :item_type, :item_id, :on => :update
   validates_presence_of :title

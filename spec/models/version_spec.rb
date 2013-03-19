@@ -68,15 +68,6 @@ describe Version do
     end
   end
 
-  describe ".current_versions" do
-    it "should restrict searches to the current versions for each item" do
-      item_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 70.days.from_now)
-      second_item = FactoryGirl.create(:event)
-      second_version = FactoryGirl.create(:version, item: second_item, edited_at: 1.days.from_now)
-      Version.current_versions.should eq [second_version, item_version]
-    end
-  end
-
   # METHODS
 
   describe ".first_versions" do

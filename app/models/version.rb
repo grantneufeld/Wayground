@@ -19,7 +19,6 @@ class Version < ActiveRecord::Base
   default_scope order(:edited_at, :id)
   scope :versions_before, lambda {|before_datetime| where('versions.edited_at < ?', before_datetime) }
   scope :versions_after, lambda {|after_datetime| where('versions.edited_at > ?', after_datetime) }
-  scope :current_versions, group(:item_type, :item_id)
 
   # Get the most recent version that preceded this one.
   def previous

@@ -10,7 +10,7 @@ class CreateExternalLinks < ActiveRecord::Migration
       t.timestamps
     end
     change_table :external_links do |t|
-      t.index [:item_type, :item_id]
+      t.index [:item_type, :item_id, :position]
       t.index [:site], :name=>'site'
       t.index [:title], :name=>'title'
     end

@@ -11,9 +11,6 @@ FactoryGirl.define do
   sequence :email do |n|
     "email#{n}-#{rand(100)}@factory.tld"
   end
-  sequence :uid do |n|
-    n
-  end
 
   # FACTORIES
 
@@ -24,7 +21,7 @@ FactoryGirl.define do
   factory :authentication do
     user
     provider        'twitter'
-    uid
+    sequence(:uid) {|n| "#{format('%04d', n)}#{rand(9999)}"}
     sequence(:name) {|n| "Auth User#{n}"}
   end
 
