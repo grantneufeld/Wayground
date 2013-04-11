@@ -12,7 +12,7 @@ class PagesController < ApplicationController
   # GET /pages
   # GET /pages.xml
   def index
-    @page_title = 'Page Index'
+    page_metadata(title: 'Page Index')
     @pages = paginate(Page)
   end
 
@@ -20,7 +20,7 @@ class PagesController < ApplicationController
   # GET /pages/1.xml
   def show
     requires_authority(:can_view)
-    @page_title = "Page “#{@page.title}”"
+    page_metadata(title: "Page “#{@page.title}”")
     @site_breadcrumbs = @page.breadcrumbs if @page.parent.present?
   end
 
@@ -41,7 +41,7 @@ class PagesController < ApplicationController
 
   # GET /pages/1/edit
   def edit
-    @page_title = "Edit Page “#{@page.title}”"
+    page_metadata(title: "Edit Page “#{@page.title}”")
   end
 
   # PUT /pages/1
@@ -50,7 +50,7 @@ class PagesController < ApplicationController
     if @page.update_attributes(params[:page])
       redirect_to(@page, notice: 'Page was successfully updated.')
     else
-      @page_title = "Edit Page “#{@page.title}”"
+      page_metadata(title: "Edit Page “#{@page.title}”")
       render action: "edit"
     end
   end
@@ -58,7 +58,7 @@ class PagesController < ApplicationController
   # GET /pages/1/delete
   def delete
     raise Wayground::AccessDenied unless current_user.has_authority_for_area('Content', :can_delete)
-    @page_title = "Delete Page “#{@page.title}”"
+    page_metadata(title: "Delete Page “#{@page.title}”")
   end
 
   # DELETE /pages/1
@@ -99,7 +99,7 @@ class PagesController < ApplicationController
   end
 
   def set_new_page
-    @page_title = 'New Page'
+    page_metadata(title: 'New Page')
     @page = Page.new(params[:page])
     if params[:parent].present?
       @page.parent = Page.find(params[:parent])

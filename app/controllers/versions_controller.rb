@@ -10,14 +10,14 @@ class VersionsController < ApplicationController
   # GET /versions.xml
   def index
     @versions = paginate(@item.versions)
-    @page_title = "Revision history of “#{@item.title}”"
+    page_metadata(title: "Revision history of “#{@item.title}”")
   end
 
   # GET /versions/1
   # GET /versions/1.xml
   def show
     @version = @item.versions.find(params[:id])
-    @page_title = "“#{@item.title}” (version from #{@version.edited_at.to_s(:compact_datetime)})"
+    page_metadata(title: "“#{@item.title}” (version from #{@version.edited_at.to_s(:compact_datetime)})")
   end
 
   protected

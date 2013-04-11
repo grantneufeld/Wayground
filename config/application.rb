@@ -65,9 +65,10 @@ module Wayground
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    # These constants define the, surprise surpise, name and description of the website.
+    # Website metadata:
     NAME = 'Wayground'
     DESCRIPTION = 'Tools for connecting, communicating and collaborating.'
+    TWITTER_AT = 'wayground' # the Twitter account for the website, without the ‘@’ prefix
 
     # Default location
     DEFAULT_CITY = 'Calgary'

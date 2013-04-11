@@ -55,6 +55,8 @@ describe "events/index.html.erb" do
   end
 
   it "renders a list of events" do
+    @page_metadata = Wayground::PageMetadata.new(title: 'Title')
+    view.stub(:page_metadata).and_return(@page_metadata)
     render
     assert_select "div.vevent>h4>span.status", :text => "Cancelled:", :count => 1
     assert_select "div.vevent>h4>time.dtstart", :text => "11:00 AM", :count => 2

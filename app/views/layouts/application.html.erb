@@ -1,11 +1,12 @@
 <% # encoding: utf-8
+require 'metadata_presenter'
 
 # Parameters - all are optional
 #
-# @page_title: Used in the <title> meta tag. If blank, defaults to the site title.
+# page_metadata.title: Used in the <title> meta tag. If blank, defaults to the site title.
 # @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
-# @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
-# @page_description: Plain text string to be used as the value for the <meta name="description"> tag.
+# page_metadata.nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
+# page_metadata.description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @site_section: symbol for the active section of the website. E.g.: :events
 # @site_breadcrumbs: An array of hashes {text: ?, url: ?} describing the hierarchical navigation parentage of the current item.
 # @page_submenu_items: An array of hashes {title: ?, path: ?} to use to create links in the submenu for the page.
@@ -17,15 +18,14 @@
 # :footer - Goes in the footer, right after the actions (if any).
 # :head - Goes at the end of the head. Useful for custom meta tags, javascript links, etc.
 
+page_meta = page_metadata
+metadata = {view: self, title: page_meta.title, description: page_meta.description}
+metadata[:cache] = :no if page_meta.nocache #@browser_nocache
+metadata_presenter = MetadataPresenter.new(metadata)
+
 %><!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<title><%
-if @page_title.blank? or params[:url] == '/'
-  %><%= Wayground::Application::NAME %><%
-else
-  %><%=h @page_title %> [<%= Wayground::Application::NAME %>]<%
-end
-%></title>
+<html lang="en" xmlns:og="http://ogp.me/ns#"><head><meta charset="utf-8">
+<%= metadata_presenter.present_title %>
 <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
@@ -45,14 +45,8 @@ end -%>
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
 <%= csrf_meta_tags %>
-<%
-if @browser_nocache
-  %><meta name="robots" content="noindex" />
-<% end
-unless @page_description.blank?
-  %><meta name="description" content="<%=h @page_description %>" />
-<% end
-%><%= yield :head -%>
+<%= metadata_presenter.present_metatags -%>
+<%= yield :head -%>
 </head><body onTouchEnd="return true;">
 
 <header role="banner">
@@ -97,6 +91,7 @@ site_sections = {
 }
 site_hidden_sections = {
   :events => {title: 'Events', path: events_path},
+  :images => {title: 'Images', path: images_path},
   :authorities => {title: 'Authorities', path: authorities_path},
   :paths => {title: 'Paths', path: paths_path},
   :settings => {title: 'Settings', path: settings_path}

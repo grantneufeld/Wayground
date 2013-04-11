@@ -14,7 +14,7 @@ class EventsController < ApplicationController
 
   def index
     range = params[:r]
-    @page_title = case range
+    title = case range
     when 'all'
       'Events'
     when 'past'
@@ -22,6 +22,7 @@ class EventsController < ApplicationController
     else
       'Events: Upcoming'
     end
+    page_metadata(title: title)
     # TODO: paginate Events#index
     if @user && @user.has_authority_for_area(Event.authority_area, :can_approve)
       # moderators see both approved and unapproved events
@@ -46,12 +47,12 @@ class EventsController < ApplicationController
   end
 
   def show
-    @page_title = "#{@event.start_at.to_s(:simple_date)}: #{@event.title}"
+    page_metadata(title: "#{@event.start_at.to_s(:simple_date)}: #{@event.title}")
     if @event.is_cancelled
       flash.now.alert = 'This event has been cancelled.'
     end
     unless @event.is_approved?
-      @browser_nocache = true
+      page_metadata.nocache = true
       flash.now.alert = 'This event listing has not been approved by a moderator yet.'
     end
   end
@@ -75,11 +76,11 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @page_title = "Edit Event: #{@event.title}"
+    page_metadata(title: "Edit Event: #{@event.title}")
   end
 
   def update
-    @page_title = "Edit Event: #{@event.title}"
+    page_metadata(title: "Edit Event: #{@event.title}")
     if @event.update_attributes(params[:event])
       notice = 'The event has been saved.'
       redirect_to(@event, notice: notice)
@@ -89,7 +90,7 @@ class EventsController < ApplicationController
   end
 
   def delete
-    @page_title = "Delete Event: #{@event.title}"
+    page_metadata(title: "Delete Event: #{@event.title}")
   end
 
   def destroy
@@ -101,7 +102,7 @@ class EventsController < ApplicationController
     if @event.is_approved?
       redirect_to(@event, :notice => 'The event has already been approved.')
     else
-      @page_title = "Approve Event: #{@event.title}"
+      page_metadata(title: "Approve Event: #{@event.title}")
     end
   end
 
@@ -114,14 +115,14 @@ class EventsController < ApplicationController
   end
 
   def merge
-    @page_title = "Merge Event: #{@event.title}"
+    page_metadata(title: "Merge Event: #{@event.title}")
     @day_events = Wayground::Event::DayEvents.new(
       events: Event.falls_on_date(@event.start_at).where('id != ?', @event.id)
     )
   end
 
   def perform_merge
-    @page_title = "Merge Event: #{@event.title}"
+    page_metadata(title: "Merge Event: #{@event.title}")
     @merge_with = Event.find(params[:merge_with])
     @merge_with.editor = @user
     merger = Merger::EventMerger.new(@event)
@@ -168,7 +169,7 @@ class EventsController < ApplicationController
   end
 
   def set_new_event
-    @page_title = 'New Event'
+    page_metadata(title: 'New Event')
     @event = Event.new(params[:event])
   end
 

@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
   def profile
     @profile_user = User.find(params[:id])
-    @page_title = "User: #{@profile_user.name}"
+    page_metadata(title: "User: #{@profile_user.name}")
   end
 
   def show

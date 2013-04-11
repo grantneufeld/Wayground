@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'page_metadata'
 
 describe "layouts/application.html.erb" do
   before do
@@ -8,21 +9,27 @@ describe "layouts/application.html.erb" do
       def current_user
         nil
       end
+      def page_metadata
+        @page_metadata ||= Wayground::PageMetadata.new
+      end
       helper_method :current_user
+      helper_method :page_metadata
     end
   end
 
   # Parameters
 
-  # @page_title: Used in the <title> meta tag. If blank, defaults to the site title.
-  describe "@page_title" do
+  # title: Used in the <title> meta tag. If blank, defaults to the site title.
+  describe "page_metadata.title" do
     it "should be used for the title element if present" do
-      @page_title = 'Test Title'
+      @page_metadata = Wayground::PageMetadata.new(title: 'Test Title')
+      view.stub(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should match(/<title>#{@page_title} \[#{Wayground::Application::NAME}\]<\/title>/)
+      rendered.should match(/<title>Test Title \[#{Wayground::Application::NAME}\]<\/title>/)
     end
     it "should default to the site title if blank" do
-      @page_title = nil
+      @page_metadata = Wayground::PageMetadata.new(title: nil)
+      view.stub(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<title>#{Wayground::Application::NAME}<\/title>/)
     end
@@ -42,31 +49,35 @@ describe "layouts/application.html.erb" do
     end
   end
 
-  # @browser_nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
-  describe "@browser_nocache" do
+  # nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
+  describe "page_metadata.nocache" do
     it "should include the robots-noindex meta tag if true" do
-      @browser_nocache = true
+      @page_metadata = Wayground::PageMetadata.new(nocache: true)
+      view.stub(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<meta name="robots" content="noindex"/)
     end
-    it "should not include the robots-noindex meta tag if not set" do
-      @browser_nocache = nil
+    it "should not include the robots-noindex meta tag if false" do
+      @page_metadata = Wayground::PageMetadata.new(nocache: false)
+      view.stub(:page_metadata).and_return(@page_metadata)
       render
       rendered.should_not match(/<meta name="robots" content="noindex"/)
     end
   end
 
-  # @page_description: Plain text string to be used as the value for the <meta name="description"> tag.
-  describe "@page_description" do
+  # description: Plain text string to be used as the value for the <meta name="description"> tag.
+  describe "page_metadata.description" do
     it "should set the description meta tag if true" do
-      @page_description = "Test Description"
+      @page_metadata = Wayground::PageMetadata.new(description: "Test Description")
+      view.stub(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<meta name="description" content="Test Description"/)
     end
     it "should not include the description meta tag if not set" do
-      @page_description = nil
+      @page_metadata = Wayground::PageMetadata.new(description: nil)
+      view.stub(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should_not match(/<meta[^>]name="description"/)
+      expect( rendered ).to_not match(/<meta[^>]+name="description"/)
     end
   end
 

@@ -34,9 +34,9 @@ describe ApplicationController do
   end
 
   context "#browser_dont_cache" do
-    it "should set the @browser_nocache variable" do
+    it "should set the page metadata nocache flag" do
       controller.send(:browser_dont_cache)
-      assigns[:browser_nocache].should be_true
+      expect( controller.send(:page_metadata).nocache ).to be_true
     end
   end
 

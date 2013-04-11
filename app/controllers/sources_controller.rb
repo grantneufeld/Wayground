@@ -12,12 +12,12 @@ class SourcesController < ApplicationController
   before_filter :set_new_source, :only => [:new, :create]
 
   def index
-    @page_title = 'Sources'
+    page_metadata(title: 'Sources')
     @sources = Source.all
   end
 
   def show
-    @page_title = @source.name
+    page_metadata(title: @source.name)
   end
 
   def new
@@ -32,20 +32,20 @@ class SourcesController < ApplicationController
   end
 
   def edit
-    @page_title = "Edit Source: #{@source.name}"
+    page_metadata(title: "Edit Source: #{@source.name}")
   end
 
   def update
     if @source.update_attributes(params[:source])
       redirect_to @source
     else
-      @page_title = "Edit Source: #{@source.name}"
+      page_metadata(title: "Edit Source: #{@source.name}")
       render :action => 'edit'
     end
   end
 
   def delete
-    @page_title = "Delete Source: #{@source.name}"
+    page_metadata(title: "Delete Source: #{@source.name}")
   end
 
   def destroy
@@ -54,11 +54,11 @@ class SourcesController < ApplicationController
   end
 
   def processor
-    @page_title = "Process Source: #{@source.name}"
+    page_metadata(title: "Process Source: #{@source.name}")
   end
 
   def runprocessor
-    @page_title = "Process Source: #{@source.name}"
+    page_metadata(title: "Process Source: #{@source.name}")
     processor = @source.run_processor(@user, params[:approve] == 'all')
     msgs = ['Processing complete.']
     msgs << "#{processor.new_events.size} items were created." if processor.new_events.size > 0
@@ -105,7 +105,7 @@ class SourcesController < ApplicationController
   end
 
   def set_new_source
-    @page_title = 'New Source'
+    page_metadata(title: 'New Source')
     @source = Source.new(params[:source])
   end
 

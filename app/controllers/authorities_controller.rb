@@ -13,27 +13,27 @@ class AuthoritiesController < ApplicationController
   # GET /authorities.xml
   def index
     @authorities = paginate(Authority)
-    @page_title = "Authorities"
+    page_metadata(title: 'Authorities')
   end
 
   # GET /authorities/1
   # GET /authorities/1.xml
   def show
-    @page_title = "Authority"
+    page_metadata(title: 'Authority')
   end
 
   # GET /authorities/new
   # GET /authorities/new.xml
   def new
     @authority = Authority.new
-    @page_title = "New Authority"
+    page_metadata(title: 'New Authority')
   end
 
   # POST /authorities
   def create
     @authority = Authority.build_from_params(authority_params: params[:authority], authorized_by: current_user)
     @user = @authority.user
-    @page_title = "New Authority"
+    page_metadata(title: 'New Authority')
 
     if @authority.save
       redirect_to(@authority, notice: 'Authority was successfully created.')
@@ -44,14 +44,14 @@ class AuthoritiesController < ApplicationController
 
   # GET /authorities/1/edit
   def edit
-    @page_title = "Update Authority"
+    page_metadata(title: 'Update Authority')
   end
 
   # PUT /authorities/1
   # PUT /authorities/1.xml
   def update
     @authority.authorized_by = current_user
-    @page_title = "Update Authority"
+    page_metadata(title: 'Update Authority')
 
     if @authority.update_attributes(params[:authority])
       redirect_to(@authority, notice: 'Authority was successfully updated.')
@@ -62,7 +62,7 @@ class AuthoritiesController < ApplicationController
 
   # GET /authorities/1/delete
   def delete
-    @page_title = "Delete Authority"
+    page_metadata(title: 'Delete Authority')
   end
 
   # DELETE /authorities/1

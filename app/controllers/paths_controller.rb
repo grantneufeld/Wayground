@@ -34,14 +34,14 @@ class PathsController < ApplicationController
   # GET /paths
   # GET /paths.xml
   def index
-    @page_title = 'Custom Paths'
+    page_metadata(title: 'Custom Paths')
     @paths = paginate(Path.for_user(current_user))
   end
 
   # GET /paths/1
   # GET /paths/1.xml
   def show
-    @page_title = "Custom Path: #{@path.sitepath}"
+    page_metadata(title: "Custom Path: #{@path.sitepath}")
   end
 
   # GET /paths/new
@@ -75,7 +75,7 @@ class PathsController < ApplicationController
 
   # GET /paths/1/delete
   def delete
-    @page_title = "Delete Custom Path: #{@path.sitepath}"
+    page_metadata(title: "Delete Custom Path: #{@path.sitepath}")
   end
 
   # DELETE /paths/1
@@ -120,12 +120,12 @@ class PathsController < ApplicationController
   end
 
   def set_new
-    @page_title = 'New Custom Path'
+    page_metadata(title: 'New Custom Path')
     @path = Path.new(params[:path])
   end
 
   def set_edit
-    @page_title = "Edit Custom Path: #{@path.sitepath}"
+    page_metadata(title: "Edit Custom Path: #{@path.sitepath}")
   end
 
   def render_path_item(item)
@@ -141,8 +141,7 @@ class PathsController < ApplicationController
 
   def render_item_as_page(item)
       @page = item
-      @page_title = @page.title
-      @page_description = @page.description
+      page_metadata(title: @page.title, description: @page.description)
       @site_breadcrumbs = @page.breadcrumbs
       render template: 'paths/page'
   end

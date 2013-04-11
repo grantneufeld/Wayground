@@ -99,7 +99,7 @@ class ProjectsController < ApplicationController
   end
 
   def set_new_project
-    @page_title = 'New Project'
+    page_metadata(title: 'New Project')
     @project = Project.new(params[:project])
     @project.creator = @project.owner = @user
   end

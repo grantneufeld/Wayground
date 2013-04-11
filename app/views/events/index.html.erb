@@ -6,7 +6,7 @@ content_for(:head) do
 end
 set_main_section_class 'event-list'
 
-%><h2><%= @page_title %></h2>
+%><h2><%= page_metadata.title %></h2>
 <p><%= link_to 'Subscribe to this calendar in your calendar application',
   "webcal://#{request.host_with_port}#{events_path(format: :ics, r: params[:r])}", class: 'ics',
   title: 'Calendar subscription link, compatible with most calendar applications' %>.</p>

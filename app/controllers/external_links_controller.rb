@@ -11,14 +11,14 @@ class ExternalLinksController < ApplicationController
   before_filter :set_new_external_link, :only => [:new, :create]
 
   def index
-    @page_title = "#{@item.title}: External Links"
+    page_metadata(title: "#{@item.title}: External Links")
     #@external_links = paginate(@item.external_links)
     @external_links = @item.external_links
     @user = current_user
   end
 
   def show
-    @page_title = "#{@item.title}: #{@external_link.title}"
+    page_metadata(title: "#{@item.title}: #{@external_link.title}")
   end
 
   def new
@@ -33,11 +33,11 @@ class ExternalLinksController < ApplicationController
   end
 
   def edit
-    @page_title = "Edit External Link: #{@external_link.title}"
+    page_metadata(title: "Edit External Link: #{@external_link.title}")
   end
 
   def update
-    @page_title = "Edit External Link: #{@external_link.title}"
+    page_metadata(title: "Edit External Link: #{@external_link.title}")
     if @external_link.update_attributes(params[:external_link])
       redirect_to([@item, @external_link], notice: 'The external link has been saved.')
     else
@@ -46,7 +46,7 @@ class ExternalLinksController < ApplicationController
   end
 
   def delete
-    @page_title = "Delete External Link: #{@external_link.title}"
+    page_metadata(title: "Delete External Link: #{@external_link.title}")
   end
 
   def destroy
@@ -94,7 +94,7 @@ class ExternalLinksController < ApplicationController
   end
 
   def set_new_external_link
-    @page_title = 'New External Link'
+    page_metadata(title: 'New External Link')
     @external_link = @item.external_links.new(params[:external_link])
   end
 

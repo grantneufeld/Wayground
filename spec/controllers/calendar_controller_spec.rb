@@ -44,7 +44,7 @@ describe CalendarController do
     end
     it "should set the page title" do
       get 'year', year: '2000'
-      expect( assigns(:page_title) ).to eq '2000'
+      expect( assigns(:page_metadata).title ).to eq '2000'
     end
     it "should set the total number of events occuring in the year" do
       get 'year', year: '2004'
@@ -83,7 +83,7 @@ describe CalendarController do
     end
     it "should set the page title" do
       get 'month', year: '2000', month: '04'
-      expect( assigns(:page_title) ).to eq 'April 2000'
+      expect( assigns(:page_metadata).title ).to eq 'April 2000'
     end
     it "should grab all the relevant events" do
       get 'month', year: '2004', month: '02'
@@ -114,7 +114,7 @@ describe CalendarController do
     end
     it "should set the page title" do
       get 'day', year: '2000', month: '01', day: '01'
-      expect( assigns(:page_title) ).to eq 'January 1, 2000'
+      expect( assigns(:page_metadata).title ).to eq 'January 1, 2000'
     end
     it "should grab all the relevant events" do
       get 'day', year: '2004', month: '02', day: '29'

@@ -23,13 +23,13 @@ class SettingsController < ApplicationController
   # GET /settings.xml
   def index
     @settings = Setting.all
-    @page_title = "Settings"
+    page_metadata(title: "Settings")
   end
 
   # GET /settings/1
   # GET /settings/1.xml
   def show
-    @page_title = "Setting: #{@setting.key}"
+    page_metadata(title: "Setting: #{@setting.key}")
   end
 
   # GET /settings/new
@@ -49,7 +49,7 @@ class SettingsController < ApplicationController
 
   # GET /settings/1/edit
   def edit
-    @page_title = "Edit Setting: #{@setting.key}"
+    page_metadata(title: "Edit Setting: #{@setting.key}")
   end
 
   # PUT /settings/1
@@ -58,14 +58,14 @@ class SettingsController < ApplicationController
     if @setting.update_attributes(params[:setting])
       redirect_to(@setting, notice: 'Setting was successfully updated.')
     else
-      @page_title = "Edit Setting: #{@setting.key}"
+      page_metadata(title: "Edit Setting: #{@setting.key}")
       render action: "edit"
     end
   end
 
   # GET /settings/1/delete
   def delete
-    @page_title = "Delete Setting: #{@setting.key}"
+    page_metadata(title: "Delete Setting: #{@setting.key}")
   end
 
   # DELETE /settings/1
@@ -109,7 +109,7 @@ class SettingsController < ApplicationController
   end
 
   def set_new_setting
-    @page_title = 'New Setting'
+    page_metadata(title: 'New Setting')
     @setting = Setting.new(params[:setting])
   end
 end

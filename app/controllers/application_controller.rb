@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'user_token'
 require 'rememberer'
+require 'page_metadata'
 
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
@@ -8,6 +9,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   helper_method :current_user
+  helper_method :page_metadata
 
   rescue_from ActiveRecord::RecordNotFound, :with => :missing
   rescue_from Wayground::AccessDenied, :with => :unauthorized
@@ -19,14 +21,14 @@ class ApplicationController < ActionController::Base
   # report that the requested url does not exist (missing - 404 error)
   # TODO: support params for missing (such as name of missing resource, e.g., "Group ID 123")
   def missing
-    @page_title = '404 Missing'
+    page_metadata(title: '404 Missing')
     flash.now[:alert] ||= 'Requested page not found.'
     render :template => 'paths/missing', :status => '404 Missing'
   end
 
   # report that the user is not authorized
   def unauthorized
-    @page_title = 'Unauthorized'
+    page_metadata(title: 'Unauthorized')
     flash.now[:alert] ||= 'You are not authorized for accessing the requested resource'
     browser_dont_cache
     render :template => 'authorities/unauthorized', :status => '403 Forbidden'
@@ -34,14 +36,23 @@ class ApplicationController < ActionController::Base
 
   # report that the user must sign in
   def login_required
-    @page_title = 'Sign In Required'
+    page_metadata(title: 'Sign In Required')
     flash.now[:alert] ||= 'You must sign in to access the requested resource'
     browser_dont_cache
     render :template => 'authorities/login_required', :status => '403 Forbidden'
   end
 
+  def page_metadata(params={})
+    if @page_metadata
+      @page_metadata.merge_params(params)
+    else
+      @page_metadata = Wayground::PageMetadata.new(params)
+    end
+    @page_metadata
+  end
+
   def browser_dont_cache
-    @browser_nocache = true
+    page_metadata.nocache = true
   end
 
   # set the remember me cookie for a user’s session

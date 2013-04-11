@@ -15,16 +15,16 @@ class DocumentsController < ApplicationController
 
   def index
     @documents = paginate(Document.for_user(current_user))
-    @page_title = 'Documents Index'
+    page_metadata(title: 'Documents Index')
   end
 
   def show
-    @page_title = "Document “#{@document.filename}”"
+    page_metadata(title: "Document “#{@document.filename}”")
   end
 
   def new
     @document = Document.new
-    @page_title = 'New Document'
+    page_metadata(title: 'New Document')
   end
 
   def create
@@ -34,26 +34,26 @@ class DocumentsController < ApplicationController
     if @document.save
       redirect_to(@document, notice: 'Document was successfully created.')
     else
-      @page_title = 'New Document'
+      page_metadata(title: 'New Document')
       render action: "new"
     end
   end
 
   def edit
-    @page_title = "Edit Document #{@document.filename}"
+    page_metadata(title: "Edit Document #{@document.filename}")
   end
 
   def update
     if @document.update_attributes(params[:document])
       redirect_to(@document, notice: 'Document was successfully updated.')
     else
-      @page_title = "Edit Document #{@document.filename}"
+      page_metadata(title: "Edit Document #{@document.filename}")
       render action: "edit"
     end
   end
 
   def delete
-    @page_title = "Delete Document #{@document.filename}"
+    page_metadata(title: "Delete Document #{@document.filename}")
   end
 
   def destroy
