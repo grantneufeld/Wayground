@@ -1,0 +1,33 @@
+<%
+# requires `image` local variable
+# add some blank image variants
+2.times do
+  image.image_variants << ImageVariant.new
+end
+
+%><%= form_for(image) do |f| %>
+<%= show_errors(image) %>
+<table><tbody>
+<tr><th><%= f.label :title %></th>
+  <td><%= f.text_field :title, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :alt_text, 'Alternate Text' %></th>
+  <td><%= f.text_field :alt_text, size: 60, maxlength: 127 %><br />(Used as the img “alt” attribute.)</td></tr>
+<tr><th><%= f.label :description %></th>
+  <td><%= f.text_area :description, rows: 4 %></td></tr>
+<tr><th><%= f.label :attribution %></th>
+  <td><%= f.text_field :attribution, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :attribution_url %></th>
+  <td><%= f.url_field :attribution_url, size: 60, placeholder: 'http://' %></td></tr>
+<tr><th><%= f.label :license_url %></th>
+  <td><%= f.url_field :license_url, size: 60, placeholder: 'http://' %></td></tr>
+<tr class="heading"><th colspan="2">Image URLs</th></tr>
+<tr><th></th><td>Variants of this image (e.g., full-size, thumbnails):</td></tr>
+<%=
+  f.fields_for :image_variants, nil, hidden_field_id: false do |builder|
+    %><tr><th></th><td><%= render "variant_fields", f: builder %></td></tr>
+<%
+  end -%>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Image') %></td></tr></tfoot>
+</table>
+<% end %>

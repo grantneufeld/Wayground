@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 16) do
+ActiveRecord::Schema.define(:version => 19) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(:version => 16) do
     t.string   "location_url"
     t.datetime "created_at",                                                 :null => false
     t.datetime "updated_at",                                                 :null => false
+    t.integer  "image_id"
   end
 
   add_index "events", ["start_at", "end_at", "is_allday", "is_approved", "is_draft", "is_cancelled"], :name => "dates"
@@ -121,9 +122,33 @@ ActiveRecord::Schema.define(:version => 16) do
     t.datetime "updated_at",                                  :null => false
   end
 
-  add_index "external_links", ["item_type", "item_id"], :name => "index_external_links_on_item_type_and_item_id"
+  add_index "external_links", ["item_type", "item_id", "position"], :name => "index_external_links_on_item_type_and_item_id_and_position"
   add_index "external_links", ["site"], :name => "site"
   add_index "external_links", ["title"], :name => "title"
+
+  create_table "image_variants", :force => true do |t|
+    t.integer  "image_id",                 :null => false
+    t.integer  "height"
+    t.integer  "width"
+    t.string   "format",     :limit => 31, :null => false
+    t.string   "style",      :limit => 15, :null => false
+    t.text     "url",                      :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "image_variants", ["image_id", "style", "height", "width"], :name => "index_image_variants_on_image_id_and_style_and_height_and_width"
+
+  create_table "images", :force => true do |t|
+    t.text     "title"
+    t.string   "alt_text",        :limit => 127
+    t.text     "description"
+    t.string   "attribution",     :limit => 127
+    t.text     "attribution_url"
+    t.text     "license_url"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
 
   create_table "pages", :force => true do |t|
     t.integer  "parent_id"

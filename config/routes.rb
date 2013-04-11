@@ -38,6 +38,7 @@ Wayground::Application.routes.draw do
     resources :external_links
     resources :versions, except: [:new, :create, :edit, :update, :destroy]
   end
+  resources :images
   resources :sources do
     member do
       get 'processor'

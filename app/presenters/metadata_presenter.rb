@@ -13,7 +13,7 @@ class MetadataPresenter < HtmlPresenter
   # :type - defaults to "article" (or "website" for root url)
   # :url - defaults to request.url
   # :description
-  # :image_url
+  # :image_url or :image_variant or :image
   # :image_height, :image_width
   # :twitter_creator - the @ username of the user responsible for the current page’s content, without the "@"
   # :cache - :no if the page is not to be remotely cached
@@ -103,6 +103,29 @@ class MetadataPresenter < HtmlPresenter
     @image_url = params[:image_url]
     @image_height = params[:image_height]
     @image_width = params[:image_width]
+    if @image_url.blank?
+      set_image_from_variant(params[:image_variant])
+    end
+    if @image_url.blank?
+      set_image_from_image(params[:image])
+    end
+  end
+
+  def set_image_from_variant(image_variant)
+    if image_variant
+      @image_url = image_variant.url
+      @image_height = image_variant.height
+      @image_width = image_variant.width
+    end
+  end
+
+  def set_image_from_image(image)
+    if image
+      # TODO: get the best image variants, from the image, for Facebook and Twitter
+      # Facebook wants a big image under 4mb
+      # Twitter wants an image close to 120x120 under 1mb
+      set_image_from_variant(image.get_best_variant)
+    end
   end
 
   def set_twitter_creator(params)

@@ -55,6 +55,48 @@ describe MetadataPresenter do
       presenter = MetadataPresenter.new(view: view_stub, image_width: 4321)
       expect( presenter.image_width ).to eq 4321
     end
+    context "with an ImageVariant" do
+      let(:variant) { $variant = ImageVariant.new(url: 'http://variant.tld/', height: 123, width: 321) }
+      it "should set the image_url" do
+        presenter = MetadataPresenter.new(view: view_stub, image_variant: variant)
+        expect( presenter.image_url ).to eq 'http://variant.tld/'
+      end
+      it "should set the image_height" do
+        presenter = MetadataPresenter.new(view: view_stub, image_variant: variant)
+        expect( presenter.image_height ).to eq 123
+      end
+      it "should set the image_width" do
+        presenter = MetadataPresenter.new(view: view_stub, image_variant: variant)
+        expect( presenter.image_width ).to eq 321
+      end
+    end
+    context "with an Image" do
+      before(:all) do
+        @image = Image.new
+        scaled = @image.image_variants.new(url: 'http://s.tld/', format: 'png',
+          height: 1, width: 2, style: 'scaled'
+        )
+        original = @image.image_variants.new(url: 'http://o.tld/', format: 'png',
+          height: 3, width: 6, style: 'original'
+        )
+        another = @image.image_variants.new(url: 'http://a.tld/', format: 'png',
+          height: 2, width: 4, style: 'scaled'
+        )
+        @image.save!
+      end
+      before(:each) do
+        @presenter = MetadataPresenter.new(view: view_stub, image: @image)
+      end
+      it "should use the original variant url" do
+        expect( @presenter.image_url ).to eq 'http://o.tld/'
+      end
+      it "should use the original variant height" do
+        expect( @presenter.image_height ).to eq 3
+      end
+      it "should use the original variant width" do
+        expect( @presenter.image_width ).to eq 6
+      end
+    end
     it "should take a twitter_creator parameter" do
       presenter = MetadataPresenter.new(view: view_stub, twitter_creator: '@parameter')
       expect( presenter.twitter_creator ).to eq '@parameter'

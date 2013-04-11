@@ -68,6 +68,24 @@ FactoryGirl.define do
     association :item, factory: :event
   end
 
+  factory :image do
+    title 'Factory Image'
+    alt_text 'Factory alt text'
+    description 'Factory generated Image.'
+    attribution 'Factory Attribution'
+    attribution_url 'http://attribution.tld/'
+    license_url 'http://license.tld/'
+  end
+
+  factory :image_variant do
+    image
+    height '200'
+    width '200'
+    format 'png'
+    style 'original'
+    url 'http://test.tld/image.png'
+  end
+
   factory :page do
     sequence(:filename) {|n| "factory_page_#{n}"}
     title       'Factory Page'

@@ -1,0 +1,12 @@
+<%= f.hidden_field :id %>
+<table><tbody><tr><th><%= f.label :url, 'Weblink' %></th>
+  <td><%= f.url_field :url, size: 49, :placeholder => 'http://' %></td></tr>
+<tr><th><%= f.label :height %></th>
+  <td><%= f.number_field :height, size: 6, maxlength: 11 %></td></tr>
+<tr><th><%= f.label :width %></th>
+  <td><%= f.number_field :width, size: 6, maxlength: 11 %></td></tr>
+<tr><th><%= f.label :format %></th>
+  <td><%= f.text_field :format, size: 10, maxlength: 31 %> (E.g., “jpeg”)</td></tr>
+<tr><th><%= f.label :style %></th>
+  <td><%= f.select :style, %w(original scaled), include_blank: true %></td></tr>
+</tbody></table>

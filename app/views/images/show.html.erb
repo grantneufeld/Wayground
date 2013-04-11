@@ -1,0 +1,55 @@
+<%
+image ||= @image
+user ||= @user
+%><h1>Image <%
+if image.title?
+  %>“<%= image.title %>”<%
+else
+  %><%= image.id %><%
+end
+%></h1>
+<%
+
+if image.description?
+  %><p><%= image.description %></p>
+<%
+end
+
+if image.attribution?
+  %><p>Source: <%
+  if image.attribution_url?
+    %><%= link_to image.attribution, image.attribution_url %><%
+  else
+    %><%= image.attribution %><%
+  end
+  %></p><%
+elsif image.attribution_url?
+  %><p><%= link_to 'Source', image.attribution_url %></p><%
+end
+
+if image.license_url?
+  %><p><%= link_to 'License', image.license_url %></p><%
+end
+
+%><div class="gallery">
+<%
+image.image_variants.each do |variant|
+  %><p class="image"><%= ImagePresenter.new(image: image, image_variant: variant).present %></p>
+<%
+end
+%><span class="tail"></span></div>
+<%
+
+if user.present?
+  %><p class="actions"><%
+  if image.has_authority_for_user_to?(user, :can_update)
+    %><%= link_to 'Edit', edit_image_path(image), class: 'action' %><%= separator %>
+<%
+  end
+  if image.has_authority_for_user_to?(user, :can_delete)
+    %><%= link_to 'Delete', [:delete, image], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%= separator %>
+<%
+  end
+  %><%= link_to 'New Image', new_image_path, class: 'action' %></p>
+<%
+end -%>

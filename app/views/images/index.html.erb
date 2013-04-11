@@ -1,0 +1,17 @@
+<%
+require 'image_presenter'
+
+# FIXME: create a gallery presenter that takes a collection of images and spits out the div, img and span.tail tags
+%><div class="gallery">
+<% @images.each do |image|
+  presenter = ImagePresenter.new(image: image)
+  %><p class="image"><%= link_to presenter.present, image, title: image.title %>
+<br /><%= image.id %>: <%= image.title %></p>
+<%
+end
+%><span class="tail"></span></div>
+<%
+if @user.present?
+  %><p class="actions"><%= link_to 'New Image', new_image_path, class: 'action' %></p>
+<%
+end -%>

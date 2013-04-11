@@ -1,0 +1,7 @@
+<h1>Edit Image<%
+if @item
+  %> for <%= link_to @item.title, @item %><%
+end
+%></h1>
+
+<%= render 'form', {image: @image} %>

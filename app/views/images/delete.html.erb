@@ -1,0 +1,10 @@
+<% # encoding: utf-8
+
+title = @image.title
+title = @image.id if title.blank?
+
+%><h1>Delete “<%= link_to title, @image %>” Image?</h1>
+
+<%= form_tag(@image, method: :delete) do %>
+<p><%= submit_tag "Delete Image" %></p>
+<% end %>

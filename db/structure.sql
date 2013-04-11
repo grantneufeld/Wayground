@@ -209,7 +209,8 @@ CREATE TABLE events (
     country character varying(2),
     location_url character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    image_id integer
 );
 
 
@@ -267,6 +268,78 @@ CREATE SEQUENCE external_links_id_seq
 --
 
 ALTER SEQUENCE external_links_id_seq OWNED BY external_links.id;
+
+
+--
+-- Name: image_variants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE image_variants (
+    id integer NOT NULL,
+    image_id integer NOT NULL,
+    height integer,
+    width integer,
+    format character varying(31) NOT NULL,
+    style character varying(15) NOT NULL,
+    url text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: image_variants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE image_variants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: image_variants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE image_variants_id_seq OWNED BY image_variants.id;
+
+
+--
+-- Name: images; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE images (
+    id integer NOT NULL,
+    title text,
+    alt_text character varying(127),
+    description text,
+    attribution character varying(127),
+    attribution_url text,
+    license_url text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE images_id_seq OWNED BY images.id;
 
 
 --
@@ -666,6 +739,20 @@ ALTER TABLE ONLY external_links ALTER COLUMN id SET DEFAULT nextval('external_li
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY image_variants ALTER COLUMN id SET DEFAULT nextval('image_variants_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY images ALTER COLUMN id SET DEFAULT nextval('images_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY pages ALTER COLUMN id SET DEFAULT nextval('pages_id_seq'::regclass);
 
 
@@ -771,6 +858,22 @@ ALTER TABLE ONLY events
 
 ALTER TABLE ONLY external_links
     ADD CONSTRAINT external_links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: image_variants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY image_variants
+    ADD CONSTRAINT image_variants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: images_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY images
+    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
 
 
 --
@@ -941,6 +1044,13 @@ CREATE INDEX index_events_on_user_id ON events USING btree (user_id);
 --
 
 CREATE INDEX index_external_links_on_item_type_and_item_id_and_position ON external_links USING btree (item_type, item_id, "position");
+
+
+--
+-- Name: index_image_variants_on_image_id_and_style_and_height_and_width; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_image_variants_on_image_id_and_style_and_height_and_width ON image_variants USING btree (image_id, style, height, width);
 
 
 --
@@ -1186,6 +1296,12 @@ INSERT INTO schema_migrations (version) VALUES ('14');
 INSERT INTO schema_migrations (version) VALUES ('15');
 
 INSERT INTO schema_migrations (version) VALUES ('16');
+
+INSERT INTO schema_migrations (version) VALUES ('17');
+
+INSERT INTO schema_migrations (version) VALUES ('18');
+
+INSERT INTO schema_migrations (version) VALUES ('19');
 
 INSERT INTO schema_migrations (version) VALUES ('2');
 

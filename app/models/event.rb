@@ -18,6 +18,7 @@ class Event < ActiveRecord::Base
   )
 
   belongs_to :user
+  belongs_to :image
   has_many :external_links, :as => :item
   accepts_nested_attributes_for :external_links,
     :reject_if => lambda { |el| el[:url].blank? }, :allow_destroy => true
@@ -214,7 +215,6 @@ class Event < ActiveRecord::Base
   def is_multi_day
     end_at? && start_at.to_date != end_at.to_date
   end
-
 
   # APPROVAL
 
