@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'url_cleaner'
+require 'http_url_validator'
 
 # External weblinks representing an item in our system.
 # E.g., a link to an event listing on another website might be for the same Event as listed on our site.
@@ -15,11 +16,7 @@ class ExternalLink < ActiveRecord::Base
   validates_presence_of :item_type, :item_id, :on => :update
   validates_presence_of :title
   validates_length_of :title, :within => 1..255
-  validates_presence_of :url
-  validates_length_of :url, :within => 1..1023
-  validates_format_of :url,
-    :with => /\Ahttps?:\/\/[A-Za-z0-9:\.\-]+(\/[\w%~_\?=&\.\#\/\-]*)?\z/,
-    :message => 'must be a valid weblink (including ‘http://’)'
+  validates :url, presence: true, length: {in: 1..1023}, http_url: true
   validates_numericality_of :position, :only_integer => true, :greater_than => 0
 
   before_validation :set_default_position
