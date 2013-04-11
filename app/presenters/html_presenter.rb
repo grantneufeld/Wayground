@@ -22,7 +22,7 @@ class HtmlPresenter
       if value.is_a? Array
         value = value.join(' ')
       end
-      attrs << "#{key}=\"#{value}\""
+      attrs << "#{key}=\"#{value}\"" unless value.blank?
     end
     content = yield block if block
     tag_name_with_attrs = ([tag_name] + attrs).join(' ')

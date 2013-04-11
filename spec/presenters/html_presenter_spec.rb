@@ -33,8 +33,14 @@ describe HtmlPresenter do
       it "should handle attributes" do
         expect( presenter.html_tag('with-attrs', foo: 'bar', x: 'y') ).to eq '<with-attrs foo="bar" x="y" />'
       end
+      it "should ignore blank attributes" do
+        expect( presenter.html_tag('blank-attrs', ignore: nil, blank: '') ).to eq '<blank-attrs />'
+      end
       it "should handle array attributes" do
         expect( presenter.html_tag('array', array: [1,2,3]) ).to eq '<array array="1 2 3" />'
+      end
+      it "should ignore blank array attributes" do
+        expect( presenter.html_tag('empty-array', array: [nil,'']) ).to eq '<empty-array />'
       end
     end
     context "with a content block" do
