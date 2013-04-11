@@ -4,7 +4,6 @@ require 'metadata_presenter'
 # Parameters - all are optional
 #
 # page_metadata.title: Used in the <title> meta tag. If blank, defaults to the site title.
-# @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
 # page_metadata.nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
 # page_metadata.description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @site_section: symbol for the active section of the website. E.g.: :events
@@ -36,11 +35,6 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <% #= stylesheet_link_tag 'print', :media => 'print'
 -%>
 <%= javascript_include_tag 'application' %>
-<%
-if @rich_text_editor
-  %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
-<% # javascript_include_tag '/ckeditor/adapters/jquery.js'
-end -%>
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />

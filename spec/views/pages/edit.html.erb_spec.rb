@@ -21,4 +21,10 @@ describe "pages/edit.html.erb" do
       assert_select "textarea#page_content", :name => "page[content]"
     end
   end
+
+  it "sets the head tags to include the necessary rich text scripts" do
+    render
+    expect( view.content_for(:head) ).to match /<script src="\/ckeditor\/ckeditor.js" type="text\/javascript"/
+  end
+
 end

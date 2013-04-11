@@ -1,8 +1,14 @@
 <%
 # include this partial at some point after the declaration of the textarea field you want made into a richtext editor field
+# requires the local variable:
+# fieldname - the name of the textarea field that is to use the rich text editor.
+
+content_for(:head) do
+  %><%= javascript_include_tag '/ckeditor/ckeditor.js' %>
+<% # javascript_include_tag '/ckeditor/adapters/jquery.js'
+end
 
 fieldname ||= 'page[content]'
-@rich_text_editor = true
 
 %><script type="text/javascript">
 // I wish I knew a way to change these indenting defaults in config instead of manually like this. Sigh.

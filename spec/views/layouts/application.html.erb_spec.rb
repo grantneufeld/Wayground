@@ -35,20 +35,6 @@ describe "layouts/application.html.erb" do
     end
   end
 
-  # @rich_text_editor: A boolean that determines whether to load the support files for displaying a rich text editor (CKEditor).
-  describe "@rich_text_editor" do
-    it "should include the ckeditor script if true" do
-      @rich_text_editor = true
-      render
-      rendered.should match(/<script[^>]src="\/ckeditor\/ckeditor\.js/)
-    end
-    it "should not include the ckeditor script if not set" do
-      @rich_text_editor = nil
-      render
-      rendered.should_not match(/<script[^>]src="\/ckeditor\/ckeditor\.js/)
-    end
-  end
-
   # nocache: A boolean that instructs browsers and search engines not to cache the content of this page.
   describe "page_metadata.nocache" do
     it "should include the robots-noindex meta tag if true" do
