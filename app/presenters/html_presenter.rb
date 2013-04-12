@@ -33,6 +33,15 @@ class HtmlPresenter
     end
   end
 
+  # present as an anchor if the url is present, otherwise as a span
+  def anchor_or_span_tag(url, attrs={}, &block)
+    if url.blank?
+      html_tag('span', attrs, &block)
+    else
+      html_tag('a', attrs.merge(href: url), &block)
+    end
+  end
+
   # based on ERB::Util#html_escape in rails/activesupport/lib/active_support/core_ext/string/output_safety.rb
   HTML_ESCAPE = { '&' => '&amp;', '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "'" => '&#x27;' }
   def html_escape(text)

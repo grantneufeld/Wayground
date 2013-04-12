@@ -62,6 +62,33 @@ describe HtmlPresenter do
     end
   end
 
+  describe "#anchor_or_span_tag" do
+    context "with an url" do
+      it "should return an anchor tag" do
+        result = presenter.anchor_or_span_tag('http://abc.tld/') { 'test' }
+        expect( result ).to eq '<a href="http://abc.tld/">test</a>'
+      end
+    end
+    context "with an url and attrs" do
+      it "should return an anchor tag with the attrs" do
+        result = presenter.anchor_or_span_tag('http://abc.tld/', foo: 'bar') { 'test' }
+        expect( result ).to eq '<a foo="bar" href="http://abc.tld/">test</a>'
+      end
+    end
+    context "with attrs but without an url" do
+      it "should return a span tag with the attrs" do
+        result = presenter.anchor_or_span_tag(nil, foo: 'bar') { 'test' }
+        expect( result ).to eq '<span foo="bar">test</span>'
+      end
+    end
+    context "without an url or attrs" do
+      it "should return a span tag with the attrs" do
+        result = presenter.anchor_or_span_tag(nil) { 'test' }
+        expect( result ).to eq '<span>test</span>'
+      end
+    end
+  end
+
   describe "#html_escape" do
     context "with an html safe string" do
       let(:string) { $string = "<test foo=\"bar\" />\r\nThis &amp; that's “what”.</test>".html_safe }
