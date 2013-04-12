@@ -19,12 +19,16 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_heading
-    html_tag_with_newline('h4') { present_status + present_schedule + present_title }
+    html_tag_with_newline('h4') do
+      present_status + present_schedule + ':'.html_safe + newline + present_title
+    end
   end
 
   def present_status
     if event.is_cancelled
       html_tag_with_newline(:span, class: 'status', title: 'CANCELLED') { 'Cancelled:' }
+    elsif event.is_tentative
+      html_tag_with_newline(:span, class: 'status', title: 'TENTATIVE') { 'Tentative:' }
     else
       html_blank
     end
@@ -38,12 +42,20 @@ class EventPresenter < HtmlPresenter
     end
   end
 
-  def present_time
-    result = TimePresenter.new(event.start_at).microformat_start
+  def present_schedule_with_date
+    if event.is_allday?
+      present_time_allday
+    else
+      present_time(:plain_datetime)
+    end
+  end
+
+  def present_time(time_format=:plain_time)
+    result = TimePresenter.new(event.start_at).microformat_start(time_format)
     if event.end_at?
       result << append_time_end_at
     end
-    result + ':'.html_safe + newline
+    result
   end
 
   def append_time_end_at
@@ -81,13 +93,18 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_details_chunks
-    chunks = [present_location, present_description, present_organizer, present_action_menu]
+    chunks = [
+      present_minimal_location, present_description, present_organizer, present_action_menu
+    ]
     chunks.reject! {|chunk| chunk.empty? }
-    chunks.join(newline + html_tag(:br)).html_safe
+    view.safe_join(chunks, newline + html_tag(:br))
   end
 
-  def present_location
-    result = present_location_chunks
+  # minimal location details
+  def present_minimal_location
+    chunks = [present_location_org, present_location_address]
+    separator = ','.html_safe + newline
+    result = join_chunks(chunks, separator)
     if result.present?
       html_tag('span', class: 'location') { result }
     else
@@ -95,15 +112,21 @@ class EventPresenter < HtmlPresenter
     end
   end
 
-  def present_location_chunks
-    chunks = [present_location_org, present_location_address]
-    chunks.reject! {|chunk| chunk.empty? }
-    chunks.join(','.html_safe + newline).html_safe
+  # all the location details
+  def present_location_block
+    chunks = [present_location_org, present_location_full_address]
+    separator = newline + html_tag(:br)
+    result = join_chunks(chunks, separator)
+    if result.present?
+      html_tag_with_newline('p', class: 'location') { result }
+    else
+      html_blank
+    end
   end
 
   def present_location_org
     if event.location?
-      html_tag('span', class: 'fn org') { html_escape(event.location) }
+      anchor_or_span_tag(event.location_url, class: 'fn org') { html_escape(event.location) }
     else
       html_blank
     end
@@ -112,10 +135,69 @@ class EventPresenter < HtmlPresenter
   def present_location_address
     if event.address?
       html_tag('span', class: 'adr') do
-        html_tag('span', class: 'street-address') do
-          html_escape(event.address)
-        end
+        present_location_street_address
       end
+    else
+      html_blank
+    end
+  end
+
+  def present_location_full_address
+    if event.address?
+      html_tag('span', class: 'adr') { full_address_elements }
+    elsif event.city? || event.province? || event.country?
+      html_tag('span', class: 'adr') { present_location_region }
+    else
+      html_blank
+    end
+  end
+
+  def full_address_elements
+    view.safe_join(
+      [present_location_street_address, present_location_region],
+      newline + html_tag(:br)
+    )
+  end
+
+  def present_location_street_address
+    # use the location url if there is no location
+    url = event.location? ? nil : event.location_url
+    if event.address?
+      anchor_or_span_tag(url, class: 'street-address') { html_escape(event.address) }
+    elsif url
+      # link to just the location url if there is no location and no address
+      html_tag('a', href: url) { html_escape(url) }
+    else
+      html_blank
+    end
+  end
+
+  # city, province, country
+  def present_location_region
+    elements = [present_location_city, present_location_province, present_location_country]
+    elements.delete_if {|item| item.blank? }
+    view.safe_join(elements, ', '.html_safe)
+  end
+
+  def present_location_city
+    if event.city?
+      html_tag(:span, class: 'locality') { html_escape(event.city) }
+    else
+      html_blank
+    end
+  end
+
+  def present_location_province
+    if event.province?
+      html_tag(:span, class: 'region') { html_escape(event.province) }
+    else
+      html_blank
+    end
+  end
+
+  def present_location_country
+    if event.country?
+      html_tag(:span, class: 'country-name') { html_escape(event.country) }
     else
       html_blank
     end
@@ -131,21 +213,12 @@ class EventPresenter < HtmlPresenter
 
   def present_organizer
     if event.organizer?
-      html_tag(:br) + 'Presented by '.html_safe + append_organizer_and_url + '.'.html_safe
+      org = anchor_or_span_tag(html_escape(event.organizer_url), class: 'organizer') do
+        html_escape(event.organizer)
+      end
+      "Presented by #{org}.".html_safe
     else
       html_blank
-    end
-  end
-
-  def append_organizer_and_url
-    event_organizer = html_escape(event.organizer)
-    event_organizer_url = html_escape(event.organizer_url)
-    if event_organizer_url.present?
-      html_tag('a', href: event_organizer_url, class: 'organizer') do
-        event_organizer
-      end
-    else
-      html_tag('span', class: 'organizer') { event_organizer }
     end
   end
 
@@ -153,7 +226,7 @@ class EventPresenter < HtmlPresenter
     actions = [present_edit_action, present_approve_action, present_delete_action]
     actions.reject! {|action| action == '' }
     unless actions.empty?
-      actions.join(view.separator + newline).html_safe
+      view.safe_join(actions, view.separator + newline)
     else
       html_blank
     end
@@ -190,6 +263,13 @@ class EventPresenter < HtmlPresenter
     else
       html_blank
     end
+  end
+
+  protected
+
+  def join_chunks(chunks, separator=', ')
+    chunks.reject! {|chunk| chunk.empty? }
+    view.safe_join(chunks, separator)
   end
 
 end

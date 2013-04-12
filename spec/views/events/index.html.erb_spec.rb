@@ -64,7 +64,7 @@ describe "events/index.html.erb" do
     assert_select "span.description", :text => "Description", :count => 2
     assert_select "a.organizer", :text => "Organizer", :count => 2
     #assert_select "tr>td", :text => "Organizer Url", :count => 2
-    assert_select "span.location>span", :text => "Location", :count => 2
+    assert_select "span.location>a", text: "Location", count: 2
     assert_select "span.street-address", :text => "Address", :count => 2
     #assert_select "tr>td", :text => "City", :count => 2
     #assert_select "tr>td", :text => "Province", :count => 2

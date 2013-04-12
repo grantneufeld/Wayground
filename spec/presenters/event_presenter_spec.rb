@@ -6,7 +6,7 @@ require_relative 'view_double'
 describe EventPresenter do
   let(:view) { $view = ViewDouble.new }
   let(:start_at) { $start_at = Time.zone.parse('2003-04-05 6:07am') }
-  let(:event) { $event = Event.new(title: 'Test Title', start_at: start_at) }
+  let(:event) { $event = Event.new(title: 'Test Title', start_at: start_at, city: '', province: '', country: '') }
   let(:user) { $user = nil }
   let(:presenter) { $presenter = EventPresenter.new(view: view, event: event, user: user) }
 
@@ -47,7 +47,7 @@ describe EventPresenter do
       presenter.should_receive(:present_status).and_return('1')
       presenter.should_receive(:present_schedule).and_return('2')
       presenter.should_receive(:present_title).and_return('3')
-      expect( presenter.present_heading ).to match />123</
+      expect( presenter.present_heading ).to match />12:[\r\n]*3</
     end
     it "should end with a line break" do
       expect( presenter.present_heading ).to match /[\r\n]+\z/
@@ -67,7 +67,16 @@ describe EventPresenter do
         expect( presenter.present_status.html_safe? ).to be_true
       end
     end
-    context "with an event that has not been cancelled" do
+    context "with a tentative event" do
+      let(:event) { $event = Event.new(is_tentative: true) }
+      it "should return a tentative notice in an element with the html class “status”" do
+        expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>Tentative:<\/[^>]+>[\r\n]+\z/
+      end
+      it "should be html safe" do
+        expect( presenter.present_status.html_safe? ).to be_true
+      end
+    end
+    context "with an event that is not tentative and has not been cancelled" do
       it "should return a blank string" do
         expect( presenter.present_status ).to eq ''
       end
@@ -94,12 +103,33 @@ describe EventPresenter do
     end
   end
 
+  describe "#present_schedule_with_date" do
+    context "with an all day event" do
+      let(:event) { $event = Event.new(is_allday: true) }
+      it "should call through to present_time_allday" do
+        presenter.should_receive(:present_time_allday)
+        presenter.present_schedule_with_date
+      end
+    end
+    context "with an event that is not all day" do
+      it "should call through to present_time set to format with date & time" do
+        presenter.should_receive(:present_time).with(:plain_datetime)
+        presenter.present_schedule_with_date
+      end
+    end
+  end
+
   describe "#present_time" do
     context "with no end time" do
       let(:event) { $event = Event.new(start_at: '2005-06-07 8am') }
       it "should be a microformat dtstart time element containing the start time" do
         expect( presenter.present_time ).to eq(
-          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">8:00 AM</time>:\n"
+          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">8:00 AM</time>"
+        )
+      end
+      it "should accept a time_format parameter" do
+        expect( presenter.present_time(:plain_datetime) ).to eq(
+          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">Tuesday, June 7, 2005 at 8:00 AM</time>"
         )
       end
       it "should be html safe" do
@@ -118,7 +148,7 @@ describe EventPresenter do
       end
       it "should end with the microformat dtend time element containing the end time" do
         expect( presenter.present_time ).to match(
-          /<time class="dtend" datetime="2005-06-07T09:00:00-06:00">9:00 AM<\/time>:\n\z/
+          /<time class="dtend" datetime="2005-06-07T09:00:00-06:00">9:00 AM<\/time>\z/
         )
       end
       it "should be html safe" do
@@ -137,7 +167,7 @@ describe EventPresenter do
       end
       it "should end with the microformat dtend time element containing the end date and time" do
         expect( presenter.present_time ).to match(
-          /<time class="dtend" datetime="2005-06-09T09:00:00-06:00">Thursday, June +9, 2005 at +9:00 AM<\/time>:\n\z/
+          /<time class="dtend" datetime="2005-06-09T09:00:00-06:00">Thursday, June +9, 2005 at +9:00 AM<\/time>\z/
         )
       end
       it "should be html safe" do
@@ -200,8 +230,8 @@ describe EventPresenter do
       it "should wrap the result in paragraph" do
         expect( presenter.present_details ).to match /\A<p(?:| [^>]*)>[^•]+<\/p>[\r\n]*\z/
       end
-      it "should call through to present_location" do
-        presenter.should_receive(:present_location).and_return(''.html_safe)
+      it "should call through to present_minimal_location" do
+        presenter.should_receive(:present_minimal_location).and_return(''.html_safe)
         presenter.present_details
       end
       it "should call through to present_description" do
@@ -213,7 +243,7 @@ describe EventPresenter do
         presenter.present_details
       end
       it "should include all the detail chunks, separated by line breaks" do
-        presenter.stub(:present_location).and_return('1'.html_safe)
+        presenter.stub(:present_minimal_location).and_return('1'.html_safe)
         presenter.stub(:present_description).and_return('2'.html_safe)
         presenter.stub(:present_organizer).and_return('3'.html_safe)
         expect( presenter.present_details ).to match />1[\r\n]*<br \/>2[\r\n]*<br \/>3</
@@ -228,7 +258,7 @@ describe EventPresenter do
           presenter.present_details
         end
         it "should include the action menu, separated by a line break" do
-          presenter.stub(:present_location).and_return('1'.html_safe)
+          presenter.stub(:present_minimal_location).and_return('1'.html_safe)
           presenter.stub(:present_description).and_return('2'.html_safe)
           presenter.stub(:present_organizer).and_return('3'.html_safe)
           presenter.stub(:present_action_menu).and_return('4'.html_safe)
@@ -257,54 +287,321 @@ describe EventPresenter do
     end
   end
 
-  describe "#present_location" do
+  describe "#present_minimal_location" do
     context "with an event location" do
       let(:event) { $event = Event.new(location: 'Test Location') }
       it "should wrap the result in an elment that has “location” as the html class" do
-        expect( presenter.present_location ).to match /\A<[^>]+ class="location"/
+        expect( presenter.present_minimal_location ).to match /\A<[^>]+ class="location"/
       end
       it "should wrap the location in an element that has “fn org” as the html class" do
-        expect( presenter.present_location ).to match /<[^>]+ class="fn org"[^>]*>Test Location</
+        expect( presenter.present_minimal_location ).to match /<[^>]+ class="fn org"[^>]*>Test Location</
       end
       it "should be html safe" do
-        expect( presenter.present_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_true
       end
     end
     context "with an event address" do
       let(:event) { $event = Event.new(address: 'Test Address') }
       it "should wrap the result in an elment that has “location” as the html class" do
-        expect( presenter.present_location ).to match /\A<[^>]+ class="location"/
+        expect( presenter.present_minimal_location ).to match /\A<[^>]+ class="location"/
       end
       it "should wrap the “street-address” element in an element that has “adr” as the html class" do
-        expect( presenter.present_location ).to match /<[^>]+ class="adr"[^>]*><[^>]+ class="street-address"/
+        expect( presenter.present_minimal_location ).to match /<[^>]+ class="adr"[^>]*><[^>]+ class="street-address"/
       end
       it "should wrap the address in an element that has “street-address” as the html class" do
-        expect( presenter.present_location ).to match /<[^>]+ class="street-address"[^>]*>Test Address</
+        expect( presenter.present_minimal_location ).to match /<[^>]+ class="street-address"[^>]*>Test Address</
       end
       it "should be html safe" do
-        expect( presenter.present_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_true
       end
     end
     context "with both an event address and an event location" do
       let(:event) { $event = Event.new(location: 'Test Location', address: 'Test Address') }
       it "should wrap the result in an elment that has “location” as the html class" do
-        expect( presenter.present_location ).to match /\A<[^>]+ class="location"/
+        expect( presenter.present_minimal_location ).to match /\A<[^>]+ class="location"/
       end
       it "should include the location followed by the address" do
-        expect( presenter.present_location ).to match(
+        expect( presenter.present_minimal_location ).to match(
           /<[^>]+ class="fn org"[^>]*>Test Location<\/[^>]+>,[\r\n]+<[^>]+ class="adr"[^>]*><[^>]+ class="street-address"[^>]*>Test Address</
         )
       end
       it "should be html safe" do
-        expect( presenter.present_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_true
       end
     end
     context "with no location or address" do
       it "should return an empty string" do
-        expect( presenter.present_location ).to eq ''
+        expect( presenter.present_minimal_location ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_block" do
+    context "with location details" do
+      let(:event) { $event = Event.new(location: 'Test Location', address: 'Test Address') }
+      it "should join the details with a linebreak" do
+        presenter.stub(:present_location_org).and_return('org')
+        presenter.stub(:present_location_full_address).and_return('addr')
+        expect( presenter.present_location_block ).to match /org[\r\n]*<br \/>[\r\n]*addr/
+      end
+      it "should wrap the details in a paragraph" do
+        expect( presenter.present_location_block ).to match /\A<p[^•]+<\/p>[\r\n]*\z/
+      end
+      it "should wrap assign “location” as the class" do
+        expect( presenter.present_location_block ).to match /\A<[^>]+ class="location"/
+      end
+    end
+    context "with no location details" do
+      it "should return an empty string" do
+        expect( presenter.present_location_block ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_block.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_org" do
+    context "with location" do
+      let(:event) { $event = Event.new(location: 'Test Location') }
+      it "should be wrapped in a tag with class “fn org”" do
+        expect( presenter.present_location_org ).to match /\A<[^>]+ class="fn org"/
+      end
+      it "should contain the location" do
+        expect( presenter.present_location_org ).to match />Test Location</
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_org.html_safe? ).to be_true
+      end
+    end
+    context "with location and location url" do
+      let(:event) { $event = Event.new(location: 'Test Location', location_url: 'http://loc.tld/') }
+      it "should be wrapped in a tag with class “fn org”" do
+        expect( presenter.present_location_org ).to match /\A<[^>]+ class="fn org"/
+      end
+      it "should be wrapped in an anchor with the location url" do
+        expect( presenter.present_location_org ).to match /\A<a [^>]*href="http:\/\/loc\.tld\/"/
+      end
+      it "should contain the location" do
+        expect( presenter.present_location_org ).to match />Test Location</
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_org.html_safe? ).to be_true
+      end
+    end
+    context "with no location details" do
+      it "should return an empty string" do
+        expect( presenter.present_location_org ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_org.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_address" do
+    context "with address" do
+      let(:event) { $event = Event.new(address: '123 Test') }
+      it "should be wrapped in a tag with class “adr”" do
+        expect( presenter.present_location_address ).to match /\A<[^>]+ class="adr"/
+      end
+      it "should contain the address" do
+        presenter.stub(:present_location_street_address).and_return('Address')
+        expect( presenter.present_location_address ).to match '>Address<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_address.html_safe? ).to be_true
+      end
+    end
+    context "with no location details" do
+      it "should return an empty string" do
+        expect( presenter.present_location_address ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_address.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_full_address" do
+    context "with address" do
+      let(:event) { $event = Event.new(address: '123 Test', city: 'Testville') }
+      it "should be wrapped in a tag with class “adr”" do
+        expect( presenter.present_location_full_address ).to match /\A<[^>]+ class="adr"/
+      end
+      it "should contain the address and region, separated by a br tag" do
+        presenter.stub(:present_location_street_address).and_return('Address')
+        presenter.stub(:present_location_region).and_return('Region')
+        expect( presenter.present_location_full_address ).to match />Address[\r\n]*<br \/>[\r\n]*Region</
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_full_address.html_safe? ).to be_true
+      end
+    end
+    context "with just the region" do
+      let(:event) { $event = Event.new(city: 'Testville') }
+      it "should be wrapped in a tag with class “adr”" do
+        expect( presenter.present_location_full_address ).to match /\A<[^>]+ class="adr"/
+      end
+      it "should contain the region" do
+        presenter.stub(:present_location_region).and_return('Region')
+        expect( presenter.present_location_full_address ).to match />Region</
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_full_address.html_safe? ).to be_true
+      end
+    end
+    context "with no location details" do
+      it "should return an empty string" do
+        expect( presenter.present_location_full_address ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_full_address.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_street_address" do
+    context "with address" do
+      let(:event) { $event = Event.new(address: '123 Test') }
+      it "should be wrapped in a tag with class “street-address”" do
+        expect( presenter.present_location_street_address ).to match /\A<[^>]+ class="street-address"/
+      end
+      it "should contain the address" do
+        expect( presenter.present_location_street_address ).to match '>123 Test<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_street_address.html_safe? ).to be_true
+      end
+    end
+    context "with address and location_url" do
+      let(:event) { $event = Event.new(address: '123 Test', location_url: 'http://loc.tld/') }
+      it "should be wrapped in a tag with class “street-address”" do
+        expect( presenter.present_location_street_address ).to match /\A<[^>]+ class="street-address"/
+      end
+      it "should be wrapped in an anchor tag for the location_url" do
+        expect( presenter.present_location_street_address ).to match /\A<a [^>]*href="http:\/\/loc\.tld\/"/
+      end
+      it "should contain the address" do
+        expect( presenter.present_location_street_address ).to match '>123 Test<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_street_address.html_safe? ).to be_true
+      end
+    end
+    context "with just a location_url" do
+      let(:event) { $event = Event.new(location_url: 'http://loc.tld/') }
+      it "should be wrapped in an anchor tag for the location_url" do
+        expect( presenter.present_location_street_address ).to match /\A<a [^>]*href="http:\/\/loc\.tld\/"/
+      end
+      it "should contain the url" do
+        expect( presenter.present_location_street_address ).to match '>http://loc.tld/<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_street_address.html_safe? ).to be_true
+      end
+    end
+    context "with no location details" do
+      it "should return an empty string" do
+        expect( presenter.present_location_street_address ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_street_address.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_region" do
+    context "with a region" do
+      let(:event) { $event = Event.new(city: 'Testville', province: 'Testia', country: 'Testland') }
+      it "should be the region elements joined with commas" do
+        presenter.stub(:present_location_city).and_return('City')
+        presenter.stub(:present_location_province).and_return('Province')
+        presenter.stub(:present_location_country).and_return('Country')
+        expect( presenter.present_location_region ).to eq 'City, Province, Country'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_region.html_safe? ).to be_true
+      end
+    end
+    context "with no region" do
+      it "should return an empty string" do
+        expect( presenter.present_location_region ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_region.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_city" do
+    context "with a city" do
+      let(:event) { $event = Event.new(city: 'Test') }
+      it "should be wrapped in a tag with class “locality”" do
+        expect( presenter.present_location_city ).to match /\A<[^>]+ class="locality"/
+      end
+      it "should contain the city" do
+        expect( presenter.present_location_city ).to match '>Test<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_city.html_safe? ).to be_true
+      end
+    end
+    context "with no city" do
+      it "should return an empty string" do
+        expect( presenter.present_location_city ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_city.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_province" do
+    context "with a province" do
+      let(:event) { $event = Event.new(province: 'Test') }
+      it "should be wrapped in a tag with class “region”" do
+        expect( presenter.present_location_province ).to match /\A<[^>]+ class="region"/
+      end
+      it "should contain the province" do
+        expect( presenter.present_location_province ).to match '>Test<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_province.html_safe? ).to be_true
+      end
+    end
+    context "with no province" do
+      it "should return an empty string" do
+        expect( presenter.present_location_province ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_province.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#present_location_country" do
+    context "with a country" do
+      let(:event) { $event = Event.new(country: 'Test') }
+      it "should be wrapped in a tag with class “country-name”" do
+        expect( presenter.present_location_country ).to match /\A<[^>]+ class="country-name"/
+      end
+      it "should contain the country" do
+        expect( presenter.present_location_country ).to match '>Test<'
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_country.html_safe? ).to be_true
+      end
+    end
+    context "with no country" do
+      it "should return an empty string" do
+        expect( presenter.present_location_country ).to eq ''
+      end
+      it "should be html safe" do
+        expect( presenter.present_location_country.html_safe? ).to be_true
       end
     end
   end
@@ -338,8 +635,8 @@ describe EventPresenter do
   describe "#present_organizer" do
     context "with an organizer url" do
       let(:event) { $event = Event.new(organizer: 'Test Organizer', organizer_url: 'http://organizer.tld/') }
-      it "should begin with a line break entity and “Presented by”" do
-        expect( presenter.present_organizer ).to match /\A<br \/>Presented by /
+      it "should begin with “Presented by”" do
+        expect( presenter.present_organizer ).to match /\APresented by /
       end
       it "should include an anchor element for the url" do
         expect( presenter.present_organizer ).to match /<a (?:|[^>]+ )href="http:\/\/organizer\.tld\/"/
@@ -356,8 +653,8 @@ describe EventPresenter do
     end
     context "without an organizer url" do
       let(:event) { $event = Event.new(organizer: 'Test Organizer') }
-      it "should begin with a line break entity and “Presented by”" do
-        expect( presenter.present_organizer ).to match /\A<br \/>Presented by /
+      it "should begin with “Presented by”" do
+        expect( presenter.present_organizer ).to match /\APresented by /
       end
       it "should not include an anchor element" do
         expect( presenter.present_organizer ).not_to match /<a /
