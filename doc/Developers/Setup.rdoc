@@ -1,0 +1,8 @@
+
+The roodi gem may not run properly depending on your configuration. You may need to fix the `gems/roodi-*/roodi.yml` file by converting lines that look like:
+  ClassLineCountCheck: { line_count: 300 }
+to:
+  ClassLineCountCheck:
+    line_count: 300
+
+I’ve included a file here (`doc/Developers/roodi.yml`) that works with rood-2.1.0 on my setup.

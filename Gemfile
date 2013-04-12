@@ -39,11 +39,14 @@ end
 group :development do
   # code analysis tools:
   gem 'brakeman', require: false # http://brakemanscanner.org/
+  gem 'cane', require: false # https://github.com/square/cane
   gem 'churn', require: false # https://github.com/danmayer/churn
   gem 'flay', require: false # https://github.com/seattlerb/flay
   gem 'flog', require: false # https://github.com/seattlerb/flog
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
   gem 'reek', require: false # https://github.com/troessner/reek/wiki
+  gem 'roodi', require: false # https://github.com/martinjandrews/roodi
+  gem 'tailor', require: false # https://github.com/turboladen/tailor
   # gem validation
   gem 'bundler-audit' # https://github.com/postmodern/bundler-audit
 end
