@@ -7,6 +7,8 @@ require_relative 'view_double'
 
 describe CalendarMonthPresenter do
 
+  let(:view) { $view = ViewDouble.new }
+
   describe "initialization" do
     it "should accept a view parameter" do
       presenter = CalendarMonthPresenter.new(view: :view, events: [])
@@ -75,7 +77,7 @@ describe CalendarMonthPresenter do
   end
 
   describe "#present_weeks" do
-    let(:presenter) { $presenter = CalendarMonthPresenter.new(year: 2013, month: 3, events: []) }
+    let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, year: 2013, month: 3, events: []) }
     it "should call through to present_week 6 times" do
       presenter.should_receive(:present_week).exactly(6).times.and_return('present_week'.html_safe)
       expect( presenter.present_weeks ).to match /(?:present_week){6}/
@@ -87,7 +89,7 @@ describe CalendarMonthPresenter do
   end
 
   describe "#present_week" do
-    let(:presenter) { $presenter = CalendarMonthPresenter.new(events: []) }
+    let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, events: []) }
     before(:all) do
       @week = ((Date.parse('2013-02-24'))..(Date.parse('2013-03-02'))).to_a
     end
@@ -106,7 +108,7 @@ describe CalendarMonthPresenter do
   end
 
   describe "#present_day" do
-    let(:presenter) { $presenter = CalendarMonthPresenter.new(month: 8, events: []) }
+    let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, month: 8, events: []) }
     context "in the presenter’s month" do
       before(:all) do
         @day = Date.parse '2006-08-14'
@@ -140,7 +142,7 @@ describe CalendarMonthPresenter do
 
   describe "#present_day_elements" do
     it "should call through to present_day_num and present_day_content" do
-      presenter = CalendarMonthPresenter.new(events: [])
+      presenter = CalendarMonthPresenter.new(view: view, events: [])
       presenter.stub(:present_day_num).with(:day).and_return('present_day_num')
       presenter.stub(:present_day_content).with(:day).and_return('present_day_content')
       expect( presenter.present_day_elements(:day) ).to eq 'present_day_numpresent_day_content'
@@ -150,9 +152,8 @@ describe CalendarMonthPresenter do
   describe "#present_day_num" do
     context "with events" do
       before(:all) do
-        view = ViewDouble.new
         event = Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))
-        presenter = CalendarMonthPresenter.new(view: view, year: 2007, month: 9, events: [event])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2007, month: 9, events: [event])
         day = Date.parse '2007-09-27'
         @result = presenter.present_day_num(day)
       end
@@ -171,8 +172,7 @@ describe CalendarMonthPresenter do
     end
     context "with an empty list" do
       before(:all) do
-        view = ViewDouble.new
-        presenter = CalendarMonthPresenter.new(view: view, year: 2005, month: 10, events: [])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2005, month: 10, events: [])
         day = Date.parse '2005-10-31'
         @result = presenter.present_day_num(day)
       end
@@ -186,8 +186,7 @@ describe CalendarMonthPresenter do
     context "with events on the day" do
       before(:all) do
         @event = Event.new(start_at: Time.zone.parse('2011-07-13 12:11pm'))
-        view = ViewDouble.new
-        presenter = CalendarMonthPresenter.new(view: view, year: 2011, month: 7, events: [@event])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2011, month: 7, events: [@event])
         day = Date.parse '2011-07-13'
         @result = presenter.present_day_content(day)
       end
@@ -336,18 +335,17 @@ describe CalendarMonthPresenter do
 
   describe "#present_day_events_list" do
     it "should return an html_safe string" do
-      presenter = CalendarMonthPresenter.new(events: [])
+      presenter = CalendarMonthPresenter.new(view: view, events: [])
       expect( presenter.present_day_events_list([]).html_safe? ).to be_true
     end
     it "should return the list wrapped in an unordered list element" do
-      presenter = CalendarMonthPresenter.new(events: [])
+      presenter = CalendarMonthPresenter.new(view: view, events: [])
       presenter.stub(:present_event_in_list).and_return('-'.html_safe)
       result = presenter.present_day_events_list([Event.new])
       expect( result ).to match /\A<ul>/
       expect( result ).to match /<\/ul>[\r\n]*\z/
     end
     it "should include all of the given events" do
-      view = ViewDouble.new
       path = view.event_path(nil)
       start_at = Time.zone.parse '2011-03-14 6:30pm'
       events = [
@@ -365,9 +363,9 @@ describe CalendarMonthPresenter do
     before(:all) do
       @event = Event.new(start_at: Time.zone.parse('2012-3-15 7pm'), title: 'Test Event')
       @title = '7pm: Test Event'
-      @view = ViewDouble.new
-      @path = @view.event_path(@event)
-      @presenter = CalendarMonthPresenter.new(view: @view, year: 2012, month: 3, events: [])
+      view = ViewDouble.new
+      @path = view.event_path(@event)
+      @presenter = CalendarMonthPresenter.new(view: view, year: 2012, month: 3, events: [])
     end
     it "should return an html_safe string" do
       expect( @presenter.present_event_in_list(@event).html_safe? ).to be_true

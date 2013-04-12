@@ -28,12 +28,12 @@ class CalendarMonthPresenter < HtmlPresenter
   end
 
   def present_weeks
-    weeks.map {|week| present_week(week) }.join().html_safe
+    view.safe_join(weeks.map {|week| present_week(week) })
   end
 
   def present_week(week)
     html_tag_with_newline(:tr) do
-      week.map {|day| present_day(day) }.join().html_safe
+      view.safe_join(week.map {|day| present_day(day) })
     end
   end
 
@@ -94,7 +94,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_day_events_list(events_list)
     html_tag(:ul) do
-      events_list.map {|event| present_event_in_list(event) }.join().html_safe
+      view.safe_join(events_list.map {|event| present_event_in_list(event) })
     end
   end
 

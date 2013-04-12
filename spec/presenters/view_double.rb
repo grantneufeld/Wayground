@@ -45,6 +45,17 @@ class ViewDouble
     html_escape(text.strip).gsub(/[\r\n]+/, ':').html_safe
   end
 
+  def safe_join(array, separator=''.html_safe)
+    result = ''.html_safe
+    needs_separator = false
+    array.each do |item|
+      result << separator if needs_separator
+      needs_separator = true
+      result << item
+    end
+    result
+  end
+
   private
 
   # copied from ERB::Util#html_escape in rails/activesupport/lib/active_support/core_ext/string/output_safety.rb
