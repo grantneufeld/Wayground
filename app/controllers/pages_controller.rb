@@ -20,7 +20,7 @@ class PagesController < ApplicationController
   # GET /pages/1.xml
   def show
     requires_authority(:can_view)
-    page_metadata(title: "Page “#{@page.title}”")
+    page_metadata(title: "Page “#{@page.title}”", description: @page.description)
     @site_breadcrumbs = @page.breadcrumbs if @page.parent.present?
   end
 

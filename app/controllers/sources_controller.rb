@@ -17,7 +17,7 @@ class SourcesController < ApplicationController
   end
 
   def show
-    page_metadata(title: @source.name)
+    page_metadata(title: @source.name, description: @source.description)
   end
 
   def new

@@ -14,6 +14,7 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    page_metadata(title: @project.name, description: @project.description)
   end
 
   def new

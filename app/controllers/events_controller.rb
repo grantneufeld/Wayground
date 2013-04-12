@@ -47,7 +47,9 @@ class EventsController < ApplicationController
   end
 
   def show
-    page_metadata(title: "#{@event.start_at.to_s(:simple_date)}: #{@event.title}")
+    page_metadata(
+      title: "#{@event.start_at.to_s(:simple_date)}: #{@event.title}", description: @event.description
+    )
     if @event.is_cancelled
       flash.now.alert = 'This event has been cancelled.'
     elsif @event.is_tentative

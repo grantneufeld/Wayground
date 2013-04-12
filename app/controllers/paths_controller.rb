@@ -16,6 +16,7 @@ class PathsController < ApplicationController
     @path = Path.find_for_path(sitepath)
     if @path.nil?
       if sitepath == '/'
+        page_metadata(title: Wayground::Application::NAME, description: Wayground::Application::DESCRIPTION)
         render template: 'paths/default_home'
       else
         missing

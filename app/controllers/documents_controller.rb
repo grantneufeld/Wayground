@@ -19,7 +19,7 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    page_metadata(title: "Document “#{@document.filename}”")
+    page_metadata(title: "Document “#{@document.filename}”", description: @document.description)
   end
 
   def new
