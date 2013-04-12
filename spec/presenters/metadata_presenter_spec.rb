@@ -161,6 +161,7 @@ describe MetadataPresenter do
           "<meta property=\"og:image\" content=\"http://image.tld/\" />\n" +
           "<meta property=\"og:image:height\" content=\"12\" />\n" +
           "<meta property=\"og:image:width\" content=\"34\" />\n" +
+          "<meta name=\"twitter:card\" value=\"summary\" />\n" +
           "<meta name=\"twitter:site\" value=\"@site\" />\n" +
           "<meta name=\"twitter:creator\" value=\"@param\" />\n" +
           "<meta name=\"robots\" content=\"noindex\" />\n"
@@ -312,10 +313,10 @@ describe MetadataPresenter do
 
   describe "#present_twitter" do
     context "with no site or creator" do
-      it "should be blank" do
+      it "should just return the card meta tag" do
         presenter = MetadataPresenter.new(view: view_stub)
         presenter.stub(:twitter_site).and_return(nil)
-        expect( presenter.present_twitter ).to eq ''
+        expect( presenter.present_twitter ).to eq "<meta name=\"twitter:card\" value=\"summary\" />\n"
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
@@ -324,10 +325,13 @@ describe MetadataPresenter do
       end
     end
     context "with a site" do
-      it "should be the twitter site meta tag" do
+      it "should be the twitter card and site meta tags" do
         presenter = MetadataPresenter.new(view: view_stub)
         presenter.stub(:twitter_site).and_return('@test')
-        expect( presenter.present_twitter ).to eq "<meta name=\"twitter:site\" value=\"@test\" />\n"
+        expect( presenter.present_twitter ).to eq(
+          "<meta name=\"twitter:card\" value=\"summary\" />\n" +
+          "<meta name=\"twitter:site\" value=\"@test\" />\n"
+        )
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
@@ -336,10 +340,13 @@ describe MetadataPresenter do
       end
     end
     context "with a creator" do
-      it "should be the twitter creator meta tag" do
+      it "should be the twitter card and creator meta tags" do
         presenter = MetadataPresenter.new(view: view_stub, twitter_creator: 'testcreate')
         presenter.stub(:twitter_site).and_return(nil)
-        expect( presenter.present_twitter ).to eq "<meta name=\"twitter:creator\" value=\"@testcreate\" />\n"
+        expect( presenter.present_twitter ).to eq(
+          "<meta name=\"twitter:card\" value=\"summary\" />\n" +
+          "<meta name=\"twitter:creator\" value=\"@testcreate\" />\n"
+        )
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub, twitter_creator: 'testcreate')
@@ -348,10 +355,11 @@ describe MetadataPresenter do
       end
     end
     context "with a site and creator" do
-      it "should be both the twitter site and creator meta tags" do
+      it "should be the twitter card, site and creator meta tags" do
         presenter = MetadataPresenter.new(view: view_stub, twitter_creator: 'testcreate')
         presenter.stub(:twitter_site).and_return('@testsite')
         expect( presenter.present_twitter ).to eq(
+          "<meta name=\"twitter:card\" value=\"summary\" />\n" +
           "<meta name=\"twitter:site\" value=\"@testsite\" />\n" +
           "<meta name=\"twitter:creator\" value=\"@testcreate\" />\n"
         )

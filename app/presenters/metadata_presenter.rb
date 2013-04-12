@@ -75,11 +75,13 @@ class MetadataPresenter < HtmlPresenter
   end
 
   # Twitter Card metadata tags
+  # twitter:card: summary, photo, gallery, product, app, player
   # twitter:site: the user’s @ username on Twitter
   # twitter:site:id: the user’s id number on Twitter
   # twitter:creator: the content creator’s @ username on Twitter
   # twitter:creator:id: the content creator’s id number on Twitter
   def present_twitter
+    twitter_tag(:card, twitter_card_type) +
     twitter_tag(:site, twitter_site) +
     twitter_tag(:creator, twitter_creator)
   end
@@ -153,6 +155,10 @@ class MetadataPresenter < HtmlPresenter
 
   def site_name
     @site_name ||= Wayground::Application::NAME
+  end
+
+  def twitter_card_type
+    @twitter_card_type ||= 'summary'
   end
 
   def twitter_site
