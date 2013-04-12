@@ -82,6 +82,11 @@ describe EventsController do
       get :show, :id => event.id
       request.flash[:alert].should match /[Cc]ancelled/
     end
+    it "shows an alert when an event is_tentative" do
+      event = FactoryGirl.create(:event, is_tentative: true)
+      get :show, :id => event.id
+      request.flash[:alert].should match /[Tt]entative/
+    end
     it "shows an alert when an event is not approved" do
       event = FactoryGirl.create(:event, :is_approved => false)
       get :show, :id => event.id

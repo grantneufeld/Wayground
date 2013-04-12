@@ -50,6 +50,8 @@ class EventsController < ApplicationController
     page_metadata(title: "#{@event.start_at.to_s(:simple_date)}: #{@event.title}")
     if @event.is_cancelled
       flash.now.alert = 'This event has been cancelled.'
+    elsif @event.is_tentative
+      flash.now.alert = 'This event is tentative.'
     end
     unless @event.is_approved?
       page_metadata.nocache = true
