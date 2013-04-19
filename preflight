@@ -51,43 +51,18 @@ fi
 echo "Auditing bundle for missing security patches..."
 bundle exec bundle-audit
 echo ""
-echo "Generating Brakeman report..."
-bundle exec brakeman --quiet --output reports/brakeman.html --message-limit 255 --routes --separate-models --confidence-level 1
-echo ""
 
 # report on the code quality
-echo "Generating cane report..."
-bundle exec cane --style-measure 110 --parallel > reports/cane.txt
-echo ""
-echo "Generating churn report..."
-bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,preflight,spec/factories.rb,README.rdoc" > reports/churn.txt
+echo "Generating Metriknit merged report..."
+bundle exec metriknit --progress --format html reports/metriknit.html
 echo ""
 echo "Generating flay reports..."
 bundle exec rake flay:app > reports/flay-app.txt
 bundle exec rake flay:spec > reports/flay-spec.txt
 bundle exec rake flay:features > reports/flay-features.txt
 echo ""
-echo "Generating flog report..."
-bundle exec flog --group --details --continue --19 app > reports/flog.txt
-echo ""
-echo "Extracting notes embedded in the code..."
-bundle exec rake notes > reports/notes.txt
-echo ""
-echo "Generating Rails Best Practices report..."
-bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
-echo ""
-echo "Generating reek report..."
-bundle exec reek --quiet --config config/reek.yml app/controllers app/models app/helpers app/processors lib > reports/reek.txt
-echo ""
-echo "Generating roodi report..."
-bundle exec roodi "app/**/*.rb" "lib/**/*.rb" > reports/roodi.txt
-echo ""
 echo "Generating stats report..."
 bundle exec rake stats > reports/stats.txt
-echo ""
-echo "Generating tailor report..."
-bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --no-color app/**/*.rb > reports/tailor.txt
-bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --no-color lib/**/*.rb >> reports/tailor.txt
 echo ""
 
 echo "Please review the reports found in the project's 'reports' directory."
