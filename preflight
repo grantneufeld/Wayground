@@ -24,6 +24,14 @@
 # simple_cov needs to be configured to generate the reports/coverage/percentage.txt file,
 # which will just have the numeric percentage result.
 
+# script argument flag for restricting to files not committed in git
+gitOnly=false
+if [ $1 ] ; then
+  if [ $1 == "--git" ] ; then
+    gitOnly=true
+  fi
+fi
+
 # checking for changes
 gs="$(git status | tail -n 1)"
 if echo $gs | grep --quiet "^nothing to commit" ; then
@@ -53,8 +61,13 @@ bundle exec bundle-audit
 echo ""
 
 # report on the code quality
-echo "Generating Metriknit merged report..."
-bundle exec metriknit --progress --format html reports/metriknit.html
+if [ $gitOnly == true ] ; then
+  echo "Generating Metriknit merged report (restricted to files uncommitted in git)..."
+  bundle exec metriknit --git-only --progress --format html reports/metriknit.html
+else
+  echo "Generating Metriknit merged report..."
+  bundle exec metriknit --progress --format html reports/metriknit.html
+fi
 echo ""
 echo "Generating flay reports..."
 bundle exec rake flay:app > reports/flay-app.txt
