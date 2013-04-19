@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'html_presenter'
+require 'event_presenter'
 require 'date'
 require 'time_presenter'
 require 'event/day_events'
@@ -8,13 +9,14 @@ require 'event/events_by_date'
 # Present a calendar of events in an html grid of weeks for a month.
 # The result (a bunch of table rows) must be wrapped in a `table` (and, presumably, a `tbody`) element.
 class CalendarMonthPresenter < HtmlPresenter
-  attr_accessor :view, :month, :year, :events_by_date
+  attr_accessor :view, :month, :year, :events_by_date, :user
 
   # Initialize with params: :view, :month, :year, :events
   def initialize(params={})
     self.view = params[:view]
     self.month = params[:month]
     self.year = params[:year]
+    self.user = params[:user]
     self.events_by_date = Wayground::Event::EventsByDate.new(params[:events])
     @carryover = []
   end
@@ -99,13 +101,15 @@ class CalendarMonthPresenter < HtmlPresenter
   end
 
   def present_event_in_list(event)
+    presenter = EventPresenter.new(view: view, event: event, user: user)
+    attrs = presenter.event_heading_attrs
     link_title = event.title
     unless event.is_allday
       time = TimePresenter.new(event.start_at)
       link_title = "#{time.brief}: #{link_title}"
     end
     event_link = view.link_to(link_title, view.event_path(event), title: link_title)
-    html_tag_with_newline(:li) { event_link }
+    html_tag_with_newline(:li, attrs) { event_link }
   end
 
 end

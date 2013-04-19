@@ -13,7 +13,10 @@ content_for(:head) do
 <%
 end
 
-%><h2 class="summary"><%= presenter.present_status %><%= event.title %></h2>
+attrs = presenter.event_heading_attrs
+attrs[:class] ||= []
+attrs[:class] << 'summary'
+%><%= presenter.html_tag(:h2, attrs) { presenter.present_status + event.title } %>
 
 <p><%= presenter.present_schedule_with_date %>
 <br /><%= link_to 'Download to your calendar.', event_path(event, format: 'ics'), class: 'ics', title: "Download this event as a file compatible with most calendar applications" %></p>

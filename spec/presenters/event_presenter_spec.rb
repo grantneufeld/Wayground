@@ -6,7 +6,9 @@ require_relative 'view_double'
 describe EventPresenter do
   let(:view) { $view = ViewDouble.new }
   let(:start_at) { $start_at = Time.zone.parse('2003-04-05 6:07am') }
-  let(:event) { $event = Event.new(title: 'Test Title', start_at: start_at, city: '', province: '', country: '') }
+  let(:event) do
+    $event = Event.new(title: 'Test Title', start_at: start_at, city: '', province: '', country: '')
+  end
   let(:user) { $user = nil }
   let(:presenter) { $presenter = EventPresenter.new(view: view, event: event, user: user) }
 
@@ -55,13 +57,55 @@ describe EventPresenter do
     it "should be html safe" do
       expect( presenter.present_heading.html_safe? ).to be_true
     end
+    context "with a cancelled event" do
+      let(:event) { $event = Event.new(title: 'Test Title', start_at: start_at, is_cancelled: true) }
+      it "should wrap the result in an elment with the “cancelled” class" do
+        expect( presenter.present_heading ).to match /\A<[^>]+ class="cancelled"/
+      end
+      it "should be html safe" do
+        expect( presenter.present_heading.html_safe? ).to be_true
+      end
+    end
+    context "with a tentative event" do
+      let(:event) { $event = Event.new(title: 'Test Title', start_at: start_at, is_tentative: true) }
+      it "should wrap the result in an elment with the “tentative” class" do
+        expect( presenter.present_heading ).to match /\A<[^>]+ class="tentative"/
+      end
+      it "should be html safe" do
+        expect( presenter.present_heading.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe "#event_heading_attrs" do
+    context "with a plain event" do
+      let(:event) { $event = Event.new }
+      it "should return an empty hash" do
+        expect( presenter.event_heading_attrs ).to eq({})
+      end
+    end
+    context "with a cancelled event" do
+      let(:event) { $event = Event.new(is_cancelled: true) }
+      it "should return a hash with the “cancelled” class" do
+        expect( presenter.event_heading_attrs ).to eq(class: ['cancelled'])
+      end
+    end
+    context "with a tentative event" do
+      let(:event) { $event = Event.new(is_tentative: true) }
+      it "should return a hash with the “tentative” class" do
+        expect( presenter.event_heading_attrs ).to eq(class: ['tentative'])
+      end
+    end
   end
 
   describe "#present_status" do
     context "with a cancelled event" do
       let(:event) { $event = Event.new(is_cancelled: true) }
-      it "should return a cancelled notice in an element with the html class “status”" do
-        expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>Cancelled:<\/[^>]+>[\r\n]+\z/
+      it "should return a cancelled notice in an element" do
+        expect( presenter.present_status ).to match /\A<[^>]+>Cancelled:<\/[^>]+>[\r\n]+\z/
+      end
+      it "should be wrapped in an element with the html class “status”" do
+        expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>/
       end
       it "should be html safe" do
         expect( presenter.present_status.html_safe? ).to be_true
@@ -69,8 +113,11 @@ describe EventPresenter do
     end
     context "with a tentative event" do
       let(:event) { $event = Event.new(is_tentative: true) }
-      it "should return a tentative notice in an element with the html class “status”" do
-        expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>Tentative:<\/[^>]+>[\r\n]+\z/
+      it "should return a tentative notice in an element" do
+        expect( presenter.present_status ).to match /\A<[^>]+>Tentative:<\/[^>]+>[\r\n]+\z/
+      end
+      it "should be wrapped in an element with the html class “status”" do
+        expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>/
       end
       it "should be html safe" do
         expect( presenter.present_status.html_safe? ).to be_true
@@ -212,7 +259,9 @@ describe EventPresenter do
     end
     it "should return a link to the event, using the title" do
       event.stub(:id).and_return(234)
-      expect( presenter.present_title ).to match /<a (?:|[^>]+ )href="\/events\/234"(?:| [^>]+)>Test Title<\/a>/
+      expect( presenter.present_title ).to match(
+        /<a (?:|[^>]+ )href="\/events\/234"(?:| [^>]+)>Test Title<\/a>/
+      )
     end
     it "should be html safe" do
       expect( presenter.present_details.html_safe? ).to be_true
@@ -306,10 +355,14 @@ describe EventPresenter do
         expect( presenter.present_minimal_location ).to match /\A<[^>]+ class="location"/
       end
       it "should wrap the “street-address” element in an element that has “adr” as the html class" do
-        expect( presenter.present_minimal_location ).to match /<[^>]+ class="adr"[^>]*><[^>]+ class="street-address"/
+        expect( presenter.present_minimal_location ).to match(
+          /<[^>]+ class="adr"[^>]*><[^>]+ class="street-address"/
+        )
       end
       it "should wrap the address in an element that has “street-address” as the html class" do
-        expect( presenter.present_minimal_location ).to match /<[^>]+ class="street-address"[^>]*>Test Address</
+        expect( presenter.present_minimal_location ).to match(
+          /<[^>]+ class="street-address"[^>]*>Test Address</
+        )
       end
       it "should be html safe" do
         expect( presenter.present_minimal_location.html_safe? ).to be_true

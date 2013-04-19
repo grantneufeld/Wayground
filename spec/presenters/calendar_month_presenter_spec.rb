@@ -22,6 +22,10 @@ describe CalendarMonthPresenter do
       presenter = CalendarMonthPresenter.new(year: 2002, events: [])
       expect( presenter.year ).to eq 2002
     end
+    it "should accept a user parameter" do
+      presenter = CalendarMonthPresenter.new(user: :user, events: [])
+      expect( presenter.user ).to eq :user
+    end
     it "should accept an events parameter and turn it into an EventsByDate" do
       time = Time.zone.parse('2000-01-02 03:04')
       event = Event.new(start_at: time)
@@ -355,32 +359,55 @@ describe CalendarMonthPresenter do
       ]
       presenter = CalendarMonthPresenter.new(view: view, events: events)
       result = presenter.present_day_events_list(events)
-      expect( result ).to match /\A<ul>[\r\n]*<li><a href="#{path}"[^>]*>6:30pm: Event 1<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 2<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 3<\/a><\/li>[\r\n]*<\/ul>\z/
+      expect( result ).to match(
+        /\A<ul>[\r\n]*<li><a href="#{path}"[^>]*>6:30pm: Event 1<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 2<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 3<\/a><\/li>[\r\n]*<\/ul>\z/
+      )
     end
   end
 
   describe "#present_event_in_list" do
-    before(:all) do
-      @event = Event.new(start_at: Time.zone.parse('2012-3-15 7pm'), title: 'Test Event')
-      @title = '7pm: Test Event'
-      view = ViewDouble.new
-      @path = view.event_path(@event)
-      @presenter = CalendarMonthPresenter.new(view: view, year: 2012, month: 3, events: [])
+    let(:title) { $title = 'Test Event' }
+    let(:event_common_params) do
+      $event_common_params = {start_at: Time.zone.parse('2012-3-15 7pm'), title: title}
     end
-    it "should return an html_safe string" do
-      expect( @presenter.present_event_in_list(@event).html_safe? ).to be_true
+    let(:event_params) { $event_params = event_common_params }
+    let(:event) { $event = Event.new(event_params) }
+    let(:view) { $view = ViewDouble.new }
+    let(:path) { $path = view.event_path(event) }
+    let(:presenter) do
+      $presenter = CalendarMonthPresenter.new(view: view, year: 2012, month: 3, events: [event])
     end
     it "should return the link wrapped in a list item element" do
       expect(
-        @presenter.present_event_in_list(@event)
-      ).to match /\A<li><a href="#{@path}"[^>]*>#{@title}<\/a><\/li>\n\z/
+        presenter.present_event_in_list(event)
+      ).to match /\A<li><a href="#{path}"[^>]*>7pm: #{title}<\/a><\/li>\n\z/
     end
-    it "should handle an all-day event" do
-      event = Event.new(start_at: Time.zone.parse('2012-3-15 7pm'), title: 'Test Event', is_allday: true)
-      title = 'Test Event'
-      expect(
-        @presenter.present_event_in_list(event)
-      ).to match /\A<li><a href="#{@path}"[^>]*>#{title}<\/a><\/li>\n\z/
+    it "should return an html_safe string" do
+      expect( presenter.present_event_in_list(event).html_safe? ).to be_true
+    end
+    context "with an all-day event" do
+      let(:event_params) { $event_params = event_common_params.merge(is_allday: true) }
+      it "should not include the time" do
+        expect(
+          presenter.present_event_in_list(event)
+        ).to match /\A<li><a href="#{path}"[^>]*>#{title}<\/a><\/li>\n\z/
+      end
+    end
+    context "with a cancelled event" do
+      let(:event_params) { $event_params = event_common_params.merge(is_cancelled: true) }
+      it "should set the “cancelled” class on the wrapping html element" do
+        expect(
+          presenter.present_event_in_list(event)
+        ).to match /\A<[^>]+ class="(?:[^"]* )?cancelled(?: [^"]*)?"/
+      end
+    end
+    context "with a tentative event" do
+      let(:event_params) { $event_params = event_common_params.merge(is_tentative: true) }
+      it "should set the “tentative” class on the wrapping html element" do
+        expect(
+          presenter.present_event_in_list(event)
+        ).to match /\A<[^>]+ class="(?:[^"]* )?tentative(?: [^"]*)?"/
+      end
     end
   end
 

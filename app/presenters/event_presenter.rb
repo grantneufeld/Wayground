@@ -19,9 +19,16 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_heading
-    html_tag_with_newline('h4') do
+    html_tag_with_newline(:h4, event_heading_attrs) do
       present_status + present_schedule + ':'.html_safe + newline + present_title
     end
+  end
+
+  def event_heading_attrs
+    classes = []
+    classes << 'cancelled'.html_safe if event.is_cancelled?
+    classes << 'tentative'.html_safe if event.is_tentative?
+    (classes.size > 0) ? {class: classes} : {}
   end
 
   def present_status
@@ -143,12 +150,19 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_location_full_address
-    if event.address?
-      html_tag('span', class: 'adr') { full_address_elements }
-    elsif event.city? || event.province? || event.country?
-      html_tag('span', class: 'adr') { present_location_region }
-    else
+    content = location_address_elements
+    if content.blank?
       html_blank
+    else
+      html_tag('span', class: 'adr') { content }
+    end
+  end
+
+  def location_address_elements
+    if event.address?
+      full_address_elements
+    elsif event.city? || event.province? || event.country?
+      present_location_region
     end
   end
 

@@ -10,3 +10,6 @@ a.ics{text-decoration:none;}
 section .vevent{margin:0.25em 0em 0em 1em; max-width:40em;}
 .vevent + .vevent{border-top:1px dotted gray; margin-top:0.5em; padding-top:0.25em;}
 .vevent h4 + *{margin-top:0em;}
+
+.cancelled{text-decoration:line-through;}
+.tentative{font-style:italic;}

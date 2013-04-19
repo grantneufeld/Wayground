@@ -48,8 +48,8 @@ describe "events/show.html.erb" do
       :is_cancelled => true
     ))
     render
-    rendered.should match(
-      /<h2 class="summary"><span class="status" title="CANCELLED">Cancelled:<\/span>[ \r\n\t]+Title<\/h2>/
+    expect( rendered ).to match(
+      /<h2 class="cancelled summary"><span class="status" title="CANCELLED">Cancelled:<\/span>[ \r\n\t]+Title<\/h2>/
     )
   end
 end
