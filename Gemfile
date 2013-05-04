@@ -7,7 +7,7 @@ gem 'rails', '3.2.13'
 #gem 'sqlite3', '>= 1.3.3'
 
 gem 'pg'
-#gem 'activerecord-postgres-hstore' # https://github.com/engageis/activerecord-postgres-hstore
+gem 'activerecord-postgres-hstore' # https://github.com/engageis/activerecord-postgres-hstore
 #gem 'pg_array_parser' # https://github.com/dockyard/pg_array_parser
 #gem 'pg_search'
 #gem 'queue_classic', '2.0.0rc12'

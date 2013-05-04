@@ -22,6 +22,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -1304,6 +1318,8 @@ INSERT INTO schema_migrations (version) VALUES ('18');
 INSERT INTO schema_migrations (version) VALUES ('19');
 
 INSERT INTO schema_migrations (version) VALUES ('2');
+
+INSERT INTO schema_migrations (version) VALUES ('20');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 
