@@ -150,29 +150,32 @@ class Event < ActiveRecord::Base
   # Add a Version based on the current state of this item.
   # Called after save.
   def add_version
-    data = "timezone: #{timezone}\n" + \
-      "is_allday: #{is_allday}\n" + \
-      "is_draft: #{is_draft}\n" + \
-      "is_approved: #{is_approved}\n" + \
-      "is_wheelchair_accessible: #{is_wheelchair_accessible}\n" + \
-      "is_adults_only: #{is_adults_only}\n" + \
-      "is_tentative: #{is_tentative}\n" + \
-      "is_cancelled: #{is_cancelled}\n" + \
-      "is_featured: #{is_featured}\n" + \
-      "organizer: #{organizer}\n" + \
-      "organizer_url: #{organizer_url}\n" + \
-      "location: #{location}\n" + \
-      "address: #{address}\n" + \
-      "city: #{city}\n" + \
-      "province: #{province}\n" + \
-      "country: #{country}\n" + \
-      "location_url: #{location_url}\n" + \
-      "content:\n#{content}"
+    values = {
+      timezone: timezone,
+      is_allday: is_allday,
+      is_draft: is_draft,
+      is_approved: is_approved,
+      is_wheelchair_accessible: is_wheelchair_accessible,
+      is_adults_only: is_adults_only,
+      is_tentative: is_tentative,
+      is_cancelled: is_cancelled,
+      is_featured: is_featured,
+      organizer: organizer,
+      organizer_url: organizer_url,
+      location: location,
+      address: address,
+      city: city,
+      province: province,
+      country: country,
+      location_url: location_url,
+      content: content,
+      description: description,
+      start_at: start_at,
+      end_at: end_at
+    }
     self.versions.create!(
-      :user => editor, :edited_at => self.updated_at, :edit_comment => edit_comment,
-      :filename => nil, :title => title, :url => nil, :description => description,
-      :content => data, :content_type => 'text/plain',
-      :start_on => start_at.to_date, :end_on => (end_at? ? end_at.to_date : nil)
+      user: editor, edited_at: updated_at, edit_comment: edit_comment,
+      title: title, values: values
     )
   end
 

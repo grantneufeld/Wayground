@@ -1,15 +1,14 @@
 # encoding: utf-8
 
 # Records a “version” (or “edit”) of a given “versionable” item.
-# Versionable items must have a “has_many :versions, :as => :item” relation,
+# Versionable items must have a `has_many :versions, as: :item` relation,
 # and they are responsible for generating their own Version records.
 class Version < ActiveRecord::Base
-  acts_as_authority_controlled :authority_area => 'Content', :inherits_from => :item
-  attr_accessible(
-    :user, :edited_at, :edit_comment, :filename, :title, :description, :content, :content_type, :url, :start_on, :end_on
-  )
+  acts_as_authority_controlled authority_area: 'Content', inherits_from: :item
+  serialize :values, ActiveRecord::Coders::Hstore
+  attr_accessible :user, :edited_at, :edit_comment, :filename, :title, :values
 
-  belongs_to :item, :polymorphic => true
+  belongs_to :item, polymorphic: true
   belongs_to :user
 
   validates_presence_of :item
@@ -17,8 +16,8 @@ class Version < ActiveRecord::Base
   validates_presence_of :edited_at
 
   default_scope order(:edited_at, :id)
-  scope :versions_before, lambda {|before_datetime| where('versions.edited_at < ?', before_datetime) }
-  scope :versions_after, lambda {|after_datetime| where('versions.edited_at > ?', after_datetime) }
+  scope :versions_before, lambda { |before_datetime| where('versions.edited_at < ?', before_datetime) }
+  scope :versions_after, lambda { |after_datetime| where('versions.edited_at > ?', after_datetime) }
 
   # Get the most recent version that preceded this one.
   def previous

@@ -43,9 +43,10 @@ class Page < ActiveRecord::Base
 
   # Add a Version based on the current state of this item
   def add_version
-    self.versions.create!(:user => editor, :edited_at => self.updated_at, :edit_comment => edit_comment,
-      :filename => filename, :title => title, :description => description,
-      :content => content, :content_type => 'text/html'
+    self.versions.create!(
+      user: editor, edited_at: self.updated_at, edit_comment: edit_comment,
+      filename: filename, title: title,
+      values: {description: description, content: content}
     )
   end
 

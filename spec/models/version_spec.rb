@@ -9,25 +9,70 @@ describe Version do
     @user = FactoryGirl.create(:user)
   end
 
+  describe "attr_accessible" do
+    it "should not allow item to be set" do
+      expect {
+        version = Version.new(item: @item)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
+    end
+    it "should not allow item_type to be set" do
+      expect {
+        version = Version.new(item_type: @item.class.name)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
+    end
+    it "should not allow item_id to be set" do
+      expect {
+        version = Version.new(item_id: @item.id)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
+    end
+    it "should allow user to be set" do
+      version = Version.new(user: @user)
+      expect( version.user_id ).to eq @user.id
+    end
+    it "should allow edited_at to be set" do
+      version = Version.new(edited_at: '2012-01-02 03:04:05')
+      expect( version.edited_at.getlocal.to_s(:db) ).to eq '2012-01-02 03:04:05'
+    end
+    it "should allow edit_comment to be set" do
+      version = Version.new(edit_comment: 'a comment for the edit')
+      expect( version.edit_comment ).to eq 'a comment for the edit'
+    end
+    it "should allow filename to be set" do
+      version = Version.new(filename: 'test_filename')
+      expect( version.filename ).to eq 'test_filename'
+    end
+    it "should allow title to be set" do
+      version = Version.new(title: 'Version Title')
+      expect( version.title ).to eq 'Version Title'
+    end
+    it "should allow values to be set" do
+      # save and reload to invoke the serialization
+      version = @item.versions.new(edited_at: Time.now, user: @user, values: {hash: 'values', abc: 123})
+      version.save!
+      version = Version.find(version.id)
+      expect( version.values ).to eq({'hash' => 'values', 'abc' => '123'})
+    end
+  end
+
   describe "validation" do
     it "should pass when all required fields are set" do
       version = @item.versions.new(edited_at: Time.now)
       version.user = @user
-      version.valid?.should be_true
+      expect( version.valid? ).to be_true
     end
     it "should require an item" do
       version = Version.new(edited_at: Time.now)
       version.user = @user
-      version.valid?.should be_false
+      expect( version.valid? ).to be_false
     end
     it "should require a user" do
       version = @item.versions.new(edited_at: Time.now)
-      version.valid?.should be_false
+      expect( version.valid? ).to be_false
     end
     it "should require an edited at datetime" do
       version = @item.versions.new
       version.user = @user
-      version.valid?.should be_false
+      expect( version.valid? ).to be_false
     end
   end
 
@@ -42,7 +87,7 @@ describe Version do
       oldest_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.month.ago)
       # reload item to reload versions
       @item.reload
-      @item.versions.should eq [oldest_version, middle_version, newest_version]
+      expect( @item.versions ).to eq [oldest_version, middle_version, newest_version]
     end
   end
 
@@ -53,7 +98,7 @@ describe Version do
       second = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 4.days.ago)
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 2.days.ago)
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.days.ago)
-      @item.versions.versions_before(3.days.ago).should eq [first, second]
+      expect( @item.versions.versions_before(3.days.ago) ).to eq [first, second]
     end
   end
 
@@ -64,7 +109,7 @@ describe Version do
       versions = []
       versions << FactoryGirl.create(:version, item: @item, user: @user, edited_at: 4.days.from_now)
       versions << FactoryGirl.create(:version, item: @item, user: @user, edited_at: 5.days.from_now)
-      @item.versions.versions_after(3.days.from_now).should eq versions
+      expect( @item.versions.versions_after(3.days.from_now) ).to eq versions
     end
   end
 
@@ -85,30 +130,30 @@ describe Version do
       @last_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.day.ago)
     end
     it "should return nothing if this is the first version" do
-      @first_version.previous.should be_nil
+      expect( @first_version.previous ).to be_nil
     end
     it "should return the first version if this is the second" do
-      @second_version.previous.should eq @first_version
+      expect( @second_version.previous ).to eq @first_version
     end
     it "should return the previous version when this version is in the middle" do
-      @third_version.previous.should eq @second_version
+      expect( @third_version.previous ).to eq @second_version
     end
     it "should return the previous version when this version is the last of many" do
-      @last_version.previous.should eq @third_version
+      expect( @last_version.previous ).to eq @third_version
     end
   end
 
   describe "#current" do
     it "should return the most recent edit on the version’s item" do
       version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 2.years.ago)
-      version.current.should == @item.versions.last
+      expect( version.current ).to eq @item.versions.last
     end
   end
 
   describe "#is_current?" do
     it "should be true if this is the only version" do
       item = FactoryGirl.create(:event)
-      item.versions[0].is_current?.should be_true
+      expect( item.versions[0].is_current? ).to be_true
     end
     it "should be true if this is the latest version" do
       Version.delete_all
@@ -116,13 +161,13 @@ describe Version do
       # create an additional, earlier, version to make sure we’re ordering by date properly
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.day.ago)
       @item.reload
-      version.is_current?.should be_true
+      expect( version.is_current? ).to be_true
     end
     it "should be false if this is not the latest version" do
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 2.weeks.ago)
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.week.from_now)
       middle_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 6.days.from_now)
-      middle_version.is_current?.should be_false
+      expect( middle_version.is_current? ).to be_false
     end
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20) do
+ActiveRecord::Schema.define(:version => 21) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -292,12 +292,7 @@ ActiveRecord::Schema.define(:version => 20) do
     t.string   "edit_comment"
     t.string   "filename"
     t.string   "title"
-    t.text     "url"
-    t.text     "description"
-    t.text     "content"
-    t.string   "content_type"
-    t.date     "start_on"
-    t.date     "end_on"
+    t.hstore   "values"
   end
 
   add_index "versions", ["edited_at", "item_type", "item_id"], :name => "edits_by_date"

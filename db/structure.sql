@@ -679,12 +679,7 @@ CREATE TABLE versions (
     edit_comment character varying(255),
     filename character varying(255),
     title character varying(255),
-    url text,
-    description text,
-    content text,
-    content_type character varying(255),
-    start_on date,
-    end_on date
+    "values" hstore
 );
 
 
@@ -1320,6 +1315,8 @@ INSERT INTO schema_migrations (version) VALUES ('19');
 INSERT INTO schema_migrations (version) VALUES ('2');
 
 INSERT INTO schema_migrations (version) VALUES ('20');
+
+INSERT INTO schema_migrations (version) VALUES ('21');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

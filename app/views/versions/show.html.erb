@@ -3,62 +3,23 @@ item = @version.item
 user = @version.user
 
 -%>
-<p>
-<b>Item:</b>
+<p><b>Item:</b>
 <%= link_to item.title, item %>
 </p>
-
-<p>
-<b>User:</b>
+<p><b>User:</b>
 <%= link_to user.name, profile_path(user) %>
 </p>
-
-<p>
-<b>Edited at:</b>
+<p><b>Edited at:</b>
 <%= @version.edited_at %>
 </p>
-
-<p>
-<b>Edit Comment:</b>
+<p><b>Edit Comment:</b>
 <%= @version.edit_comment %>
 </p>
 
-<p>
-<b>Filename:</b>
-<%= @version.filename %>
-</p>
-
-<p>
-<b>Title:</b>
-<%= @version.title %>
-</p>
-
-<p>
-<b>Url:</b>
-<%= @version.url %>
-</p>
-
-<p>
-<b>Description:</b>
-<%= @version.description %>
-</p>
-
-<p>
-<b>Content:</b>
-<%= @version.content %>
-</p>
-
-<p>
-<b>Content type:</b>
-<%= @version.content_type %>
-</p>
-
-<p>
-<b>Start on:</b>
-<%= @version.start_on %>
-</p>
-
-<p>
-<b>End on:</b>
-<%= @version.end_on %>
-</p>
+<table><tbody>
+<tr><th>Filename:</th> <td><%= @version.filename %></td></tr>
+<tr><th>Title:</th> <td><%= @version.title %></td></tr>
+<% @version.values.each do |key, value|
+  -%><tr><th><%= key %>:</th> <td><%= value %></td></tr>
+<% end -%>
+</tbody></table>
