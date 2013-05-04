@@ -3,6 +3,8 @@ require 'spec_helper'
 
 describe "events/index.ics.erb" do
   before(:each) do
+    Event.delete_all
+    Version.delete_all
     @events = assign(:events,
       [
       FactoryGirl.create(:event,

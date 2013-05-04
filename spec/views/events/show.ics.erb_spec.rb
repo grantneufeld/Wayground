@@ -2,7 +2,9 @@
 require 'spec_helper'
 
 describe "events/show.ics.erb" do
-  before(:each) do
+  before(:all) do
+    Event.delete(123)
+    Version.delete_all
     @event = FactoryGirl.create(:event,
       :id => 123,
       :user => nil,
@@ -32,35 +34,9 @@ describe "events/show.ics.erb" do
     )
     FactoryGirl.create(:external_link, :url => 'http://1st.external.link/', :item => @event)
     FactoryGirl.create(:external_link, :url => 'http://2nd.external.link/', :item => @event)
-    assign(:event, Event.find(123))
-    #@event ||= assign(:event, stub_model(Event,
-    #  :id => 123,
-    #  :user => nil,
-    #  :start_at => Time.parse('2011-02-03 04:05:06 am MST'),
-    #  :end_at => Time.parse('2011-07-08 09:10:11 am MDT'),
-    #  :is_allday => false,
-    #  :is_draft => false,
-    #  :is_approved => true,
-    #  :is_wheelchair_accessible => false,
-    #  :is_adults_only => false,
-    #  :is_tentative => false,
-    #  :is_cancelled => false,
-    #  :is_featured => false,
-    #  :title => "A Title That Extends Beyond Seventy-Five Characters So We Can Test Line Folding",
-    #  :description => "A description that goes on, and on, so it can exceed two lines of seventy-five characters. This should serve as a good test of the line folding. At least, that’s what I hope.",
-    #  :content => "Content",
-    #  :organizer => "Organizer",
-    #  :organizer_url => "Organizer Url",
-    #  :location => "Location",
-    #  :address => "Address",
-    #  :city => "City",
-    #  :province => "Province",
-    #  :country => "Country",
-    #  :location_url => "Location Url",
-    #  :created_at => Time.parse('2001-02-03 04:05:06 am MST'),
-    #  :updated_at => Time.parse('2001-02-03 04:05:06 am UTC'),
-    #  :external_links => @external_links
-    #))
+  end
+  before(:each) do
+    assign(:event, @event)
   end
 
   it "renders the expected text" do
