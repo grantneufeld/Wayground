@@ -1,5 +1,12 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'sources_controller'
+require 'authority'
+require 'event'
+require 'source'
+require 'sourced_item'
+require 'user'
+require 'import/ical_importer'
 
 describe SourcesController do
   before(:all) do
@@ -7,8 +14,8 @@ describe SourcesController do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
-    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, name: 'Admin User')
+    @user_normal = FactoryGirl.create(:user, name: 'Normal User')
   end
 
   def set_logged_in_admin
@@ -26,7 +33,7 @@ describe SourcesController do
   # Source. As you add validations to Source, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {:processor => 'IcalProcessor', :url => 'test://test.tld/valid.ics'}
+    { processor: 'iCalendar', url: 'test://test.tld/valid.ics' }
   end
 
   describe "GET index" do
@@ -46,14 +53,14 @@ describe SourcesController do
   describe "GET show" do
     it "fails if not logged in" do
       source = FactoryGirl.create(:source)
-      get :show, :id => source.id
+      get :show, id: source.id
       response.status.should eq 403
     end
 
     it "assigns the requested source as @source" do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
-      get :show, :id => source.id
+      get :show, id: source.id
       assigns(:source).should eq(source)
     end
   end
@@ -73,7 +80,7 @@ describe SourcesController do
 
   describe "POST create" do
     it "fails if not logged in" do
-      post :create, :source => valid_attributes
+      post :create, source: valid_attributes
       response.status.should eq 403
     end
 
@@ -81,20 +88,20 @@ describe SourcesController do
       it "creates a new Source" do
         set_logged_in_admin
         expect {
-          post :create, :source => valid_attributes
+          post :create, source: valid_attributes
         }.to change(Source, :count).by(1)
       end
 
       it "assigns a newly created source as @source" do
         set_logged_in_admin
-        post :create, :source => valid_attributes
+        post :create, source: valid_attributes
         assigns(:source).should be_a(Source)
         assigns(:source).should be_persisted
       end
 
       it "redirects to the created source" do
         set_logged_in_admin
-        post :create, :source => valid_attributes
+        post :create, source: valid_attributes
         response.should redirect_to(Source.last)
       end
     end
@@ -104,7 +111,7 @@ describe SourcesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Source.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        post :create, :source => {}
+        post :create, source: {}
         assigns(:source).should be_a_new(Source)
       end
 
@@ -112,7 +119,7 @@ describe SourcesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Source.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        post :create, :source => {}
+        post :create, source: {}
         response.should render_template("new")
       end
     end
@@ -122,14 +129,14 @@ describe SourcesController do
     it "requires the user to have authority" do
       source = FactoryGirl.create(:source)
       set_logged_in_user
-      get :edit, :id => source.id
+      get :edit, id: source.id
       response.status.should eq 403
     end
 
     it "assigns the requested source as @source" do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
-      get :edit, :id => source.id
+      get :edit, id: source.id
       assigns(:source).should eq(source)
     end
   end
@@ -138,7 +145,7 @@ describe SourcesController do
     it "requires the user to have authority" do
       source = FactoryGirl.create(:source)
       set_logged_in_user
-      put :update, :id => source.id, :source => {'these' => 'params'}
+      put :update, id: source.id, source: {'these' => 'params'}
       response.status.should eq 403
     end
 
@@ -151,20 +158,20 @@ describe SourcesController do
         # submitted in the request.
         Source.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
         set_logged_in_admin
-        put :update, :id => source.id, :source => {'these' => 'params'}
+        put :update, id: source.id, source: {'these' => 'params'}
       end
 
       it "assigns the requested source as @source" do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
-        put :update, :id => source.id, :source => valid_attributes
+        put :update, id: source.id, source: valid_attributes
         assigns(:source).should eq(source)
       end
 
       it "redirects to the source" do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
-        put :update, :id => source.id, :source => valid_attributes
+        put :update, id: source.id, source: valid_attributes
         response.should redirect_to(source)
       end
     end
@@ -175,7 +182,7 @@ describe SourcesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Source.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, :id => source.id, :source => {}
+        put :update, id: source.id, source: {}
         assigns(:source).should eq(source)
       end
 
@@ -184,7 +191,7 @@ describe SourcesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Source.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, :id => source.id, :source => {}
+        put :update, id: source.id, source: {}
         response.should render_template("edit")
       end
     end
@@ -194,14 +201,14 @@ describe SourcesController do
     it "requires the user to have authority" do
       source = FactoryGirl.create(:source)
       set_logged_in_user
-      get :delete, :id => source.id
+      get :delete, id: source.id
       response.status.should eq 403
     end
 
     it "shows a form for confirming deletion of an source" do
       Source.stub(:find).with("37") { mock_source }
       set_logged_in_admin
-      get :delete, :id => "37"
+      get :delete, id: "37"
       assigns(:source).should be(mock_source)
     end
   end
@@ -210,7 +217,7 @@ describe SourcesController do
     it "requires the user to have authority" do
       source = FactoryGirl.create(:source)
       set_logged_in_user
-      delete :destroy, :id => source.id
+      delete :destroy, id: source.id
       response.status.should eq 403
     end
 
@@ -218,14 +225,14 @@ describe SourcesController do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       expect {
-        delete :destroy, :id => source.id
+        delete :destroy, id: source.id
       }.to change(Source, :count).by(-1)
     end
 
     it "redirects to the sources list" do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
-      delete :destroy, :id => source.id
+      delete :destroy, id: source.id
       response.should redirect_to(sources_url)
     end
   end
@@ -235,13 +242,13 @@ describe SourcesController do
 
     it "requires the user to have authority" do
       set_logged_in_user
-      get :processor, :id => source.id
+      get :processor, id: source.id
       response.status.should eq 403
     end
 
     it "assigns the requested source as @source" do
       set_logged_in_admin
-      get :processor, :id => source.id
+      get :processor, id: source.id
       assigns(:source).should eq(source)
     end
   end
@@ -249,13 +256,13 @@ describe SourcesController do
   describe "POST runprocessor" do
     let(:source) do
       $source = FactoryGirl.create(:source,
-        processor: 'IcalProcessor', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
+        processor: 'iCalendar', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
       )
     end
 
     it "requires the user to have authority" do
       set_logged_in_user
-      post :runprocessor, :id => source.id
+      post :runprocessor, id: source.id
       response.status.should eq 403
     end
 
@@ -267,9 +274,9 @@ describe SourcesController do
         # specifies that the Source created on the previous line
         # receives the :process message with the admin User as an arg.
         Source.any_instance.should_receive(:run_processor).
-          with(@user_admin, false).and_return(IcalProcessor.new)
+          with(@user_admin, false).and_return(Wayground::Import::IcalImporter.new)
         set_logged_in_admin
-        post :runprocessor, :id => source.id
+        post :runprocessor, id: source.id
       end
     end
   end

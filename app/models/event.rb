@@ -1,10 +1,12 @@
 # encoding: utf-8
+require 'user'
 require 'text_cleaner'
 require 'url_cleaner'
+require 'import/ical_importer'
 
 # Details of a calendar event
 class Event < ActiveRecord::Base
-  acts_as_authority_controlled :authority_area => 'Calendar', :item_authority_flag_field => :always_viewable
+  acts_as_authority_controlled authority_area: 'Calendar', item_authority_flag_field: :always_viewable
   # editor and edit_comment are used for Version records
   # is_sourcing is set when generating or updating from a Source (and SourcedItem)
   attr_accessor :editor, :edit_comment, :is_sourcing
@@ -19,30 +21,30 @@ class Event < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :image
-  has_many :external_links, :as => :item
+  has_many :external_links, as: :item
   accepts_nested_attributes_for :external_links,
-    :reject_if => lambda { |el| el[:url].blank? }, :allow_destroy => true
-  has_many :sourced_items, :as => :item, :dependent => :delete_all
-  has_many :versions, :as => :item, :dependent => :delete_all
+    reject_if: lambda { |el| el[:url].blank? }, allow_destroy: true
+  has_many :sourced_items, as: :item, dependent: :delete_all
+  has_many :versions, as: :item, dependent: :delete_all
 
-  validates_length_of :title, :within => 1..255
+  validates_length_of :title, within: 1..255
   validates_presence_of :start_at
   validate :validate_end_at_not_before_start_at,
     :validate_timezone,
     :validate_not_both_is_draft_and_is_approved
-  validates_length_of :organizer, :within => 0..255, :allow_blank => true
-  validates_length_of :organizer_url, :within => 0..255, :allow_blank => true
-  validates_length_of :location, :within => 0..255, :allow_blank => true
-  validates_length_of :address, :within => 0..255, :allow_blank => true
-  validates_length_of :city, :within => 0..255, :allow_blank => true
-  validates_length_of :province, :within => 0..31, :allow_blank => true
-  validates_length_of :country, :within => 0..2, :allow_blank => true
-  validates_length_of :location_url, :within => 0..255, :allow_blank => true
-  validates_length_of :description, :within => 0..511, :allow_blank => true
-  validates_length_of :content, :within => 0..8191, :allow_blank => true
+  validates_length_of :organizer, within: 0..255, allow_blank: true
+  validates_length_of :organizer_url, within: 0..255, allow_blank: true
+  validates_length_of :location, within: 0..255, allow_blank: true
+  validates_length_of :address, within: 0..255, allow_blank: true
+  validates_length_of :city, within: 0..255, allow_blank: true
+  validates_length_of :province, within: 0..31, allow_blank: true
+  validates_length_of :country, within: 0..2, allow_blank: true
+  validates_length_of :location_url, within: 0..255, allow_blank: true
+  validates_length_of :description, within: 0..511, allow_blank: true
+  validates_length_of :content, within: 0..8191, allow_blank: true
 
   default_scope order('start_at')
-  scope :approved, where(:is_approved => true)
+  scope :approved, where(is_approved: true)
   scope :upcoming, lambda { # use a lambda so the time is reloaded each time upcoming is called
     where(
       'start_at >= :day_start OR (end_at IS NOT NULL AND end_at >= :day_start)',
@@ -113,7 +115,7 @@ class Event < ActiveRecord::Base
 
   # If the timezone is set for an event, it must be valid
   def validate_timezone
-    if timezone.present? && ActiveSupport::TimeZone[timezone].nil?
+    if timezone.present? && !(ActiveSupport::TimeZone[timezone])
       errors.add(:timezone, 'must be a recognized timezone name')
     end
   end
@@ -277,7 +279,7 @@ class Event < ActiveRecord::Base
       end
       # TODO: handle updating the associated url from the icalendar event (for external_links)
       success = false
-      proc = params[:processor] || IcalProcessor.new()
+      proc = params[:processor] || Wayground::Import::IcalImporter.new()
       proc.editor = self.editor
       perform_from_source do
         success = self.update_attributes(proc.icalendar_field_mapping(ievent))

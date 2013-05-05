@@ -98,10 +98,10 @@ FactoryGirl.define do
   factory :path do
     sequence(:sitepath) {|n| "/sitepath/factory_sitepath_#{n}"}
   end
-  factory :item_path, :parent => :path do
-    item { create(:page, :path => self)  }
+  factory :item_path, parent: :path do
+    item { create(:page, path: self)  }
   end
-  factory :redirect_path, :parent => :path do
+  factory :redirect_path, parent: :path do
     redirect '/'
   end
 
@@ -120,7 +120,7 @@ FactoryGirl.define do
   end
 
   factory :source do
-    processor 'IcalProcessor'
+    processor 'iCalendar'
     url       'test://factory.tld/factory.ics'
     method    'get'
     sequence(:title) {|n| "Factory Source #{n}"}
@@ -138,7 +138,7 @@ FactoryGirl.define do
     password              "password"
     password_confirmation "password"
   end
-  factory :email_confirmed_user, :parent => :user do |user|
+  factory :email_confirmed_user, parent: :user do |user|
     email_confirmed true
   end
 

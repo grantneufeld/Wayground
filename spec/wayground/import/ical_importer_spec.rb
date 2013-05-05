@@ -1,14 +1,18 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'import/ical_importer'
+require 'authority'
+require 'event'
+require 'user'
 
-describe IcalProcessor do
+describe Wayground::Import::IcalImporter do
 
   before(:all) do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
-    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, name: 'Admin User')
+    @user_normal = FactoryGirl.create(:user, name: 'Normal User')
     @source = FactoryGirl.create(:source, url: "#{Rails.root}/spec/fixtures/files/sample.ics")
   end
 
@@ -29,7 +33,7 @@ describe IcalProcessor do
   let(:source) { $source = @source }
   let(:user) { $user = @user_normal }
   let(:proc) do
-    iproc = IcalProcessor.new
+    iproc = Wayground::Import::IcalImporter.new
     iproc.source = @source
     iproc.editor = @user_normal
     $proc = iproc
@@ -38,12 +42,12 @@ describe IcalProcessor do
   describe ".process_source" do
     it "should generate events" do
       expect {
-        processor = IcalProcessor.process_source(source, user: user)
+        processor = Wayground::Import::IcalImporter.process_source(source, user: user)
       }.to change(Event, :count).by(2)
     end
     it "should generate sourced items" do
       expect {
-        processor = IcalProcessor.process_source(source, user: user)
+        processor = Wayground::Import::IcalImporter.process_source(source, user: user)
       }.to change(source.sourced_items, :count).by(2)
     end
   end
@@ -99,7 +103,7 @@ describe IcalProcessor do
 
     context "with a pre-existing event" do
       let(:event) do
-        proc = IcalProcessor.new
+        proc = Wayground::Import::IcalImporter.new
         proc.source = source
         $event = proc.process_event(ievent).new_events[0]
       end
@@ -141,7 +145,7 @@ describe IcalProcessor do
           source = double('source')
           source.stub(sourced_items: sourced_items)
           # prepare processor
-          proc = IcalProcessor.new
+          proc = Wayground::Import::IcalImporter.new
           proc.source = source
           # call the method being tested
           proc.process_event(modified_ievent)
@@ -241,7 +245,7 @@ describe IcalProcessor do
     end
     it "should split the description after the first paragraph after 100 chars if too long" do
       event = proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) })
+        new_ievent('DESCRIPTION' => {value: ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) })
       )
       [event[:description], event[:content]].should eq [
         ('A' * 99) + "\n" + ('B' * 100),
@@ -250,7 +254,7 @@ describe IcalProcessor do
     end
     it "should split the description on the last sentence break in a too long paragraph" do
       event = proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 200) + '. ' + ('B' * 200) + '! ' + ('C' * 200) + '?' })
+        new_ievent('DESCRIPTION' => {value: ('A' * 200) + '. ' + ('B' * 200) + '! ' + ('C' * 200) + '?' })
       )
       [event[:description], event[:content]].should eq [
         ('A' * 200) + '. ' + ('B' * 200) + '!',
@@ -259,7 +263,7 @@ describe IcalProcessor do
     end
     it "should split the description on the last space in a too long sentence" do
       event = proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 200) + ' ' + ('B' * 200) + ' ' + ('C' * 200) + ' ' })
+        new_ievent('DESCRIPTION' => {value: ('A' * 200) + ' ' + ('B' * 200) + ' ' + ('C' * 200) + ' ' })
       )
       [event[:description], event[:content]].should eq [
         ('A' * 200) + ' ' + ('B' * 200),
@@ -268,7 +272,7 @@ describe IcalProcessor do
     end
     it "should split the description after the 100th char if an unbroken blob of characters" do
       event = proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {:value => ('A' * 100) + 'B' + ('C' * 411)})
+        new_ievent('DESCRIPTION' => {value: ('A' * 100) + 'B' + ('C' * 411)})
       )
       [event[:description], event[:content]].should eq ['A' * 100, 'B' + ('C' * 411)]
     end
@@ -281,13 +285,13 @@ describe IcalProcessor do
     it "should use DTSTART as the start_at date & time" do
       date = '2001-02-03 04:05:06 MST'.to_datetime
       proc.icalendar_field_mapping(
-        new_ievent('DTSTART' => {:value => date})
+        new_ievent('DTSTART' => {value: date})
       )[:start_at].should eq date
     end
     it "should use DTEND as the end_at date & time" do
       date = '2001-02-03 04:05:06 MST'.to_datetime
       proc.icalendar_field_mapping(
-        new_ievent('DTEND' => {:value => date})
+        new_ievent('DTEND' => {value: date})
       )[:end_at].should eq date
     end
   end

@@ -1,34 +1,34 @@
 <%
 require 'wayground_form_builder'
 
-%><%= form_for(source, :builder => WaygroundFormBuilder) do |f| %>
+%><%= form_for(source, builder: WaygroundFormBuilder) do |f| %>
 <%= show_errors(source) %>
 <table><tbody>
 <tr><th><%= f.label :title %></th>
-  <td><%= f.text_field :title, :size => 60, :maxlength => 127 %></td></tr>
+  <td><%= f.text_field :title, size: 60, maxlength: 127 %></td></tr>
 <tr><th><%= f.label :description %></th>
-  <td><%= f.text_area :description, :rows => 4, :cols => 50, :maxlength => 511 %></td></tr>
+  <td><%= f.text_area :description, rows: 4, cols: 50, maxlength: 511 %></td></tr>
 <tr class="heading"><th colspan="2">Technical Details</th></tr>
 <tr><th><%= f.label :processor %></th>
   <td><%= f.select(:processor,
     options_for_select(
-      [['iCalendar', 'IcalProcessor']], source.processor
+      [['iCalendar', 'iCalendar']], source.processor
     ),
-    :include_blank => false
+    include_blank: false
   ) %></td></tr>
 <tr><th><%= f.label :url %></th>
-  <td><%= f.text_field :url, :size => 60, :maxlength => 511 %></td></tr>
+  <td><%= f.text_field :url, size: 60, maxlength: 511 %></td></tr>
 <tr><th><%= f.label :method %></th>
   <td><%= f.select(:method,
     options_for_select(
       [['get', 'get'], ['post', 'post']], source.method
     ),
-    :include_blank => false
+    include_blank: false
   ) %></td></tr>
 <tr><th><%= f.label :post_args %></th>
-  <td><%= f.text_area :post_args, :rows => 6, :cols => 30, :maxlength => 1023 %></td></tr>
+  <td><%= f.text_area :post_args, rows: 6, cols: 30, maxlength: 1023 %></td></tr>
 <tr><th><%= f.label :options %></th>
-  <td><%= f.text_area :options, :rows => 4, :cols => 30 %></td></tr>
+  <td><%= f.text_area :options, rows: 4, cols: 30 %></td></tr>
 <tr><th><%= f.label :refresh_after_at, 'Refresh After' %></th>
   <td><%= f.datetime_field :refresh_after_at %> (date &amp; time)</td></tr>
 </tbody>

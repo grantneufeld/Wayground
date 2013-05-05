@@ -5,71 +5,71 @@ describe Source do
     Authority.delete_all
     User.destroy_all
     # first user is automatically an admin
-    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
-    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, name: 'Admin User')
+    @user_normal = FactoryGirl.create(:user, name: 'Normal User')
   end
 
   describe "attr_accessible" do
     it "should not allow container to be set" do
       expect {
-        Source.new(:container => Project.new)
+        Source.new(container: Project.new)
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow container_type to be set" do
       expect {
-        Source.new(:container_type => 'Project')
+        Source.new(container_type: 'Project')
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow container_id to be set" do
       expect {
-        Source.new(:container_id => '1')
+        Source.new(container_id: '1')
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow datastore to be set" do
       expect {
-        Source.new(:datastore => Datastore.new)
+        Source.new(datastore: Datastore.new)
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow datastore_id to be set" do
       expect {
-        Source.new(:datastore_id => '1')
+        Source.new(datastore_id: '1')
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should not allow last_updated_at to be set" do
       expect {
-        Source.new(:last_updated_at => '2012-01-02 03:04:05')
+        Source.new(last_updated_at: '2012-01-02 03:04:05')
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should allow refresh_after_at to be set" do
-      source = Source.new(:refresh_after_at => '2012-06-07 08:09:10')
+      source = Source.new(refresh_after_at: '2012-06-07 08:09:10')
       source.refresh_after_at?.should be_true
     end
     it "should allow processor to be set" do
-      Source.new(:processor => 'Test').processor.should eq 'Test'
+      Source.new(processor: 'Test').processor.should eq 'Test'
     end
     it "should allow url to be set" do
-      Source.new(:url => 'Test').url.should eq 'Test'
+      Source.new(url: 'Test').url.should eq 'Test'
     end
     it "should allow method to be set" do
-      Source.new(:method => 'Test').method.should eq 'Test'
+      Source.new(method: 'Test').method.should eq 'Test'
     end
     it "should allow post_args to be set" do
-      Source.new(:post_args => 'Test').post_args.should eq 'Test'
+      Source.new(post_args: 'Test').post_args.should eq 'Test'
     end
     it "should allow title to be set" do
-      Source.new(:title => 'Test').title.should eq 'Test'
+      Source.new(title: 'Test').title.should eq 'Test'
     end
     it "should allow description to be set" do
-      Source.new(:description => 'Test').description.should eq 'Test'
+      Source.new(description: 'Test').description.should eq 'Test'
     end
     it "should allow options to be set" do
-      Source.new(:options => 'Test').options.should eq 'Test'
+      Source.new(options: 'Test').options.should eq 'Test'
     end
   end
 
   describe "validation" do
     let(:minimum_valid_params) {
-      $minimum_valid_params = { processor: 'IcalProcessor', url: 'http://test.tld/test.ics' }
+      $minimum_valid_params = { processor: 'iCalendar', url: 'http://test.tld/test.ics' }
     }
     it "should pass with minimum valid parameters" do
       Source.new(minimum_valid_params).valid?.should be_true
@@ -82,8 +82,8 @@ describe Source do
       it "should fail if set to an invalid value" do
         Source.new(minimum_valid_params.merge(processor: 'invalid')).valid?.should be_false
       end
-      it "should pass if set to IcalProcessor" do
-        source = Source.new(minimum_valid_params.merge( processor: 'IcalProcessor' ))
+      it "should pass if set to iCalendar" do
+        source = Source.new(minimum_valid_params.merge( processor: 'iCalendar' ))
         source.valid?.should be_true
       end
     end
@@ -143,10 +143,10 @@ describe Source do
     it "should do nothing when not a recognized processor" do
       Source.new.run_processor.should be_nil
     end
-    context "with the IcalProcessor" do
+    context "with the iCalendar processor" do
       let(:source) do
         $source = FactoryGirl.create(:source,
-          processor: 'IcalProcessor', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
+          processor: 'iCalendar', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
         )
       end
       it "should run the process" do
@@ -156,6 +156,16 @@ describe Source do
         source.last_updated_at = nil
         source.run_processor(@user_normal)
         source.last_updated_at.should be
+      end
+    end
+    context "with the old, legacy, IcalProcessor value" do
+      let(:source) do
+        $source = FactoryGirl.create(:source,
+          processor: 'IcalProcessor', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
+        )
+      end
+      it "should run the process" do
+        expect { source.run_processor(@user_normal) }.to change(Event, :count).by(2)
       end
     end
   end
