@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'icalendar_reader'
+require 'import/icalendar_reader'
 require 'open-uri'
 require 'event'
 require 'user'

@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'icalendar_reader'
+require 'import/icalendar_reader'
 
 describe IcalendarReader do
   let(:ical_reader) { $ical_reader = IcalendarReader.new }
