@@ -65,7 +65,7 @@ module Wayground
       # Process an iCalendar format IO.
       # ical_processor.io must be set before this is called
       def process_data
-        calendars = Wayground::Import::IcalendarReader.new.parse(io)
+        calendars = Wayground::Import::IcalendarReader.new(io: io).parse
         calendars.each do |calendar|
           process_icalendar(calendar)
         end
