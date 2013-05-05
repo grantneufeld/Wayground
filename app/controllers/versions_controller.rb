@@ -1,23 +1,22 @@
 # encoding: utf-8
 
 # Reviewing versions of arbitrary items (such as Pages or Events).
-# This controller is always routed as a sub-controller to an item class (e.g., pages).
+# This controller is always routed as a sub-controller to an item class (e.g., pages/1/versions).
 class VersionsController < ApplicationController
   before_filter :set_item
   before_filter :requires_view_authority
 
-  # GET /versions
-  # GET /versions.xml
   def index
     @versions = paginate(@item.versions)
-    page_metadata(title: "Revision history of “#{@item.title}”")
+    page_metadata(title: "Revision history of “#{@item.title}”", nocache: true)
   end
 
-  # GET /versions/1
-  # GET /versions/1.xml
   def show
     @version = @item.versions.find(params[:id])
-    page_metadata(title: "“#{@item.title}” (version from #{@version.edited_at.to_s(:compact_datetime)})")
+    page_metadata(
+      title: "“#{@item.title}” (version from #{@version.edited_at.to_s(:compact_datetime)})",
+      nocache: true
+    )
   end
 
   protected

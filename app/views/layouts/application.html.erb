@@ -18,8 +18,7 @@ require 'metadata_presenter'
 # :head - Goes at the end of the head. Useful for custom meta tags, javascript links, etc.
 
 page_meta = page_metadata
-metadata = {view: self, title: page_meta.title, description: page_meta.description}
-metadata[:cache] = :no if page_meta.nocache #@browser_nocache
+metadata = {view: self, title: page_meta.title, description: page_meta.description, nocache: page_meta.nocache}
 metadata_presenter = MetadataPresenter.new(metadata)
 
 %><!DOCTYPE html>
@@ -29,10 +28,10 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
 <!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
-<%= stylesheet_link_tag 'application', :media => 'all' %>
-<% #= stylesheet_link_tag 'screen', :media => 'screen'
+<%= stylesheet_link_tag 'application', media: 'all' %>
+<% #= stylesheet_link_tag 'screen', media: 'screen'
 -%>
-<% #= stylesheet_link_tag 'print', :media => 'print'
+<% #= stylesheet_link_tag 'print', media: 'print'
 -%>
 <%= javascript_include_tag 'application' %>
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
@@ -59,9 +58,9 @@ metadata_presenter = MetadataPresenter.new(metadata)
     %><p id="username"><%= current_user.name %><%
     case session[:source]
     when 'twitter'
-      %><%= image_tag('/icon/site/twitter.png', :alt => '(via Twitter)', :title => 'via Twitter', :size => '16x16') %><%
+      %><%= image_tag('/icon/site/twitter.png', alt: '(via Twitter)', title: 'via Twitter', size: '16x16') %><%
     when 'facebook'
-      %><%= image_tag('/icon/site/facebook.png', :alt => '(via Facebook)', :title => 'via Facebook', :size => '16x16') %><%
+      %><%= image_tag('/icon/site/facebook.png', alt: '(via Facebook)', title: 'via Facebook', size: '16x16') %><%
     end
     %></p>
 <ul><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li></ul><%
@@ -76,19 +75,19 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
-  :calendar => {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))},
-  :projects => {title: 'Projects', path: projects_path},
-  :pages => {title: 'Pages', path: pages_path},
-  :documents => {title: 'Documents', path: documents_path},
-  :sources => {title: 'Sources', path: sources_path},
-  :admin => {title: 'Admin', path: settings_path}
+  calendar: {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))},
+  projects: {title: 'Projects', path: projects_path},
+  pages: {title: 'Pages', path: pages_path},
+  documents: {title: 'Documents', path: documents_path},
+  sources: {title: 'Sources', path: sources_path},
+  admin: {title: 'Admin', path: settings_path}
 }
 site_hidden_sections = {
-  :events => {title: 'Events', path: events_path},
-  :images => {title: 'Images', path: images_path},
-  :authorities => {title: 'Authorities', path: authorities_path},
-  :paths => {title: 'Paths', path: paths_path},
-  :settings => {title: 'Settings', path: settings_path}
+  events: {title: 'Events', path: events_path},
+  images: {title: 'Images', path: images_path},
+  authorities: {title: 'Authorities', path: authorities_path},
+  paths: {title: 'Paths', path: paths_path},
+  settings: {title: 'Settings', path: settings_path}
 }
 if @site_section
   current_section = site_sections[@site_section] || site_hidden_sections[@site_section]
@@ -221,11 +220,11 @@ if @versioned_item || content_for?(:actions)
 <%
   if @versioned_item && @versioned_item.versions.count > 1
     if @versioned_item.is_a? Page
-      %><%= link_to 'Versions', page_versions_path(@versioned_item), :class => 'action',
-        :title => 'Previous versions of this Page' %>
+      %><%= link_to 'Versions', page_versions_path(@versioned_item), class: 'action',
+        title: 'Previous versions of this Page' %>
 <%  elsif @versioned_item.is_a? Event
-      %><%= link_to 'Versions', event_versions_path(@versioned_item), :class => 'action',
-        :title => 'Previous versions of this Event' %>
+      %><%= link_to 'Versions', event_versions_path(@versioned_item), class: 'action',
+        title: 'Previous versions of this Event' %>
 <%  end
   end
 %><%= yield :actions %>

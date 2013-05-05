@@ -15,9 +15,9 @@ module Wayground
     end
 
     def merge_params(params={})
-      @title = params[:title] if params[:title]
-      @description = params[:description] if params[:description]
-      @nocache = params[:nocache] unless params[:nocache].nil?
+      @title = params[:title] if params.keys.include?(:title)
+      @description = params[:description] if params.keys.include?(:description)
+      @nocache = params[:nocache] if params.keys.include?(:nocache)
     end
 
   end

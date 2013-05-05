@@ -106,8 +106,8 @@ describe MetadataPresenter do
       expect( presenter.twitter_creator ).to eq '@parameter'
     end
     it "should take a cache parameter" do
-      presenter = MetadataPresenter.new(view: view_stub, cache: :parameter)
-      expect( presenter.cache ).to eq :parameter
+      presenter = MetadataPresenter.new(view: view_stub, nocache: :parameter)
+      expect( presenter.nocache ).to eq :parameter
     end
   end
 
@@ -144,7 +144,7 @@ describe MetadataPresenter do
         $big_params = {
           type: 'param', title: 'Param', url: 'http://param.tld/', description: 'Param.',
           image_url: 'http://image.tld/', image_height: 12, image_width: 34, twitter_creator: 'param',
-          cache: :no
+          nocache: true
         }
       end
       it "should be all the meta tags" do
@@ -385,11 +385,11 @@ describe MetadataPresenter do
     end
     context "with cache flag set to :no" do
       it "should be the no cache tag" do
-        presenter = MetadataPresenter.new(view: view_stub, cache: :no)
+        presenter = MetadataPresenter.new(view: view_stub, nocache: true)
         expect( presenter.present_cache ).to eq "<meta name=\"robots\" content=\"noindex\" />\n"
       end
       it "should be html safe" do
-        presenter = MetadataPresenter.new(view: view_stub, cache: :no)
+        presenter = MetadataPresenter.new(view: view_stub, nocache: true)
         expect( presenter.present_cache.html_safe? ).to be_true
       end
     end

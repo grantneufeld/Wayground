@@ -4,7 +4,7 @@ require 'html_presenter'
 # Meta elements to go in the head element.
 class MetadataPresenter < HtmlPresenter
   attr_reader :view, :url, :title, :description, :image_url, :image_height, :image_width,
-    :twitter_creator, :cache
+    :twitter_creator, :nocache
 
   # Requires:
   # :view - generally passed in as `self` from a view
@@ -16,7 +16,7 @@ class MetadataPresenter < HtmlPresenter
   # :image_url or :image_variant or :image
   # :image_height, :image_width
   # :twitter_creator - the @ username of the user responsible for the current page’s content, without the "@"
-  # :cache - :no if the page is not to be remotely cached
+  # :nocache - boolean of whether to flag that the page is not to be remotely cached
   def initialize(params={})
     @view = params[:view]
     @graph_type = params[:type]
@@ -25,7 +25,7 @@ class MetadataPresenter < HtmlPresenter
     @description = params[:description]
     set_image(params)
     set_twitter_creator(params)
-    @cache = params[:cache]
+    @nocache = params[:nocache]
   end
 
   def present_title
@@ -87,7 +87,7 @@ class MetadataPresenter < HtmlPresenter
   end
 
   def present_cache
-    if cache == :no
+    if nocache
       html_tag_with_newline(:meta, name: 'robots', content: 'noindex')
     else
       html_blank
