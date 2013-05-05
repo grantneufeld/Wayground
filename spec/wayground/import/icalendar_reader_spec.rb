@@ -2,8 +2,8 @@
 require 'spec_helper'
 require 'import/icalendar_reader'
 
-describe IcalendarReader do
-  let(:ical_reader) { $ical_reader = IcalendarReader.new }
+describe Wayground::Import::IcalendarReader do
+  let(:ical_reader) { $ical_reader = Wayground::Import::IcalendarReader.new }
 
   describe "#parse" do
     it "should take a String with the iCalendar data" do
