@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 21) do
+ActiveRecord::Schema.define(:version => 22) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -249,6 +249,21 @@ ActiveRecord::Schema.define(:version => 21) do
   add_index "sources", ["last_updated_at"], :name => "index_sources_on_last_updated_at"
   add_index "sources", ["processor"], :name => "index_sources_on_processor"
   add_index "sources", ["refresh_after_at"], :name => "index_sources_on_refresh_after_at"
+
+  create_table "tags", :force => true do |t|
+    t.integer  "item_id",                       :null => false
+    t.string   "item_type",                     :null => false
+    t.integer  "user_id"
+    t.string   "tag",                           :null => false
+    t.string   "title"
+    t.boolean  "is_meta",    :default => false, :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "tags", ["item_type", "item_id", "tag"], :name => "tags_item_tag_idx", :unique => true
+  add_index "tags", ["tag", "item_type", "item_id"], :name => "tags_tag_item_idx"
+  add_index "tags", ["user_id", "item_type", "item_id"], :name => "tags_user_item_idx"
 
   create_table "user_tokens", :force => true do |t|
     t.integer  "user_id",                     :null => false

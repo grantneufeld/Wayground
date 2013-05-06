@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'active_record'
+require 'authority_controlled'
 require 'user'
 require 'text_cleaner'
 require 'url_cleaner'
@@ -25,6 +27,7 @@ class Event < ActiveRecord::Base
   accepts_nested_attributes_for :external_links,
     reject_if: lambda { |el| el[:url].blank? }, allow_destroy: true
   has_many :sourced_items, as: :item, dependent: :delete_all
+  has_many :tags, as: :item, dependent: :delete_all
   has_many :versions, as: :item, dependent: :delete_all
 
   validates_length_of :title, within: 1..255
