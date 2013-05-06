@@ -41,8 +41,8 @@ class Version < ActiveRecord::Base
     diff[:filename] = version.filename unless filename == version.filename
     diff[:title] = version.title unless title == version.title
     values.keys.each do |key|
-      value = values[key].to_s
-      version_value = version.values[key].to_s
+      value = (values[key.to_s] || values[key.to_sym]).to_s
+      version_value = (version.values[key.to_s] || version.values[key.to_sym]).to_s
       diff[key] = version_value unless value == version_value
     end
     diff

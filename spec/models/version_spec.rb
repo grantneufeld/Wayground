@@ -205,6 +205,16 @@ describe Version do
       diff = version_old.diff_with(version_new)
       expect( diff ).to eq(city: 'Diffville', province: 'Difference', country: 'Diffland')
     end
+    it 'should handle values with keys that are strings or symbols' do
+      @event.editor = @user
+      version_old = @event.new_version
+      version_new = @event.new_version
+      version_old.values[:city] = 'Diffville'
+      version_new.values.delete(:city)
+      version_new.values['city'] = 'Diffville'
+      diff = version_old.diff_with(version_new)
+      expect( diff ).to eq({})
+    end
   end
 
 end
