@@ -5,7 +5,10 @@ describe Version do
 
   before(:all) do
     Version.delete_all
+    Page.delete_all
+    User.delete_all
     @item = FactoryGirl.create(:page)
+    @event = FactoryGirl.create(:event)
     @user = FactoryGirl.create(:user)
   end
 
@@ -47,10 +50,10 @@ describe Version do
     end
     it "should allow values to be set" do
       # save and reload to invoke the serialization
-      version = @item.versions.new(edited_at: Time.now, user: @user, values: {hash: 'values', abc: 123})
+      version = @item.versions.new(edited_at: Time.now, user: @user, values: { hash: 'values', abc: 123 })
       version.save!
       version = Version.find(version.id)
-      expect( version.values ).to eq({'hash' => 'values', 'abc' => '123'})
+      expect( version.values ).to eq('hash' => 'values', 'abc' => '123')
     end
   end
 
@@ -168,6 +171,39 @@ describe Version do
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.week.from_now)
       middle_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 6.days.from_now)
       expect( middle_version.is_current? ).to be_false
+    end
+  end
+
+  describe '#diff_with' do
+    it 'should return an empty hash when no difference' do
+      @event.editor = @user
+      version_old = @event.new_version
+      version_new = @event.new_version
+      expect( version_old.diff_with(version_new) ).to eq({})
+    end
+    it 'should set the filename to the new filename in the diff when filenames differ' do
+      @event.editor = @user
+      version_old = @event.new_version
+      version_new = @event.new_version
+      version_new.filename = 'different'
+      expect( version_old.diff_with(version_new) ).to eq(filename: 'different')
+    end
+    it 'should set the title to the new title in the diff when titles differ' do
+      @event.editor = @user
+      version_old = @event.new_version
+      version_new = @event.new_version
+      version_new.title = 'different'
+      expect( version_old.diff_with(version_new) ).to eq(title: 'different')
+    end
+    it 'should set the different values' do
+      @event.editor = @user
+      version_old = @event.new_version
+      version_new = @event.new_version
+      version_new.values[:city] = 'Diffville'
+      version_new.values[:province] = 'Difference'
+      version_new.values[:country] = 'Diffland'
+      diff = version_old.diff_with(version_new)
+      expect( diff ).to eq(city: 'Diffville', province: 'Difference', country: 'Diffland')
     end
   end
 

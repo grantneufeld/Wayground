@@ -48,13 +48,13 @@ class Event < ActiveRecord::Base
   scope :upcoming, lambda { # use a lambda so the time is reloaded each time upcoming is called
     where(
       'start_at >= :day_start OR (end_at IS NOT NULL AND end_at >= :day_start)',
-      {day_start: Time.current.beginning_of_day}
+      { day_start: Time.current.beginning_of_day }
     )
   }
   scope :past, lambda { # use a lambda so the time is reloaded each time upcoming is called
     where(
       'start_at < :day_start AND (end_at IS NULL OR end_at < :day_start)',
-      {day_start: Time.current.beginning_of_day}
+      { day_start: Time.current.beginning_of_day }
     )
   }
   scope :falls_between_dates, ->(start_date, end_date) {
@@ -67,7 +67,7 @@ class Event < ActiveRecord::Base
       ' OR (end_at IS NOT NULL AND end_at > :start_time AND end_at < :end_time)' +
       # matches if event#start_at is before the dates and event#end_at is after the dates
       ' OR (end_at IS NOT NULL AND start_at < :start_time AND end_at >= :end_time)',
-      {start_time: start_time, end_time: end_time}
+      { start_time: start_time, end_time: end_time }
     )
   }
   scope :falls_on_date, ->(the_date) {
@@ -77,7 +77,7 @@ class Event < ActiveRecord::Base
       '(start_at >= :start_time AND start_at < :end_time)' +
       ' OR ' +
       '(end_at IS NOT NULL AND start_at < :end_time AND end_at >= :start_time)',
-      {start_time: start_time, end_time: end_time}
+      { start_time: start_time, end_time: end_time }
     )
   }
 
@@ -145,14 +145,36 @@ class Event < ActiveRecord::Base
   # Called after save on update.
   def flag_as_modified_for_sourcing
     unless is_sourcing
-      sourced_items.each {|sourced_item| sourced_item.update_attributes(has_local_modifications: true) }
+      sourced_items.each { |sourced_item| sourced_item.update_attributes(has_local_modifications: true) }
     end
   end
 
   # Add a Version based on the current state of this item.
   # Called after save.
   def add_version
-    values = {
+    previous_version = self.versions.last
+    version = new_version
+    if previous_version
+      diff = previous_version.diff_with(version)
+      if diff.size > 0
+        version.save!
+      else
+        version.destroy
+      end
+    else
+      version.save!
+    end
+  end
+
+  def new_version
+    self.versions.new(
+      user: editor, edited_at: updated_at, edit_comment: edit_comment,
+      title: title, values: values_for_version
+    )
+  end
+
+  def values_for_version
+    {
       timezone: timezone,
       is_allday: is_allday,
       is_draft: is_draft,
@@ -175,10 +197,6 @@ class Event < ActiveRecord::Base
       start_at: start_at,
       end_at: end_at
     }
-    self.versions.create!(
-      user: editor, edited_at: updated_at, edit_comment: edit_comment,
-      title: title, values: values
-    )
   end
 
   # Setters

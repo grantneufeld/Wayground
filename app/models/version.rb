@@ -34,4 +34,18 @@ class Version < ActiveRecord::Base
     current == self
   end
 
+  # Assumptions:
+  # * version is a version on the same type of item model as self
+  def diff_with(version)
+    diff = {}
+    diff[:filename] = version.filename unless filename == version.filename
+    diff[:title] = version.title unless title == version.title
+    values.keys.each do |key|
+      value = values[key].to_s
+      version_value = version.values[key].to_s
+      diff[key] = version_value unless value == version_value
+    end
+    diff
+  end
+
 end
