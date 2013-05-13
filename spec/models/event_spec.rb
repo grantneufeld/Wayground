@@ -751,6 +751,74 @@ describe Event do
     end
   end
 
+  describe '#tag_list' do
+    context 'with no tags' do
+      it 'should return an empty string' do
+        event = Event.new
+        expect( event.tag_list.to_s ).to eq ''
+      end
+    end
+    context 'with a single tag' do
+      it 'should return the tag title' do
+        event = Event.new
+        event.tags.new(title: 'Test Tag')
+        expect( event.tag_list.to_s ).to eq 'Test Tag'
+      end
+    end
+    context 'with multiple tags' do
+      it 'should return a comma and space separated string of the tag titles' do
+        event = Event.new
+        event.tags.new(title: 'Tag A')
+        event.tags.new(title: 'Tag B')
+        event.tags.new(title: 'Tag C')
+        expect( event.tag_list.to_s ).to eq 'Tag A, Tag B, Tag C'
+      end
+    end
+  end
+
+  describe '#tag_list=' do
+    context 'with no tags' do
+      it 'should add a single-tag when given a string with no commas' do
+        event = Event.new
+        event.tag_list = 'Single Tag'
+        expect( event.tag_list.to_s ).to eq 'Single Tag'
+      end
+      it 'should add multiple tags when give a string with multiple commas' do
+        event = Event.new
+        event.tag_list = 'Tag 1, Tag 2, Tag 3'
+        expect( event.tag_list.to_s ).to eq 'Tag 1, Tag 2, Tag 3'
+      end
+      it 'should strip surrounding quotes and white-space' do
+        event = Event.new
+        event.tag_list = " 'Tag 1 ' ,  \" Tag 2\",' Tag 3'"
+        expect( event.tag_list.to_s ).to eq 'Tag 1, Tag 2, Tag 3'
+      end
+    end
+    context 'with pre-existing tags' do
+      before(:all) do
+        @event = FactoryGirl.create(:event)
+      end
+      it 'should remove existing tags that aren’t in the given string' do
+        Tag.delete_all
+        @event.tag_list = 'Keep 1, Remove 1, Remove 2'
+        @event.save!
+        @event.tag_list = 'Keep 1, New Tag'
+        @event.save!
+        @event.reload
+        expect( @event.tag_list.to_s ).to eq 'Keep 1, New Tag'
+      end
+      it 'should change the title on tags that match with different titles' do
+        Tag.delete_all
+        @event.tag_list = 'Change 1, Change 2'
+        @event.save!
+        @event.tag_list = 'change1, change2'
+        @event.save!
+        @event.reload
+        expect( @event.tag_list.to_s ).to eq 'change1, change2'
+      end
+    end
+  end
+
   describe "#is_multi_day" do
     let(:event) { $event = Event.new(start_at: '2004-05-06 7:08am') }
     context "with no end time" do

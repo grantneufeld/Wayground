@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
+require 'tag_list'
 require 'user'
 require 'text_cleaner'
 require 'url_cleaner'
@@ -18,7 +19,7 @@ class Event < ActiveRecord::Base
     :title, :description, :content,
     :organizer, :organizer_url,
     :location, :address, :city, :province, :country, :location_url,
-    :external_links_attributes, :edit_comment
+    :external_links_attributes, :edit_comment, :tag_list
   )
 
   belongs_to :user
@@ -234,6 +235,18 @@ class Event < ActiveRecord::Base
   end
   def location_url=(location_url_str)
     write_attribute(:location_url, UrlCleaner.clean(location_url_str))
+  end
+
+  def tag_list
+    Wayground::TagList.new(tags: tags, editor: editor)
+  end
+
+  # Take a comma-separated string of tag titles,
+  # add any tags that don’t already exist for the event,
+  # update any changed titles of tags that do exist,
+  # remove existing tags that are not in the supplied list.
+  def tag_list=(value)
+    tag_list.tags = value
   end
 
   # VALUES
