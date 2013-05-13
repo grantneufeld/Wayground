@@ -24,7 +24,7 @@ metadata_presenter = MetadataPresenter.new(metadata)
 %><!DOCTYPE html>
 <html lang="en" xmlns:og="http://ogp.me/ns#"><head><meta charset="utf-8">
 <%= metadata_presenter.present_title %>
-<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="icon" href="/favicon.png" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
 <!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
@@ -46,14 +46,16 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <%
 # If you don’t want a subtitle, remove that paragraph and take away the "maintitle" id from the heading.
 -%>
-<h1><a href="/"><img src="/apple-touch-icon-114x114.png" alt=" " id="logo" /> <%= Wayground::Application::NAME %></a></h1>
+<h1><a href="/"><%= Wayground::Application::NAME %></a></h1>
 <% unless Wayground::Application::DESCRIPTION.blank?
   %><p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
 <% end -%>
 <div id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>" onTouchEnd="return false;">
 <% if current_user.nil?
+    if false # don’t show login or registration options, for now
     %><p>Signed Out</p>
 <ul><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li></ul><%
+    end
   else
     %><p id="username"><%= current_user.name %><%
     case session[:source]
@@ -75,14 +77,14 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
-  calendar: {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))},
+  calendar: {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))}
+}
+site_hidden_sections = {
   projects: {title: 'Projects', path: projects_path},
   pages: {title: 'Pages', path: pages_path},
   documents: {title: 'Documents', path: documents_path},
   sources: {title: 'Sources', path: sources_path},
-  admin: {title: 'Admin', path: settings_path}
-}
-site_hidden_sections = {
+  admin: {title: 'Admin', path: settings_path},
   events: {title: 'Events', path: events_path},
   images: {title: 'Images', path: images_path},
   authorities: {title: 'Authorities', path: authorities_path},
@@ -232,6 +234,8 @@ if @versioned_item || content_for?(:actions)
 <% end -%>
 <%= yield :footer -%>
 <p id="about"><a href="/about">About <%= Wayground::Application::NAME %></a>.</p>
-<p id="copyright">Copyright ©2003-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.</p>
+<p>Our <a href="/accountability">Accountability Statement</a> addresses how we try to fulfill the principles of transparency, openness, equality and accessibility.</p>
+<p id="copyright">Copyright ©2007-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.
+<br />Except where otherwise indicated, all text is freely licensed under a <a href="http://creativecommons.org/licenses/by/2.5/ca/">Creative Commons License</a> requiring attribution for any reuse (including derivative work). See individual photo/media attributions for licensing details of non-text content.</p>
 </footer>
 </body></html>

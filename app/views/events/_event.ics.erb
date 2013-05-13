@@ -1,7 +1,7 @@
 # encoding: utf-8 <%
 %>BEGIN:VEVENT<%= "\r\n"
 # old UID was: "#{event.id}-event@wayground.ca". Changed because Versions reset, putting SEQUENCE out of sync
-%>UID:<%= event.id %>.event@wayground.ca<%= "\r\n"
+%>UID:<%= event.id %>.event@calgarydemocracy.ca<%= "\r\n"
 %>CREATED:<%= event.created_at.utc.to_s(:icalendar_utc) %><%= "\r\n"
 %>DTSTAMP:<%= event.updated_at.utc.to_s(:icalendar_utc) %><%= "\r\n"
 # special case the start and end date when it’s an all-day event (no time, just dates)

@@ -66,9 +66,10 @@ module Wayground
     config.assets.version = '1.0'
 
     # Website metadata:
-    NAME = 'Wayground'
-    DESCRIPTION = 'Tools for connecting, communicating and collaborating.'
-    TWITTER_AT = 'wayground' # the Twitter account for the website, without the ‘@’ prefix
+    NAME = 'Calgary Democracy'
+    DESCRIPTION = 'Listings of citizen and voter resources about candidates and elected government representatives in Calgary. Includes detailed candidate lists for all positions, general election info, upcoming forums, media, blogs, video links, etc.'
+    # 'Providing comprehensive, independent, access to online information about our governments and elections affecting Calgarians.'
+    TWITTER_AT = 'yycelect' # the Twitter account for the website, without the ‘@’ prefix
 
     # Default location
     DEFAULT_CITY = 'Calgary'

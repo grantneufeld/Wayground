@@ -42,7 +42,7 @@ describe "events/show.ics.erb" do
   it "renders the expected text" do
     render
     rendered.should match(/\ABEGIN:VEVENT\r/)
-    rendered.should match(/^UID:123.event@wayground.ca\r/)
+    rendered.should match(/^UID:123.event@calgarydemocracy.ca\r/)
     rendered.should match(/^CREATED:20010203T110506Z\r/)
     rendered.should match(/^DTSTAMP:20010203T040506Z\r/)
     rendered.should match(/^DTSTART;TZID=America\/Denver:20110203T040506\r/)
