@@ -54,6 +54,10 @@ document.write('<br /><span id="descriptionLength" class="charcounter">511</span
 document.write('<br /><span id="contentLength" class="charcounter">8191</span> characters remaining.')
 <%= content_char_script %>
 </script></td></tr>
+<tr class="heading"><th colspan="2">Tags</th></tr>
+<tr><th><%= f.label :tag_list, 'Tags' %></th>
+  <td><%= f.text_field :tag_list, size: 60, maxlength: 255 %>
+  <br />comma-separated list of “tag” keywords to associate with this event</td></tr>
 <tr class="heading"><th colspan="2">Weblinks</th></tr>
 <tr><th></th><td>Links to listings of this event on other websites:</td></tr>
 <%
