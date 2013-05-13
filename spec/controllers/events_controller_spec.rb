@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe EventsController do
@@ -47,6 +48,10 @@ describe EventsController do
       get :index
       assigns(:events).should eq([@event1, @event2])
     end
+    it "should assign nil to @range" do
+      get :index, {}
+      expect( assigns(:range) ).to be_nil
+    end
     context "past events" do
       it "assigns all approved past events as @events" do
         get :index, {r: 'past'}
@@ -56,6 +61,10 @@ describe EventsController do
         set_logged_in_admin
         get :index, {r: 'past'}
         assigns(:events).should eq([@event4, @event3])
+      end
+      it "should assign 'past' to @range" do
+        get :index, {r: 'past'}
+        expect( assigns(:range) ).to eq 'past'
       end
     end
     context "all events" do
@@ -67,6 +76,27 @@ describe EventsController do
         set_logged_in_admin
         get :index, {r: 'all'}
         assigns(:events).should eq([@event4, @event3, @event1, @event2])
+      end
+      it "should assign 'all' to @range" do
+        get :index, {r: 'all'}
+        expect( assigns(:range) ).to eq 'all'
+      end
+    end
+    context 'tagged events' do
+      before(:all) do
+        @event2.tag_list = 'Test, Example'
+        @event2.save!
+        @event3.tag_list = 'Test, Example'
+        @event3.save!
+      end
+      it 'should assign the events tagged with the given tag' do
+        set_logged_in_admin
+        get :index, {tag: 'test', r: 'all'}
+        expect( assigns(:events) ).to eq [@event3, @event2]
+      end
+      it 'should assign the tag as @tag' do
+        get :index, {tag: 'test', r: 'all'}
+        expect( assigns(:tag) ).to eq 'test'
       end
     end
   end

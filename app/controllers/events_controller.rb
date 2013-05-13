@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'event/day_events'
 
+# Access events.
 class EventsController < ApplicationController
   before_filter :set_user
   before_filter :set_event, :except => [:index, :new, :create]
@@ -13,37 +14,29 @@ class EventsController < ApplicationController
   before_filter :set_editor, :only => [:create, :update, :destroy, :approve, :merge, :perform_merge]
 
   def index
-    range = params[:r]
-    title = case range
+    @range = params[:r]
+    case @range
     when 'all'
-      'Events'
+      title = 'Events'
+      @events = Event.where(nil)
     when 'past'
-      'Events: Past'
+      title = 'Events: Past'
+      @events = Event.past
     else
-      'Events: Upcoming'
+      title = 'Events: Upcoming'
+      @events = Event.upcoming
+      @range = nil
     end
-    page_metadata(title: title)
+    unless @user && @user.has_authority_for_area(Event.authority_area, :can_approve)
+      @events = @events.approved
+    end
+    @tag = params[:tag]
+    if @tag.present?
+      @events = @events.tagged(@tag)
+      title += " (tagged “#{@tag}”)"
+    end
     # TODO: paginate Events#index
-    if @user && @user.has_authority_for_area(Event.authority_area, :can_approve)
-      # moderators see both approved and unapproved events
-      @events = case range
-      when 'all'
-        Event.all
-      when 'past'
-        Event.past
-      else
-        Event.upcoming
-      end
-    else
-      @events = case range
-      when 'all'
-        Event.approved
-      when 'past'
-        Event.past.approved
-      else
-        Event.upcoming.approved
-      end
-    end
+    page_metadata(title: title)
   end
 
   def show

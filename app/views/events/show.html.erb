@@ -59,6 +59,23 @@ if event.external_links.count > 0
 end
 
 
+if event.tags.count > 0
+  content_for(:other_sections) do
+    %>
+<section class="tags"><h3>Tags</h3>
+<ul>
+<%
+  event.tags.each do |tag|
+    %><li><%= link_to tag.title, events_path(tag: tag.tag) %></li>
+<%
+  end
+%></ul>
+</section>
+<%
+  end
+end
+
+
 if @user.present?
   %><p class="actions"><%
   if event.has_authority_for_user_to?(@user, :can_update)

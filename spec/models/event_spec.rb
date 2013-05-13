@@ -388,6 +388,19 @@ describe Event do
         end
       end
     end
+    describe '.tagged' do
+      it 'should return events that are tagged with the given tag' do
+        Tag.delete_all
+        event1 = Event.first || FactoryGirl.create(:event)
+        event2 = Event.offset(1).first || FactoryGirl.create(:event)
+        event3 = Event.offset(2).first || FactoryGirl.create(:event)
+        event1.tag_list = 'Given, Tag'
+        event1.save!
+        event3.tag_list = 'Tag, Given'
+        event3.save!
+        expect( Event.tagged('given') ).to eq [event1, event3]
+      end
+    end
   end
 
   describe "initialize" do
