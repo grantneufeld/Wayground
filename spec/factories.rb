@@ -155,4 +155,12 @@ FactoryGirl.define do
     title     'Factory Version'
     values    'abc' => 'def', 'ghi' => 'jkl'
   end
+
+  # DEMOCRACY MODELS
+
+  factory :level do
+    sequence(:filename) { |n| "factory_level_#{n}" }
+    sequence(:name) { |n| "Factory Level #{n}" }
+  end
+
 end
