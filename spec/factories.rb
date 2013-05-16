@@ -158,8 +158,15 @@ FactoryGirl.define do
 
   # DEMOCRACY MODELS
 
+  factory :election do
+    level
+    sequence(:filename) { |n| "factory_election_#{n}" }
+    sequence(:name) { |n| "Factory Election #{n}" }
+    sequence(:end_on) { |n| n.months.from_now }
+  end
+
   factory :level do
-    sequence(:filename) { |n| "factory_level_#{n}" }
+    sequence(:filename) { |n| "factory_level_#{n}_#{rand(1000)}" }
     sequence(:name) { |n| "Factory Level #{n}" }
   end
 

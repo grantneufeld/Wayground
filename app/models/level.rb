@@ -10,6 +10,7 @@ class Level < ActiveRecord::Base
   attr_accessible :filename, :name, :url
 
   belongs_to :parent, class_name: 'Level'
+  has_many :elections
   has_many :offices
 
   validates :filename, presence: true, uniqueness: true, format: { with: /\A[a-z0-9_\-]+\z/ }

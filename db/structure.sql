@@ -194,6 +194,43 @@ ALTER SEQUENCE documents_id_seq OWNED BY documents.id;
 
 
 --
+-- Name: elections; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE elections (
+    id integer NOT NULL,
+    level_id integer,
+    filename character varying(63) NOT NULL,
+    name character varying(255) NOT NULL,
+    start_on date,
+    end_on date,
+    description text,
+    url text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: elections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE elections_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: elections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE elections_id_seq OWNED BY elections.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -844,6 +881,13 @@ ALTER TABLE ONLY documents ALTER COLUMN id SET DEFAULT nextval('documents_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY elections ALTER COLUMN id SET DEFAULT nextval('elections_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
@@ -982,6 +1026,14 @@ ALTER TABLE ONLY datastores
 
 ALTER TABLE ONLY documents
     ADD CONSTRAINT documents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: elections_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY elections
+    ADD CONSTRAINT elections_pkey PRIMARY KEY (id);
 
 
 --
@@ -1187,6 +1239,20 @@ CREATE INDEX file ON documents USING btree (filename);
 --
 
 CREATE UNIQUE INDEX filename ON users USING btree (filename);
+
+
+--
+-- Name: index_elections_on_level_id_and_end_on; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_elections_on_level_id_and_end_on ON elections USING btree (level_id, end_on);
+
+
+--
+-- Name: index_elections_on_level_id_and_filename; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_elections_on_level_id_and_filename ON elections USING btree (level_id, filename);
 
 
 --
@@ -1534,6 +1600,8 @@ INSERT INTO schema_migrations (version) VALUES ('22');
 INSERT INTO schema_migrations (version) VALUES ('23');
 
 INSERT INTO schema_migrations (version) VALUES ('24');
+
+INSERT INTO schema_migrations (version) VALUES ('25');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 
