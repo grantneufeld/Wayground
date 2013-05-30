@@ -24,6 +24,13 @@ class Office < ActiveRecord::Base
     end
   end
 
+  scope :active_on, ->(active_date) do
+    where(
+      '(established_on IS NULL OR established_on <= :active_date) AND (ended_on IS NULL OR ended_on >= :active_date)',
+      {active_date: active_date}
+    )
+  end
+
   scope :from_param, ->(param) do
     where(filename: param)
   end

@@ -141,6 +141,23 @@ describe Office do
   end
 
   describe 'scopes' do
+    describe '.active_on' do
+      before(:all) do
+        @level.offices.destroy_all
+        @office1 = FactoryGirl.create(:office, level: @level)
+        @office2 = FactoryGirl.create(:office, level: @level, established_on: '2001-01-01')
+        @office3 = FactoryGirl.create(:office, level: @level,
+          established_on: '2001-01-01', ended_on: '2001-01-31'
+        )
+        @office4 = FactoryGirl.create(:office, level: @level, established_on: '2001-01-02')
+      end
+      it 'should exclude offices that are established after the given date' do
+        expect( @level.offices.active_on('2001-01-01') ).to eq [@office1, @office2, @office3]
+      end
+      it 'should exclude offices that ended before the given date' do
+        expect( @level.offices.active_on('2001-02-01') ).to eq [@office1, @office2, @office4]
+      end
+    end
     describe '.from_param' do
       before(:all) do
         @office = Office.where(filename: 'the_param').first || FactoryGirl.create(:office, filename: 'the_param')
