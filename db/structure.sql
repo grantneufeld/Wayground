@@ -126,6 +126,43 @@ ALTER SEQUENCE authorities_id_seq OWNED BY authorities.id;
 
 
 --
+-- Name: ballots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE ballots (
+    id integer NOT NULL,
+    election_id integer NOT NULL,
+    office_id integer NOT NULL,
+    term_start_on date,
+    term_end_on date,
+    is_byelection boolean DEFAULT false NOT NULL,
+    url character varying(255),
+    description text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: ballots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE ballots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ballots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE ballots_id_seq OWNED BY ballots.id;
+
+
+--
 -- Name: datastores; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -867,6 +904,13 @@ ALTER TABLE ONLY authorities ALTER COLUMN id SET DEFAULT nextval('authorities_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY ballots ALTER COLUMN id SET DEFAULT nextval('ballots_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY datastores ALTER COLUMN id SET DEFAULT nextval('datastores_id_seq'::regclass);
 
 
@@ -1010,6 +1054,14 @@ ALTER TABLE ONLY authentications
 
 ALTER TABLE ONLY authorities
     ADD CONSTRAINT authorities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ballots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY ballots
+    ADD CONSTRAINT ballots_pkey PRIMARY KEY (id);
 
 
 --
@@ -1239,6 +1291,20 @@ CREATE INDEX file ON documents USING btree (filename);
 --
 
 CREATE UNIQUE INDEX filename ON users USING btree (filename);
+
+
+--
+-- Name: index_ballots_on_election_id_and_office_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_ballots_on_election_id_and_office_id ON ballots USING btree (election_id, office_id);
+
+
+--
+-- Name: index_ballots_on_office_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_ballots_on_office_id ON ballots USING btree (office_id);
 
 
 --
@@ -1602,6 +1668,8 @@ INSERT INTO schema_migrations (version) VALUES ('23');
 INSERT INTO schema_migrations (version) VALUES ('24');
 
 INSERT INTO schema_migrations (version) VALUES ('25');
+
+INSERT INTO schema_migrations (version) VALUES ('26');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

@@ -10,6 +10,7 @@ class Office < ActiveRecord::Base
 
   belongs_to :level
   belongs_to :previous, class_name: 'Office'
+  has_many :ballots
 
   validates :level_id, presence: true
   validates :filename, presence: true, uniqueness: { scope: :level_id }, format: { with: /\A[a-z0-9_\-]+\z/ }

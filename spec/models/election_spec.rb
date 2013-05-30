@@ -119,8 +119,8 @@ describe Election do
         expect( @level.elections.new(required.merge(url: 'not an url')).valid? ).to be_false
       end
       it "should pass if the url is a valid url" do
-        level = @level.elections.new(required.merge(url: 'https://valid.url:8080/should/pass')).valid?
-        expect( level ).to be_true
+        election = @level.elections.new(required.merge(url: 'https://valid.url:8080/should/pass'))
+        expect( election.valid? ).to be_true
       end
     end
     describe 'of end_on' do

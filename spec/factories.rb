@@ -158,6 +158,16 @@ FactoryGirl.define do
 
   # DEMOCRACY MODELS
 
+  factory :ballot do
+  	election
+  	office
+  	term_start_on { 30.days.from_now }
+  	term_end_on { 395.days.from_now }
+  	is_byelection false
+  	url 'http://ballot.url.tld/'
+  	description 'This is a Ballot.'
+  end
+
   factory :election do
     level
     sequence(:filename) { |n| "factory_election_#{n}" }

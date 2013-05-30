@@ -9,6 +9,7 @@ class Election < ActiveRecord::Base
   attr_accessible :filename, :name, :start_on, :end_on, :url, :description
 
   belongs_to :level
+  has_many :ballots
 
   validates :level_id, presence: true
   validates :filename, presence: true, uniqueness: { scope: :level_id }, format: { with: /\A[a-z0-9_\-]+\z/ }
