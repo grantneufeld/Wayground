@@ -575,6 +575,42 @@ ALTER SEQUENCE paths_id_seq OWNED BY paths.id;
 
 
 --
+-- Name: people; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE people (
+    id integer NOT NULL,
+    user_id integer,
+    submitter_id integer,
+    filename character varying(255) NOT NULL,
+    fullname character varying(255) NOT NULL,
+    bio text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aliases text[]
+);
+
+
+--
+-- Name: people_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE people_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: people_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE people_id_seq OWNED BY people.id;
+
+
+--
 -- Name: projects; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -988,6 +1024,13 @@ ALTER TABLE ONLY paths ALTER COLUMN id SET DEFAULT nextval('paths_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY people ALTER COLUMN id SET DEFAULT nextval('people_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
 
 
@@ -1150,6 +1193,14 @@ ALTER TABLE ONLY pages
 
 ALTER TABLE ONLY paths
     ADD CONSTRAINT paths_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: people_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY people
+    ADD CONSTRAINT people_pkey PRIMARY KEY (id);
 
 
 --
@@ -1347,6 +1398,41 @@ CREATE INDEX index_external_links_on_item_type_and_item_id_and_position ON exter
 --
 
 CREATE INDEX index_image_variants_on_image_id_and_style_and_height_and_width ON image_variants USING btree (image_id, style, height, width);
+
+
+--
+-- Name: index_people_on_aliases; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_people_on_aliases ON people USING btree (aliases);
+
+
+--
+-- Name: index_people_on_filename; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_people_on_filename ON people USING btree (filename);
+
+
+--
+-- Name: index_people_on_fullname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_people_on_fullname ON people USING btree (fullname);
+
+
+--
+-- Name: index_people_on_submitter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_people_on_submitter_id ON people USING btree (submitter_id);
+
+
+--
+-- Name: index_people_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_people_on_user_id ON people USING btree (user_id);
 
 
 --
@@ -1670,6 +1756,8 @@ INSERT INTO schema_migrations (version) VALUES ('24');
 INSERT INTO schema_migrations (version) VALUES ('25');
 
 INSERT INTO schema_migrations (version) VALUES ('26');
+
+INSERT INTO schema_migrations (version) VALUES ('27');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

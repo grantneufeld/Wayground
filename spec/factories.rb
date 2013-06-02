@@ -180,6 +180,13 @@ FactoryGirl.define do
     sequence(:name) { |n| "Factory Level #{n}" }
   end
 
+  factory :person do
+    sequence(:filename) { |n| "person#{n}" }
+    sequence(:fullname) { |n| "Person #{n}" }
+    sequence(:aliases) { |n| ["Alias #{n}", "Nickname #{n}"] }
+    bio 'Biography of a person.'
+  end
+
   factory :office do
     level
     sequence(:filename) { |n| "factory_office_#{n}" }
