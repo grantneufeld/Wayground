@@ -152,10 +152,10 @@ describe Office do
         @office4 = FactoryGirl.create(:office, level: @level, established_on: '2001-01-02')
       end
       it 'should exclude offices that are established after the given date' do
-        expect( @level.offices.active_on('2001-01-01') ).to eq [@office1, @office2, @office3]
+        expect( @level.offices.active_on('2001-01-01').order(:id) ).to eq [@office1, @office2, @office3]
       end
       it 'should exclude offices that ended before the given date' do
-        expect( @level.offices.active_on('2001-02-01') ).to eq [@office1, @office2, @office4]
+        expect( @level.offices.active_on('2001-02-01').order(:id) ).to eq [@office1, @office2, @office4]
       end
     end
     describe '.from_param' do
