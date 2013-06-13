@@ -541,6 +541,48 @@ ALTER SEQUENCE pages_id_seq OWNED BY pages.id;
 
 
 --
+-- Name: parties; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE parties (
+    id integer NOT NULL,
+    level_id integer NOT NULL,
+    filename character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    abbrev character varying(255),
+    is_registered boolean DEFAULT false NOT NULL,
+    colour character varying(255),
+    url character varying(255),
+    description text,
+    established_on date,
+    registered_on date,
+    ended_on date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    aliases text[]
+);
+
+
+--
+-- Name: parties_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE parties_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: parties_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE parties_id_seq OWNED BY parties.id;
+
+
+--
 -- Name: paths; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1017,6 +1059,13 @@ ALTER TABLE ONLY pages ALTER COLUMN id SET DEFAULT nextval('pages_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY parties ALTER COLUMN id SET DEFAULT nextval('parties_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY paths ALTER COLUMN id SET DEFAULT nextval('paths_id_seq'::regclass);
 
 
@@ -1185,6 +1234,14 @@ ALTER TABLE ONLY offices
 
 ALTER TABLE ONLY pages
     ADD CONSTRAINT pages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: parties_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY parties
+    ADD CONSTRAINT parties_pkey PRIMARY KEY (id);
 
 
 --
@@ -1398,6 +1455,27 @@ CREATE INDEX index_external_links_on_item_type_and_item_id_and_position ON exter
 --
 
 CREATE INDEX index_image_variants_on_image_id_and_style_and_height_and_width ON image_variants USING btree (image_id, style, height, width);
+
+
+--
+-- Name: index_parties_on_level_id_and_abbrev; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_parties_on_level_id_and_abbrev ON parties USING btree (level_id, abbrev);
+
+
+--
+-- Name: index_parties_on_level_id_and_filename; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_parties_on_level_id_and_filename ON parties USING btree (level_id, filename);
+
+
+--
+-- Name: index_parties_on_level_id_and_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_parties_on_level_id_and_name ON parties USING btree (level_id, name);
 
 
 --
@@ -1758,6 +1836,8 @@ INSERT INTO schema_migrations (version) VALUES ('25');
 INSERT INTO schema_migrations (version) VALUES ('26');
 
 INSERT INTO schema_migrations (version) VALUES ('27');
+
+INSERT INTO schema_migrations (version) VALUES ('28');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

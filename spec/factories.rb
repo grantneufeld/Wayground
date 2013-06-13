@@ -180,6 +180,20 @@ FactoryGirl.define do
     sequence(:name) { |n| "Factory Level #{n}" }
   end
 
+  factory :party do
+    level
+    sequence(:filename) { |n| "party#{n}" }
+    sequence(:name) { |n| "Party #{n}" }
+    sequence(:aliases) { |n| ["Party AKA #{n}", "#{n} Party"] }
+    sequence(:abbrev) { |n| "PP#{n}" }
+    is_registered true
+    colour 'gray'
+    url 'http://party.url.tld/'
+    description 'This is a political Party.'
+    established_on { (rand(10) + 1).years.ago }
+    registered_on { established_on + 1.month }
+  end
+
   factory :person do
     sequence(:filename) { |n| "person#{n}" }
     sequence(:fullname) { |n| "Person #{n}" }
