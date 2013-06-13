@@ -14,6 +14,7 @@ class Party < ActiveRecord::Base
     :established_on, :registered_on, :ended_on
 
   belongs_to :level
+  has_many :candidates
 
   validates :level_id, presence: true
   validates :filename, presence: true, filename: true, uniqueness: { scope: :level_id }

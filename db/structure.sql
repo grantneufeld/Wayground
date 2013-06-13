@@ -163,6 +163,51 @@ ALTER SEQUENCE ballots_id_seq OWNED BY ballots.id;
 
 
 --
+-- Name: candidates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE candidates (
+    id integer NOT NULL,
+    ballot_id integer NOT NULL,
+    person_id integer NOT NULL,
+    party_id integer,
+    submitter_id integer,
+    filename character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    is_rumoured boolean DEFAULT false NOT NULL,
+    is_confirmed boolean DEFAULT false NOT NULL,
+    is_incumbent boolean DEFAULT false NOT NULL,
+    is_leader boolean DEFAULT false NOT NULL,
+    is_acclaimed boolean DEFAULT false NOT NULL,
+    is_elected boolean DEFAULT false NOT NULL,
+    announced_on date,
+    quit_on date,
+    vote_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: candidates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE candidates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE candidates_id_seq OWNED BY candidates.id;
+
+
+--
 -- Name: datastores; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -989,6 +1034,13 @@ ALTER TABLE ONLY ballots ALTER COLUMN id SET DEFAULT nextval('ballots_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY candidates ALTER COLUMN id SET DEFAULT nextval('candidates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY datastores ALTER COLUMN id SET DEFAULT nextval('datastores_id_seq'::regclass);
 
 
@@ -1154,6 +1206,14 @@ ALTER TABLE ONLY authorities
 
 ALTER TABLE ONLY ballots
     ADD CONSTRAINT ballots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY candidates
+    ADD CONSTRAINT candidates_pkey PRIMARY KEY (id);
 
 
 --
@@ -1413,6 +1473,48 @@ CREATE UNIQUE INDEX index_ballots_on_election_id_and_office_id ON ballots USING 
 --
 
 CREATE INDEX index_ballots_on_office_id ON ballots USING btree (office_id);
+
+
+--
+-- Name: index_candidates_on_ballot_id_and_filename; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_candidates_on_ballot_id_and_filename ON candidates USING btree (ballot_id, filename);
+
+
+--
+-- Name: index_candidates_on_ballot_id_and_is_confirmed_and_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_candidates_on_ballot_id_and_is_confirmed_and_name ON candidates USING btree (ballot_id, is_confirmed, name);
+
+
+--
+-- Name: index_candidates_on_ballot_id_and_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_candidates_on_ballot_id_and_name ON candidates USING btree (ballot_id, name);
+
+
+--
+-- Name: index_candidates_on_ballot_id_and_person_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_candidates_on_ballot_id_and_person_id ON candidates USING btree (ballot_id, person_id);
+
+
+--
+-- Name: index_candidates_on_ballot_id_and_vote_count_and_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_candidates_on_ballot_id_and_vote_count_and_name ON candidates USING btree (ballot_id, vote_count, name);
+
+
+--
+-- Name: index_candidates_on_submitter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_candidates_on_submitter_id ON candidates USING btree (submitter_id);
 
 
 --
@@ -1838,6 +1940,8 @@ INSERT INTO schema_migrations (version) VALUES ('26');
 INSERT INTO schema_migrations (version) VALUES ('27');
 
 INSERT INTO schema_migrations (version) VALUES ('28');
+
+INSERT INTO schema_migrations (version) VALUES ('29');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

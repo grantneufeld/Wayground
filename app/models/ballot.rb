@@ -10,6 +10,7 @@ class Ballot < ActiveRecord::Base
 
   belongs_to :election
   belongs_to :office
+  has_many :candidates
 
   validates :election_id, presence: true
   # only only ballot for a given office in a given election
