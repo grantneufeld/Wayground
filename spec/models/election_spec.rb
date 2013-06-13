@@ -6,8 +6,9 @@ describe Election do
 
   before(:all) do
     Election.delete_all
-    @level = Level.first || FactoryGirl.create(:level)
-    @level2 = Level.offset(1).first || FactoryGirl.create(:level)
+    Level.delete_all
+    @level = FactoryGirl.create(:level)
+    @level2 = FactoryGirl.create(:level)
     @level_with_lots = FactoryGirl.create(:level)
     @election3 = FactoryGirl.create(:election, level: @level_with_lots, end_on: '2013-12-11')
     @election2 = FactoryGirl.create(:election, level: @level_with_lots, end_on: '2009-09-09')
