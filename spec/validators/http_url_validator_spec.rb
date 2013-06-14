@@ -1,13 +1,19 @@
 # encoding: utf-8
 require 'spec_helper'
 require 'http_url_validator'
-require 'event'
-require 'external_link' # a class that uses the validator
+
+class SpecClassWithHttpUrl
+  include ActiveModel::Validations
+  attr_accessor :url
+  validates :url, http_url: true
+  def initialize(params={})
+    self.url = params[:url]
+  end
+end
 
 describe HttpUrlValidator do
   let(:url) { $url = 'http://url.tld/' }
-  let(:event) { $event = Event.new }
-  let(:item) { $item = event.external_links.new(url: url, title: 'A') }
+  let(:item) { $item = SpecClassWithHttpUrl.new(url: url) }
 
   context "with an http url" do
     it "should be valid" do
