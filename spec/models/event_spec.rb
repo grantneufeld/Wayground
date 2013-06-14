@@ -395,8 +395,10 @@ describe Event do
         event2 = Event.offset(1).first || FactoryGirl.create(:event)
         event3 = Event.offset(2).first || FactoryGirl.create(:event)
         event1.tag_list = 'Given, Tag'
+        event1.editor = @user_admin
         event1.save!
         event3.tag_list = 'Tag, Given'
+        event3.editor = @user_admin
         event3.save!
         expect( Event.tagged('given') ).to eq [event1, event3]
       end
