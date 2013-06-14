@@ -155,7 +155,7 @@ describe Project do
         project.valid?.should be_false
       end
       it "should allow letters, numbers, dashes, and underscores in the filename" do
-        project = Project.new(minimum_valid_params.merge(:filename => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz_0123456789'))
+        project = Project.new(minimum_valid_params.merge(filename: 'abcdefghijklmnopqrstuvwxyz_0123456789-'))
         project.creator = project.owner = @user_admin
         project.valid?.should be_true
       end

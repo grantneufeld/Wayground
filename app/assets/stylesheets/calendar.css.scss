@@ -52,10 +52,10 @@ table.calendar{
           list-style-type:none; margin:0em; padding:0em;
           > li{
             > a:link, > a:visited{
-            	display:block; max-height:2.9em; overflow:hidden;
-            	padding:0.2em 1em;
-            	border-top:thin dotted #CCC;
-            	text-decoration:none; text-indent:-0.5em;
+              display:block; max-height:2.9em; overflow:hidden;
+              padding:0.2em 1em;
+              border-top:thin dotted #CCC;
+              text-decoration:none; text-indent:-0.5em;
             }
             > a:link          {background:transparent; color:#009;}
             > a:visited       {background:transparent; color:#606;}
@@ -82,13 +82,11 @@ table.calendar{
   .day{
     display:block; float:right; min-width:1.2em; padding:0.1em 0.25em;
     background:#66B; color:white;
-  	border-bottom-left-radius:0.33em;
-  	font-weight:bold; text-align:right; text-decoration:none;
+    border-bottom-left-radius:0.33em;
+    font-weight:bold; text-align:right; text-decoration:none;
   }
   .day:link:hover, .day:visited:hover{background:#CCF; color:#009;}
   .day:link:active, .day:visited:active{background:#DDF; color:red;}
   // Modify the display of the day of the month when there are zero events.
   .day.empty{background:#779; color:white;}
 }
-
-

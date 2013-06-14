@@ -63,6 +63,8 @@ describe User do
         u.password_confirmation = 'missmatch'
         u.valid?.should be_false
       end
+    end
+    describe 'of email' do
       it "should fail if there is no email address" do
         u = User.new
         u.password_confirmation = u.password = 'password'

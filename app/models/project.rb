@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'authority_controlled'
+require 'filename_validator'
 
 # A grouping of Memberships (typically Users or EmailAddresses),
 # and various items (Events, Pages, Tasks, etc.).
@@ -20,12 +22,7 @@ class Project < ActiveRecord::Base
   validates_presence_of :creator_id
   validates_presence_of :owner_id
   validates_presence_of :name
-  validates_length_of :filename, :within => 0..127, :allow_nil => true
-  validates_format_of :filename,
-    :with => /\A([\w_\-]*)\z/,
-    :allow_nil => true,
-    :message => 'must only be letters, numbers, dashes and underscores, with no extension; e.g., “a-filename_1”'
-  validates_uniqueness_of :filename, :allow_blank => true
+  validates :filename, filename: true, length: { in: 0..127 }, uniqueness: true, allow_blank: true
 
   default_scope order('name')
 
