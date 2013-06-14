@@ -20,7 +20,7 @@ describe "make_db_array_field" do
   end
   describe "getter method" do
     it "should wrap the value in a DbArray object" do
-      person = FactoryGirl.create(:person, aliases: ['E', 'F'])
+      person = FactoryGirl.create(:person, aliases: ['E', 'F'], filename: 'make_db_array_getter')
       person = Person.find(person.id)
       expect( person.aliases.is_a? DbArray ).to be_true
     end
