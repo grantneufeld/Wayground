@@ -560,6 +560,41 @@ ALTER SEQUENCE levels_id_seq OWNED BY levels.id;
 
 
 --
+-- Name: office_holders; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE office_holders (
+    id integer NOT NULL,
+    office_id integer NOT NULL,
+    person_id integer NOT NULL,
+    previous_id integer NOT NULL,
+    start_on date,
+    end_on date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: office_holders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE office_holders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: office_holders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE office_holders_id_seq OWNED BY office_holders.id;
+
+
+--
 -- Name: offices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1154,6 +1189,13 @@ ALTER TABLE ONLY levels ALTER COLUMN id SET DEFAULT nextval('levels_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY office_holders ALTER COLUMN id SET DEFAULT nextval('office_holders_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY offices ALTER COLUMN id SET DEFAULT nextval('offices_id_seq'::regclass);
 
 
@@ -1343,6 +1385,14 @@ ALTER TABLE ONLY images
 
 ALTER TABLE ONLY levels
     ADD CONSTRAINT levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: office_holders_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY office_holders
+    ADD CONSTRAINT office_holders_pkey PRIMARY KEY (id);
 
 
 --
@@ -1657,6 +1707,27 @@ CREATE INDEX index_external_links_on_item_type_and_item_id_and_position ON exter
 --
 
 CREATE INDEX index_image_variants_on_image_id_and_style_and_height_and_width ON image_variants USING btree (image_id, style, height, width);
+
+
+--
+-- Name: index_office_holders_on_office_id_and_person_id_and_start_on; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_office_holders_on_office_id_and_person_id_and_start_on ON office_holders USING btree (office_id, person_id, start_on);
+
+
+--
+-- Name: index_office_holders_on_person_id_and_office_id_and_start_on; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_office_holders_on_person_id_and_office_id_and_start_on ON office_holders USING btree (person_id, office_id, start_on);
+
+
+--
+-- Name: index_office_holders_on_previous_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_office_holders_on_previous_id ON office_holders USING btree (previous_id);
 
 
 --
@@ -2046,6 +2117,8 @@ INSERT INTO schema_migrations (version) VALUES ('29');
 INSERT INTO schema_migrations (version) VALUES ('3');
 
 INSERT INTO schema_migrations (version) VALUES ('30');
+
+INSERT INTO schema_migrations (version) VALUES ('31');
 
 INSERT INTO schema_migrations (version) VALUES ('4');
 

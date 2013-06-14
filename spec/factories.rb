@@ -220,6 +220,19 @@ FactoryGirl.define do
     sequence(:name) { |n| "Factory Level #{n}" }
   end
 
+  factory :office do
+    level
+    sequence(:filename) { |n| "factory_office_#{n}" }
+    sequence(:name) { |n| "Factory Office #{n}" }
+    title 'Factory Officer'
+  end
+
+  factory :office_holder do
+    office
+    person
+    start_on { (rand(10) + 1).years.ago }
+  end
+
   factory :party do
     level
     sequence(:filename) { |n| "party#{n}" }
@@ -239,13 +252,6 @@ FactoryGirl.define do
     sequence(:fullname) { |n| "Person #{n}" }
     sequence(:aliases) { |n| ["Alias #{n}", "Nickname #{n}"] }
     bio 'Biography of a person.'
-  end
-
-  factory :office do
-    level
-    sequence(:filename) { |n| "factory_office_#{n}" }
-    sequence(:name) { |n| "Factory Office #{n}" }
-    title 'Factory Officer'
   end
 
 end
