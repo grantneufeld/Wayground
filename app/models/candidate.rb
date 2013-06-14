@@ -19,7 +19,7 @@ class Candidate < ActiveRecord::Base
   validates :ballot_id, presence: true
   validates :person_id, presence: true, uniqueness: { scope: :ballot_id }
   validates :filename, presence: true, filename: true, uniqueness: { scope: :ballot_id }
-  validates :name, presence: true, format: { with: /^[^\r\n\t<>&]+$/ }, uniqueness: { scope: :ballot_id }
+  validates :name, presence: true, format: { with: /\A[^\r\n\t<>&]+\z/ }, uniqueness: { scope: :ballot_id }
   validate :validate_dates
 
   def validate_dates

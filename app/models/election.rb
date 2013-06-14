@@ -33,7 +33,7 @@ class Election < ActiveRecord::Base
   # get the current (next) election, or the last if there’s no next
   def self.current
     current = self.upcoming.order_by_date.first
-    if current.nil?
+    unless current
       current = self.order_by_date.last
     end
     current
@@ -42,7 +42,7 @@ class Election < ActiveRecord::Base
   # get the current (next) election, for a given level, or the last if there’s no next
   def self.current_for_level(level)
     current = self.where(level_id: level.id).upcoming.order_by_date.first
-    if current.nil?
+    unless current
       current = self.where(level_id: level.id).order_by_date.last
     end
     current

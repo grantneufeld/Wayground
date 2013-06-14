@@ -27,8 +27,9 @@ class Office < ActiveRecord::Base
 
   scope :active_on, ->(active_date) do
     where(
-      '(established_on IS NULL OR established_on <= :active_date) AND (ended_on IS NULL OR ended_on >= :active_date)',
-      {active_date: active_date}
+      '(established_on IS NULL OR established_on <= :active_date)' +
+      ' AND (ended_on IS NULL OR ended_on >= :active_date)',
+      { active_date: active_date }
     )
   end
 

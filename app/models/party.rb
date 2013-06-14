@@ -27,12 +27,18 @@ class Party < ActiveRecord::Base
   scope :by_name, -> { order(:name) }
 
   def validate_dates
-    if registered_on? && established_on? && registered_on < established_on
+    if registered_before_established?
       errors.add(:registered_on, 'must be on or after the date established on')
     end
-    if ended_on? && ((established_on? && ended_on < established_on) || (registered_on? && ended_on < registered_on))
+    if established_or_registered_after_ended?
       errors.add(:ended_on, 'must be on or after the established and registered dates')
     end
+  end
+  def registered_before_established?
+    registered_on? && established_on? && registered_on < established_on
+  end
+  def established_or_registered_after_ended?
+    ended_on? && ((established_on? && ended_on < established_on) || (registered_on? && ended_on < registered_on))
   end
 
   def to_param
