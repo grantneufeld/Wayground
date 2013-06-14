@@ -14,6 +14,7 @@ class Candidate < ActiveRecord::Base
   belongs_to :person
   belongs_to :party
   belongs_to :submitter, class_name: "User"
+  has_many :contacts, as: :item
 
   validates :ballot_id, presence: true
   validates :person_id, presence: true, uniqueness: { scope: :ballot_id }

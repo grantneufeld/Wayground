@@ -186,6 +186,28 @@ FactoryGirl.define do
     vote_count 0
   end
 
+  factory :contact do
+    association :item, factory: :person
+    sequence(:position) { |n| n }
+    is_public true
+    confirmed_at 1.day.ago
+    expires_at 1.month.from_now
+    sequence(:name) { |n| "Contact #{n}" }
+    organization 'Organization'
+    sequence(:email) { |n| "contact+#{n}@factory.tld" }
+    twitter 'contacttwit'
+    url 'http://factory.tld/contact'
+    phone '000-000-0000'
+    phone2 '123-456-7890 ext. 0'
+    fax '098-765-4321'
+    address1 'c/o Nobody'
+    address2 '123 Main Street'
+    city 'Townsville'
+    province 'Alberta'
+    country 'Canada'
+    postal 'A1B 2C3'
+  end
+
   factory :election do
     level
     sequence(:filename) { |n| "factory_election_#{n}" }

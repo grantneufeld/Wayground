@@ -13,6 +13,7 @@ class Person < ActiveRecord::Base
   belongs_to :user
   belongs_to :submitter, class_name: "User"
   has_many :candidacies, class_name: "Candidate"
+  has_many :contacts, as: :item
 
   validates :user_id, uniqueness: true, allow_nil: true
   validates :filename, presence: true, uniqueness: true, format: { with: /\A[a-z0-9_\-]+\z/ }

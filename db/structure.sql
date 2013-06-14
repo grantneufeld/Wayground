@@ -208,6 +208,56 @@ ALTER SEQUENCE candidates_id_seq OWNED BY candidates.id;
 
 
 --
+-- Name: contacts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE contacts (
+    id integer NOT NULL,
+    item_id integer NOT NULL,
+    item_type character varying(255) NOT NULL,
+    "position" integer DEFAULT 999 NOT NULL,
+    is_public boolean DEFAULT false NOT NULL,
+    confirmed_at timestamp without time zone,
+    expires_at timestamp without time zone,
+    name character varying(255),
+    organization character varying(255),
+    email character varying(255),
+    twitter character varying(255),
+    url character varying(255),
+    phone character varying(255),
+    phone2 character varying(255),
+    fax character varying(255),
+    address1 character varying(255),
+    address2 character varying(255),
+    city character varying(255),
+    province character varying(255),
+    country character varying(255),
+    postal character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE contacts_id_seq OWNED BY contacts.id;
+
+
+--
 -- Name: datastores; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1041,6 +1091,13 @@ ALTER TABLE ONLY candidates ALTER COLUMN id SET DEFAULT nextval('candidates_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY contacts ALTER COLUMN id SET DEFAULT nextval('contacts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY datastores ALTER COLUMN id SET DEFAULT nextval('datastores_id_seq'::regclass);
 
 
@@ -1214,6 +1271,14 @@ ALTER TABLE ONLY ballots
 
 ALTER TABLE ONLY candidates
     ADD CONSTRAINT candidates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
 
 
 --
@@ -1515,6 +1580,41 @@ CREATE INDEX index_candidates_on_ballot_id_and_vote_count_and_name ON candidates
 --
 
 CREATE INDEX index_candidates_on_submitter_id ON candidates USING btree (submitter_id);
+
+
+--
+-- Name: index_contacts_on_confirmed_at_and_expires_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_contacts_on_confirmed_at_and_expires_at ON contacts USING btree (confirmed_at, expires_at);
+
+
+--
+-- Name: index_contacts_on_country_and_province_and_city; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_contacts_on_country_and_province_and_city ON contacts USING btree (country, province, city);
+
+
+--
+-- Name: index_contacts_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_contacts_on_email ON contacts USING btree (email);
+
+
+--
+-- Name: index_contacts_on_item_type_and_item_id_and_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_contacts_on_item_type_and_item_id_and_position ON contacts USING btree (item_type, item_id, "position");
+
+
+--
+-- Name: index_contacts_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_contacts_on_name ON contacts USING btree (name);
 
 
 --
@@ -1944,6 +2044,8 @@ INSERT INTO schema_migrations (version) VALUES ('28');
 INSERT INTO schema_migrations (version) VALUES ('29');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
+
+INSERT INTO schema_migrations (version) VALUES ('30');
 
 INSERT INTO schema_migrations (version) VALUES ('4');
 

@@ -1,0 +1,29 @@
+# encoding: utf-8
+require 'active_record'
+require 'authority_controlled'
+require 'email_validator'
+require 'http_url_validator'
+
+# Contact information for an item (such as a Person or Candidate).
+class Contact < ActiveRecord::Base
+  acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
+  attr_accessible :position, :is_public,
+    :confirmed_at, :expires_at,
+    :name, :organization,
+    :email, :twitter, :url,
+    :phone, :phone2, :fax,
+    :address1, :address2, :city, :province, :country, :postal
+
+  belongs_to :item, polymorphic: true
+
+  validates :item_type, presence: true
+  validates :item_id, presence: true
+  validates :email, email: true, allow_blank: true
+  validates :twitter, allow_blank: true,
+    format: { with: /\A[a-z0-9_\-]+\z/i, message: 'invalid Twitter id' }
+  validates :url, http_url: true, allow_blank: true
+
+  # TODO: parse phone numbers to make more consistent format
+  # TODO: auto-fill country, province and city with site defaults
+
+end
