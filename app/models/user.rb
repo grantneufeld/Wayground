@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'authority_controlled'
+require 'email_validator'
 require 'crypted_password'
 require 'password'
 require 'authority'
@@ -32,9 +33,8 @@ class User < ActiveRecord::Base
   validates_length_of :password, :within => 8..63, :allow_blank => true
   validates_confirmation_of :password, :if => :password_present?
   validates_presence_of :password_confirmation, :if => :password_present?
-  validates_presence_of :email, :if => :local_authentication_required?
-  validates_format_of :email, :with => /\A[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+\z/, :allow_blank => true
-  validates_uniqueness_of :email, :case_sensitive => false, :if => :email_present?
+  validates :email, presence: true, if: :local_authentication_required?
+  validates :email, email: true, uniqueness: { case_sensitive: false }, allow_blank: true
   validate :validate_timezone
 
   # validation conditionals
@@ -43,9 +43,6 @@ class User < ActiveRecord::Base
   end
   def password_present?
     password.present?
-  end
-  def email_present?
-    email.present?
   end
 
   # If the timezone is set for a user, it must be valid.
