@@ -77,7 +77,7 @@ module Wayground
         it "should figure out the twitter url" do
           provider = 'twitter'
           auth_hash = {'provider' => provider, 'uid' => 'twitteruid',
-            'user_info' => {'nickname' => 'twitteruser'}
+            'info' => { 'nickname' => 'twitteruser' }
           }
           user = OauthLogin.new(current_user: @user, auth: auth_hash).user
           authentication = user.authentications.where(provider: provider).first
@@ -88,6 +88,7 @@ module Wayground
           auth_hash = {'provider' => provider, 'uid' => 'nourluid',
             # include the facebook and twitter data to make sure it’s not accidentally getting picked up
             'user_info' => {'nickname' => 'wrong'},
+            'info' => { 'nickname' => 'alsowrong' },
             'urls' => {'Facebook' => 'http://facebook.com/wrong'}
           }
           user = OauthLogin.new(current_user: @user, auth: auth_hash).user

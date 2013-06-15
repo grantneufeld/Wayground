@@ -117,7 +117,7 @@ Given /^(?:|I )have my ([^ ]+) account(?:| @([^ ]+))$/ do |provider, uid|
   provider.downcase!
   uid ||= rand(255).to_s
   auth = {'uid' => uid}
-  auth['user_info'] = {'nickname' => uid} if provider == 'twitter'
+  auth['info'] = { 'nickname' => uid } if provider == 'twitter'
   OmniAuth.config.add_mock(provider.to_sym, auth)
 end
 When /^(?:|I )(?:|try to )sign in with my ([^ ]+) account(?:| @[^ ]+)(?:| again)$/ do |provider|

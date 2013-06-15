@@ -29,7 +29,7 @@ module Wayground
       # - wrong user tried to use existing authentication
       def find_user
         begin
-          authentication = Authentication.where(provider: auth["provider"], uid: auth["uid"]).first!
+          authentication = Authentication.where(provider: provider, uid: auth['uid']).first!
         rescue ActiveRecord::RecordNotFound
           authentication = create_authentication!
         end
@@ -58,7 +58,7 @@ module Wayground
       def authentication_attrs
         auth_params = user_info
         {
-          provider: auth['provider'], uid: auth['uid'],
+          provider: provider, uid: auth['uid'],
           nickname: auth_params['nickname'], name: auth_params['name'],
           email: auth_params['email'], location: auth_params['location'],
           image_url: auth_params['image'], description: auth_params['description'],
@@ -68,18 +68,29 @@ module Wayground
 
       # figure out the user’s url on the service, if available
       def url_from_provider
-        case auth['provider']
+        case provider
         when 'facebook'
           auth['urls']['Facebook'] if auth['urls'].present?
         when 'twitter'
-          "https://twitter.com/#{user_info['nickname']}" if user_info.present?
+          "https://twitter.com/#{user_info['nickname']}"
         else
           nil
         end
       end
 
       def user_info
-        auth['user_info'] || {}
+        unless @user_info
+          if provider == 'twitter'
+            @user_info = auth['info'] || {}
+          else
+            @user_info = auth['user_info'] || {}
+          end
+        end
+        @user_info
+      end
+
+      def provider
+        @provider ||= auth['provider']
       end
 
     end
