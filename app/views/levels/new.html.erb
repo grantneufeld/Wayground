@@ -1,0 +1,8 @@
+<%
+parent = @level.parent
+-%>
+<h1>New Level</h1>
+<% if parent
+  %><p>Will be created as a sub-level under <%= link_to parent.name, parent %>.</p>
+<% end -%>
+<%= render 'form', { level: @level, parent: parent } %>

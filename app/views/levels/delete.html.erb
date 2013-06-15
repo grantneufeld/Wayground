@@ -1,0 +1,5 @@
+<h1>Delete “<%= link_to @level.name, @level %>” Level?</h1>
+
+<%= form_tag(@level, method: :delete) do %>
+<p><%= submit_tag "Delete Level" %></p>
+<% end %>

@@ -21,6 +21,11 @@ Wayground::Application.routes.draw do
     collection { get 'initialize_defaults' }
   end
 
+  # DEMOCRACY
+  resources :levels do
+    get 'new/:parent_id' => 'levels#new', on: :collection, as: :new_level_with_parent
+  end
+
   # CONTENT
   resources :paths
   resources :pages do

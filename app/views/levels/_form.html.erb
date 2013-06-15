@@ -1,0 +1,20 @@
+<%
+# requires `level` local variable
+# optional `parent` local variable
+parent ||= level.parent
+%><%= form_for(level) do |f| %>
+<% if parent
+  %><%= hidden_field_tag 'parent_id', parent.to_param %>
+<% end -%>
+<%= show_errors(level) %>
+<table><tbody>
+<tr><th><%= f.label :name %></th>
+  <td><%= f.text_field :name, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :filename %></th>
+  <td><%= f.text_field :filename, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :url %></th>
+  <td><%= f.url_field :url, size: 60, placeholder: 'http://' %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Level') %></td></tr></tfoot>
+</table>
+<% end %>

@@ -1,0 +1,37 @@
+<%
+level ||= @level
+user ||= @user
+parents = level.parent_chain.reverse
+%><h1>Level “<%= level.name %><%
+parents.each do |parent|
+  %>, <%= link_to parent.name, level_path(parent) %><%
+end %>”</h1>
+<%
+
+if level.url?
+  %><p>Weblink: <%= link_to level.url, level.url %></p>
+<%
+end
+
+if user.present?
+  actions = []
+  if level.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_level_path(level), class: 'action')
+  end
+  if level.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, level], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user.has_authority_for_area(Level.authority_area, :can_create)
+    actions << link_to('New Level', new_level_path, class: 'action')
+    actions << link_to('New Sub-Level', new_level_with_parent_levels_path(level), class: 'action')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end -%>

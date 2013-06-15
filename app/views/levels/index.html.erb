@@ -1,0 +1,12 @@
+<h1>Levels of Government</h1>
+<ul>
+<% @levels.each do |level|
+  %><li><%= link_to level.name, level %></li>
+<%
+end
+%></ul>
+<%
+if @user && @user.has_authority_for_area(Level.authority_area, :can_create)
+  %><p class="actions"><%= link_to 'New Level', new_level_path, class: 'action' %></p>
+<%
+end -%>
