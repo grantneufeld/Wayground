@@ -98,6 +98,34 @@ describe Level do
     end
   end
 
+  describe '#parent_chain' do
+    context 'with no parent' do
+      it 'should return an empty array' do
+        expect( Level.new().parent_chain ).to eq []
+      end
+    end
+    context 'with one parent' do
+      it 'should return an array with the parent' do
+        parent = Level.new
+        level = Level.new
+        level.parent = parent
+        expect( level.parent_chain ).to eq [parent]
+      end
+    end
+    context 'with multiple parents' do
+      it 'should return an array with the parents' do
+        great_grandparent = Level.new
+        grandparent = Level.new
+        grandparent.parent = great_grandparent
+        parent = Level.new
+        parent.parent = grandparent
+        level = Level.new
+        level.parent = parent
+        expect( level.parent_chain ).to eq [great_grandparent, grandparent, parent]
+      end
+    end
+  end
+
   describe '#to_param' do
     it 'should return the filename' do
       expect( Level.new(filename: 'param').to_param ).to eq 'param'

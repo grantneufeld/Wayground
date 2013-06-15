@@ -23,6 +23,15 @@ class Level < ActiveRecord::Base
     where(filename: param)
   end
 
+  # Returns an array of parents for this level, starting with the top parent.
+  def parent_chain
+    if parent
+      parent.parent_chain << parent
+    else
+      []
+    end
+  end
+
   def to_param
     filename
   end
