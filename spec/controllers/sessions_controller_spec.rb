@@ -227,7 +227,7 @@ describe SessionsController do
       end
       it "should figure out the twitter url" do
         user_is_signed_in(request)
-        set_mock_auth(:twitter, 'twitteruid', {'user_info' => {'nickname' => 'twitternickname'}})
+        set_mock_auth(:twitter, 'twitteruid', { 'info' => { 'nickname' => 'twitternickname' } })
         get :oauth_callback, provider: 'twitter'
         @user.reload
         authentication = @user.authentications.where(provider: 'twitter').first
