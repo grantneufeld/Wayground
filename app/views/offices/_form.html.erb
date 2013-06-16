@@ -1,0 +1,31 @@
+<%
+require 'wayground_form_builder'
+
+# requires `office` local variable
+level ||= office.level
+# optional `previous` local variable
+previous ||= nil
+%><%= form_for([level, office], :builder => WaygroundFormBuilder) do |f| %>
+<% if previous
+  %><%= hidden_field_tag 'previous_id', previous.to_param %>
+<% end -%>
+<%= show_errors(office) %>
+<table><tbody>
+<tr><th><%= f.label :name %></th>
+  <td><%= f.text_field :name, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :filename %></th>
+  <td><%= f.text_field :filename, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :url %></th>
+  <td><%= f.url_field :url, size: 60, placeholder: 'http://' %></td></tr>
+<tr><th><%= f.label :title %></th>
+  <td><%= f.text_field :title, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :established_on %></th>
+  <td><%= f.date_field :established_on %> (date)</td></tr>
+<tr><th><%= f.label :ended_on %></th>
+  <td><%= f.date_field :ended_on %> (date)</td></tr>
+<tr><th><%= f.label :description %></th>
+  <td><%= f.text_area :description, rows: 4 %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Office') %></td></tr></tfoot>
+</table>
+<% end %>

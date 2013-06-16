@@ -1,0 +1,13 @@
+<%= render 'levels/breadcrumb', { level: @level } %>
+<h1>Offices for <%= @level.name %></h1>
+<ul>
+<% @offices.each do |office|
+  %><li><%= link_to office.name, [@level, office] %></li>
+<%
+end
+%></ul>
+<%
+if @user && @user.has_authority_for_area(Office.authority_area, :can_create)
+  %><p class="actions"><%= link_to 'New Office', new_level_office_path, class: 'action' %></p>
+<%
+end -%>

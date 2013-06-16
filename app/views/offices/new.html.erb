@@ -1,0 +1,9 @@
+<%
+previous ||= @office.previous
+-%>
+<%= render 'levels/breadcrumb', { level: @level } %>
+<h1>New Office</h1>
+<% if previous
+  %><p>Will be created as a sub-office under <%= link_to previous.name, [@level, previous] %>.</p>
+<% end -%>
+<%= render 'form', { office: @office, previous: previous } %>

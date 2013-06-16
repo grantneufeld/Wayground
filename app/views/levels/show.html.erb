@@ -54,4 +54,22 @@ if children.count > 0
 end
 
 
+content_for(:other_sections) do
+  %>
+<section><h2>Offices</h2>
+<ul>
+<%
+level.offices.each do |office|
+  %><%= render 'offices/list_item', {office: office} %><%
+end
+%></ul><%
+if user.present? && user.has_authority_for_area(Level.authority_area, :can_create)
+  %><p class="actions"><%= link_to('New Office', new_level_office_path(level), class: 'action') %></p>
+<%
+end
+%></section>
+<%
+end
+
+
 -%>

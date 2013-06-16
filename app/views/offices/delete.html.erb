@@ -1,0 +1,6 @@
+<%= render 'levels/breadcrumb', { level: @level } %>
+<h1>Delete “<%= link_to @office.name, [@level, @office] %>” Office?</h1>
+
+<%= form_tag([@level, @office], method: :delete) do %>
+<p><%= submit_tag "Delete Office" %></p>
+<% end %>

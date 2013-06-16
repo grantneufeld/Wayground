@@ -1,0 +1,60 @@
+<%
+office ||= @office
+level ||= @level || office.level
+user ||= @user
+previous = office.previous
+-%>
+<%= render 'levels/breadcrumb', { level: level } %>
+<h1><%= level.name %> office: <%= office.name %></h1>
+<%
+if previous
+  %><p>Previous Office: <%= link_to previous.name, level_office_path(level, previous) %><%
+end %><%
+
+if office.url?
+  %><p>Weblink: <%= link_to office.url, office.url %></p>
+<%
+end
+
+if office.title?
+  %><p>The holder of this office is called: <%= office.title %></p>
+<%
+end
+
+if office.established_on?
+  %><p>Established on <%= office.established_on.to_datetime.to_s(:simple_date) %></p>
+<%
+end
+
+if office.ended_on?
+  %><p>Ended on <%= office.ended_on.to_datetime.to_s(:simple_date) %></p>
+<%
+end
+
+if office.description?
+  %><p><%= office.description %></p>
+<%
+end
+
+if user.present?
+  actions = []
+  if office.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_level_office_path(level, office), class: 'action')
+  end
+  if office.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, level, office], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user.has_authority_for_area(Office.authority_area, :can_create)
+    actions << link_to('New Office', new_level_office_path, class: 'action')
+    actions << link_to('New Successor Office', new_office_with_previous_level_offices_path(level, office), class: 'action', title: 'If this office has been replaced (e.g., during redistricting)')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end -%>

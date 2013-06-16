@@ -1,0 +1,9 @@
+<%
+# requires level
+
+@site_breadcrumbs = []
+level.parent_chain.each do |parent|
+  @site_breadcrumbs << {text: parent.name, url: parent}
+end
+@site_breadcrumbs << {text: level.name, url: level, highlight: true}
+%>
