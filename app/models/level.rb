@@ -14,6 +14,7 @@ class Level < ActiveRecord::Base
   has_many :elections
   has_many :offices
   has_many :parties
+  has_many :children, class_name: 'Level', foreign_key: 'parent_id'
 
   validates :filename, presence: true, uniqueness: true, format: { with: /\A[a-z0-9_\-]+\z/ }
   validates :name, presence: true

@@ -2,10 +2,10 @@
 level ||= @level
 user ||= @user
 parents = level.parent_chain.reverse
-%><h1>Level “<%= level.name %><%
+%><h1><%= level.name %><%
 parents.each do |parent|
   %>, <%= link_to parent.name, level_path(parent) %><%
-end %>”</h1>
+end %></h1>
 <%
 
 if level.url?
@@ -34,4 +34,24 @@ if user.present?
 </p>
 <%
   end
-end -%>
+end
+
+
+children = level.children
+if children.count > 0
+  content_for(:other_sections) do
+    %>
+  <section><h2>Sub-Levels</h2>
+  <ul>
+  <%
+  children.each do |child|
+    %><li><%= link_to child.name, child %></li>
+  <%
+  end
+  %></ul></section>
+  <%
+  end
+end
+
+
+-%>

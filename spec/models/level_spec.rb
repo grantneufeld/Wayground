@@ -44,6 +44,15 @@ describe Level do
     end
   end
 
+  describe '#children' do
+    it 'should access levels that have this level as a parent' do
+      level = FactoryGirl.create(:level)
+      child1 = FactoryGirl.create(:level, parent: level)
+      child2 = FactoryGirl.create(:level, parent: level)
+      expect( level.children ).to eq [child1, child2]
+    end
+  end
+
   describe "validations" do
     let(:required) { $required = {filename: 'required', name: 'Required'} }
     it "should validate with all required values" do
