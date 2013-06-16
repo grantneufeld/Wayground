@@ -1,0 +1,5 @@
+<%
+# requires election
+-%>
+<li><%= link_to election.name, [election.level, election] %>:
+<br /><%= election.end_on.to_datetime.to_s(:plain_date) %></li>

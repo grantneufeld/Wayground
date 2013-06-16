@@ -1,0 +1,50 @@
+<%
+election ||= @election
+level ||= @level || election.level
+user ||= @user
+-%>
+<%= render 'levels/breadcrumb', { level: level } %>
+<h1><%= level.name %> election: <%= election.name %></h1>
+<%
+
+if election.url?
+  %><p>Weblink: <%= link_to election.url, election.url %></p>
+<%
+end
+
+if election.start_on?
+  %><p>Begins on <%= election.start_on.to_datetime.to_s(:simple_date) %></p>
+<%
+end
+
+if election.end_on?
+  %><p>Ends on <%= election.end_on.to_datetime.to_s(:simple_date) %></p>
+<%
+end
+
+if election.description?
+  %><p><%= election.description %></p>
+<%
+end
+
+if user.present?
+  actions = []
+  if election.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_level_election_path(level, election), class: 'action')
+  end
+  if election.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, level, election], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user.has_authority_for_area(Election.authority_area, :can_create)
+    actions << link_to('New Election', new_level_election_path, class: 'action')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end -%>

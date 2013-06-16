@@ -1,0 +1,13 @@
+<%= render 'levels/breadcrumb', { level: @level } %>
+<h1>Elections for <%= @level.name %></h1>
+<ul>
+<% @elections.each do |election|
+  %><li><%= link_to election.name, [@level, election] %></li>
+<%
+end
+%></ul>
+<%
+if @user && @user.has_authority_for_area(Election.authority_area, :can_create)
+  %><p class="actions"><%= link_to 'New Election', new_level_election_path, class: 'action' %></p>
+<%
+end -%>

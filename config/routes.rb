@@ -24,6 +24,7 @@ Wayground::Application.routes.draw do
   # DEMOCRACY
   resources :levels do
     get 'new/:parent_id' => 'levels#new', on: :collection, as: :new_level_with_parent
+    resources :elections
     resources :offices do
       get 'new/:previous_id' => 'offices#new', on: :collection, as: :new_office_with_previous
     end
