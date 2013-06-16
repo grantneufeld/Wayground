@@ -115,6 +115,24 @@ end
 <%
 
 
+if @site_breadcrumbs && @site_breadcrumbs.size > 0
+  %><ul id="breadcrumb">
+<%
+  @site_breadcrumbs.each do |breadcrumb|
+    if breadcrumb[:highlight]
+      %><li class="highlight"><%
+    else
+      %><li><%
+    end
+    %><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
+<%
+  end
+  %></ul>
+
+<%
+end
+
+
 flash_count = (flash && flash.count) || 0
 if flash_count > 0
   %>
@@ -129,18 +147,7 @@ end %></div>
 end
 
 
-if @site_breadcrumbs && @site_breadcrumbs.size > 0
-  %><ul id="breadcrumb">
-<%
-  @site_breadcrumbs.each do |breadcrumb|
-    %><li><%= link_to breadcrumb[:text], breadcrumb[:url] %></li>
-<%
-  end
-  %></ul>
-
-<%
-end -%>
-
+%>
 <section id="main" class="<%= @page_main_class %>" role="main">
 <%= yield %>
 </section>
