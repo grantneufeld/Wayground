@@ -12,6 +12,8 @@ class Tag < ActiveRecord::Base
   belongs_to :item, polymorphic: true
   belongs_to :user
 
+  default_scope order(:tag)
+
   validates :item_type, :item_id, presence: true
   validates :tag, presence: true, uniqueness: { scope: [:item_type, :item_id] },
     format: { with: /\A[a-z0-9]+\z/ }
