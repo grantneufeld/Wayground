@@ -9,7 +9,7 @@ ActiveRecord::Base.class_eval do
         def #{field}
           unless @#{field}
             value = read_attribute(:#{field})
-            @#{field} = DbArray.new(db: value) if value
+            @#{field} = DbArray.new(db: value)
           end
           @#{field}
         end

@@ -11,7 +11,7 @@ class DbArray
       if params[:user]
         self.array = array_from_user_value(params[:user])
       elsif params[:db]
-        self.array = parse_pg_array(params[:db])
+        self.array = parse_pg_array(params[:db]) || []
       end
     end
   end
@@ -30,7 +30,7 @@ class DbArray
   # The array formatted for saving the database
   def to_db
     if @array.empty?
-      ''
+      nil
     else
       strings = @array.map { |element| string_for_pg_array(element) }
       # join with commas and wrap in angle-brackets

@@ -64,7 +64,7 @@ describe DbArray do
     end
     context 'with a nil array value' do
       it 'should return an empty string' do
-        expect( DbArray.new(nil).to_db ).to eq ''
+        expect( DbArray.new(nil).to_db ).to be_nil
       end
     end
     it 'should strip quotes from array values' do
