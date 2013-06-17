@@ -1,0 +1,34 @@
+<%
+require 'wayground_form_builder'
+
+# requires `party` local variable
+level ||= party.level
+%><%= form_for([level, party], :builder => WaygroundFormBuilder) do |f| %>
+<%= show_errors(party) %>
+<table><tbody>
+<tr><th><%= f.label :name %></th>
+  <td><%= f.text_field :name, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :filename %></th>
+  <td><%= f.text_field :filename, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :aliases %></th>
+  <td><%= f.text_field :aliases, size: 60, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :abbrev, 'Abbreviation' %></th>
+  <td><%= f.text_field :abbrev, size: 20, maxlength: 255 %></td></tr>
+<tr><th><%= f.label :colour %></th>
+  <td><%= f.text_field :colour, size: 8, maxlength: 7 %></td></tr>
+<tr><th><%= f.label :url %></th>
+  <td><%= f.url_field :url, size: 60, placeholder: 'http://' %></td></tr>
+<tr><th><%= f.label :established_on %></th>
+  <td><%= f.date_field :established_on %> (date)</td></tr>
+<tr><th></th>
+  <td><%= f.check_box :is_registered %> <%= f.label :is_registered %></td></tr>
+<tr><th><%= f.label :registered_on %></th>
+  <td><%= f.date_field :registered_on %> (date)</td></tr>
+<tr><th><%= f.label :ended_on %></th>
+  <td><%= f.date_field :ended_on %> (date)</td></tr>
+<tr><th><%= f.label :description %></th>
+  <td><%= f.text_area :description, rows: 4 %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Party') %></td></tr></tfoot>
+</table>
+<% end %>

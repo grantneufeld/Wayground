@@ -1,0 +1,10 @@
+<%
+require 'party_presenter'
+
+# requires local: party
+# optional local: user
+user ||= nil
+
+presenter = PartyPresenter.new(view: self, party: party, user: user)
+
+%><%= presenter.present_as_list_item %>

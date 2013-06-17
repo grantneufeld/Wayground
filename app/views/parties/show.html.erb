@@ -1,0 +1,52 @@
+<%
+require 'party_presenter'
+
+party ||= @party
+level ||= @level || party.level
+user ||= @user
+
+presenter = PartyPresenter.new(view: self, party: party, user: user)
+
+-%>
+<%= render 'levels/breadcrumb', { level: level } %>
+<%= presenter.present_heading %>
+<%
+
+if party.aliases && party.aliases.size > 0
+  %><p>(also known as: <%= party.aliases.join(', ') %>)</p>
+<%
+end
+
+if party.url?
+  %><p>Weblink: <%= link_to party.url, party.url %></p>
+<%
+end
+
+%><%= presenter.present_dates %><%
+
+if party.description?
+  %><p><%= party.description %></p>
+<%
+end
+
+if user.present?
+  actions = []
+  if party.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_level_party_path(level, party), class: 'action')
+  end
+  if party.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, level, party], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user.has_authority_for_area(Party.authority_area, :can_create)
+    actions << link_to('New Party', new_level_party_path, class: 'action')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end -%>

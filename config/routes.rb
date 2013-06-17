@@ -28,6 +28,7 @@ Wayground::Application.routes.draw do
     resources :offices do
       get 'new/:previous_id' => 'offices#new', on: :collection, as: :new_office_with_previous
     end
+    resources :parties
   end
 
   # CONTENT

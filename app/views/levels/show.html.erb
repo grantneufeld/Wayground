@@ -2,6 +2,8 @@
 level ||= @level
 user ||= @user
 parents = level.parent_chain.reverse
+user_can_create = user.present? && user.has_authority_for_area(Level.authority_area, :can_create)
+
 %><h1><%= level.name %><%
 parents.each do |parent|
   %>, <%= link_to parent.name, level_path(parent) %><%
@@ -23,7 +25,7 @@ if user.present?
       [:delete, level], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
     )
   end
-  if user.has_authority_for_area(Level.authority_area, :can_create)
+  if user_can_create
     actions << link_to('New Level', new_level_path, class: 'action')
     actions << link_to('New Sub-Level', new_level_with_parent_levels_path(level), class: 'action')
   end
@@ -41,15 +43,15 @@ children = level.children
 if children.count > 0
   content_for(:other_sections) do
     %>
-  <section><h2>Sub-Levels</h2>
-  <ul>
-  <%
+<section><h2>Sub-Levels</h2>
+<ul>
+<%
   children.each do |child|
     %><li><%= link_to child.name, child %></li>
-  <%
+<%
   end
   %></ul></section>
-  <%
+<%
   end
 end
 
@@ -60,15 +62,53 @@ content_for(:other_sections) do
 <ul>
 <%
 level.offices.each do |office|
-  %><%= render 'offices/list_item', {office: office} %><%
+  %><%= render 'offices/list_item', { office: office } %><%
 end
 %></ul><%
-if user.present? && user.has_authority_for_area(Level.authority_area, :can_create)
+if user_can_create
   %><p class="actions"><%= link_to('New Office', new_level_office_path(level), class: 'action') %></p>
 <%
 end
 %></section>
 <%
+end
+
+
+content_for(:other_sections) do
+  %>
+<section><h2>Elections</h2>
+<ul>
+<%
+level.elections.order('end_on DESC').each do |election|
+  %><%= render 'elections/list_item', { election: election } %><%
+end
+%></ul><%
+if user_can_create
+  %><p class="actions"><%= link_to('New Election', new_level_election_path(level), class: 'action') %></p>
+<%
+end
+%></section>
+<%
+end
+
+
+if level.parties.count > 0 || user_can_create
+  content_for(:other_sections) do
+    %>
+<section><h2>Parties</h2>
+<ul>
+<%
+  level.parties.order('name').each do |party|
+    %><%= render 'parties/list_item', { party: party, user: @user } %><%
+  end
+  %></ul><%
+  if user_can_create
+    %><p class="actions"><%= link_to('New Party', new_level_party_path(level), class: 'action') %></p>
+<%
+  end
+  %></section>
+<%
+  end
 end
 
 

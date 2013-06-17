@@ -1,0 +1,6 @@
+<%= render 'levels/breadcrumb', { level: @level } %>
+<h1>Delete “<%= link_to @party.name, [@level, @party] %>” Party?</h1>
+
+<%= form_tag([@level, @party], method: :delete) do %>
+<p><%= submit_tag 'Delete Party' %></p>
+<% end %>
