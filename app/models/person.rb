@@ -20,6 +20,10 @@ class Person < ActiveRecord::Base
   validates :filename, presence: true, uniqueness: true, format: { with: /\A[a-z0-9_\-]+\z/ }
   validates :fullname, presence: true
 
+  scope :from_param, ->(param) do
+    where(filename: param)
+  end
+
   def to_param
     filename
   end

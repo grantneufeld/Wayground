@@ -99,6 +99,20 @@ describe Person do
     end
   end
 
+  describe 'scopes' do
+    describe '.from_param' do
+      before(:all) do
+        @person = Person.where(filename: 'the_param').first || FactoryGirl.create(:person, filename: 'the_param')
+      end
+      it 'should return the person that matches the param' do
+        expect( Person.from_param('the_param') ).to eq [@person]
+      end
+      it 'should return an empty list for a non-existent param' do
+        expect( Person.from_param('non-existent-param') ).to eq []
+      end
+    end
+  end
+
   describe '#to_param' do
     it 'should return the filename' do
       expect( Person.new(filename: 'param').to_param ).to eq 'param'
