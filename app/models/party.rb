@@ -24,6 +24,9 @@ class Party < ActiveRecord::Base
   validates :url, http_url: true, allow_blank: true
   validate :validate_dates
 
+  scope :from_param, ->(param) do
+    where(filename: param)
+  end
   scope :by_name, -> { order(:name) }
 
   def validate_dates
