@@ -5,34 +5,30 @@ require 'pg_array_parser'
 class DbArray
   include PgArrayParser
 
-  def initialize(in_array=[])
-    self.array = in_array
+  def initialize(params=nil)
+    self.array = []
+    if params
+      if params[:user]
+        self.array = array_from_user_value(params[:user])
+      elsif params[:db]
+        self.array = parse_pg_array(params[:db])
+      end
+    end
+  end
+
+  attr_reader :array
+  def array=(value)
+    @array = array_from_user_value(value)
   end
 
   # Delegate unhandled methods to the array.
   # E.g., `[]` and `<<`.
   def method_missing(method, *args, &block)
-    @array.send(method, *args, &block)
+    array.send(method, *args, &block)
   end
-
-  def array=(value)
-    @array = array_from_value(value)
-  end
-
-  def array_from_value(value)
-    if value.is_a? String
-      parse_pg_array(value)
-    elsif value.blank?
-      []
-    else
-      value
-    end
-  end
-
-  attr_reader :array
 
   # The array formatted for saving the database
-  def to_s
+  def to_db
     if @array.empty?
       ''
     else
@@ -42,15 +38,29 @@ class DbArray
     end
   end
 
+  def to_s
+    array.join(', ')
+  end
+
   def ==(value)
     if value.is_a? DbArray
       self.array == value.array
     else
-      self.array == array_from_value(value)
+      self.array == array_from_user_value(value)
     end
   end
 
   # protected
+
+  def array_from_user_value(value)
+    if value.is_a? String
+      value.split(/ *, *|[\r\n]+/)
+    elsif value.blank?
+      []
+    else
+      value
+    end
+  end
 
   def string_for_pg_array(string)
     # strip quotes and backslashes, and wrap in quotes

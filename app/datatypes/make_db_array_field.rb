@@ -9,14 +9,20 @@ ActiveRecord::Base.class_eval do
         def #{field}
           unless @#{field}
             value = read_attribute(:#{field})
-            @#{field} = DbArray.new(value) if value
+            @#{field} = DbArray.new(db: value) if value
           end
           @#{field}
         end
         def #{field}=(value)
-          @#{field} = DbArray.new(value)
-          write_attribute(:#{field}, @#{field}.to_s)
+          @#{field} = DbArray.new(user: value)
+          write_attribute(:#{field}, @#{field}.to_db)
           @#{field}
+        end
+      "
+      # ugly, ugly, hack to make up for the awful fact that Rails form helpers use [field_name]_before_type_cast
+      class_eval "
+        def #{field}_before_type_cast
+          #{field}.to_s
         end
       "
     end
