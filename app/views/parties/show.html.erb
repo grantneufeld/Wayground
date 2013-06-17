@@ -40,7 +40,7 @@ if user.present?
     )
   end
   if user.has_authority_for_area(Party.authority_area, :can_create)
-    actions << link_to('New Party', new_level_party_path, class: 'action')
+    actions << link_to('New Party', new_level_party_path(level), class: 'action')
   end
   if actions.size > 0
     %>

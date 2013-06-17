@@ -8,6 +8,6 @@ end
 %></ul>
 <%
 if @user && @user.has_authority_for_area(Party.authority_area, :can_create)
-  %><p class="actions"><%= link_to 'New Party', new_level_party_path, class: 'action' %></p>
+  %><p class="actions"><%= link_to 'New Party', new_level_party_path(@level), class: 'action' %></p>
 <%
 end -%>

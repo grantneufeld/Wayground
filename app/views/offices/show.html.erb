@@ -47,7 +47,7 @@ if user.present?
     )
   end
   if user.has_authority_for_area(Office.authority_area, :can_create)
-    actions << link_to('New Office', new_level_office_path, class: 'action')
+    actions << link_to('New Office', new_level_office_path(level), class: 'action')
     actions << link_to('New Successor Office', new_office_with_previous_level_offices_path(level, office), class: 'action', title: 'If this office has been replaced (e.g., during redistricting)')
   end
   if actions.size > 0
