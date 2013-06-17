@@ -1,0 +1,9 @@
+<%
+# requires election
+level ||= election.level
+
+%><%= render 'levels/breadcrumb', { level: level, skip_highlight: true } %>
+<%
+@site_breadcrumbs ||= []
+@site_breadcrumbs << {text: election.name, url: [level, election], highlight: true}
+%>

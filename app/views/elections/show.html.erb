@@ -47,4 +47,24 @@ if user.present?
 </p>
 <%
   end
-end -%>
+end
+
+
+content_for(:other_sections) do
+  %>
+<section><h2>Ballots</h2>
+<ul>
+<%
+  election.ballots.each do |ballot|
+    %><%= render 'ballots/list_item', { ballot: ballot, user: user } %><%
+  end
+  %></ul><%
+  if user.present? && user.has_authority_for_area(Ballot.authority_area, :can_create)
+    %><p class="actions"><%= link_to('New Ballot', new_level_election_ballot_path(level, election), class: 'action') %></p>
+<%
+  end
+  %></section>
+<%
+end
+
+-%>

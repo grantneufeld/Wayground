@@ -1,9 +1,11 @@
 <%
-# requires level
+# requires local: level
+# optional local: skip_highlight (boolean)
+skip_highlight ||= false
 
 @site_breadcrumbs = []
 level.parent_chain.each do |parent|
   @site_breadcrumbs << {text: parent.name, url: parent}
 end
-@site_breadcrumbs << {text: level.name, url: level, highlight: true}
+@site_breadcrumbs << {text: level.name, url: level, highlight: !(skip_highlight)}
 %>

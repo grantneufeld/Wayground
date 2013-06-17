@@ -15,7 +15,7 @@ class LevelsController < ApplicationController
   end
 
   def show
-    page_metadata(title: 'Level' + (@level.name? ? " “#{@level.name}”" : ''))
+    page_metadata(title: @level.name)
   end
 
   #def new; end

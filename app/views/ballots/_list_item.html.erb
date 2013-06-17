@@ -1,0 +1,7 @@
+<%
+# requires ballot
+election ||= ballot.election
+office ||= ballot.office
+level ||= election.level
+-%>
+<li><%= link_to office.name, [level, election, ballot] %></li>

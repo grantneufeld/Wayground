@@ -1,0 +1,54 @@
+<%
+ballot ||= @ballot
+election ||= @election || ballot.election
+level ||= @level || election.level
+office ||= @office || ballot.office
+user ||= @user
+
+%><%= render 'elections/breadcrumb', { election: election } %>
+<h1><%= link_to election.name, [level, election] %> ballot for <%= link_to office.name, [level, office] %><%
+if ballot.is_byelection
+  %> (byelection)<%
+end
+%></h1>
+<%
+
+dates = []
+dates << "Term begins on #{ballot.term_start_on.to_datetime.to_s(:simple_date)}." if ballot.term_start_on?
+dates << "Term ends on #{ballot.term_end_on.to_datetime.to_s(:simple_date)}." if ballot.term_end_on?
+if dates.size > 0
+  %><p><%= safe_join(dates, "\n<br />".html_safe) %></p>
+<%
+end
+
+if ballot.url?
+  %><p>Weblink: <%= link_to ballot.url, ballot.url %></p>
+<%
+end
+
+if ballot.description?
+  %><p><%= ballot.description %></p>
+<%
+end
+
+if user.present?
+  actions = []
+  if ballot.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_level_election_ballot_path(level, election, ballot), class: 'action')
+  end
+  if ballot.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, level, election, ballot], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user.has_authority_for_area(Ballot.authority_area, :can_create)
+    actions << link_to('New Ballot', new_level_election_ballot_path(level, election), class: 'action')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end -%>
