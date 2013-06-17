@@ -1,0 +1,42 @@
+<%
+person ||= @person
+user ||= @user
+user_can_create = user.present? && user.has_authority_for_area(Person.authority_area, :can_create)
+
+%><h1><%= person.fullname %></h1>
+<%
+
+if person.aliases.size > 0
+  %><p>Also goes by <%= person.aliases.join(', ') %>.</p>
+<%
+end
+
+if person.bio?
+  %><p><%= person.bio %></p>
+<%
+end
+
+if user.present?
+  actions = []
+  if person.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_person_path(person), class: 'action')
+  end
+  if person.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, person], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user_can_create
+    actions << link_to('New Person', new_person_path, class: 'action')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end
+
+
+-%>

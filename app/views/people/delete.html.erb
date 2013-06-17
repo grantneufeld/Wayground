@@ -1,0 +1,5 @@
+<h1>Delete “<%= link_to @person.fullname, @person %>” Person?</h1>
+
+<%= form_tag(@person, method: :delete) do %>
+<p><%= submit_tag "Delete Person" %></p>
+<% end %>

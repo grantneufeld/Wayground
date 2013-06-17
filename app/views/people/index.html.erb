@@ -1,0 +1,12 @@
+<h1>People</h1>
+<ul>
+<% @people.each do |person|
+  %><li><%= link_to person.fullname, person %></li>
+<%
+end
+%></ul>
+<%
+if @user && @user.has_authority_for_area(Person.authority_area, :can_create)
+  %><p class="actions"><%= link_to 'New Person', new_person_path, class: 'action' %></p>
+<%
+end -%>

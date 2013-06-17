@@ -32,6 +32,7 @@ Wayground::Application.routes.draw do
     end
     resources :parties
   end
+  resources :people
 
   # CONTENT
   resources :paths
