@@ -22,11 +22,16 @@ class ViewDouble
   def link_to(*args)
     link = args[1]
     if link.is_a? Array
-      action = link[0]
-      obj = link[1]
-      link = "/#{obj.class.name.pluralize.underscore}/#{obj.id}/#{action}"
-    elsif link.respond_to?(:id)
-      link = "/#{link.class.name.pluralize.underscore}/#{link.id}"
+      if link[0].is_a? Symbol
+        action = link.shift
+      else
+        action = nil
+      end
+      links = link.map { |obj| "/#{obj.class.name.pluralize.underscore}/#{obj.to_param}" }
+      link = links.join
+      link += "/#{action}" if action
+    elsif link.is_a? ActiveRecord::Base
+      link = "/#{link.class.name.pluralize.underscore}/#{link.to_param}"
     end
     attributes = ''
     if args[2]
