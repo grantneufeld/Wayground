@@ -7,7 +7,7 @@ class Setting < ActiveRecord::Base
 
   validates_presence_of :key
 
-  default_scope order('key')
+  default_scope { order('key') }
 
   # Key-indexed accessor for the values of settings.
   def self.[](key)

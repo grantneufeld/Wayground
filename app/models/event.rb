@@ -47,8 +47,8 @@ class Event < ActiveRecord::Base
   validates_length_of :description, within: 0..511, allow_blank: true
   validates_length_of :content, within: 0..8191, allow_blank: true
 
-  default_scope order('start_at')
-  scope :approved, where(is_approved: true)
+  default_scope { order('start_at') }
+  scope :approved, -> { where(is_approved: true) }
   scope :upcoming, lambda { # use a lambda so the time is reloaded each time upcoming is called
     where(
       'start_at >= :day_start OR (end_at IS NOT NULL AND end_at >= :day_start)',

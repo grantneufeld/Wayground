@@ -19,7 +19,7 @@ class ImageVariant < ActiveRecord::Base
 
   # this originals scope is a bit of a hack that relies on 'original' being alphabetically before 'scaled'
   # it could break when other styles are introduced
-  scope :originals, order(:style)
+  scope :originals, -> { order(:style) }
   # this makes the big assumption that the width is more important than the height
-  scope :largest, order('image_variants.width DESC, image_variants.height DESC')
+  scope :largest, -> { order('image_variants.width DESC, image_variants.height DESC') }
 end

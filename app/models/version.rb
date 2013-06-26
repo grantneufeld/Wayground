@@ -5,7 +5,6 @@
 # and they are responsible for generating their own Version records.
 class Version < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Content', inherits_from: :item
-  serialize :values, ActiveRecord::Coders::Hstore
   attr_accessible :user, :edited_at, :edit_comment, :filename, :title, :values
 
   belongs_to :item, polymorphic: true
@@ -15,7 +14,7 @@ class Version < ActiveRecord::Base
   validates_presence_of :user
   validates_presence_of :edited_at
 
-  default_scope order(:edited_at, :id)
+  default_scope { order(:edited_at, :id) }
   scope :versions_before, lambda { |before_datetime| where('versions.edited_at < ?', before_datetime) }
   scope :versions_after, lambda { |after_datetime| where('versions.edited_at > ?', after_datetime) }
 
