@@ -24,7 +24,7 @@ describe ProjectsController do
       get("/projects/1/edit").should route_to("projects#edit", :id => "1")
     end
     it "routes to #update" do
-      put("/projects/1").should route_to("projects#update", :id => "1")
+      expect( patch: '/projects/1' ).to route_to('projects#update', id: '1')
     end
 
     it "routes to #delete" do

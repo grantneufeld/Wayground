@@ -169,7 +169,7 @@ describe PathsController do
   describe "PUT update" do
     it "requires the user to have authority" do
       path = FactoryGirl.create(:path, {:redirect => '/'})
-      put :update, :id => path.id.to_s
+      patch :update, id: path.id.to_s
       response.status.should eq 403
     end
 
@@ -178,20 +178,20 @@ describe PathsController do
         set_logged_in_admin
         Path.stub(:find).with("37") { mock_path }
         mock_path.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :path => {'these' => 'params'}
+        patch :update, id: '37', path: { 'these' => 'params' }
       end
 
       it "assigns the requested path as @path" do
         set_logged_in_admin
         Path.stub(:find) { mock_path(:update_attributes => true) }
-        put :update, :id => "1"
+        patch :update, id: '1'
         assigns(:path).should be(mock_path)
       end
 
       it "redirects to the path" do
         set_logged_in_admin
         Path.stub(:find) { mock_path(:update_attributes => true) }
-        put :update, :id => "1"
+        patch :update, id: '1'
         response.should redirect_to(path_url(mock_path))
       end
     end
@@ -200,14 +200,14 @@ describe PathsController do
       it "assigns the path as @path" do
         set_logged_in_admin
         Path.stub(:find) { mock_path(:update_attributes => false) }
-        put :update, :id => "1"
+        patch :update, id: '1'
         assigns(:path).should be(mock_path)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         Path.stub(:find) { mock_path(:update_attributes => false) }
-        put :update, :id => "1"
+        patch :update, id: '1'
         response.should render_template("edit")
       end
     end

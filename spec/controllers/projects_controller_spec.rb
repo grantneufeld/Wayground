@@ -149,20 +149,20 @@ describe ProjectsController do
         # submitted in the request.
         Project.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
         set_logged_in_admin
-        put :update, {:id => project.to_param, :project => {'these' => 'params'}}, valid_session
+        patch :update, { id: project.to_param, project: { 'these' => 'params' } }, valid_session
       end
 
       it "assigns the requested project as @project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
-        put :update, {:id => project.to_param, :project => valid_attributes}, valid_session
+        patch :update, { id: project.to_param, project: valid_attributes }, valid_session
         assigns(:project).should eq(project)
       end
 
       it "redirects to the project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
-        put :update, {:id => project.to_param, :project => valid_attributes}, valid_session
+        patch :update, { id: project.to_param, project: valid_attributes }, valid_session
         response.should redirect_to(project_name_url(project.filename))
       end
     end
@@ -172,7 +172,7 @@ describe ProjectsController do
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, {id: @admin_project.to_param, project: {}}
+        patch :update, { id: @admin_project.to_param, project: {} }
         expect( assigns(:project) ).to eq @admin_project
       end
 
@@ -180,7 +180,7 @@ describe ProjectsController do
         # Trigger the behavior that occurs when invalid params are submitted
         Project.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, {id: @admin_project.to_param, project: {}}
+        patch :update, { id: @admin_project.to_param, project: {} }
         response.should render_template("edit")
       end
     end

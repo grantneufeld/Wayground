@@ -41,7 +41,7 @@ describe EventsController do
     end
     it "assigns all approved upcoming events as @events" do
       get :index
-      assigns(:events).should eq([@event1])
+      expect( assigns(:events).to_a ).to eq([@event1])
     end
     it "assigns all upcoming events, including unapproved, as @events for moderators" do
       set_logged_in_admin
@@ -55,7 +55,7 @@ describe EventsController do
     context "past events" do
       it "assigns all approved past events as @events" do
         get :index, {r: 'past'}
-        assigns(:events).should eq([@event3])
+        expect( assigns(:events).to_a ).to eq([@event3])
       end
       it "assigns all past events, including unapproved, as @events for moderators" do
         set_logged_in_admin
@@ -70,7 +70,7 @@ describe EventsController do
     context "all events" do
       it "assigns all approved past events as @events" do
         get :index, {r: 'all'}
-        assigns(:events).should eq([@event3, @event1])
+        expect( assigns(:events) ).to eq([@event3, @event1])
       end
       it "assigns all past events, including unapproved, as @events for moderators" do
         set_logged_in_admin
@@ -222,7 +222,7 @@ describe EventsController do
     it "requires the user to have authority" do
       set_logged_in_user
       event = FactoryGirl.create(:event)
-      put :update, :id => event.id, :event => {'these' => 'params'}
+      patch :update, id: event.id, event: { 'these' => 'params' }
       response.status.should eq 403
     end
 
@@ -235,20 +235,20 @@ describe EventsController do
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Event.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => event.id, :event => {'these' => 'params'}
+        patch :update, id: event.id, event: { 'these' => 'params' }
       end
 
       it "assigns the requested event as @event" do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
-        put :update, :id => event.id, :event => valid_attributes
+        patch :update, id: event.id, event: valid_attributes
         assigns(:event).should eq(event)
       end
 
       it "redirects to the event" do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
-        put :update, :id => event.id, :event => valid_attributes
+        patch :update, id: event.id, event: valid_attributes
         response.should redirect_to(event)
       end
     end
@@ -259,7 +259,7 @@ describe EventsController do
         event = FactoryGirl.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
         Event.any_instance.stub(:save).and_return(false)
-        put :update, :id => event.id, :event => {}
+        patch :update, id: event.id, event: {}
         assigns(:event).should eq(event)
       end
 
@@ -268,7 +268,7 @@ describe EventsController do
         event = FactoryGirl.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
         Event.any_instance.stub(:save).and_return(false)
-        put :update, :id => event.id, :event => {}
+        patch :update, id: event.id, event: {}
         response.should render_template("edit")
       end
     end

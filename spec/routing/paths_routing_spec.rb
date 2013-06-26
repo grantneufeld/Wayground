@@ -33,7 +33,7 @@ describe PathsController do
       { :get => "/paths/1/edit" }.should route_to(:controller => "paths", :action => "edit", :id => "1")
     end
     it "recognizes and generates #update" do
-      { :put => "/paths/1" }.should route_to(:controller => "paths", :action => "update", :id => "1")
+      expect( patch: '/paths/1' ).to route_to(controller: 'paths', action: 'update', id: '1')
     end
 
     it "recognizes and generates #delete" do

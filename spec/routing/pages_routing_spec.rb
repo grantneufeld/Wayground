@@ -21,7 +21,7 @@ describe PagesController do
       { :get => "/pages/1/edit" }.should route_to(:controller => "pages", :action => "edit", :id => "1")
     end
     it "recognizes and generates #update" do
-      { :put => "/pages/1" }.should route_to(:controller => "pages", :action => "update", :id => "1")
+      expect( patch: '/pages/1' ).to route_to(controller: 'pages', action: 'update', id: '1')
     end
 
     it "recognizes and generates #delete" do

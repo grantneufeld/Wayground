@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 require 'spec_helper'
 
 describe DocumentsController do
@@ -185,7 +184,7 @@ describe DocumentsController do
   describe "PUT update" do
     context "as anonymous user" do
       it "requires the user to have authority" do
-        put :update, :id => @document.id.to_s
+        patch :update, id: @document.id.to_s
         response.status.should eq 403
       end
     end
@@ -201,19 +200,19 @@ describe DocumentsController do
           # specifies that the document receives the :update_attributes message
           # with whatever params are submitted in the request.
           Document.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-          put :update, :id => @document.id, :document => {'these' => 'params'}
+          patch :update, id: @document.id, document: { 'these' => 'params' }
         end
 
         it "assigns the requested document as @document" do
           document = FactoryGirl.create(:document)
-          put :update, :id => document.id, :document => valid_attributes
+          patch :update, id: document.id, document: valid_attributes
           assigns(:document).should eq(document)
           document.delete
         end
 
         it "redirects to the document" do
           document = FactoryGirl.create(:document)
-          put :update, :id => document.id, :document => valid_attributes
+          patch :update, id: document.id, document: valid_attributes
           response.should redirect_to(document)
           document.delete
         end
@@ -223,7 +222,7 @@ describe DocumentsController do
         before(:each) do
           # Trigger the behavior that occurs when invalid params are submitted
           Document.any_instance.stub(:save).and_return(false)
-          put :update, :id => @document.id.to_s, :document => {}
+          patch :update, id: @document.id.to_s, document: {}
         end
 
         it "assigns the document as @document" do

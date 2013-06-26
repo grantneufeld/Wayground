@@ -29,7 +29,7 @@ describe "images/edit.html.erb" do
   it "renders edit image form" do
     image.stub(:id).and_return(123)
     render
-    assert_select 'form', action: '/images/123', method: 'put' do
+    assert_select 'form', action: '/images/123', method: 'patch' do
       assert_select 'input#image_title', name: 'image[title]', value: 'Stub Title'
       assert_select 'input#image_alt_text', name: 'image[alt_text]', value: 'stub alt text'
       assert_select 'textarea#image_description', name: 'image[description]', value: 'Stub description.'

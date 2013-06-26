@@ -25,7 +25,7 @@ describe DocumentsController do
       get("/documents/1/edit").should route_to("documents#edit", :id => "1")
     end
     it "routes to #update" do
-      put("/documents/1").should route_to("documents#update", :id => "1")
+      expect( patch: '/documents/1' ).to route_to('documents#update', id: '1')
     end
 
     it "routes to #delete" do
