@@ -24,7 +24,7 @@ describe "pages/edit.html.erb" do
 
   it "sets the head tags to include the necessary rich text scripts" do
     render
-    expect( view.content_for(:head) ).to match /<script src="\/ckeditor\/ckeditor.js" type="text\/javascript"/
+    expect( view.content_for(:head) ).to match /<script (?:|[^>]+ )src="\/ckeditor\/ckeditor.js"/
   end
 
 end
