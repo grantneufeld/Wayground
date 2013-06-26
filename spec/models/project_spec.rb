@@ -22,7 +22,7 @@ describe Project do
   end
 
   describe "attr_accessible" do
-    it "should not allow user to be set" do
+    it 'should not allow creator to be set' do
       expect {
         project = Project.new(:creator => @user_normal)
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error

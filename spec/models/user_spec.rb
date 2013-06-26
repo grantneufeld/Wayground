@@ -175,8 +175,11 @@ describe User do
   end
 
   describe "email code confirmation" do
+    before(:each) do
+      @user.authorizations.destroy_all
+    end
     it "should generate a confirmation token when creating a new user" do
-      @user.confirmation_token.blank?.should_not be_true
+      expect( @user.confirmation_token.blank? ).to be_false
     end
     it "should fail to confirm if the code parameter does not match the saved token" do
       @user.confirm_code!('invalid token').should be_false
@@ -306,7 +309,7 @@ describe User do
     it "should ammend an existing authority" do
       authority = FactoryGirl.build(:authority, user: @user, item: @item, can_view: true)
       @user.authorizations << authority
-      @user.save!
+      authority.save!
       @user.set_authority_on_item(@item, :can_update)
       authority = @user.authorizations.for_item(@item).first
       authority.can_view?.should be_true

@@ -42,6 +42,7 @@ module Wayground
         context "with no existing authentication" do
           context "with a current user" do
             it "should add a new authentication to the user" do
+              @user.authentications.destroy_all
               provider = 'newproviderforuser'
               uid = 'newuidforuser'
               auth_hash = {'provider' => provider, 'uid' => uid}
@@ -66,34 +67,39 @@ module Wayground
             end
           end
         end
-        it "should figure out the facebook url" do
-          provider = 'facebook'
-          fb_url = 'http://facebook.com/fburl'
-          auth_hash = {'provider' => provider, 'uid' => 'facebookuid', 'urls' => {'Facebook' => fb_url}}
-          user = OauthLogin.new(current_user: @user, auth: auth_hash).user
-          authentication = user.authentications.where(provider: provider).first
-          expect( authentication.url ).to eq fb_url
-        end
-        it "should figure out the twitter url" do
-          provider = 'twitter'
-          auth_hash = {'provider' => provider, 'uid' => 'twitteruid',
-            'info' => { 'nickname' => 'twitteruser' }
-          }
-          user = OauthLogin.new(current_user: @user, auth: auth_hash).user
-          authentication = user.authentications.where(provider: provider).first
-          expect( authentication.url ).to eq 'https://twitter.com/twitteruser'
-        end
-        it "should leave the url as nil if not facebook or twitter" do
-          provider = 'nourl'
-          auth_hash = {'provider' => provider, 'uid' => 'nourluid',
-            # include the facebook and twitter data to make sure it’s not accidentally getting picked up
-            'user_info' => {'nickname' => 'wrong'},
-            'info' => { 'nickname' => 'alsowrong' },
-            'urls' => {'Facebook' => 'http://facebook.com/wrong'}
-          }
-          user = OauthLogin.new(current_user: @user, auth: auth_hash).user
-          authentication = user.authentications.where(provider: provider).first
-          expect( authentication.url ).to be_nil
+        context '...' do
+          before(:each) do
+            @user.authentications.destroy_all
+          end
+          it 'should figure out the facebook url' do
+            provider = 'facebook'
+            fb_url = 'http://facebook.com/fburl'
+            auth_hash = {'provider' => provider, 'uid' => 'facebookuid', 'urls' => {'Facebook' => fb_url}}
+            user = OauthLogin.new(current_user: @user, auth: auth_hash).user
+            authentication = user.authentications.where(provider: provider).first
+            expect( authentication.url ).to eq fb_url
+          end
+          it 'should figure out the twitter url' do
+            provider = 'twitter'
+            auth_hash = {'provider' => provider, 'uid' => 'twitteruid',
+              'info' => { 'nickname' => 'twitteruser' }
+            }
+            user = OauthLogin.new(current_user: @user, auth: auth_hash).user
+            authentication = user.authentications.where(provider: provider).first
+            expect( authentication.url ).to eq 'https://twitter.com/twitteruser'
+          end
+          it 'should leave the url as nil if not facebook or twitter' do
+            provider = 'nourl'
+            auth_hash = {'provider' => provider, 'uid' => 'nourluid',
+              # include the facebook and twitter data to make sure it’s not accidentally getting picked up
+              'user_info' => {'nickname' => 'wrong'},
+              'info' => { 'nickname' => 'alsowrong' },
+              'urls' => {'Facebook' => 'http://facebook.com/wrong'}
+            }
+            user = OauthLogin.new(current_user: @user, auth: auth_hash).user
+            authentication = user.authentications.where(provider: provider).first
+            expect( authentication.url ).to be_nil
+          end
         end
       end
 

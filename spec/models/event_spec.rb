@@ -368,11 +368,11 @@ describe Event do
     context "with dates in the year 2000" do
       before(:all) do
         Event.delete_all
-        @event1 = FactoryGirl.create(:event, start_at: '2000-01-01 23:59:99', title: '2000 day 1')
+        @event1 = FactoryGirl.create(:event, start_at: '2000-01-01 23:59:59', title: '2000 day 1')
         @event2 = FactoryGirl.create(:event, start_at: '2000-01-02 00:00:00', title: '2000 day 2')
-        @event3 = FactoryGirl.create(:event, start_at: '2000-01-03 23:59:99', title: '2000 day 3')
+        @event3 = FactoryGirl.create(:event, start_at: '2000-01-03 23:59:59', title: '2000 day 3')
         @event4 = FactoryGirl.create(:event, start_at: '2000-01-04 00:00:00', title: '2000 day 4')
-        @event4_2 = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:99', title: '2000 day 4, #2')
+        @event4_2 = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:59', title: '2000 day 4, #2')
         @event5 = FactoryGirl.create(:event, start_at: '2000-01-05 00:00:00', title: '2000 day 5')
       end
       describe ".falls_between_dates" do
@@ -391,9 +391,9 @@ describe Event do
     describe '.tagged' do
       it 'should return events that are tagged with the given tag' do
         Tag.delete_all
-        event1 = Event.first || FactoryGirl.create(:event)
-        event2 = Event.offset(1).first || FactoryGirl.create(:event)
-        event3 = Event.offset(2).first || FactoryGirl.create(:event)
+        event1 = Event.order(:id).first || FactoryGirl.create(:event)
+        event2 = Event.order(:id).offset(1).first || FactoryGirl.create(:event)
+        event3 = Event.order(:id).offset(2).first || FactoryGirl.create(:event)
         event1.tag_list = 'Given, Tag'
         event1.editor = @user_admin
         event1.save!
