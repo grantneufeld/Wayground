@@ -155,7 +155,7 @@ describe Wayground::TagList do
         @list.determine_existing_tags
       end
       it 'should not update the tag' do
-        Tag.any_instance.should_not_receive(:update_attributes!)
+        Tag.any_instance.should_not_receive(:update!)
         @list.update_existing_tag('same title')
       end
       it 'should return the tag' do
@@ -173,7 +173,7 @@ describe Wayground::TagList do
         tags.stub(:all).and_return(tags)
         list = Wayground::TagList.new(tags: tags)
         list.determine_existing_tags
-        Tag.any_instance.should_receive(:update_attributes!).with(title: 'different title').and_return(true)
+        Tag.any_instance.should_receive(:update!).with(title: 'different title').and_return(true)
         list.update_existing_tag('different title')
       end
     end

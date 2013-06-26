@@ -53,7 +53,7 @@ class AuthoritiesController < ApplicationController
     @authority.authorized_by = current_user
     page_metadata(title: 'Update Authority')
 
-    if @authority.update_attributes(params[:authority])
+    if @authority.update(params[:authority])
       redirect_to(@authority, notice: 'Authority was successfully updated.')
     else
       render action: "edit"

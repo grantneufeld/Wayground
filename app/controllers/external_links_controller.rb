@@ -38,7 +38,7 @@ class ExternalLinksController < ApplicationController
 
   def update
     page_metadata(title: "Edit External Link: #{@external_link.title}")
-    if @external_link.update_attributes(params[:external_link])
+    if @external_link.update(params[:external_link])
       redirect_to([@item, @external_link], notice: 'The external link has been saved.')
     else
       render action: "edit"

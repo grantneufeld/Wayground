@@ -33,7 +33,7 @@ class ImagesController < ApplicationController
   end
 
   def update
-    if @image.update_attributes(params[:image])
+    if @image.update(params[:image])
       redirect_to(@image, notice: 'The image has been saved.')
     else
       render action: 'edit'

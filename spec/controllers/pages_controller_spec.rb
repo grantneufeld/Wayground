@@ -146,20 +146,20 @@ describe PagesController do
       it "updates the requested page" do
         set_logged_in_admin
         Page.stub(:find).with("37") { mock_page }
-        mock_page.should_receive(:update_attributes).with({'these' => 'params'})
+        mock_page.should_receive(:update).with('these' => 'params')
         patch :update, id: '37', page: { 'these' => 'params' }
       end
 
       it "assigns the requested page as @page" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(:update_attributes => true) }
+        Page.stub(:find) { mock_page(update: true) }
         patch :update, id: '1'
         assigns(:page).should be(mock_page)
       end
 
       it "redirects to the page" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(:update_attributes => true) }
+        Page.stub(:find) { mock_page(update: true) }
         patch :update, id: '1'
         response.should redirect_to(page_url(mock_page))
       end
@@ -168,14 +168,14 @@ describe PagesController do
     describe "with invalid params" do
       it "assigns the page as @page" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(:update_attributes => false) }
+        Page.stub(:find) { mock_page(update: false) }
         patch :update, id: '1'
         assigns(:page).should be(mock_page)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(:update_attributes => false) }
+        Page.stub(:find) { mock_page(update: false) }
         patch :update, id: '1'
         response.should render_template("edit")
       end

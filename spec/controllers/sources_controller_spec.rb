@@ -154,9 +154,9 @@ describe SourcesController do
         source = FactoryGirl.create(:source)
         # Assuming there are no other sources in the database, this
         # specifies that the Source created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        Source.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Source.any_instance.should_receive(:update).with('these' => 'params')
         set_logged_in_admin
         patch :update, id: source.id, source: { 'these' => 'params' }
       end

@@ -142,9 +142,9 @@ describe SettingsController do
         set_logged_in_admin
         # Assuming there are no other settings in the database, this
         # specifies that the Setting created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        Setting.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Setting.any_instance.should_receive(:update).with('these' => 'params')
         patch :update, { id: setting.to_param, setting: { 'these' => 'params' } }, valid_session
       end
 

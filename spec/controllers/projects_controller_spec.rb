@@ -145,9 +145,9 @@ describe ProjectsController do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         # Assuming there are no other projects in the database, this
         # specifies that the Project created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        Project.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Project.any_instance.should_receive(:update).with('these' => 'params')
         set_logged_in_admin
         patch :update, { id: project.to_param, project: { 'these' => 'params' } }, valid_session
       end

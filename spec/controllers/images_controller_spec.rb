@@ -133,7 +133,7 @@ describe ImagesController do
     describe "with valid params" do
       it "updates the requested image" do
         set_logged_in_admin
-        Image.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Image.any_instance.should_receive(:update).with('these' => 'params')
         patch :update, id: image.id, image: { 'these' => 'params' }
       end
       it "assigns the requested image as @image" do

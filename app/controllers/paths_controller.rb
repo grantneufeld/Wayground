@@ -67,7 +67,7 @@ class PathsController < ApplicationController
   # PUT /paths/1
   # PUT /paths/1.xml
   def update
-    if @path.update_attributes(params[:path])
+    if @path.update(params[:path])
       redirect_to(@path, notice: 'Path was successfully updated.')
     else
       render action: "edit"

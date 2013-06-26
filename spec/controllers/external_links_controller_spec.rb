@@ -163,9 +163,9 @@ describe ExternalLinksController do
     describe "with valid params" do
       it "updates the requested external_link" do
         set_logged_in_admin
-        # This specifies that the ExternalLink receives the :update_attributes message
+        # This specifies that the ExternalLink receives the :update message
         # with whatever params are submitted in the request.
-        ExternalLink.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        ExternalLink.any_instance.should_receive(:update).with('these' => 'params')
         patch :update, event_id: event.id, id: external_link.id, external_link: { 'these' => 'params' }
       end
 

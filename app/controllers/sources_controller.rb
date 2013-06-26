@@ -36,7 +36,7 @@ class SourcesController < ApplicationController
   end
 
   def update
-    if @source.update_attributes(params[:source])
+    if @source.update(params[:source])
       redirect_to @source
     else
       page_metadata(title: "Edit Source: #{@source.name}")

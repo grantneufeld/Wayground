@@ -47,7 +47,7 @@ class PagesController < ApplicationController
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
-    if @page.update_attributes(params[:page])
+    if @page.update(params[:page])
       redirect_to(@page, notice: 'Page was successfully updated.')
     else
       page_metadata(title: "Edit Page “#{@page.title}”")

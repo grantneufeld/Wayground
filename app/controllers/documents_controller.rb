@@ -44,7 +44,7 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    if @document.update_attributes(params[:document])
+    if @document.update(params[:document])
       redirect_to(@document, notice: 'Document was successfully updated.')
     else
       page_metadata(title: "Edit Document #{@document.filename}")

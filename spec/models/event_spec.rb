@@ -506,7 +506,7 @@ describe Event do
     it "should be called when updating an Event" do
       sourced_item.has_local_modifications = false
       sourced_item.save!
-      event.update_attributes(title: 'Updated')
+      event.update(title: 'Updated')
       sourced_item.reload
       expect( sourced_item.has_local_modifications? ).to be_true
     end
@@ -562,7 +562,7 @@ describe Event do
       event = FactoryGirl.create(:event, editor: @user_admin, edit_comment: 'add_version after update')
       Version.any_instance.stub(:diff_with).and_return(title: 'Different')
       expect {
-        event.update_attributes(title: 'updated version')
+        event.update(title: 'updated version')
       }.to change{ event.versions.count }.by(1)
     end
   end

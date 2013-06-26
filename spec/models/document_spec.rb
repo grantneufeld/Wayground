@@ -181,7 +181,7 @@ describe Document do
       document.data = ''
       document.container_path = @container
       document.save!
-      document.update_attributes!(:description => 'Not changing the filename.')
+      document.update!(description: 'Not changing the filename.')
       document.sitepath.should eq '/container/original'
     end
     it "should update the path if the Document’s filename changed" do
@@ -190,7 +190,7 @@ describe Document do
       document.data = ''
       document.container_path = @container
       document.save!
-      document.update_attributes!(:custom_filename => 'changed')
+      document.update!(custom_filename: 'changed')
       document.sitepath.should eq '/container/changed'
     end
     it "should add a path if a container_path is added" do

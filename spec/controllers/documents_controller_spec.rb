@@ -197,9 +197,9 @@ describe DocumentsController do
       context "with valid params" do
         it "updates the requested document" do
           # Assuming there are no other documents in the database, this
-          # specifies that the document receives the :update_attributes message
+          # specifies that the document receives the :update message
           # with whatever params are submitted in the request.
-          Document.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+          Document.any_instance.should_receive(:update).with('these' => 'params')
           patch :update, id: @document.id, document: { 'these' => 'params' }
         end
 

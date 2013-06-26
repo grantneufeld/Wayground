@@ -78,7 +78,7 @@ class EventsController < ApplicationController
 
   def update
     page_metadata(title: "Edit Event: #{@event.title}")
-    if @event.update_attributes(params[:event])
+    if @event.update(params[:event])
       notice = 'The event has been saved.'
       redirect_to(@event, notice: notice)
     else

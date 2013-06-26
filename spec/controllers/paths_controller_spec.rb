@@ -177,20 +177,20 @@ describe PathsController do
       it "updates the requested path" do
         set_logged_in_admin
         Path.stub(:find).with("37") { mock_path }
-        mock_path.should_receive(:update_attributes).with({'these' => 'params'})
+        mock_path.should_receive(:update).with('these' => 'params')
         patch :update, id: '37', path: { 'these' => 'params' }
       end
 
       it "assigns the requested path as @path" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(:update_attributes => true) }
+        Path.stub(:find) { mock_path(update: true) }
         patch :update, id: '1'
         assigns(:path).should be(mock_path)
       end
 
       it "redirects to the path" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(:update_attributes => true) }
+        Path.stub(:find) { mock_path(update: true) }
         patch :update, id: '1'
         response.should redirect_to(path_url(mock_path))
       end
@@ -199,14 +199,14 @@ describe PathsController do
     describe "with invalid params" do
       it "assigns the path as @path" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(:update_attributes => false) }
+        Path.stub(:find) { mock_path(update: false) }
         patch :update, id: '1'
         assigns(:path).should be(mock_path)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(:update_attributes => false) }
+        Path.stub(:find) { mock_path(update: false) }
         patch :update, id: '1'
         response.should render_template("edit")
       end

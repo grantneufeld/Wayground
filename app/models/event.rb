@@ -320,7 +320,7 @@ class Event < ActiveRecord::Base
       proc = params[:processor] || Wayground::Import::IcalImporter.new()
       proc.editor = self.editor
       perform_from_source do
-        success = self.update_attributes(proc.icalendar_field_mapping(ievent))
+        success = self.update(proc.icalendar_field_mapping(ievent))
       end
       success
     end

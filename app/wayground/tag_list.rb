@@ -74,7 +74,7 @@ module Wayground
       tag = @existing_tags[tag_text]
       if tag
         if tag.title != title
-          tag.update_attributes!(title: title)
+          tag.update!(title: title)
         end
         @existing_tags.delete(tag_text)
       end

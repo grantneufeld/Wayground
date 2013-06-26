@@ -232,9 +232,9 @@ describe EventsController do
         event = FactoryGirl.create(:event)
         # Assuming there are no other events in the database, this
         # specifies that the Event created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        Event.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Event.any_instance.should_receive(:update).with('these' => 'params')
         patch :update, id: event.id, event: { 'these' => 'params' }
       end
 

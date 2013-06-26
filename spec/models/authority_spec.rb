@@ -163,7 +163,7 @@ describe Authority do
     end
 
     it "should logical-OR the boolean fields" do
-      authority1.update_attributes(is_owner: true, can_delete: true)
+      authority1.update(is_owner: true, can_delete: true)
       authority2 = FactoryGirl.create(:authority, user: user,
         item: FactoryGirl.create(:event), can_view: true, can_update: true
       )
