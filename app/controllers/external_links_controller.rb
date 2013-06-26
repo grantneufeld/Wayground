@@ -2,13 +2,13 @@
 
 # This controller must always be a sub-controller (e.g., /events/:event_id/external_links).
 class ExternalLinksController < ApplicationController
-  before_filter :set_user
-  before_filter :set_item
-  before_filter :set_external_link, :except => [:index, :new, :create]
-  before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_new_external_link, :only => [:new, :create]
+  before_action :set_user
+  before_action :set_item
+  before_action :set_external_link, except: [:index, :new, :create]
+  before_action :requires_create_authority, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_new_external_link, only: [:new, :create]
 
   def index
     page_metadata(title: "#{@item.title}: External Links")

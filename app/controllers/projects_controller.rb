@@ -1,13 +1,13 @@
 # encoding: utf-8
 
 class ProjectsController < ApplicationController
-  before_filter :set_user
-  before_filter :set_project, :except => [:index, :new, :create]
-  before_filter :requires_login, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_section
-  before_filter :set_new_project, :only => [:new, :create]
+  before_action :set_user
+  before_action :set_project, except: [:index, :new, :create]
+  before_action :requires_login, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_section
+  before_action :set_new_project, only: [:new, :create]
 
   def index
     @projects = Project.all

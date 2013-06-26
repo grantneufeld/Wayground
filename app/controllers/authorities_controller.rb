@@ -2,12 +2,12 @@
 
 # Set authorities (permissions / access-control) for users.
 class AuthoritiesController < ApplicationController
-  before_filter :requires_view_authority, :only => [:index, :show]
-  before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_authority, :except => [:index, :new, :create]
-  before_filter :set_site_location, :except => [:index]
+  before_action :requires_view_authority, only: [:index, :show]
+  before_action :requires_create_authority, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_authority, except: [:index, :new, :create]
+  before_action :set_site_location, except: [:index]
 
   # GET /authorities
   # GET /authorities.xml

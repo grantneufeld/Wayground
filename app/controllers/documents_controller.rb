@@ -1,12 +1,12 @@
 # encoding: utf-8
 
 class DocumentsController < ApplicationController
-  before_filter :set_document, :except => [:index, :new, :create]
-  before_filter :requires_view_authority, :only => [:download, :show]
-  before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_section
+  before_action :set_document, except: [:index, :new, :create]
+  before_action :requires_view_authority, only: [:download, :show]
+  before_action :requires_create_authority, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_section
 
   def download
     @document.assign_headers(response)

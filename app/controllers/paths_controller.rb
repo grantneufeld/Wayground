@@ -1,14 +1,14 @@
 # encoding: utf-8
 
 class PathsController < ApplicationController
-  before_filter :set_path, :except => [:sitepath, :index, :new, :create]
-  before_filter :requires_view_authority, :only => [:show]
-  before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_breadcrumbs, :except => [:sitepath, :index]
-  before_filter :set_new, :only => [:new, :create]
-  before_filter :set_edit, :only => [:edit, :update]
+  before_action :set_path, except: [:sitepath, :index, :new, :create]
+  before_action :requires_view_authority, only: [:show]
+  before_action :requires_create_authority, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_breadcrumbs, except: [:sitepath, :index]
+  before_action :set_new, only: [:new, :create]
+  before_action :set_edit, only: [:edit, :update]
 
   # process arbitrary paths
   def sitepath
