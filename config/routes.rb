@@ -13,7 +13,7 @@ Wayground::Application.routes.draw do
   get "signout" => "sessions#delete", :as => :signout
   delete "signout" => "sessions#destroy"
   # OAUTH
-  match "auth/:provider/callback" => "sessions#oauth_callback"
+  match 'auth/:provider/callback' => 'sessions#oauth_callback', via: [:get, :post]
   # AUTHORITIES
   resources :authorities
   # SETTINGS
