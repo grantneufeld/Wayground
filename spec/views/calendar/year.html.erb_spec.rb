@@ -42,7 +42,7 @@ describe "calendar/year.html.erb" do
     it "should show the new event link" do
       assign(:user, @user)
       render
-      expect( rendered ).to match /<a href="\/events\/new"/
+      expect( rendered ).to match /<a (?:|[^>]+ )href="\/events\/new"/
     end
   end
 end
