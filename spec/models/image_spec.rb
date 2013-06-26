@@ -74,41 +74,48 @@ describe Image do
     end
     context "with no variants" do
       it "should return nil" do
+        @image.image_variants.destroy_all
         expect( @image.get_best_variant ).to eq nil
       end
     end
     context "with one variant" do
       it "should return the variant" do
+        @image.image_variants.destroy_all
         variant = @image.image_variants.create!(style: 'scaled', url: 'http://a.tld', format: 'png')
         expect( @image.get_best_variant ).to eq variant
       end
     end
     context "with no original variants" do
       it "should return the largest scaled variant" do
+        @image.image_variants.destroy_all
         variant1 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
         variant2 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
-        @image.save!
+        variant1.save!
+        variant2.save!
         expect( @image.get_best_variant ).to eq variant2
       end
     end
     context "with one original variant" do
       it "should return the original" do
+        @image.image_variants.destroy_all
         variant = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
         original = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
-        @image.save!
+        variant.save!
+        original.save!
         expect( @image.get_best_variant ).to eq original
       end
     end
     context "with multiple original variants" do
       it "should return the largest" do
+        @image.image_variants.destroy_all
         original1 = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )

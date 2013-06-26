@@ -151,7 +151,7 @@ class User < ActiveRecord::Base
       )
       authority.authorized_by = authorizing_user || self
       self.authorizations << authority
-      self.save!
+      authority.save!
     end
   end
 
