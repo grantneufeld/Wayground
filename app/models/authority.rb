@@ -41,7 +41,7 @@ class Authority < ActiveRecord::Base
     authority_params = params[:authority_params] || {}
     user = User.from_string(authority_params[:user_proxy].to_s)
     if user
-      authority = user.authorizations.new(authority_params)
+      authority = user.authorizations.build(authority_params)
     else
       authority = Authority.new(authority_params)
     end

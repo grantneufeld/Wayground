@@ -94,8 +94,7 @@ describe Image do
         variant2 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
-        variant1.save!
-        variant2.save!
+        @image.save!
         expect( @image.get_best_variant ).to eq variant2
       end
     end
@@ -108,8 +107,7 @@ describe Image do
         original = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
-        variant.save!
-        original.save!
+        @image.save!
         expect( @image.get_best_variant ).to eq original
       end
     end

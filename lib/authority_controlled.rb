@@ -156,7 +156,7 @@ module AuthorityControlled
       if authority
         authority.set_action!(action_type)
       else
-        authority = self.authorities.new(action_type => true)
+        authority = self.authorities.build(action_type => true)
         authority.user = user
         authority.save!
       end

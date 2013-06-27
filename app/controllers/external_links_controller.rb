@@ -95,7 +95,7 @@ class ExternalLinksController < ApplicationController
 
   def set_new_external_link
     page_metadata(title: 'New External Link')
-    @external_link = @item.external_links.new(params[:external_link])
+    @external_link = @item.external_links.build(params[:external_link])
   end
 
 end

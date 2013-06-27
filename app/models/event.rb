@@ -175,7 +175,7 @@ class Event < ActiveRecord::Base
   end
 
   def new_version
-    self.versions.new(
+    self.versions.build(
       user: editor, edited_at: updated_at, edit_comment: edit_comment,
       title: title, values: values_for_version
     )

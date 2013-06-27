@@ -144,14 +144,13 @@ class User < ActiveRecord::Base
         :can_permit => true, :can_approve => true
       )
     else
-      authority = Authority.new(:area => area,
+      authority = self.authorizations.build(:area => area,
         :is_owner => true, :can_create => true, :can_view => true,
         :can_update => true, :can_delete => true, :can_invite => true,
         :can_permit => true, :can_approve => true
       )
       authority.authorized_by = authorizing_user || self
-      self.authorizations << authority
-      authority.save!
+      self.save!
     end
   end
 
@@ -168,7 +167,7 @@ class User < ActiveRecord::Base
     if authority
       authority.set_action!(action_type)
     else
-      authority = self.authorizations.new(action_type => true)
+      authority = self.authorizations.build(action_type => true)
       authority.item = item
       authority.save!
     end

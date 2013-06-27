@@ -82,7 +82,7 @@ module Wayground
     end
 
     def new_tag(title)
-      tag = tags.new(title: title)
+      tag = tags.build(title: title)
       tag.user = editor
       tag
     end

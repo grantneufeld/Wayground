@@ -400,7 +400,7 @@ describe Event do
         event3.tag_list = 'Tag, Given'
         event3.editor = @user_admin
         event3.save!
-        expect( Event.tagged('given') ).to eq [event1, event3]
+        expect( Event.tagged('given').order(:id) ).to eq [event1, event3]
       end
     end
   end
@@ -569,12 +569,12 @@ describe Event do
 
   describe '#new_version' do
     it "should build a new Version for the event" do
-      values1 = {timezone: 'CDT', is_allday: true, is_draft: true}
+      values1 = { timezone: 'Central Time (US & Canada)', is_allday: true, is_draft: false }
       values2 = {
         is_wheelchair_accessible: true, is_adults_only: true, is_tentative: true,
         is_cancelled: true, is_featured: true,
         organizer: 'Organizer', organizer_url: 'http://organizer.url/',
-        location: 'Location', address: 'Address', city: 'City', province: 'Province', country: 'Country',
+        location: 'Location', address: 'Address', city: 'City', province: 'Province', country: 'Co',
         location_url: 'http://location.url/',
         content: 'Content', description: 'Description',
         start_at: Time.zone.parse('2000-01-01 02:03pm'), end_at: Time.zone.parse('2000-01-01 04:05pm')
@@ -586,7 +586,9 @@ describe Event do
       event.is_approved = true
       updated_at = Time.zone.parse('2000-01-01 06:07pm')
       event.updated_at = updated_at
+      event.save!
       version = event.new_version
+      expect( version.item ).to eq event
       expect( version.user ).to eq @user_admin
       expect( version.edited_at ).to eq updated_at
       expect( version.edit_comment ).to eq 'Edit Comment'
