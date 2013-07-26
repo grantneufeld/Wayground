@@ -71,7 +71,7 @@ describe Election do
   describe "validations" do
     let(:required) { $required = {filename: 'required', name: 'Required', end_on: '2004-05-06'} }
     it "should validate with all required values" do
-      expect( @level.elections.new(required).valid? ).to be_true
+      expect( @level.elections.build(required).valid? ).to be_true
     end
     describe 'of level' do
       it 'should fail if level is not set' do
@@ -81,56 +81,56 @@ describe Election do
     describe "of filename" do
       let(:required) { $required = {name: 'Required', end_on: '2006-07-08'} }
       it "should fail if filename is blank" do
-        expect( @level.elections.new(required.merge(filename: '')).valid? ).to be_false
+        expect( @level.elections.build(required.merge(filename: '')).valid? ).to be_false
       end
       it "should fail if filename is nil" do
-        expect( @level.elections.new(required).valid? ).to be_false
+        expect( @level.elections.build(required).valid? ).to be_false
       end
       it 'should fail if filename is a duplicate for the level' do
-        @level.elections.new(name: 'Duplicate for level', filename: 'duplicate-on-level', end_on: '2003-04-05').save!
-        expect( @level.elections.new(required.merge(filename: 'duplicate-on-level')).valid? ).to be_false
+        @level.elections.build(name: 'Duplicate for level', filename: 'duplicate-on-level', end_on: '2003-04-05').save!
+        expect( @level.elections.build(required.merge(filename: 'duplicate-on-level')).valid? ).to be_false
       end
       it 'should validate if filename is a duplicate, but not for the level' do
-        @level2.elections.new(name: 'Original', filename: 'duplicate', end_on: '2003-04-05').save!
-        expect( @level.elections.new(required.merge(filename: 'duplicate')).valid? ).to be_true
+        @level2.elections.build(name: 'Original', filename: 'duplicate', end_on: '2003-04-05').save!
+        expect( @level.elections.build(required.merge(filename: 'duplicate')).valid? ).to be_true
       end
       it 'should fail if filename contains invalid characters' do
-        expect( @level.elections.new(required.merge(filename: 'Has invalid characters!')).valid? ).to be_false
+        expect( @level.elections.build(required.merge(filename: 'Has invalid characters!')).valid? ).to be_false
       end
     end
     describe "of name" do
       let(:required) { $required = {filename: 'required', end_on: '2007-08-09'} }
       it "should fail if name is blank" do
-        expect( @level.elections.new(required.merge(name: '')).valid? ).to be_false
+        expect( @level.elections.build(required.merge(name: '')).valid? ).to be_false
       end
       it "should fail if name is nil" do
-        expect( @level.elections.new(required).valid? ).to be_false
+        expect( @level.elections.build(required).valid? ).to be_false
       end
       it 'should fail if name is a duplicate for the level' do
-        @level.elections.new(name: 'Duplicate', filename: 'duplicate-on-level', end_on: '2003-04-05').save!
-        expect( @level.elections.new(required.merge(name: 'Duplicate')).valid? ).to be_false
+        @level.elections.build(name: 'Duplicate', filename: 'duplicate-on-level', end_on: '2003-04-05').save!
+        expect( @level.elections.build(required.merge(name: 'Duplicate')).valid? ).to be_false
       end
       it 'should validate if name is a duplicate, but not for the level' do
-        @level2.elections.new(name: 'Duplicate', filename: 'duplicate-not-for-level', end_on: '2003-04-05').save!
-        expect( @level.elections.new(required.merge(name: 'Duplicate')).valid? ).to be_true
+        @level2.elections.build(name: 'Duplicate', filename: 'duplicate-not-for-level', end_on: '2003-04-05').save!
+        expect( @level.elections.build(required.merge(name: 'Duplicate')).valid? ).to be_true
       end
     end
     describe "of url" do
       it "should fail if url is not an url string" do
-        expect( @level.elections.new(required.merge(url: 'not an url')).valid? ).to be_false
+        expect( @level.elections.build(required.merge(url: 'not an url')).valid? ).to be_false
       end
       it "should pass if the url is a valid url" do
-        election = @level.elections.new(required.merge(url: 'https://valid.url:8080/should/pass'))
+        election = @level.elections.build(required.merge(url: 'https://valid.url:8080/should/pass'))
         expect( election.valid? ).to be_true
       end
     end
     describe 'of end_on' do
       it 'should fail if end_on is not set' do
-        expect( @level.elections.new(required.merge(end_on: '')).valid? ).to be_false
+        expect( @level.elections.build(required.merge(end_on: '')).valid? ).to be_false
       end
       it 'should fail if end_on is before start_on' do
         params = required.merge(start_on: '2001-02-03', end_on: '2001-02-02')
-        expect( @level.elections.new(params).valid? ).to be_false
+        expect( @level.elections.build(params).valid? ).to be_false
       end
     end
   end
@@ -140,7 +140,7 @@ describe Election do
       it 'should return the election that matches the param' do
         election = Election.where(filename: 'the_param').first
         unless election
-          election = @level.elections.new(filename: 'the_param', name: 'Election From Param', end_on: '2002-03-04')
+          election = @level.elections.build(filename: 'the_param', name: 'Election From Param', end_on: '2002-03-04')
           election.save!
         end
         expect( Election.from_param('the_param') ).to eq [election]

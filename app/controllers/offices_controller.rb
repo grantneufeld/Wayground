@@ -72,7 +72,7 @@ class OfficesController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Office')
-    @office = @level.offices.new(params[:office])
+    @office = @level.offices.build(params[:office])
     if params[:previous_id]
       @office.previous = @level.offices.from_param(params[:previous_id]).first
     end

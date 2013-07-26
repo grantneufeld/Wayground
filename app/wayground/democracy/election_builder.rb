@@ -17,7 +17,7 @@ module Wayground
 
       def generate_ballots
         offices_to_add_ballots_for.each do |office|
-          ballot = @election.ballots.new(term_start_on: @term_start_on, term_end_on: @term_end_on)
+          ballot = @election.ballots.build(term_start_on: @term_start_on, term_end_on: @term_end_on)
           ballot.office = office
           #ballot.save!
         end

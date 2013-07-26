@@ -5,7 +5,7 @@ require 'level'
 describe 'elections/new.html.erb' do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:election) do
-    $election = level.elections.new
+    $election = level.elections.build
     $election.level = level
     $election
   end

@@ -7,7 +7,7 @@ describe "offices/index.html.erb" do
   let(:office_attrs) do
     $office_attrs = { name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/' }
   end
-  let(:office) { $office = level.offices.new(office_attrs) }
+  let(:office) { $office = level.offices.build(office_attrs) }
 
   before(:each) do
     assign(:level, level)

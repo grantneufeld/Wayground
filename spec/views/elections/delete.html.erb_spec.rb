@@ -4,7 +4,7 @@ require 'level'
 
 describe "elections/delete.html.erb" do
   let(:level) { $level = Level.new(filename: 'lvl') }
-  let(:election) { $election = level.elections.new(name: 'Delete Me') }
+  let(:election) { $election = level.elections.build(name: 'Delete Me') }
 
   before(:each) do
     assign(:level, level)

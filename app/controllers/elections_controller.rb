@@ -72,7 +72,7 @@ class ElectionsController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Election')
-    @election = @level.elections.new(params[:election])
+    @election = @level.elections.build(params[:election])
   end
 
   def prep_edit

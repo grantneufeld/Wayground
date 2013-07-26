@@ -15,7 +15,7 @@ describe PartyPresenter do
   end
   let(:party_extra_attrs) { $party_extra_attrs = {} }
   let(:party) do
-    $party = level.parties.new(party_attrs.merge(party_extra_attrs))
+    $party = level.parties.build(party_attrs.merge(party_extra_attrs))
     $party.level = level
     $party
   end

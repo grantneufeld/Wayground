@@ -127,7 +127,7 @@ describe Candidate do
   describe "validations" do
     let(:required) { $required = {filename: 'required', name: 'required'} }
     it "should validate with all required values" do
-      candidate = @ballot.candidates.new(required)
+      candidate = @ballot.candidates.build(required)
       candidate.person = @person
       expect( candidate.valid? ).to be_true
     end
@@ -147,14 +147,14 @@ describe Candidate do
       it 'should fail if there is already a candidate for the person for the ballot' do
         person = FactoryGirl.create(:person)
         existing_candidate = FactoryGirl.create(:candidate, ballot: @ballot, person: person)
-        candidate = @ballot.candidates.new(required)
+        candidate = @ballot.candidates.build(required)
         candidate.person = person
         expect( candidate.valid? ).to be_false
       end
       it 'should validate if there is already a candidate for the person for a different ballot' do
         person = FactoryGirl.create(:person)
         different_ballot_candidacy = FactoryGirl.create(:candidate, person: person)
-        candidate = @ballot.candidates.new(required)
+        candidate = @ballot.candidates.build(required)
         candidate.person = person
         expect( candidate.valid? ).to be_true
       end
@@ -162,29 +162,29 @@ describe Candidate do
     describe "of filename" do
       let(:required) { $required = {name: 'Required'} }
       it "should fail if filename is blank" do
-        candidate = @ballot.candidates.new(required.merge(filename: ''))
+        candidate = @ballot.candidates.build(required.merge(filename: ''))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
       it "should fail if filename is nil" do
-        candidate = @ballot.candidates.new(required)
+        candidate = @ballot.candidates.build(required)
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
       it 'should fail if filename is a duplicate for the ballot' do
         FactoryGirl.create(:candidate, ballot: @ballot, filename: 'duplicate-on-ballot')
-        candidate = @ballot.candidates.new(required.merge(filename: 'duplicate-on-ballot'))
+        candidate = @ballot.candidates.build(required.merge(filename: 'duplicate-on-ballot'))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
       it 'should validate if filename is a duplicate, but not for the ballot' do
         FactoryGirl.create(:candidate, person: @person, filename: 'duplicate')
-        candidate = @ballot.candidates.new(required.merge(filename: 'duplicate'))
+        candidate = @ballot.candidates.build(required.merge(filename: 'duplicate'))
         candidate.person = @person
         expect( candidate.valid? ).to be_true
       end
       it 'should fail if filename contains invalid characters' do
-        candidate = @ballot.candidates.new(required.merge(filename: 'Has invalid characters!'))
+        candidate = @ballot.candidates.build(required.merge(filename: 'Has invalid characters!'))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
@@ -192,36 +192,36 @@ describe Candidate do
     describe "of name" do
       let(:required) { $required = {filename: 'required'} }
       it "should fail if name is blank" do
-        candidate = @ballot.candidates.new(required.merge(name: ''))
+        candidate = @ballot.candidates.build(required.merge(name: ''))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
       it "should fail if name is nil" do
-        candidate = @ballot.candidates.new(required)
+        candidate = @ballot.candidates.build(required)
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
       it 'should fail if name is a duplicate for the ballot' do
         FactoryGirl.create(:candidate, ballot: @ballot, name: 'Duplicate On Ballot')
-        candidate = @ballot.candidates.new(required.merge(name: 'Duplicate On Ballot'))
+        candidate = @ballot.candidates.build(required.merge(name: 'Duplicate On Ballot'))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
       it 'should validate if name is a duplicate, but not for the ballot' do
         FactoryGirl.create(:candidate, person: @person, name: 'Duplicate')
-        candidate = @ballot.candidates.new(required.merge(name: 'Duplicate'))
+        candidate = @ballot.candidates.build(required.merge(name: 'Duplicate'))
         candidate.person = @person
         expect( candidate.valid? ).to be_true
       end
       it 'should fail if name contains invalid characters' do
-        candidate = @ballot.candidates.new(required.merge(name: "Invalid\r"))
+        candidate = @ballot.candidates.build(required.merge(name: "Invalid\r"))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end
     end
     describe 'of quit_on' do
       it 'should fail if quit_on is before announced_on' do
-        candidate = @ballot.candidates.new(required.merge(announced_on: '2001-02-03', quit_on: '2001-02-02'))
+        candidate = @ballot.candidates.build(required.merge(announced_on: '2001-02-03', quit_on: '2001-02-02'))
         candidate.person = @person
         expect( candidate.valid? ).to be_false
       end

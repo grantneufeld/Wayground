@@ -13,7 +13,7 @@ describe "images/index.html.erb" do
       attribution_url: 'http://stub.attribution.tld/',
       license_url: 'http://stub.license.tld/'
     )
-    @image.image_variants.new(
+    @image.image_variants.build(
       height: 123, width: 234,
       format: 'gif',
       style: 'original',

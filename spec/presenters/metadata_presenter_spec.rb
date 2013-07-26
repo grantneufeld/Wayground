@@ -73,13 +73,13 @@ describe MetadataPresenter do
     context "with an Image" do
       before(:all) do
         @image = Image.new
-        scaled = @image.image_variants.new(url: 'http://s.tld/', format: 'png',
+        scaled = @image.image_variants.build(url: 'http://s.tld/', format: 'png',
           height: 1, width: 2, style: 'scaled'
         )
-        original = @image.image_variants.new(url: 'http://o.tld/', format: 'png',
+        original = @image.image_variants.build(url: 'http://o.tld/', format: 'png',
           height: 3, width: 6, style: 'original'
         )
-        another = @image.image_variants.new(url: 'http://a.tld/', format: 'png',
+        another = @image.image_variants.build(url: 'http://a.tld/', format: 'png',
           height: 2, width: 4, style: 'scaled'
         )
         @image.save!

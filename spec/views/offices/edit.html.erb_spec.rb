@@ -12,7 +12,7 @@ describe 'offices/edit.html.erb' do
     }
   end
   let(:office) do
-    $office = level.offices.new(office_attrs)
+    $office = level.offices.build(office_attrs)
     $office.level = level
     $office
   end

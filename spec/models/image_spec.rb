@@ -88,10 +88,10 @@ describe Image do
     context "with no original variants" do
       it "should return the largest scaled variant" do
         @image.image_variants.destroy_all
-        variant1 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
+        variant1 = @image.image_variants.build(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
-        variant2 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
+        variant2 = @image.image_variants.build(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
         @image.save!
@@ -101,10 +101,10 @@ describe Image do
     context "with one original variant" do
       it "should return the original" do
         @image.image_variants.destroy_all
-        variant = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
+        variant = @image.image_variants.build(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
-        original = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
+        original = @image.image_variants.build(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
         @image.save!
@@ -114,10 +114,10 @@ describe Image do
     context "with multiple original variants" do
       it "should return the largest" do
         @image.image_variants.destroy_all
-        original1 = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
+        original1 = @image.image_variants.build(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
-        original2 = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
+        original2 = @image.image_variants.build(style: 'original', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
         @image.save!

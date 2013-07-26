@@ -72,7 +72,7 @@ class PartiesController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Party')
-    @party = @level.parties.new(params[:party])
+    @party = @level.parties.build(params[:party])
   end
 
   def prep_edit

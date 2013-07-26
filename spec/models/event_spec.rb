@@ -514,7 +514,7 @@ describe Event do
       sourced_item.has_local_modifications = false
       sourced_item.save!
       source2 = FactoryGirl.create(:source)
-      sourced_item2 = event.sourced_items.new(last_sourced_at: source2.last_updated_at)
+      sourced_item2 = event.sourced_items.build(last_sourced_at: source2.last_updated_at)
       sourced_item2.source = source2
       sourced_item2.save!
       # should not have updated event yet
@@ -778,16 +778,16 @@ describe Event do
     context 'with a single tag' do
       it 'should return the tag title' do
         event = Event.new
-        event.tags.new(title: 'Test Tag')
+        event.tags.build(title: 'Test Tag')
         expect( event.tag_list.to_s ).to eq 'Test Tag'
       end
     end
     context 'with multiple tags' do
       it 'should return a comma and space separated string of the tag titles' do
         event = Event.new
-        event.tags.new(title: 'Tag A')
-        event.tags.new(title: 'Tag B')
-        event.tags.new(title: 'Tag C')
+        event.tags.build(title: 'Tag A')
+        event.tags.build(title: 'Tag B')
+        event.tags.build(title: 'Tag C')
         expect( event.tag_list.to_s ).to eq 'Tag A, Tag B, Tag C'
       end
     end
@@ -881,7 +881,7 @@ describe Event do
     end
     it "should not set the locally modified flag on shared items" do
       sourced_at = 1.hour.ago
-      sourced_item = event.sourced_items.new(last_sourced_at: sourced_at)
+      sourced_item = event.sourced_items.build(last_sourced_at: sourced_at)
       sourced_item.source = FactoryGirl.create(:source, last_updated_at: sourced_at)
       sourced_item.save
       event.approve_by(@user_admin)

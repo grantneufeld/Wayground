@@ -5,7 +5,7 @@ require 'level'
 describe 'offices/new.html.erb' do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
-    $office = level.offices.new(url: 'http://no.previous/')
+    $office = level.offices.build(url: 'http://no.previous/')
     $office.level = level
     $office
   end
@@ -28,9 +28,9 @@ describe 'offices/new.html.erb' do
   end
   context 'with a previous' do
     let(:office) do
-      $office = level.offices.new(url: 'http://with.previous/')
+      $office = level.offices.build(url: 'http://with.previous/')
       $office.level = level
-      $office.previous = level.offices.new(name: 'Previous Office', filename: 'previous_office' )
+      $office.previous = level.offices.build(name: 'Previous Office', filename: 'previous_office' )
       $office
     end
     before(:each) do

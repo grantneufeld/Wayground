@@ -4,7 +4,7 @@ require 'level'
 
 describe "offices/delete.html.erb" do
   let(:level) { $level = Level.new(filename: 'lvl') }
-  let(:office) { $office = level.offices.new(name: 'Delete Me') }
+  let(:office) { $office = level.offices.build(name: 'Delete Me') }
 
   before(:each) do
     assign(:level, level)

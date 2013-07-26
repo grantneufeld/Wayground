@@ -50,7 +50,7 @@ describe Version do
     end
     it "should allow values to be set" do
       # save and reload to invoke the serialization
-      version = @item.versions.new(edited_at: Time.now, user: @user, values: { hash: 'values', abc: 123 })
+      version = @item.versions.build(edited_at: Time.now, user: @user, values: { hash: 'values', abc: 123 })
       version.save!
       version = Version.find(version.id)
       expect( version.values ).to eq('hash' => 'values', 'abc' => '123')
@@ -59,7 +59,7 @@ describe Version do
 
   describe "validation" do
     it "should pass when all required fields are set" do
-      version = @item.versions.new(edited_at: Time.now)
+      version = @item.versions.build(edited_at: Time.now)
       version.user = @user
       expect( version.valid? ).to be_true
     end
@@ -69,11 +69,11 @@ describe Version do
       expect( version.valid? ).to be_false
     end
     it "should require a user" do
-      version = @item.versions.new(edited_at: Time.now)
+      version = @item.versions.build(edited_at: Time.now)
       expect( version.valid? ).to be_false
     end
     it "should require an edited at datetime" do
-      version = @item.versions.new
+      version = @item.versions.build
       version.user = @user
       expect( version.valid? ).to be_false
     end

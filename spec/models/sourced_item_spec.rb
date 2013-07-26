@@ -67,7 +67,7 @@ describe SourcedItem do
 
   describe "validation" do
     it "should pass with minimum valid parameters" do
-      si = source.sourced_items.new(minimum_valid_params)
+      si = source.sourced_items.build(minimum_valid_params)
       si.item = item
       si.valid?.should be_true
     end
@@ -80,20 +80,20 @@ describe SourcedItem do
     end
     describe "of item" do
       it "should fail if not set" do
-        si = source.sourced_items.new(minimum_valid_params)
+        si = source.sourced_items.build(minimum_valid_params)
         si.valid?.should be_false
       end
     end
     describe "of last_sourced_at" do
       it "should fail if greater than the source’s time" do
-        si = source.sourced_items.new(minimum_valid_params)
+        si = source.sourced_items.build(minimum_valid_params)
         si.item = item
         si.source.last_updated_at = Time.now
         si.last_sourced_at = 1.minute.from_now
         si.valid?.should be_false
       end
       it "should pass if equal to the current time" do
-        si = source.sourced_items.new(minimum_valid_params)
+        si = source.sourced_items.build(minimum_valid_params)
         si.item = item
         si.last_sourced_at = 0.minutes.ago
         si.source.last_updated_at = Time.now
@@ -118,12 +118,12 @@ describe SourcedItem do
 
   describe "#modified_locally" do
     it "should set has_local_modifications to true" do
-      si = source.sourced_items.new(minimum_valid_params)
+      si = source.sourced_items.build(minimum_valid_params)
       si.modified_locally
       si.has_local_modifications?.should be_true
     end
     it "should not save the sourced item" do
-      si = source.sourced_items.new(minimum_valid_params)
+      si = source.sourced_items.build(minimum_valid_params)
       si.modified_locally
       si.changed?.should be_true
     end
@@ -131,13 +131,13 @@ describe SourcedItem do
 
   describe "#modified_locally!" do
     it "should set has_local_modifications to true" do
-      si = source.sourced_items.new(minimum_valid_params)
+      si = source.sourced_items.build(minimum_valid_params)
       si.item = item
       si.modified_locally!
       si.has_local_modifications?.should be_true
     end
     it "should save the sourced item" do
-      si = source.sourced_items.new(minimum_valid_params)
+      si = source.sourced_items.build(minimum_valid_params)
       si.item = item
       si.modified_locally!
       si.changed?.should be_false

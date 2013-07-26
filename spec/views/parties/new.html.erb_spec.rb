@@ -5,7 +5,7 @@ require 'level'
 describe 'parties/new.html.erb' do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:party) do
-    $party = level.parties.new
+    $party = level.parties.build
     $party.level = level
     $party
   end

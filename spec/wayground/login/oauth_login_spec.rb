@@ -15,7 +15,7 @@ module Wayground
         @user = FactoryGirl.build(:user, name: 'Oauth User')
         @provider = 'testprovider'
         @uid = 'testuser'
-        @authentication = @user.authentications.new(provider: @provider, uid: @uid)
+        @authentication = @user.authentications.build(provider: @provider, uid: @uid)
         @user.save!
       end
 

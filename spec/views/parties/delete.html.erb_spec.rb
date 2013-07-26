@@ -4,7 +4,7 @@ require 'level'
 
 describe 'parties/delete.html.erb' do
   let(:level) { $level = Level.new(filename: 'lvl') }
-  let(:party) { $party = level.parties.new(name: 'Delete Me') }
+  let(:party) { $party = level.parties.build(name: 'Delete Me') }
 
   before(:each) do
     assign(:level, level)

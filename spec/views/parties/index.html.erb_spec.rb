@@ -13,7 +13,7 @@ describe 'parties/index.html.erb' do
     }
   end
   let(:party) do
-    $party = level.parties.new(party_attrs)
+    $party = level.parties.build(party_attrs)
     $party.level = level
     $party
   end

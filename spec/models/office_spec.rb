@@ -87,7 +87,7 @@ describe Office do
   describe "validations" do
     let(:required) { $required = {filename: 'required', name: 'Required'} }
     it "should validate with all required values" do
-      expect( @level.offices.new(required).valid? ).to be_true
+      expect( @level.offices.build(required).valid? ).to be_true
     end
     describe 'of level' do
       it 'should fail if level is not set' do
@@ -97,45 +97,45 @@ describe Office do
     describe "of filename" do
       let(:required) { $required = {name: 'Required'} }
       it "should fail if filename is blank" do
-        expect( @level.offices.new(required.merge(filename: '')).valid? ).to be_false
+        expect( @level.offices.build(required.merge(filename: '')).valid? ).to be_false
       end
       it "should fail if filename is nil" do
-        expect( @level.offices.new(required).valid? ).to be_false
+        expect( @level.offices.build(required).valid? ).to be_false
       end
       it 'should fail if filename is a duplicate for the level' do
-        @level.offices.new(name: 'Duplicate for level', filename: 'duplicate-on-level').save!
-        expect( @level.offices.new(required.merge(filename: 'duplicate-on-level')).valid? ).to be_false
+        @level.offices.build(name: 'Duplicate for level', filename: 'duplicate-on-level').save!
+        expect( @level.offices.build(required.merge(filename: 'duplicate-on-level')).valid? ).to be_false
       end
       it 'should validate if filename is a duplicate, but not for the level' do
-        @level2.offices.new(name: 'Original', filename: 'duplicate').save!
-        expect( @level.offices.new(required.merge(filename: 'duplicate')).valid? ).to be_true
+        @level2.offices.build(name: 'Original', filename: 'duplicate').save!
+        expect( @level.offices.build(required.merge(filename: 'duplicate')).valid? ).to be_true
       end
       it 'should fail if filename contains invalid characters' do
-        expect( @level.offices.new(required.merge(filename: 'Has invalid characters!')).valid? ).to be_false
+        expect( @level.offices.build(required.merge(filename: 'Has invalid characters!')).valid? ).to be_false
       end
     end
     describe "of name" do
       let(:required) { $required = {filename: 'required'} }
       it "should fail if name is blank" do
-        expect( @level.offices.new(required.merge(name: '')).valid? ).to be_false
+        expect( @level.offices.build(required.merge(name: '')).valid? ).to be_false
       end
       it "should fail if name is nil" do
-        expect( @level.offices.new(required).valid? ).to be_false
+        expect( @level.offices.build(required).valid? ).to be_false
       end
     end
     describe "of url" do
       it "should fail if url is not an url string" do
-        expect( @level.offices.new(required.merge(url: 'not an url')).valid? ).to be_false
+        expect( @level.offices.build(required.merge(url: 'not an url')).valid? ).to be_false
       end
       it "should pass if the url is a valid url" do
-        level = @level.offices.new(required.merge(url: 'https://valid.url:8080/should/pass')).valid?
+        level = @level.offices.build(required.merge(url: 'https://valid.url:8080/should/pass')).valid?
         expect( level ).to be_true
       end
     end
     describe 'of ended_on' do
       it 'should fail if ended_on is before established_on' do
         params = required.merge(established_on: '2001-02-03', ended_on: '2001-02-02')
-        expect( @level.offices.new(params).valid? ).to be_false
+        expect( @level.offices.build(params).valid? ).to be_false
       end
     end
   end

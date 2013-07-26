@@ -16,10 +16,10 @@ describe ImagePresenter do
       attribution: 'Present Attribution', attribution_url: 'http://present.attrib/',
       license_url: 'http://present.license/'
     )
-    @original = @image.image_variants.new(
+    @original = @image.image_variants.build(
       height: 1234, width: 2345, format: 'png', style: 'original', url: 'http://present.tld/original.png'
     )
-    @scaled = @image.image_variants.new(
+    @scaled = @image.image_variants.build(
       height: 123, width: 234, format: 'jpeg', style: 'scaled', url: 'http://present.tld/scaled.jpg'
     )
     @image.save!

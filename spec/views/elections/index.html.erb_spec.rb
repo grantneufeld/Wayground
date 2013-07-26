@@ -7,7 +7,7 @@ describe "elections/index.html.erb" do
   let(:election_attrs) do
     $election_attrs = { name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/' }
   end
-  let(:election) { $election = level.elections.new(election_attrs) }
+  let(:election) { $election = level.elections.build(election_attrs) }
 
   before(:each) do
     assign(:level, level)

@@ -127,7 +127,7 @@ describe ImageVariant do
     describe ".originals" do
       before(:all) do
         @image = Image.new
-        @scaled = @image.image_variants.new(url: 'http://scaled.tld/', style: 'scaled', format: 'png')
+        @scaled = @image.image_variants.build(url: 'http://scaled.tld/', style: 'scaled', format: 'png')
         @image.save!
       end
       context "with no ‘original’ variants" do
@@ -169,16 +169,16 @@ describe ImageVariant do
       it "should order the results from largest to smallest" do
         ImageVariant.delete_all
         image = Image.first || FactoryGirl.create(:image)
-        v1 = image.image_variants.new(url: 'http://a.tld', style: 'scaled', format: 'png',
+        v1 = image.image_variants.build(url: 'http://a.tld', style: 'scaled', format: 'png',
           height: 10, width: 20
         )
-        v2 = image.image_variants.new(url: 'http://b.tld', style: 'scaled', format: 'png',
+        v2 = image.image_variants.build(url: 'http://b.tld', style: 'scaled', format: 'png',
           height: 100, width: 200
         )
-        v3 = image.image_variants.new(url: 'http://c.tld', style: 'scaled', format: 'png',
+        v3 = image.image_variants.build(url: 'http://c.tld', style: 'scaled', format: 'png',
           height: 20, width: 40
         )
-        v4 = image.image_variants.new(url: 'http://d.tld', style: 'scaled', format: 'png',
+        v4 = image.image_variants.build(url: 'http://d.tld', style: 'scaled', format: 'png',
           height: 50, width: 100
         )
         image.save!

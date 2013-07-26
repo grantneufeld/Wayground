@@ -75,7 +75,7 @@ class BallotsController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Ballot')
-    @ballot = @election.ballots.new(params[:ballot])
+    @ballot = @election.ballots.build(params[:ballot])
     @offices = @level.offices
     @office_id = params[:office_id]
     @ballot.office = Office.from_param(@office_id).first if @office_id

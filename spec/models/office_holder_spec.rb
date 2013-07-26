@@ -90,7 +90,7 @@ describe OfficeHolder do
   describe 'validation' do
     let(:required) { $required = { start_on: 1.day.ago } }
     it 'should validate with all required values' do
-      holder = @office.office_holders.new(required)
+      holder = @office.office_holders.build(required)
       holder.person = @person
       expect( holder.valid? ).to be_true
     end
@@ -103,31 +103,31 @@ describe OfficeHolder do
     end
     describe 'of person' do
       it 'should fail if person is not set' do
-        holder = @office.office_holders.new(required)
+        holder = @office.office_holders.build(required)
         expect( holder.valid? ).to be_false
       end
     end
     describe 'of previous' do
       it 'should fail if previous is not for the same office' do
-        not_same_office = @office2.office_holders.new(required)
+        not_same_office = @office2.office_holders.build(required)
         not_same_office.person = @person
-        holder = @office.office_holders.new(required)
+        holder = @office.office_holders.build(required)
         holder.person = @person
         holder.previous = not_same_office
         expect( holder.valid? ).to be_false
       end
       it 'should fail if previous starts after this holder' do
-        other_holder = @office.office_holders.new(required.merge(start_on: 5.days.from_now))
+        other_holder = @office.office_holders.build(required.merge(start_on: 5.days.from_now))
         other_holder.person = @person
-        holder = @office.office_holders.new(required.merge(start_on: 4.days.from_now))
+        holder = @office.office_holders.build(required.merge(start_on: 4.days.from_now))
         holder.person = @person
         holder.previous = other_holder
         expect( holder.valid? ).to be_false
       end
       it 'should validate with an appropriate previous holder' do
-        other_holder = @office.office_holders.new(required.merge(start_on: 6.days.ago))
+        other_holder = @office.office_holders.build(required.merge(start_on: 6.days.ago))
         other_holder.person = @person
-        holder = @office.office_holders.new(required.merge(start_on: 7.days.from_now))
+        holder = @office.office_holders.build(required.merge(start_on: 7.days.from_now))
         holder.person = @person
         holder.previous = other_holder
         expect( holder.valid? ).to be_true
@@ -135,30 +135,30 @@ describe OfficeHolder do
     end
     describe 'of start_on' do
       it 'should fail if start_on is nil' do
-        holder = @office.office_holders.new(required.merge(start_on: nil))
+        holder = @office.office_holders.build(required.merge(start_on: nil))
         holder.person = @person
         expect( holder.valid? ).to be_false
       end
       it 'should fail if start_on is blank' do
-        holder = @office.office_holders.new(required.merge(start_on: ''))
+        holder = @office.office_holders.build(required.merge(start_on: ''))
         holder.person = @person
         expect( holder.valid? ).to be_false
       end
     end
     describe 'of end_on' do
       it 'should fail if end_on is before start_on' do
-        holder = @office.office_holders.new(required.merge(start_on: 1.day.ago, end_on: 2.days.ago))
+        holder = @office.office_holders.build(required.merge(start_on: 1.day.ago, end_on: 2.days.ago))
         holder.person = @person
         expect( holder.valid? ).to be_false
       end
       it 'should validate if end_on is the same date as start_on' do
         date = 3.days.ago
-        holder = @office.office_holders.new(required.merge(start_on: date, end_on: date))
+        holder = @office.office_holders.build(required.merge(start_on: date, end_on: date))
         holder.person = @person
         expect( holder.valid? ).to be_true
       end
       it 'should validate if end_on is after start_on' do
-        holder = @office.office_holders.new(required.merge(start_on: 5.days.ago, end_on: 4.days.ago))
+        holder = @office.office_holders.build(required.merge(start_on: 5.days.ago, end_on: 4.days.ago))
         holder.person = @person
         expect( holder.valid? ).to be_true
       end

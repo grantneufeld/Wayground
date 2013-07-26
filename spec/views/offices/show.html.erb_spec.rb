@@ -11,7 +11,7 @@ describe 'offices/show.html.erb' do
       description: 'Stub description.'
     }
   end
-  let(:office) { $office = level.offices.new(office_attrs) }
+  let(:office) { $office = level.offices.build(office_attrs) }
 
   before(:each) do
     assign(:level, level)
@@ -37,14 +37,14 @@ describe 'offices/show.html.erb' do
     expect( rendered ).to match /Stub description./
   end
   context 'with previous' do
-    let(:previous_previous) { $previous_previous = level.offices.new(name: 'Previous Previous', filename: 'previous_previous') }
+    let(:previous_previous) { $previous_previous = level.offices.build(name: 'Previous Previous', filename: 'previous_previous') }
     let(:previous) do
-      $previous = level.offices.new(name: 'Previous', filename: 'previous')
+      $previous = level.offices.build(name: 'Previous', filename: 'previous')
       $previous.previous = previous_previous
       $previous
     end
     let(:office) do
-      $office = level.offices.new(office_attrs)
+      $office = level.offices.build(office_attrs)
       $office.previous = previous
       $office
     end

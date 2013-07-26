@@ -12,7 +12,7 @@ describe 'elections/edit.html.erb' do
     }
   end
   let(:election) do
-    $election = level.elections.new(election_attrs)
+    $election = level.elections.build(election_attrs)
     $election.level = level
     $election
   end

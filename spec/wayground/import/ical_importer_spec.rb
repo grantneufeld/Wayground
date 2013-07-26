@@ -121,7 +121,7 @@ describe Wayground::Import::IcalImporter do
         })
       end
       it "should update the event" do
-        sourced_item = source.sourced_items.new
+        sourced_item = source.sourced_items.build
         sourced_item.item = event
         sourced_item.source_identifier = '123@spec'
         sourced_item.save!

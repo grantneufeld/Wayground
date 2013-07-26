@@ -83,7 +83,7 @@ describe Ballot do
   describe "validations" do
     let(:required) { $required = {} } # term_start_on: '2005-04-03'
     it "should validate with all required values" do
-      ballot = @election.ballots.new(required)
+      ballot = @election.ballots.build(required)
       ballot.office = @office1
       expect( ballot.valid? ).to be_true
     end
@@ -101,32 +101,32 @@ describe Ballot do
         expect( ballot.valid? ).to be_false
       end
       it 'should fail if office is not the same level as the election' do
-        ballot = @election.ballots.new(required)
+        ballot = @election.ballots.build(required)
         ballot.office = @other_level_office
         expect( ballot.valid? ).to be_false
       end
       it 'should fail if there is already a ballot for the office for the election' do
         existing_ballot = FactoryGirl.create(:ballot, election: @election, office: @office3)
-        ballot = @election.ballots.new(required)
+        ballot = @election.ballots.build(required)
         ballot.office = @office3
         expect( ballot.valid? ).to be_false
       end
     end
     describe "of url" do
       it "should fail if url is not an url string" do
-        ballot = @election.ballots.new(required.merge(url: 'not an url'))
+        ballot = @election.ballots.build(required.merge(url: 'not an url'))
         ballot.office = @office1
         expect( ballot.valid? ).to be_false
       end
       it "should pass if the url is a valid url" do
-        ballot = @election.ballots.new(required.merge(url: 'https://valid.url:8080/should/pass'))
+        ballot = @election.ballots.build(required.merge(url: 'https://valid.url:8080/should/pass'))
         ballot.office = @office1
         expect( ballot.valid? ).to be_true
       end
     end
     describe 'of term_end_on' do
       it 'should fail if term_end_on is before term_start_on' do
-        ballot = @election.ballots.new(required.merge(term_start_on: '2001-02-03', term_end_on: '2001-02-02'))
+        ballot = @election.ballots.build(required.merge(term_start_on: '2001-02-03', term_end_on: '2001-02-02'))
         ballot.office = @office1
         expect( ballot.valid? ).to be_false
       end

@@ -5,17 +5,17 @@ require 'election'
 describe 'ballots/new.html.erb' do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
-    $office = level.offices.new(filename: 'offc', name: 'Stub Name', filename: 'stub_filename')
+    $office = level.offices.build(filename: 'offc', name: 'Stub Name', filename: 'stub_filename')
     $office.level = level
     $office
   end
   let(:election) do
-    $election = level.elections.new(filename: 'elct')
+    $election = level.elections.build(filename: 'elct')
     $election.level = level
     $election
   end
   let(:ballot) do
-    $ballot = election.ballots.new
+    $ballot = election.ballots.build
     $ballot.election = election
     $ballot.office = office
     $ballot
