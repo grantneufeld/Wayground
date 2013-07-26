@@ -5,14 +5,14 @@ require 'election'
 # RESTful controller for Ballot records.
 # Called as a sub-controller under ElectionsController
 class BallotsController < ApplicationController
-  before_filter :set_user
-  before_filter :set_level
-  before_filter :set_election
-  before_filter :set_ballot, only: [:show, :edit, :update, :delete, :destroy]
-  before_filter :prep_new, only: [:new, :create]
-  before_filter :prep_edit, only: [:edit, :update]
-  before_filter :prep_delete, only: [:delete, :destroy]
-  before_filter :set_section
+  before_action :set_user
+  before_action :set_level
+  before_action :set_election
+  before_action :set_ballot, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :prep_new, only: [:new, :create]
+  before_action :prep_edit, only: [:edit, :update]
+  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_section
 
   def index
     page_metadata(title: 'Ballots')

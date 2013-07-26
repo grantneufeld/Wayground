@@ -2,12 +2,12 @@
 require 'person'
 
 class PeopleController < ApplicationController
-  before_filter :set_user
-  before_filter :set_person, only: [:show, :edit, :update, :delete, :destroy]
-  before_filter :prep_new, only: [:new, :create]
-  before_filter :prep_edit, only: [:edit, :update]
-  before_filter :prep_delete, only: [:delete, :destroy]
-  before_filter :set_section
+  before_action :set_user
+  before_action :set_person, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :prep_new, only: [:new, :create]
+  before_action :prep_edit, only: [:edit, :update]
+  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_section
 
   def index
     page_metadata(title: 'People')
