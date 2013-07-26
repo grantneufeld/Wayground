@@ -31,7 +31,7 @@ class PeopleController < ApplicationController
   def edit; end
 
   def update
-    if @person.update_attributes(params[:person])
+    if @person.update(params[:person])
       redirect_to(@person, notice: 'The person has been saved.')
     else
       render action: 'edit'

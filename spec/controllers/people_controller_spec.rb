@@ -190,7 +190,7 @@ describe PeopleController do
     describe 'with valid params' do
       it 'updates the requested person' do
         set_logged_in_admin
-        Person.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
+        Person.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: person.filename, person: { 'these' => 'params' }
       end
       context 'with attributes' do

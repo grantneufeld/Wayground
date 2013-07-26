@@ -209,7 +209,7 @@ describe BallotsController do
     describe 'with valid params' do
       it 'updates the requested ballot' do
         set_logged_in_admin
-        Ballot.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
+        Ballot.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: ballot.to_param, ballot: { 'these' => 'params' }, level_id: @level.to_param, election_id: @election.to_param
       end
       context 'with attributes' do

@@ -35,7 +35,7 @@ class PartiesController < ApplicationController
   def edit; end
 
   def update
-    if @party.update_attributes(params[:party])
+    if @party.update(params[:party])
       redirect_to([@level, @party], notice: 'The party has been saved.')
     else
       render action: 'edit'

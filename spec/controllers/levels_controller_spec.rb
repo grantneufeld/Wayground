@@ -203,7 +203,7 @@ describe LevelsController do
     describe 'with valid params' do
       it 'updates the requested level' do
         set_logged_in_admin
-        Level.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
+        Level.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: level.filename, level: { 'these' => 'params' }
       end
       context 'with attributes' do

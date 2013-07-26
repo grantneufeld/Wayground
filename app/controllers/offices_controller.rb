@@ -35,7 +35,7 @@ class OfficesController < ApplicationController
   def edit; end
 
   def update
-    if @office.update_attributes(params[:office])
+    if @office.update(params[:office])
       redirect_to([@level, @office], notice: 'The office has been saved.')
     else
       render action: 'edit'

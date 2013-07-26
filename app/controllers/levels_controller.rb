@@ -31,7 +31,7 @@ class LevelsController < ApplicationController
   #def edit; end
 
   def update
-    if @level.update_attributes(params[:level])
+    if @level.update(params[:level])
       redirect_to(@level, notice: 'The level has been saved.')
     else
       render action: 'edit'

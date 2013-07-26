@@ -205,7 +205,7 @@ describe OfficesController do
     describe 'with valid params' do
       it 'updates the requested office' do
         set_logged_in_admin
-        Office.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
+        Office.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: office.filename, office: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do

@@ -35,7 +35,7 @@ class ElectionsController < ApplicationController
   def edit; end
 
   def update
-    if @election.update_attributes(params[:election])
+    if @election.update(params[:election])
       redirect_to([@level, @election], notice: 'The election has been saved.')
     else
       render action: 'edit'

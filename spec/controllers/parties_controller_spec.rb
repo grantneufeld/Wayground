@@ -195,7 +195,7 @@ describe PartiesController do
     describe 'with valid params' do
       it 'updates the requested party' do
         set_logged_in_admin
-        Party.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
+        Party.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: party.filename, party: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do

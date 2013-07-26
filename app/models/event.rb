@@ -153,7 +153,7 @@ class Event < ActiveRecord::Base
   # Called after save on update.
   def flag_as_modified_for_sourcing
     unless is_sourcing
-      sourced_items.each { |sourced_item| sourced_item.update_attributes(has_local_modifications: true) }
+      sourced_items.each { |sourced_item| sourced_item.update(has_local_modifications: true) }
     end
   end
 

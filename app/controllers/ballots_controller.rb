@@ -36,7 +36,7 @@ class BallotsController < ApplicationController
   def edit; end
 
   def update
-    if @ballot.update_attributes(params[:ballot])
+    if @ballot.update(params[:ballot])
       redirect_to([@level, @election, @ballot], notice: 'The ballot has been saved.')
     else
       render action: 'edit'

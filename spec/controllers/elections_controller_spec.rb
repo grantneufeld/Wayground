@@ -194,7 +194,7 @@ describe ElectionsController do
     describe 'with valid params' do
       it 'updates the requested election' do
         set_logged_in_admin
-        Election.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
+        Election.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: election.filename, election: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
