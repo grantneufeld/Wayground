@@ -36,7 +36,7 @@ describe 'ballots/edit.html.erb' do
     render
   end
   it 'renders edit ballot form' do
-    assert_select 'form', action: '/levels/lvl/elections/elct/ballots/abc', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/elections/elct/ballots/abc', method: 'patch' do
       assert_select 'input#ballot_term_start_on', name: 'ballot[term_start_on]', type: 'date', value: '2001-02-03'
       assert_select 'input#ballot_term_end_on', name: 'ballot[term_end_on]', type: 'date', value: '2009-08-07'
       assert_select 'input#ballot_is_byelection', name: 'ballot[is_byelection]', value: '1', checked: 'checked'

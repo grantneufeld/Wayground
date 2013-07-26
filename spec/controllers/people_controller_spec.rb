@@ -183,7 +183,7 @@ describe PeopleController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: person.filename, person: {}
+      patch :update, id: person.filename, person: {}
       expect( response.status ).to eq 403
     end
 
@@ -191,12 +191,12 @@ describe PeopleController do
       it 'updates the requested person' do
         set_logged_in_admin
         Person.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
-        put :update, id: person.filename, person: {'these' => 'params'}
+        patch :update, id: person.filename, person: { 'these' => 'params' }
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: person.filename, person: valid_attributes
+          patch :update, id: person.filename, person: valid_attributes
         end
         it 'assigns the requested person as @person' do
           expect( assigns(:person) ).to eq(person)
@@ -218,7 +218,7 @@ describe PeopleController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Person.any_instance.stub(:save).and_return(false)
-        put :update, id: person.filename, person: {}
+        patch :update, id: person.filename, person: {}
       end
       it 'assigns the person as @person' do
         expect( assigns(:person) ).to eq(person)

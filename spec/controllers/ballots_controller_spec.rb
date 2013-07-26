@@ -202,7 +202,7 @@ describe BallotsController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
+      patch :update, id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
       expect( response.status ).to eq 403
     end
 
@@ -210,12 +210,12 @@ describe BallotsController do
       it 'updates the requested ballot' do
         set_logged_in_admin
         Ballot.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
-        put :update, id: ballot.to_param, ballot: {'these' => 'params'}, level_id: @level.to_param, election_id: @election.to_param
+        patch :update, id: ballot.to_param, ballot: { 'these' => 'params' }, level_id: @level.to_param, election_id: @election.to_param
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: ballot.to_param, ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param
+          patch :update, id: ballot.to_param, ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param
         end
         it 'assigns the requested ballot as @ballot' do
           expect( assigns(:ballot) ).to eq(ballot)
@@ -237,7 +237,7 @@ describe BallotsController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Ballot.any_instance.stub(:save).and_return(false)
-        put :update, id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
+        patch :update, id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
       end
       it 'assigns the ballot as @ballot' do
         expect( assigns(:ballot) ).to eq(ballot)

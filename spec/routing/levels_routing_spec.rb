@@ -26,7 +26,7 @@ describe LevelsController do
       get('/levels/abc/edit').should route_to('levels#edit', id: 'abc')
     end
     it 'routes to #update' do
-      put('/levels/abc').should route_to('levels#update', id: 'abc')
+      patch('/levels/abc').should route_to('levels#update', id: 'abc')
     end
 
     it 'routes to #delete' do

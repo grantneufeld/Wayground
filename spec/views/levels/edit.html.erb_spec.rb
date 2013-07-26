@@ -14,7 +14,7 @@ describe "levels/edit.html.erb" do
     render
   end
   it "renders edit level form" do
-    assert_select 'form', action: '/levels/123', method: 'put' do
+    assert_select 'form', action: '/levels/123', method: 'patch' do
       assert_select 'input#level_name', name: 'level[name]', value: 'Stub Name'
       assert_select 'input#level_filename', name: 'level[filename]', value: 'stub_filename'
       assert_select 'input#level_url', name: 'level[url]', type: 'url', value: 'http://stub.url.tld/'

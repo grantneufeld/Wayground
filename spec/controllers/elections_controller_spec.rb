@@ -187,7 +187,7 @@ describe ElectionsController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: election.filename, election: {}, level_id: @level.to_param
+      patch :update, id: election.filename, election: {}, level_id: @level.to_param
       expect( response.status ).to eq 403
     end
 
@@ -195,12 +195,12 @@ describe ElectionsController do
       it 'updates the requested election' do
         set_logged_in_admin
         Election.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
-        put :update, id: election.filename, election: {'these' => 'params'}, level_id: @level.to_param
+        patch :update, id: election.filename, election: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: election.filename, election: valid_attributes, level_id: @level.to_param
+          patch :update, id: election.filename, election: valid_attributes, level_id: @level.to_param
         end
         it 'assigns the requested election as @election' do
           expect( assigns(:election) ).to eq(election)
@@ -222,7 +222,7 @@ describe ElectionsController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Election.any_instance.stub(:save).and_return(false)
-        put :update, id: election.filename, election: {}, level_id: @level.to_param
+        patch :update, id: election.filename, election: {}, level_id: @level.to_param
       end
       it 'assigns the election as @election' do
         expect( assigns(:election) ).to eq(election)

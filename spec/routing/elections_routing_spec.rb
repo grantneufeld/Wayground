@@ -23,7 +23,7 @@ describe ElectionsController do
       get('/levels/def/elections/abc/edit').should route_to('elections#edit', id: 'abc', level_id: 'def')
     end
     it 'routes to #update' do
-      put('/levels/def/elections/abc').should route_to('elections#update', id: 'abc', level_id: 'def')
+      patch('/levels/def/elections/abc').should route_to('elections#update', id: 'abc', level_id: 'def')
     end
 
     it 'routes to #delete' do

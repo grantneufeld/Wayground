@@ -29,7 +29,7 @@ describe 'parties/edit.html.erb' do
     render
   end
   it 'renders edit party form' do
-    assert_select 'form', action: '/levels/lvl/parties/abc', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/parties/abc', method: 'patch' do
       assert_select 'input#party_filename', name: 'party[filename]', value: 'stub_filename'
       assert_select 'input#party_name', name: 'party[name]', value: 'Stub Name'
       assert_select 'input#party_aliases', name: 'party[aliases]', value: 'Stub Alias 1, Stub Alias 2'

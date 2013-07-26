@@ -23,7 +23,7 @@ describe PeopleController do
       get('/people/abc/edit').should route_to('people#edit', id: 'abc')
     end
     it 'routes to #update' do
-      put('/people/abc').should route_to('people#update', id: 'abc')
+      patch('/people/abc').should route_to('people#update', id: 'abc')
     end
 
     it 'routes to #delete' do

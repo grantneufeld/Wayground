@@ -10,7 +10,7 @@ describe "levels/new.html.erb" do
     render
   end
   it "renders new level form" do
-    assert_select 'form', action: levels_path, method: 'put' do
+    assert_select 'form', action: levels_path, method: 'post' do
       assert_select 'input#level_name', name: 'level[name]'
       assert_select 'input#level_filename', name: 'level[filename]'
       assert_select 'input#level_url', name: 'level[url]', type: 'url'

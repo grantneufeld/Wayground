@@ -23,7 +23,7 @@ describe PartiesController do
       get('/levels/def/parties/abc/edit').should route_to('parties#edit', id: 'abc', level_id: 'def')
     end
     it 'routes to #update' do
-      put('/levels/def/parties/abc').should route_to('parties#update', id: 'abc', level_id: 'def')
+      patch('/levels/def/parties/abc').should route_to('parties#update', id: 'abc', level_id: 'def')
     end
 
     it 'routes to #delete' do

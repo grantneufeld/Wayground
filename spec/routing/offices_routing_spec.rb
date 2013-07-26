@@ -26,7 +26,7 @@ describe OfficesController do
       get('/levels/def/offices/abc/edit').should route_to('offices#edit', id: 'abc', level_id: 'def')
     end
     it 'routes to #update' do
-      put('/levels/def/offices/abc').should route_to('offices#update', id: 'abc', level_id: 'def')
+      patch('/levels/def/offices/abc').should route_to('offices#update', id: 'abc', level_id: 'def')
     end
 
     it 'routes to #delete' do

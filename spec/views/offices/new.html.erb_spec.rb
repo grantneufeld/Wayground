@@ -16,7 +16,7 @@ describe 'offices/new.html.erb' do
     render
   end
   it 'renders new office form' do
-    assert_select 'form', action: '/levels/lvl/offices', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/offices', method: 'post' do
       assert_select 'input#office_name', name: 'office[name]'
       assert_select 'input#office_filename', name: 'office[filename]'
       assert_select 'input#office_url', name: 'office[url]', type: 'url'

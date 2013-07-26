@@ -188,7 +188,7 @@ describe PartiesController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: party.filename, party: {}, level_id: @level.to_param
+      patch :update, id: party.filename, party: {}, level_id: @level.to_param
       expect( response.status ).to eq 403
     end
 
@@ -196,12 +196,12 @@ describe PartiesController do
       it 'updates the requested party' do
         set_logged_in_admin
         Party.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
-        put :update, id: party.filename, party: {'these' => 'params'}, level_id: @level.to_param
+        patch :update, id: party.filename, party: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: party.filename, party: valid_attributes, level_id: @level.to_param
+          patch :update, id: party.filename, party: valid_attributes, level_id: @level.to_param
         end
         it 'assigns the requested party as @party' do
           expect( assigns(:party) ).to eq(party)
@@ -223,7 +223,7 @@ describe PartiesController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Party.any_instance.stub(:save).and_return(false)
-        put :update, id: party.filename, party: {}, level_id: @level.to_param
+        patch :update, id: party.filename, party: {}, level_id: @level.to_param
       end
       it 'assigns the party as @party' do
         expect( assigns(:party) ).to eq(party)

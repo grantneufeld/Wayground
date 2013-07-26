@@ -30,7 +30,7 @@ describe 'ballots/new.html.erb' do
     render
   end
   it 'renders new ballot form' do
-    assert_select 'form', action: '/levels/lvl/elections/elct/ballots', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/elections/elct/ballots', method: 'post' do
       assert_select 'select#office_id', name: 'office_id' do
         assert_select 'option', value: 'offc', selected: 'selected', text: 'Stub Name'
       end

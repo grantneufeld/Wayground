@@ -196,7 +196,7 @@ describe LevelsController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: level.filename, level: {}
+      patch :update, id: level.filename, level: {}
       expect( response.status ).to eq 403
     end
 
@@ -204,12 +204,12 @@ describe LevelsController do
       it 'updates the requested level' do
         set_logged_in_admin
         Level.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
-        put :update, id: level.filename, level: {'these' => 'params'}
+        patch :update, id: level.filename, level: { 'these' => 'params' }
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: level.filename, level: valid_attributes
+          patch :update, id: level.filename, level: valid_attributes
         end
         it 'assigns the requested level as @level' do
           expect( assigns(:level) ).to eq(level)
@@ -231,7 +231,7 @@ describe LevelsController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Level.any_instance.stub(:save).and_return(false)
-        put :update, id: level.filename, level: {}
+        patch :update, id: level.filename, level: {}
       end
       it 'assigns the level as @level' do
         expect( assigns(:level) ).to eq(level)

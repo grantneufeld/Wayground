@@ -24,7 +24,7 @@ describe 'offices/edit.html.erb' do
     render
   end
   it 'renders edit office form' do
-    assert_select 'form', action: '/levels/lvl/offices/abc', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/offices/abc', method: 'patch' do
       assert_select 'input#office_name', name: 'office[name]', value: 'Stub Name'
       assert_select 'input#office_filename', name: 'office[filename]', value: 'stub_filename'
       assert_select 'input#office_url', name: 'office[url]', type: 'url', value: 'http://stub.url.tld/'

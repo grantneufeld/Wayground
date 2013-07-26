@@ -16,7 +16,7 @@ describe 'elections/new.html.erb' do
     render
   end
   it 'renders new election form' do
-    assert_select 'form', action: '/levels/lvl/elections', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/elections', method: 'post' do
       assert_select 'input#election_name', name: 'election[name]'
       assert_select 'input#election_filename', name: 'election[filename]'
       assert_select 'input#election_url', name: 'election[url]', type: 'url'

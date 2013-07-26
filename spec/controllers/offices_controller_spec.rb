@@ -198,7 +198,7 @@ describe OfficesController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: office.filename, office: {}, level_id: @level.to_param
+      patch :update, id: office.filename, office: {}, level_id: @level.to_param
       expect( response.status ).to eq 403
     end
 
@@ -206,12 +206,12 @@ describe OfficesController do
       it 'updates the requested office' do
         set_logged_in_admin
         Office.any_instance.should_receive(:update_attributes).with({'these' => 'params'}).and_return(true)
-        put :update, id: office.filename, office: {'these' => 'params'}, level_id: @level.to_param
+        patch :update, id: office.filename, office: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: office.filename, office: valid_attributes, level_id: @level.to_param
+          patch :update, id: office.filename, office: valid_attributes, level_id: @level.to_param
         end
         it 'assigns the requested office as @office' do
           expect( assigns(:office) ).to eq(office)
@@ -233,7 +233,7 @@ describe OfficesController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Office.any_instance.stub(:save).and_return(false)
-        put :update, id: office.filename, office: {}, level_id: @level.to_param
+        patch :update, id: office.filename, office: {}, level_id: @level.to_param
       end
       it 'assigns the office as @office' do
         expect( assigns(:office) ).to eq(office)

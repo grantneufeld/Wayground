@@ -15,7 +15,7 @@ describe "people/edit.html.erb" do
     render
   end
   it "renders edit person form" do
-    assert_select 'form', action: '/people/stub_filename', method: 'put' do
+    assert_select 'form', action: '/people/stub_filename', method: 'patch' do
       assert_select 'input#person_fullname', name: 'person[fullname]', value: 'Stub Name'
       assert_select 'input#person_aliases', name: 'person[aliases]', value: 'Alias 1, Alias 2'
       assert_select 'input#person_filename', name: 'person[filename]', value: 'stub_filename'

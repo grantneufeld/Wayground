@@ -24,7 +24,7 @@ describe 'elections/edit.html.erb' do
     render
   end
   it 'renders edit election form' do
-    assert_select 'form', action: '/levels/lvl/elections/abc', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/elections/abc', method: 'patch' do
       assert_select 'input#election_name', name: 'election[name]', value: 'Stub Name'
       assert_select 'input#election_filename', name: 'election[filename]', value: 'stub_filename'
       assert_select 'input#election_url', name: 'election[url]', type: 'url', value: 'http://stub.url.tld/'

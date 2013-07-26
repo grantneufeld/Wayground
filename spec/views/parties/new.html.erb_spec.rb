@@ -16,7 +16,7 @@ describe 'parties/new.html.erb' do
     render
   end
   it 'renders new party form' do
-    assert_select 'form', action: '/levels/lvl/parties', method: 'put' do
+    assert_select 'form', action: '/levels/lvl/parties', method: 'post' do
       assert_select 'input#party_name', name: 'party[name]'
       assert_select 'input#party_filename', name: 'party[filename]'
       assert_select 'input#party_aliases', name: 'party[aliases]', value: 'Stub Alias 1, Stub Alias 2'

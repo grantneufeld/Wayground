@@ -10,7 +10,7 @@ describe "people/new.html.erb" do
     render
   end
   it "renders new person form" do
-    assert_select 'form', action: people_path, method: 'put' do
+    assert_select 'form', action: people_path, method: 'post' do
       assert_select 'input#person_fullname', name: 'person[fullname]'
       assert_select 'input#person_aliases', name: 'person[aliases]'
       assert_select 'input#person_filename', name: 'person[filename]'
