@@ -1,13 +1,11 @@
 # encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
-require 'make_db_array_field'
 
 # Represents an individual person.
 # May have multiple occurrences of being a candidate or elected representative.
 class Person < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  make_db_array_field :aliases
   attr_accessible :filename, :fullname, :aliases, :bio
 
   belongs_to :user

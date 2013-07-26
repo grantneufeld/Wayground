@@ -33,7 +33,7 @@ module Wayground
     # build a list of existing tags, indexed off of the taggified tag value (not the title)
     def determine_existing_tags
       @existing_tags = {}
-      tags.all.each { |tag| @existing_tags[tag.tag] = tag }
+      tags.each { |tag| @existing_tags[tag.tag] = tag }
       @existing_tags
     end
 
@@ -74,7 +74,7 @@ module Wayground
       tag = @existing_tags[tag_text]
       if tag
         if tag.title != title
-          tag.update_attributes!(title: title)
+          tag.update!(title: title)
         end
         @existing_tags.delete(tag_text)
       end
@@ -82,7 +82,7 @@ module Wayground
     end
 
     def new_tag(title)
-      tag = tags.new(title: title)
+      tag = tags.build(title: title)
       tag.user = editor
       tag
     end

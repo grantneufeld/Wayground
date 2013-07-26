@@ -89,6 +89,11 @@ describe ExternalLinksController do
       get :new, :event_id => event.id
       assigns(:external_link).should be_a_new(ExternalLink)
     end
+    it 'associates the new ExternalLink with the event' do
+      set_logged_in_admin
+      get :new, event_id: event.id
+      expect( assigns(:external_link).item ).to eq event
+    end
   end
 
   describe "POST 'create'" do
@@ -98,21 +103,24 @@ describe ExternalLinksController do
       response.status.should eq 403
     end
 
-    describe "with valid params" do
+    context 'with valid params' do
       it "creates a new Event" do
         set_logged_in_admin
         expect {
           post :create, :event_id => event.id, :external_link => valid_attributes
         }.to change(event.external_links, :count).by(1)
       end
-
       it "assigns a newly created ExternalLink as @external_link" do
         set_logged_in_admin
         post :create, :event_id => event.id, :external_link => valid_attributes
         assigns(:external_link).should be_a(ExternalLink)
         assigns(:external_link).should be_persisted
       end
-
+      it 'associates the new ExternalLink with the event' do
+        set_logged_in_admin
+        post :create, event_id: event.id, external_link: valid_attributes
+        expect( assigns(:external_link).item ).to eq event
+      end
       it "redirects to the created ExternalLink" do
         set_logged_in_admin
         post :create, :event_id => event.id, :external_link => valid_attributes
@@ -120,7 +128,7 @@ describe ExternalLinksController do
       end
     end
 
-    describe "with invalid params" do
+    context 'with invalid params' do
       it "assigns a newly created but unsaved ExternalLink as @external_link" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
@@ -128,7 +136,12 @@ describe ExternalLinksController do
         post :create, :event_id => event.id, :external_link => {}
         assigns(:external_link).should be_a_new(ExternalLink)
       end
-
+      it 'associates the new ExternalLink with the event' do
+        set_logged_in_admin
+        ExternalLink.any_instance.stub(:save).and_return(false)
+        post :create, event_id: event.id, external_link: {}
+        expect( assigns(:external_link).item ).to eq event
+      end
       it "re-renders the 'new' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
@@ -156,28 +169,28 @@ describe ExternalLinksController do
   describe "PUT 'update'" do
     it "requires the user to have authority" do
       set_logged_in_user
-      put :update, :event_id => event.id, :id => external_link.id, :external_link => {'these' => 'params'}
+      patch :update, event_id: event.id, id: external_link.id, external_link: { 'these' => 'params' }
       response.status.should eq 403
     end
 
     describe "with valid params" do
       it "updates the requested external_link" do
         set_logged_in_admin
-        # This specifies that the ExternalLink receives the :update_attributes message
+        # This specifies that the ExternalLink receives the :update message
         # with whatever params are submitted in the request.
-        ExternalLink.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :event_id => event.id, :id => external_link.id, :external_link => {'these' => 'params'}
+        ExternalLink.any_instance.should_receive(:update).with('these' => 'params')
+        patch :update, event_id: event.id, id: external_link.id, external_link: { 'these' => 'params' }
       end
 
       it "assigns the requested external_link as @external_link" do
         set_logged_in_admin
-        put :update, :event_id => event.id, :id => external_link.id, :external_link => valid_attributes
+        patch :update, event_id: event.id, id: external_link.id, external_link: valid_attributes
         assigns(:external_link).should eq(external_link)
       end
 
       it "redirects to the external_link" do
         set_logged_in_admin
-        put :update, :event_id => event.id, :id => external_link.id, :external_link => valid_attributes
+        patch :update, event_id: event.id, id: external_link.id, external_link: valid_attributes
         response.should redirect_to([event, external_link])
       end
     end
@@ -187,7 +200,7 @@ describe ExternalLinksController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         ExternalLink.any_instance.stub(:save).and_return(false)
-        put :update, :event_id => event.id, :id => external_link.id, :external_link => {:url => 'invalid url'}
+        patch :update, event_id: event.id, id: external_link.id, external_link: { url: 'invalid url' }
         assigns(:external_link).should eq(external_link)
       end
 
@@ -195,7 +208,7 @@ describe ExternalLinksController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         ExternalLink.any_instance.stub(:save).and_return(false)
-        put :update, :event_id => event.id, :id => external_link.id, :external_link => {:url => 'invalid url'}
+        patch :update, event_id: event.id, id: external_link.id, external_link: { url: 'invalid url' }
         response.should render_template("edit")
       end
     end

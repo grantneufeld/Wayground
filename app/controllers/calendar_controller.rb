@@ -6,11 +6,11 @@ require 'event/year'
 
 # Present calendar views of events.
 class CalendarController < ApplicationController
-  before_filter :set_user
-  before_filter :require_year
-  before_filter :require_month, except: [:year]
-  before_filter :require_day, only: [:day]
-  before_filter :set_section
+  before_action :set_user
+  before_action :require_year
+  before_action :require_month, except: [:year]
+  before_action :require_day, only: [:day]
+  before_action :set_section
 
   def year
     year = @date.year

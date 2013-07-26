@@ -44,7 +44,7 @@ module Wayground
           user = user_class.new(name: auth_name, email: user_info['email'])
           self.current_user = user
         end
-        authentication = current_user.authentications.new(authentication_attrs)
+        authentication = current_user.authentications.build(authentication_attrs)
         current_user.save!
         authentication
       end

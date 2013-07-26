@@ -5,6 +5,11 @@ require 'image'
 
 describe ImageVariant do
 
+  before(:all) do
+    ImageVariant.delete_all
+    Image.delete_all
+  end
+
   describe "attribute mass assignment security" do
     it "should allow height" do
       height = '123'
@@ -140,13 +145,13 @@ describe ImageVariant do
           @variant = @image.image_variants.create!(url: 'http://o.tld/', style: 'original', format: 'png')
         end
         it "should return the one variant and the scaled" do
-          expect( @image.image_variants.originals.all ).to eq [@variant, @scaled]
+          expect( @image.image_variants.originals.to_a ).to eq [@variant, @scaled]
         end
       end
       context "with multiple ‘original’ variants" do
         before(:all) do
           @variants = []
-          @image.image_variants.order(:id).where(style: 'original').each do |variant|
+          @image.image_variants.where(style: 'original').order(:id).each do |variant|
             @variants << variant
           end
           while @variants.count < 2 do
@@ -155,7 +160,7 @@ describe ImageVariant do
           @variants << @scaled
         end
         it "should return all the variants" do
-          expect( @image.image_variants.originals.order(:id).all ).to eq @variants
+          expect( @image.image_variants.order(:id).originals.to_a ).to eq @variants
         end
       end
     end
@@ -177,7 +182,7 @@ describe ImageVariant do
           height: 50, width: 100
         )
         image.save!
-        expect( ImageVariant.largest.all ).to eq [v2, v4, v3, v1]
+        expect( ImageVariant.largest.to_a ).to eq [v2, v4, v3, v1]
       end
     end
   end

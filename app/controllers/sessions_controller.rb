@@ -5,8 +5,8 @@ require 'authentication'
 
 # Actions for the user to sign-in or sign-out (establish/clear the user session).
 class SessionsController < ApplicationController
-  before_filter :cant_be_signed_in, :only => [:new, :create]
-  before_filter :must_be_signed_in, :only => [:delete, :destroy]
+  before_action :cant_be_signed_in, only: [:new, :create]
+  before_action :must_be_signed_in, only: [:delete, :destroy]
 
   def new
   end

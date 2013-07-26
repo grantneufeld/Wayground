@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe AuthoritiesController do
@@ -135,7 +136,7 @@ describe AuthoritiesController do
   describe "PUT update" do
     it "blocks users without the :can_update authority" do
       set_logged_in_user
-      put :update, :id => "37", :authority => {'these' => 'params'}
+      patch :update, id: '37', authority: { 'these' => 'params' }
       response.status.should eq 403 # "403 Forbidden"
     end
 
@@ -143,19 +144,19 @@ describe AuthoritiesController do
       it "updates the requested authority" do
         set_logged_in_admin
         Authority.stub(:find).with("37") { mock_admin_authority }
-        mock_admin_authority.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :authority => {'these' => 'params'}
+        mock_admin_authority.should_receive(:update).with('these' => 'params')
+        patch :update, id: '37', authority: { 'these' => 'params' }
       end
       it "assigns the requested authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:find) { reset_mock_admin_authority(:update_attributes => true) }
-        put :update, :id => "1"
+        Authority.stub(:find) { reset_mock_admin_authority(update: true) }
+        patch :update, id: '1'
         assigns(:authority).should be(mock_admin_authority)
       end
       it "redirects to the authority" do
         set_logged_in_admin
-        Authority.stub(:find) { reset_mock_admin_authority(:update_attributes => true) }
-        put :update, :id => "1"
+        Authority.stub(:find) { reset_mock_admin_authority(update: true) }
+        patch :update, id: '1'
         response.should redirect_to(authority_url(mock_admin_authority))
       end
     end
@@ -163,14 +164,14 @@ describe AuthoritiesController do
     describe "with invalid params" do
       it "assigns the authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:find) { mock_admin_authority(:update_attributes => false) }
-        put :update, :id => "1"
+        Authority.stub(:find) { mock_admin_authority(update: false) }
+        patch :update, id: '1'
         assigns(:authority).should be(mock_admin_authority)
       end
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        Authority.stub(:find) { mock_authority(:update_attributes => false) }
-        put :update, :id => "1"
+        Authority.stub(:find) { mock_authority(update: false) }
+        patch :update, id: '1'
         response.should render_template("edit")
       end
     end

@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'democracy/election_builder'
 require 'event/events_by_date'
 require 'event'
 

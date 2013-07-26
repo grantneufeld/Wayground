@@ -23,7 +23,7 @@ describe UsersController do
       { :get => "/account/edit" }.should route_to(:controller => "users", :action => "edit")
     end
     it "recognizes and generates #update" do
-      { :put => "/account" }.should route_to(:controller => "users", :action => "update")
+      expect( patch: '/account' ).to route_to(controller: 'users', action: 'update')
     end
   end
 end

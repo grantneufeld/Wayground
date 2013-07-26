@@ -1,13 +1,13 @@
 # encoding: utf-8
 
 class SettingsController < ApplicationController
-  before_filter :set_setting, :except => [:initialize_defaults, :index, :new, :create]
-  before_filter :requires_view_authority, :only => [:index, :show]
-  before_filter :requires_create_authority, :only => [:initialize_defaults, :new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_section
-  before_filter :set_new_setting, :only => [:new, :create]
+  before_action :set_setting, except: [:initialize_defaults, :index, :new, :create]
+  before_action :requires_view_authority, only: [:index, :show]
+  before_action :requires_create_authority, only: [:initialize_defaults, :new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_section
+  before_action :set_new_setting, only: [:new, :create]
 
   # Setup default Settings for the system as a whole.
   # Currently, just the global_start_date.
@@ -55,7 +55,7 @@ class SettingsController < ApplicationController
   # PUT /settings/1
   # PUT /settings/1.xml
   def update
-    if @setting.update_attributes(params[:setting])
+    if @setting.update(params[:setting])
       redirect_to(@setting, notice: 'Setting was successfully updated.')
     else
       page_metadata(title: "Edit Setting: #{@setting.key}")

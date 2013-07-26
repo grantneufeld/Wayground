@@ -21,7 +21,7 @@ describe EventsController do
       post("/events").should route_to("events#create")
     end
     it "routes to #update" do
-      put("/events/1").should route_to("events#update", :id => "1")
+      expect( patch: '/events/1' ).to route_to('events#update', id: '1')
     end
 
     it "routes to #delete" do

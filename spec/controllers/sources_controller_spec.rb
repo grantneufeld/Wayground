@@ -145,7 +145,7 @@ describe SourcesController do
     it "requires the user to have authority" do
       source = FactoryGirl.create(:source)
       set_logged_in_user
-      put :update, id: source.id, source: {'these' => 'params'}
+      patch :update, id: source.id, source: { 'these' => 'params' }
       response.status.should eq 403
     end
 
@@ -154,24 +154,24 @@ describe SourcesController do
         source = FactoryGirl.create(:source)
         # Assuming there are no other sources in the database, this
         # specifies that the Source created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        Source.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
+        Source.any_instance.should_receive(:update).with('these' => 'params')
         set_logged_in_admin
-        put :update, id: source.id, source: {'these' => 'params'}
+        patch :update, id: source.id, source: { 'these' => 'params' }
       end
 
       it "assigns the requested source as @source" do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
-        put :update, id: source.id, source: valid_attributes
+        patch :update, id: source.id, source: valid_attributes
         assigns(:source).should eq(source)
       end
 
       it "redirects to the source" do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
-        put :update, id: source.id, source: valid_attributes
+        patch :update, id: source.id, source: valid_attributes
         response.should redirect_to(source)
       end
     end
@@ -182,7 +182,7 @@ describe SourcesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Source.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, id: source.id, source: {}
+        patch :update, id: source.id, source: {}
         assigns(:source).should eq(source)
       end
 
@@ -191,7 +191,7 @@ describe SourcesController do
         # Trigger the behavior that occurs when invalid params are submitted
         Source.any_instance.stub(:save).and_return(false)
         set_logged_in_admin
-        put :update, id: source.id, source: {}
+        patch :update, id: source.id, source: {}
         response.should render_template("edit")
       end
     end

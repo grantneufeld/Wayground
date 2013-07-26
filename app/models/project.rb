@@ -24,6 +24,6 @@ class Project < ActiveRecord::Base
   validates_presence_of :name
   validates :filename, filename: true, length: { in: 0..127 }, uniqueness: true, allow_blank: true
 
-  default_scope order('name')
+  default_scope { order('name') }
 
 end

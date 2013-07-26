@@ -6,7 +6,9 @@ require 'page_metadata'
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
 
   helper_method :current_user
   helper_method :page_metadata
@@ -81,7 +83,7 @@ class ApplicationController < ActionController::Base
     @pagenum ||= 1
     @pagenum = 1 if @pagenum < 1
     @source_total = source.count
-    items = source.limit(@max).offset((@pagenum - 1) * @max).all
+    items = source.limit(@max).offset((@pagenum - 1) * @max)
     @selected_total = items.size
     items
   end

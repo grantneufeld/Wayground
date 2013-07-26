@@ -26,7 +26,7 @@ describe ExternalLinksController do
         get("/events/1/external_links/2/edit").should route_to("external_links#edit", :id => "2", :event_id => '1')
       end
       it "routes to #update" do
-        put("/events/1/external_links/2").should route_to("external_links#update", :id => "2", :event_id => '1')
+        expect( patch: '/events/1/external_links/2' ).to route_to('external_links#update', id: '2', event_id: '1')
       end
 
       it "routes to #delete" do

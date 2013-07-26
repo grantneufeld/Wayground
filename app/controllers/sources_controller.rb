@@ -2,14 +2,14 @@
 
 # Assign remote Sources and queue them for processing.
 class SourcesController < ApplicationController
-  before_filter :set_user
-  before_filter :set_source, :except => [:index, :new, :create]
-  before_filter :requires_view_authority, :only => [:index, :show]
-  before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update, :processor, :runprocessor]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_section
-  before_filter :set_new_source, :only => [:new, :create]
+  before_action :set_user
+  before_action :set_source, except: [:index, :new, :create]
+  before_action :requires_view_authority, only: [:index, :show]
+  before_action :requires_create_authority, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update, :processor, :runprocessor]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_section
+  before_action :set_new_source, only: [:new, :create]
 
   def index
     page_metadata(title: 'Sources')
@@ -36,7 +36,7 @@ class SourcesController < ApplicationController
   end
 
   def update
-    if @source.update_attributes(params[:source])
+    if @source.update(params[:source])
       redirect_to @source
     else
       page_metadata(title: "Edit Source: #{@source.name}")

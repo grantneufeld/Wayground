@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
-require 'make_db_array_field'
 require 'colour_validator'
 require 'filename_validator'
 require 'http_url_validator'
@@ -9,7 +8,6 @@ require 'http_url_validator'
 # Represents a political party at a level of government.
 class Party < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  make_db_array_field :aliases
   attr_accessible :filename, :name, :aliases, :abbrev, :is_registered, :colour, :url, :description,
     :established_on, :registered_on, :ended_on
 

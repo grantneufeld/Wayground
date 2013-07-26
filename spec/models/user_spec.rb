@@ -175,8 +175,11 @@ describe User do
   end
 
   describe "email code confirmation" do
+    before(:each) do
+      @user.authorizations.destroy_all
+    end
     it "should generate a confirmation token when creating a new user" do
-      @user.confirmation_token.blank?.should_not be_true
+      expect( @user.confirmation_token.blank? ).to be_false
     end
     it "should fail to confirm if the code parameter does not match the saved token" do
       @user.confirm_code!('invalid token').should be_false
@@ -203,8 +206,9 @@ describe User do
 
   # AUTHORITIES
 
-  context "#admin?" do
+  describe '#admin?' do
     it "should be true for a user with global is_owner authority" do
+      @user.reload
       @user.make_admin!
       @user.admin?.should be_true
     end
@@ -222,6 +226,7 @@ describe User do
   describe "#first_user_is_admin" do
     it "should create one authority for first user" do
       Authority.where(user_id: @user.id).delete_all
+      @user.reload
       User.stub(:count).and_return(1)
       expect { @user.first_user_is_admin }.to change(Authority, :count).by(1)
     end
@@ -304,9 +309,8 @@ describe User do
       @item.has_authority_for_user_to?(@user, :can_update).should be_true
     end
     it "should ammend an existing authority" do
-      authority = FactoryGirl.build(:authority, user: @user, item: @item, can_view: true)
-      @user.authorizations << authority
-      @user.save!
+      authority = FactoryGirl.create(:authority, user: @user, item: @item, can_view: true)
+      @user.reload
       @user.set_authority_on_item(@item, :can_update)
       authority = @user.authorizations.for_item(@item).first
       authority.can_view?.should be_true

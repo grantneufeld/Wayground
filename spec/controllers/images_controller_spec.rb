@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 require 'images_controller'
 
@@ -22,6 +23,7 @@ describe ImagesController do
 
   describe "GET index" do
     it "assigns all images as @images" do
+      image
       Image.stub(:all).and_return([image])
       get :index
       expect( assigns(:images) ).to eq([image])
@@ -124,29 +126,29 @@ describe ImagesController do
   describe "PUT update" do
     it "requires the user to have authority" do
       set_logged_in_user
-      put :update, id: image.id, image: {}
+      patch :update, id: image.id, image: {}
       expect( response.status ).to eq 403
     end
 
     describe "with valid params" do
       it "updates the requested image" do
         set_logged_in_admin
-        Image.any_instance.should_receive(:update_attributes).with({'these' => 'params'})
-        put :update, id: image.id, image: {'these' => 'params'}
+        Image.any_instance.should_receive(:update).with('these' => 'params')
+        patch :update, id: image.id, image: { 'these' => 'params' }
       end
       it "assigns the requested image as @image" do
         set_logged_in_admin
-        put :update, id: image.id, image: valid_attributes
+        patch :update, id: image.id, image: valid_attributes
         expect( assigns(:image) ).to eq(image)
       end
       it "notifies the user that the image was saved" do
         set_logged_in_admin
-        put :update, id: image.id, image: valid_attributes
+        patch :update, id: image.id, image: valid_attributes
         expect( request.flash[:notice] ).to eq 'The image has been saved.'
       end
       it "redirects to the image" do
         set_logged_in_admin
-        put :update, id: image.id, image: valid_attributes
+        patch :update, id: image.id, image: valid_attributes
         expect( response ).to redirect_to(image)
       end
     end
@@ -156,14 +158,14 @@ describe ImagesController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Image.any_instance.stub(:save).and_return(false)
-        put :update, id: image.id, image: {}
+        patch :update, id: image.id, image: {}
         expect( assigns(:image) ).to eq(image)
       end
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Image.any_instance.stub(:save).and_return(false)
-        put :update, id: image.id, image: {}
+        patch :update, id: image.id, image: {}
         expect( response ).to render_template("edit")
       end
     end

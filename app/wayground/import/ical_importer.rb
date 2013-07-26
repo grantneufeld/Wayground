@@ -102,7 +102,7 @@ module Wayground
         else
           event = create_event(ievent, user: editor, approve_by: approve_by)
           new_events << event
-          sourced_item = source.sourced_items.new(
+          sourced_item = source.sourced_items.build(
             source_identifier: uid, last_sourced_at: source.last_updated_at
           )
           sourced_item.item = event

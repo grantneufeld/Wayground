@@ -26,7 +26,7 @@ class Path < ActiveRecord::Base
     matches = searchpath.match(/\A(.+)\/\z/)
     where({:sitepath => (matches ? matches[1] : searchpath)})
   }
-  scope :in_order, order(:sitepath)
+  scope :in_order, -> { order(:sitepath) }
   scope :for_user, lambda { |user|
     # this is going to get ugly...
     # Basically, going to need a join for each type of model that uses paths.

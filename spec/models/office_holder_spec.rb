@@ -51,11 +51,11 @@ describe OfficeHolder do
       }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
     end
     it 'should allow start_on' do
-      date = 1.day.ago
+      date = 1.day.ago.to_date
       expect( OfficeHolder.new(start_on: date).start_on ).to eq date
     end
     it 'should allow end_on' do
-      date = 1.day.ago
+      date = 1.day.ago.to_date
       expect( OfficeHolder.new(end_on: date).end_on ).to eq date
     end
   end

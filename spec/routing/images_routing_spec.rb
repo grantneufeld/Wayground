@@ -21,7 +21,7 @@ describe ImagesController do
       get("/images/1/edit").should route_to("images#edit", :id => "1")
     end
     it "routes to #update" do
-      put("/images/1").should route_to("images#update", :id => "1")
+      expect( patch: '/images/1' ).to route_to('images#update', id: '1')
     end
 
     it "routes to #delete" do

@@ -81,7 +81,7 @@ describe "calendar/day.html.erb" do
         @event1.stub(:is_approved?).and_return(false)
         render
         expect( rendered ).to match(
-          /<a href="\/events\/123\/edit"[^•]+<a href="\/events\/123\/approve"[^•]+<a href="\/events\/123\/delete"[^•]+/
+          /<a (?:|[^>]+ )href="\/events\/123\/edit"[^•]+<a (?:|[^>]+ )href="\/events\/123\/approve"[^•]+<a (?:|[^>]+ )href="\/events\/123\/delete"[^•]+/
         )
       end
     end
@@ -96,7 +96,7 @@ describe "calendar/day.html.erb" do
     end
     it "should show the new event action" do
       render
-      expect( rendered ).to match /<a href="\/events\/new"/
+      expect( rendered ).to match /<a (?:|[^>]+ )href="\/events\/new"/
     end
   end
 end

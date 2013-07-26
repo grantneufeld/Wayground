@@ -81,7 +81,7 @@ class Document < ActiveRecord::Base
         self.path = nil
       end
     elsif path
-      path.update_attributes!(:sitepath => sitepath)
+      path.update!(sitepath: sitepath)
     else
       generate_path(sitepath)
       path.save!

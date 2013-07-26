@@ -368,11 +368,11 @@ describe Event do
     context "with dates in the year 2000" do
       before(:all) do
         Event.delete_all
-        @event1 = FactoryGirl.create(:event, start_at: '2000-01-01 23:59:99', title: '2000 day 1')
+        @event1 = FactoryGirl.create(:event, start_at: '2000-01-01 23:59:59', title: '2000 day 1')
         @event2 = FactoryGirl.create(:event, start_at: '2000-01-02 00:00:00', title: '2000 day 2')
-        @event3 = FactoryGirl.create(:event, start_at: '2000-01-03 23:59:99', title: '2000 day 3')
+        @event3 = FactoryGirl.create(:event, start_at: '2000-01-03 23:59:59', title: '2000 day 3')
         @event4 = FactoryGirl.create(:event, start_at: '2000-01-04 00:00:00', title: '2000 day 4')
-        @event4_2 = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:99', title: '2000 day 4, #2')
+        @event4_2 = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:59', title: '2000 day 4, #2')
         @event5 = FactoryGirl.create(:event, start_at: '2000-01-05 00:00:00', title: '2000 day 5')
       end
       describe ".falls_between_dates" do
@@ -391,17 +391,16 @@ describe Event do
     describe '.tagged' do
       it 'should return events that are tagged with the given tag' do
         Tag.delete_all
-        event1 = Event.first || FactoryGirl.create(:event)
-        event2 = Event.offset(1).first || FactoryGirl.create(:event)
-        event3 = Event.offset(2).first || FactoryGirl.create(:event)
-        user = event1.user || User.first || FactoryGirl.create(:user)
+        event1 = Event.order(:id).first || FactoryGirl.create(:event)
+        event2 = Event.order(:id).offset(1).first || FactoryGirl.create(:event)
+        event3 = Event.order(:id).offset(2).first || FactoryGirl.create(:event)
         event1.tag_list = 'Given, Tag'
         event1.editor = @user_admin
         event1.save!
         event3.tag_list = 'Tag, Given'
         event3.editor = @user_admin
         event3.save!
-        expect( Event.tagged('given') ).to eq [event1, event3]
+        expect( Event.tagged('given').order(:id) ).to eq [event1, event3]
       end
     end
   end
@@ -507,7 +506,7 @@ describe Event do
     it "should be called when updating an Event" do
       sourced_item.has_local_modifications = false
       sourced_item.save!
-      event.update_attributes(title: 'Updated')
+      event.update(title: 'Updated')
       sourced_item.reload
       expect( sourced_item.has_local_modifications? ).to be_true
     end
@@ -563,19 +562,19 @@ describe Event do
       event = FactoryGirl.create(:event, editor: @user_admin, edit_comment: 'add_version after update')
       Version.any_instance.stub(:diff_with).and_return(title: 'Different')
       expect {
-        event.update_attributes(title: 'updated version')
+        event.update(title: 'updated version')
       }.to change{ event.versions.count }.by(1)
     end
   end
 
   describe '#new_version' do
     it "should build a new Version for the event" do
-      values1 = {timezone: 'CDT', is_allday: true, is_draft: true}
+      values1 = { timezone: 'Central Time (US & Canada)', is_allday: true, is_draft: false }
       values2 = {
         is_wheelchair_accessible: true, is_adults_only: true, is_tentative: true,
         is_cancelled: true, is_featured: true,
         organizer: 'Organizer', organizer_url: 'http://organizer.url/',
-        location: 'Location', address: 'Address', city: 'City', province: 'Province', country: 'Country',
+        location: 'Location', address: 'Address', city: 'City', province: 'Province', country: 'Co',
         location_url: 'http://location.url/',
         content: 'Content', description: 'Description',
         start_at: Time.zone.parse('2000-01-01 02:03pm'), end_at: Time.zone.parse('2000-01-01 04:05pm')
@@ -587,7 +586,9 @@ describe Event do
       event.is_approved = true
       updated_at = Time.zone.parse('2000-01-01 06:07pm')
       event.updated_at = updated_at
+      event.save!
       version = event.new_version
+      expect( version.item ).to eq event
       expect( version.user ).to eq @user_admin
       expect( version.edited_at ).to eq updated_at
       expect( version.edit_comment ).to eq 'Edit Comment'

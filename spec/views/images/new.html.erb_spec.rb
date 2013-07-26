@@ -11,7 +11,7 @@ describe "images/new.html.erb" do
 
   it "renders new image form" do
     render
-    assert_select 'form', action: images_path, method: 'put' do
+    assert_select 'form', action: images_path, method: 'patch' do
       assert_select 'input#image_title', name: 'image[title]'
       assert_select 'input#image_alt_text', name: 'image[alt_text]'
       assert_select 'textarea#image_description', name: 'image[description]'

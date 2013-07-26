@@ -89,12 +89,12 @@ describe Page do
   describe "#update_path" do
     it "should make no change to the path if the Page’s filename did not change" do
       page = FactoryGirl.create(:page, :filename => 'original')
-      page.update_attributes!(:description => 'Not changing the filename.')
+      page.update!(description: 'Not changing the filename.')
       page.sitepath.should eq '/original'
     end
     it "should update the path if the Page’s filename changed" do
       page = FactoryGirl.create(:page, :filename => 'original')
-      page.update_attributes!(:filename => 'changed')
+      page.update!(filename: 'changed')
       page.sitepath.should eq '/changed'
     end
     it "should create the path if the Page doesn’t have one" do

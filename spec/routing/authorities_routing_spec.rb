@@ -19,8 +19,8 @@ describe AuthoritiesController do
     it "recognizes and generates #edit" do
       { :get => "/authorities/1/edit" }.should route_to(:controller => "authorities", :action => "edit", :id => "1")
     end
-    it "recognizes and generates #update (put)" do
-      { :put => "/authorities/1" }.should route_to(:controller => "authorities", :action => "update", :id => "1")
+    it 'recognizes and generates #update (patch)' do
+      expect( patch: '/authorities/1' ).to route_to(controller: 'authorities', action: 'update', id: '1')
     end
 
     it "recognizes and generates #delete" do

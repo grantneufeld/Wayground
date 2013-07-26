@@ -3,8 +3,8 @@
 # Reviewing versions of arbitrary items (such as Pages or Events).
 # This controller is always routed as a sub-controller to an item class (e.g., pages/1/versions).
 class VersionsController < ApplicationController
-  before_filter :set_item
-  before_filter :requires_view_authority
+  before_action :set_item
+  before_action :requires_view_authority
 
   def index
     @versions = paginate(@item.versions)

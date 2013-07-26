@@ -2,13 +2,13 @@
 
 # This controller must always be a sub-controller (e.g., /events/:event_id/external_links).
 class ExternalLinksController < ApplicationController
-  before_filter :set_user
-  before_filter :set_item
-  before_filter :set_external_link, :except => [:index, :new, :create]
-  before_filter :requires_create_authority, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy]
-  before_filter :set_new_external_link, :only => [:new, :create]
+  before_action :set_user
+  before_action :set_item
+  before_action :set_external_link, except: [:index, :new, :create]
+  before_action :requires_create_authority, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update]
+  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_new_external_link, only: [:new, :create]
 
   def index
     page_metadata(title: "#{@item.title}: External Links")
@@ -38,7 +38,7 @@ class ExternalLinksController < ApplicationController
 
   def update
     page_metadata(title: "Edit External Link: #{@external_link.title}")
-    if @external_link.update_attributes(params[:external_link])
+    if @external_link.update(params[:external_link])
       redirect_to([@item, @external_link], notice: 'The external link has been saved.')
     else
       render action: "edit"
@@ -95,7 +95,7 @@ class ExternalLinksController < ApplicationController
 
   def set_new_external_link
     page_metadata(title: 'New External Link')
-    @external_link = @item.external_links.new(params[:external_link])
+    @external_link = @item.external_links.build(params[:external_link])
   end
 
 end

@@ -3,15 +3,15 @@ require 'event/day_events'
 
 # Access events.
 class EventsController < ApplicationController
-  before_filter :set_user
-  before_filter :set_event, :except => [:index, :new, :create]
-  before_filter :requires_login, :only => [:new, :create]
-  before_filter :requires_update_authority, :only => [:edit, :update, :merge, :perform_merge]
-  before_filter :requires_delete_authority, :only => [:delete, :destroy, :merge, :perform_merge]
-  before_filter :requires_approve_authority, :only => [:approve, :set_approved]
-  before_filter :set_section
-  before_filter :set_new_event, :only => [:new, :create]
-  before_filter :set_editor, :only => [:create, :update, :destroy, :approve, :merge, :perform_merge]
+  before_action :set_user
+  before_action :set_event, except: [:index, :new, :create]
+  before_action :requires_login, only: [:new, :create]
+  before_action :requires_update_authority, only: [:edit, :update, :merge, :perform_merge]
+  before_action :requires_delete_authority, only: [:delete, :destroy, :merge, :perform_merge]
+  before_action :requires_approve_authority, only: [:approve, :set_approved]
+  before_action :set_section
+  before_action :set_new_event, only: [:new, :create]
+  before_action :set_editor, only: [:create, :update, :destroy, :approve, :merge, :perform_merge]
 
   def index
     @range = params[:r]
@@ -78,7 +78,7 @@ class EventsController < ApplicationController
 
   def update
     page_metadata(title: "Edit Event: #{@event.title}")
-    if @event.update_attributes(params[:event])
+    if @event.update(params[:event])
       notice = 'The event has been saved.'
       redirect_to(@event, notice: notice)
     else

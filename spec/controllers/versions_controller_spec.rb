@@ -18,7 +18,7 @@ describe VersionsController do
   describe "GET index" do
     it "assigns all versions as @versions" do
       get :index, page_id: @page.id
-      expect( assigns(:versions) ).to eq(@version.item.versions)
+      expect( assigns(:versions).to_a ).to eq(@version.item.versions.to_a)
     end
     it "restricts access for versions of items that require authorization to authorized users" do
       page = FactoryGirl.create(:page, is_authority_controlled: true)
@@ -27,7 +27,7 @@ describe VersionsController do
       FactoryGirl.create(:owner_authority, item: page, user: user)
       controller.stub!(:current_user).and_return(user)
       get :index, page_id: page.id
-      expect( assigns(:versions) ).to eq(page.versions)
+      expect( assigns(:versions).to_a ).to eq(page.versions.to_a)
     end
     it "restricts access for versions of items that require authorization" do
       page = FactoryGirl.create(:page, is_authority_controlled: true)

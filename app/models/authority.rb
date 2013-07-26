@@ -35,13 +35,13 @@ class Authority < ActiveRecord::Base
     raise "invalid action “#{action}”" unless action.match(/\A(can_[a-z]+|is_owner)\z/)
     where("(authorities.#{action} = ? OR authorities.is_owner = ?)", true, true)
   }
-  scope :where_owner, where(:is_owner => true)
+  scope :where_owner, -> { where(is_owner: true) }
 
   def self.build_from_params(params)
     authority_params = params[:authority_params] || {}
     user = User.from_string(authority_params[:user_proxy].to_s)
     if user
-      authority = user.authorizations.new(authority_params)
+      authority = user.authorizations.build(authority_params)
     else
       authority = Authority.new(authority_params)
     end

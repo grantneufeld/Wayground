@@ -60,7 +60,6 @@ describe Wayground::TagList do
     context 'with no tags' do
       it 'should return an empty hash' do
         tags = []
-        tags.stub(:all).and_return(tags)
         list = Wayground::TagList.new(tags: tags)
         expect( list.determine_existing_tags ).to eq({})
       end
@@ -71,7 +70,6 @@ describe Wayground::TagList do
         tagb = Tag.new(title: 'Tag B')
         tagc = Tag.new(title: 'Tag C')
         tags = [taga, tagb, tagc]
-        tags.stub(:all).and_return(tags)
         list = Wayground::TagList.new(tags: tags)
         expect( list.determine_existing_tags ).to eq({ 'taga' => taga, 'tagb' => tagb, 'tagc' => tagc })
       end
@@ -138,7 +136,6 @@ describe Wayground::TagList do
     context 'with no matching existing tag' do
       it 'should do nothing' do
         tags = []
-        tags.stub(:all).and_return(tags)
         list = Wayground::TagList.new(tags: tags)
         list.determine_existing_tags
         expect( list.update_existing_tag('Not Present') ).to be_nil
@@ -150,12 +147,11 @@ describe Wayground::TagList do
       end
       before(:each) do
         @tags = [@tag]
-        @tags.stub(:all).and_return(@tags)
         @list = Wayground::TagList.new(tags: @tags)
         @list.determine_existing_tags
       end
       it 'should not update the tag' do
-        Tag.any_instance.should_not_receive(:update_attributes!)
+        Tag.any_instance.should_not_receive(:update!)
         @list.update_existing_tag('same title')
       end
       it 'should return the tag' do
@@ -170,10 +166,9 @@ describe Wayground::TagList do
       it 'should update the title for the tag' do
         tag = Tag.new(title: 'Different title.')
         tags = [tag]
-        tags.stub(:all).and_return(tags)
         list = Wayground::TagList.new(tags: tags)
         list.determine_existing_tags
-        Tag.any_instance.should_receive(:update_attributes!).with(title: 'different title').and_return(true)
+        Tag.any_instance.should_receive(:update!).with(title: 'different title').and_return(true)
         list.update_existing_tag('different title')
       end
     end
@@ -181,15 +176,22 @@ describe Wayground::TagList do
 
   describe '#new_tag' do
     it 'should use the given title for the new tag' do
-      list = Wayground::TagList.new(tags: Tag)
+      list = Wayground::TagList.new(tags: Event.new.tags )
       tag = list.new_tag('New Tag')
       expect( tag.tag ).to eq 'newtag'
     end
     it 'should assign the editor as the user for the new tag' do
       user = User.new
-      list = Wayground::TagList.new(tags: Tag, editor: user)
+      list = Wayground::TagList.new(tags: Event.new.tags, editor: user)
       tag = list.new_tag('Tag With Editor')
       expect( tag.user ).to eq user
+    end
+    it 'should associate the event as the item for the new tag' do
+      user = User.new
+      event = Event.first || FactoryGirl.create(:event)
+      list = Wayground::TagList.new(tags: event.tags, editor: user)
+      tag = list.new_tag('Tag On Item')
+      expect( tag.item ).to eq event
     end
   end
 
@@ -198,7 +200,6 @@ describe Wayground::TagList do
       taga = Tag.new(title: 'Tag A')
       tagb = Tag.new(title: 'Tag B')
       tags = [taga, tagb]
-      tags.stub(:all).and_return(tags)
       list = Wayground::TagList.new(tags: tags)
       list.determine_existing_tags
       taga.should_receive(:destroy)

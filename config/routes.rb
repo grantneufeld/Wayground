@@ -1,4 +1,8 @@
 Wayground::Application.routes.draw do
+  concern :versioned do
+    resources :versions, except: [:new, :create, :edit, :update, :destroy]
+  end
+
   root to: "paths#sitepath", via: :get, defaults: { url: '/' }
 
   # USERS
@@ -13,7 +17,7 @@ Wayground::Application.routes.draw do
   get "signout" => "sessions#delete", :as => :signout
   delete "signout" => "sessions#destroy"
   # OAUTH
-  match "auth/:provider/callback" => "sessions#oauth_callback"
+  match 'auth/:provider/callback' => 'sessions#oauth_callback', via: [:get, :post]
   # AUTHORITIES
   resources :authorities
   # SETTINGS
@@ -36,12 +40,10 @@ Wayground::Application.routes.draw do
 
   # CONTENT
   resources :paths
-  resources :pages do
-    resources :versions, except: [:new, :create, :edit, :update, :destroy]
-  end
+  resources :pages, concerns: :versioned
   resources :documents
   get 'download/:id/*filename' => 'documents#download', :as => :download
-  resources :events do
+  resources :events, concerns: :versioned do
     member do
       get 'approve'
       post 'approve' => 'events#set_approved'
@@ -49,7 +51,6 @@ Wayground::Application.routes.draw do
       post 'merge' => 'events#perform_merge'
     end
     resources :external_links
-    resources :versions, except: [:new, :create, :edit, :update, :destroy]
   end
   resources :images
   resources :sources do

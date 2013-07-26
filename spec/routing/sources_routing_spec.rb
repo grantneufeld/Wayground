@@ -21,7 +21,7 @@ describe SourcesController do
       get("/sources/1/edit").should route_to("sources#edit", :id => "1")
     end
     it "routes to #update" do
-      put("/sources/1").should route_to("sources#update", :id => "1")
+      expect( patch: '/sources/1' ).to route_to('sources#update', id: '1')
     end
 
     it "routes to #delete" do

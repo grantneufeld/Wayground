@@ -47,8 +47,8 @@ class Event < ActiveRecord::Base
   validates_length_of :description, within: 0..511, allow_blank: true
   validates_length_of :content, within: 0..8191, allow_blank: true
 
-  default_scope order('start_at')
-  scope :approved, where(is_approved: true)
+  default_scope { order('start_at') }
+  scope :approved, -> { where(is_approved: true) }
   scope :upcoming, lambda { # use a lambda so the time is reloaded each time upcoming is called
     where(
       'start_at >= :day_start OR (end_at IS NOT NULL AND end_at >= :day_start)',
@@ -175,7 +175,7 @@ class Event < ActiveRecord::Base
   end
 
   def new_version
-    self.versions.new(
+    self.versions.build(
       user: editor, edited_at: updated_at, edit_comment: edit_comment,
       title: title, values: values_for_version
     )
@@ -320,7 +320,7 @@ class Event < ActiveRecord::Base
       proc = params[:processor] || Wayground::Import::IcalImporter.new()
       proc.editor = self.editor
       perform_from_source do
-        success = self.update_attributes(proc.icalendar_field_mapping(ievent))
+        success = self.update(proc.icalendar_field_mapping(ievent))
       end
       success
     end
