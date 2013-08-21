@@ -145,4 +145,17 @@ describe Ballot do
     end
   end
 
+  describe '#running_for' do
+    it 'should return just the office title if it is the same as the office name' do
+      ballot = Ballot.new
+      ballot.office = Office.new(name: 'The Same', title: 'The Same')
+      expect( ballot.running_for ).to eq 'The Same'
+    end
+    it 'should return the office title, “for”, and the office name, when title and name are different' do
+      ballot = Ballot.new
+      ballot.office = Office.new(name: 'Not The Same', title: 'Different')
+      expect( ballot.running_for ).to eq 'Different for Not The Same'
+    end
+  end
+
 end

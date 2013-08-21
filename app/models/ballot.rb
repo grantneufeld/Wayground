@@ -13,7 +13,7 @@ class Ballot < ActiveRecord::Base
   has_many :candidates
 
   validates :election_id, presence: true
-  # only only ballot for a given office in a given election
+  # only one ballot for a given office in a given election
   validates :office_id, presence: true, uniqueness: { scope: :election_id }
   validates :url, http_url: true, allow_blank: true
   validate :validate_dates
@@ -38,6 +38,16 @@ class Ballot < ActiveRecord::Base
       office.filename
     else
       nil
+    end
+  end
+
+  def running_for
+    title = office.title
+    area = office.name
+    if title == area
+      title
+    else
+      "#{title} for #{area}"
     end
   end
 
