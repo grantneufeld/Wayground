@@ -121,7 +121,7 @@ describe SessionsController do
       end
       it "should notify the user that they are signed out" do
         request.cookies['remember_token'] = "#{@user_token.token}/#{@user.id}"
-        delete 'destroy', {:debug => 'y'}, {:debug => 'y'}
+        delete 'destroy'
         flash[:notice].should match /You are now signed out/
       end
     end
