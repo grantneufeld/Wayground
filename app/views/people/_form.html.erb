@@ -5,8 +5,8 @@
 <table><tbody>
 <tr><th><%= f.label :fullname %></th>
   <td><%= f.text_field :fullname, size: 60, maxlength: 255 %></td></tr>
-<tr><th><%= f.label :aliases %></th>
-  <td><%= f.text_field :aliases, size: 60, maxlength: 255 %> (comma-separated)</td></tr>
+<tr><th><%= f.label :aliases_string, 'Aliases' %></th>
+  <td><%= f.text_field :aliases_string, size: 60, maxlength: 255 %> (comma-separated)</td></tr>
 <tr><th><%= f.label :filename %></th>
   <td><%= f.text_field :filename, size: 60, maxlength: 255 %></td></tr>
 <tr><th><%= f.label :bio %></th>

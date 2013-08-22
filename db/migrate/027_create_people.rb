@@ -5,11 +5,11 @@ class CreatePeople < ActiveRecord::Migration
       t.belongs_to :submitter
       t.string :filename, null: false
       t.string :fullname, null: false
-      #t.string :aliases, array: true
+      t.string :aliases, array: true, null: false, default: '{}'
       t.text :bio
       t.timestamps
     end
-    execute 'ALTER TABLE people ADD COLUMN aliases text[]'
+    #execute 'ALTER TABLE people ADD COLUMN aliases text[]'
     add_index :people, :user_id, unique: true # only one person record can be associated with a user
     add_index :people, :submitter_id
     add_index :people, :filename, unique: true

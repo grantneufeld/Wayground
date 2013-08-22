@@ -39,13 +39,18 @@ describe Person do
       fullname = 'Example Name'
       expect( Person.new(fullname: fullname).fullname ).to eq fullname
     end
-    it "should allow aliases" do
+    it "should not allow aliases" do
       aliases = ['A.K.A.', 'Nick-Name']
-      expect( Person.new(aliases: aliases).aliases ).to eq aliases
+      expect {
+        Person.new(aliases: aliases)
+      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
     end
     it "should allow bio" do
       bio = 'Example biography.'
       expect( Person.new(bio: bio).bio ).to eq bio
+    end
+    it "should allow aliases_string" do
+      expect( Person.new(aliases_string: 'A, B').aliases_string ).to eq 'A, B'
     end
   end
 

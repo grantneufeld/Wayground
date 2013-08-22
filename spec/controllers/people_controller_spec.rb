@@ -29,7 +29,7 @@ describe PeopleController do
 
   describe 'GET index' do
     before(:each) do
-      Person.stub(:all).and_return([person])
+      Person.stub_chain(:order, :all).and_return([person])
       get :index
     end
     it 'assigns all people as @people' do

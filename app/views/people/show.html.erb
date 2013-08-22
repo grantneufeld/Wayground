@@ -7,7 +7,7 @@ user_can_create = user.present? && user.has_authority_for_area(Person.authority_
 <%
 
 if person.aliases.size > 0
-  %><p>Also goes by <%= person.aliases.join(', ') %>.</p>
+  %><p>Also known as: <%= person.aliases.join(', ') %>.</p>
 <%
 end
 
@@ -37,6 +37,14 @@ if user.present?
 <%
   end
 end
-
-
 -%>
+
+<h2>Candidacies</h2>
+<ul>
+<% person.candidacies.each do |candidate|
+  ballot = candidate.ballot
+  election = ballot.election
+  level = election.level
+  %><li><%= election.name %>: <%= link_to ballot.running_for, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li>
+<% end -%>
+</ul>

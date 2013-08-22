@@ -11,7 +11,7 @@ class PeopleController < ApplicationController
 
   def index
     page_metadata(title: 'People')
-    @people = Person.all
+    @people = Person.order(:fullname).all
   end
 
   def show
@@ -55,6 +55,7 @@ class PeopleController < ApplicationController
 
   def set_person
     @person = Person.from_param(params[:id]).first
+    missing unless @person
   end
 
   def set_section

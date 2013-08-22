@@ -6,7 +6,7 @@ require 'authority_controlled'
 # May have multiple occurrences of being a candidate or elected representative.
 class Person < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :filename, :fullname, :aliases, :bio
+  attr_accessible :filename, :fullname, :aliases_string, :bio
 
   belongs_to :user
   belongs_to :submitter, class_name: "User"
@@ -24,6 +24,14 @@ class Person < ActiveRecord::Base
 
   def to_param
     filename
+  end
+
+  def aliases_string
+    aliases.join(', ') if aliases
+  end
+
+  def aliases_string=(value)
+    self.aliases = value.split(/ *, */)
   end
 
 end
