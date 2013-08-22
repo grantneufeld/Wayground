@@ -2,6 +2,9 @@
   -moz-border-radius:$radius; -webkit-border-radius:$radius; border-radius:$radius;
 }
 
+$font_text: Helvetica,sans-serif;
+$font_title: Ubuntu,Helvetica,sans-serif;
+
 $button_text_color: black;
 $button_background_color: white;
 $button_radius: 0.5em;

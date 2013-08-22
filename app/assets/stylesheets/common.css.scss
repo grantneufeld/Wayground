@@ -1,0 +1,57 @@
+// font
+*{font-family:$font_text;}
+body{font-size:12pt;}
+h1,h2,h3,h4,h5,h6,h1 *,h2 *,h3 *,h4 *,h5 *,h6 *{font-family:$font_title; font-weight:bold;}
+
+// spacing
+*{margin:0em; padding:0em;}
+body * + *{margin-top:0.75em;}
+p,li,td,th{line-height:1.4em;}
+h1, h2{font-size:1.5em;}
+h3{font-size:1.15em;}
+h4{font-size:1.05em;}
+h5, h6{font-size:1em;}
+blockquote, li, p, td, th{font-size:0.9em;}
+p + p, * + ul{margin-top:0.5em;}
+ul{padding-left:1.5em;}
+li + li{margin-top:0.2em;}
+blockquote{padding:0em 2em;}
+textarea{width:98%;}
+
+// tables
+table, tr, th, td{border-spacing:0em;}
+table.full{width:100%;}
+thead, thead > tr, tr.heading > th{background:#999; color:white; text-shadow:0em 0em 0.2em black;}
+th, td{padding:0.2em 0.4em; vertical-align:top;}
+th{text-align:left;}
+thead > tr > th{text-align:center;}
+tr.heading > th{font-size:110%; text-align:left !important;}
+tbody > tr > th:first-child{text-align:right;}
+//tbody > tr:nth-child(odd){background:#EEE; color:black;}
+tbody > tr:nth-child(even){background:#DDD; background:rgba(0,0,0,0.1); color:black;}
+// no row/cell backgrounds for tables contained within tables
+table table, table table tr, table table th, table table td,
+table table tbody > tr:nth-child(odd), table table tbody > tr:nth-child(even){
+  background:transparent;
+}
+td > table, th > table{width:100%;}
+
+// forms
+.error_messages{
+  background:#FCC; background:rgba(255,128,128,0.5); color:black; margin:1em auto; padding:0.5em 1em;
+}
+.field_with_errors{
+  display:inline;
+  > input{outline:2px solid #900;}
+  > label{color:#900;}
+}
+.charcounter{}
+.charcounter_warn{font-weight:bold; background:yellow;}
+.charcounter_over{font-weight:bold; background:yellow; color:red;}
+
+// general elements
+.button, .nowrap{white-space:nowrap;}
+.hidden{display:none;}
+.preview{background:white; color:black; border:thin solid #999; max-height:18em; overflow:auto; padding:1.2em;}
+.separator{display:none;}
+
