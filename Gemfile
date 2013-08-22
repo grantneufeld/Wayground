@@ -50,6 +50,9 @@ gem 'omniauth-twitter', '>= 0.0.11'
 
 gem 'tzinfo', '>= 0.3.33'
 
+# ActiveRecord-style attributes on plain objects
+gem 'virtus', '>= 0.5.5'
+
 group :development do
   # code analysis tools:
   gem 'metriknit', git: 'https://github.com/grantneufeld/metriknit.git', require: false
