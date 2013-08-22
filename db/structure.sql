@@ -58,8 +58,8 @@ CREATE TABLE authentications (
     url character varying(255),
     image_url character varying(255),
     description text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -101,8 +101,8 @@ CREATE TABLE authorities (
     can_invite boolean,
     can_permit boolean,
     can_approve boolean,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -138,8 +138,8 @@ CREATE TABLE ballots (
     is_byelection boolean DEFAULT false NOT NULL,
     url character varying(255),
     description text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -183,8 +183,8 @@ CREATE TABLE candidates (
     announced_on date,
     quit_on date,
     vote_count integer DEFAULT 0 NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -233,8 +233,8 @@ CREATE TABLE contacts (
     province character varying(255),
     country character varying(255),
     postal character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -301,8 +301,8 @@ CREATE TABLE documents (
     content_type character varying(255) NOT NULL,
     charset character varying(31),
     description character varying(1023),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -338,8 +338,8 @@ CREATE TABLE elections (
     end_on date,
     description text,
     url text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -391,8 +391,8 @@ CREATE TABLE events (
     province character varying(31),
     country character varying(2),
     location_url character varying(255),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     image_id integer
 );
 
@@ -429,8 +429,8 @@ CREATE TABLE external_links (
     site character varying(31),
     title character varying(255) NOT NULL,
     url text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -465,8 +465,8 @@ CREATE TABLE image_variants (
     format character varying(31) NOT NULL,
     style character varying(15) NOT NULL,
     url text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -501,8 +501,8 @@ CREATE TABLE images (
     attribution character varying(127),
     attribution_url text,
     license_url text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -535,8 +535,8 @@ CREATE TABLE levels (
     filename character varying(63) NOT NULL,
     name character varying(255) NOT NULL,
     url text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -570,8 +570,8 @@ CREATE TABLE office_holders (
     previous_id integer NOT NULL,
     start_on date,
     end_on date,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -610,8 +610,8 @@ CREATE TABLE offices (
     ended_on date,
     description text,
     url text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -646,8 +646,8 @@ CREATE TABLE pages (
     title character varying(255) NOT NULL,
     description text,
     content text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -679,7 +679,7 @@ CREATE TABLE parties (
     level_id integer NOT NULL,
     filename character varying(255) NOT NULL,
     name character varying(255) NOT NULL,
-    abbrev character varying(255),
+    abbrev character varying(255) NOT NULL,
     is_registered boolean DEFAULT false NOT NULL,
     colour character varying(255),
     url character varying(255),
@@ -687,8 +687,8 @@ CREATE TABLE parties (
     established_on date,
     registered_on date,
     ended_on date,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     aliases text[]
 );
 
@@ -722,8 +722,8 @@ CREATE TABLE paths (
     item_type character varying(255),
     sitepath text NOT NULL,
     redirect text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -756,10 +756,10 @@ CREATE TABLE people (
     submitter_id integer,
     filename character varying(255) NOT NULL,
     fullname character varying(255) NOT NULL,
+    aliases character varying(255)[] DEFAULT '{}'::character varying[] NOT NULL,
     bio text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    aliases text[]
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -803,8 +803,8 @@ CREATE TABLE projects (
     filename character varying(255),
     name character varying(255) NOT NULL,
     description text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -844,8 +844,8 @@ CREATE TABLE settings (
     id integer NOT NULL,
     key character varying(255),
     value text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -881,8 +881,8 @@ CREATE TABLE sourced_items (
     source_identifier character varying(255),
     last_sourced_at timestamp without time zone NOT NULL,
     has_local_modifications boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -923,8 +923,8 @@ CREATE TABLE sources (
     title character varying(127),
     description character varying(511),
     options text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -959,8 +959,8 @@ CREATE TABLE tags (
     tag character varying(255) NOT NULL,
     title character varying(255),
     is_meta boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -993,8 +993,8 @@ CREATE TABLE user_tokens (
     token character varying(127) NOT NULL,
     expires_at timestamp without time zone,
     last_used_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -1034,8 +1034,8 @@ CREATE TABLE users (
     timezone character varying(31),
     location character varying(255),
     about text,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -2069,6 +2069,8 @@ CREATE INDEX userfile ON documents USING btree (user_id, filename);
 --
 -- PostgreSQL database dump complete
 --
+
+SET search_path TO "$user",public;
 
 INSERT INTO schema_migrations (version) VALUES ('1');
 

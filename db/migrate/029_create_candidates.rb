@@ -15,7 +15,7 @@ class CreateCandidates < ActiveRecord::Migration
       t.boolean :is_elected, null: false, default: false
       t.date :announced_on
       t.date :quit_on
-      t.integer :vote_count, limit: 12, default: 0, null: false
+      t.integer :vote_count, default: 0, null: false
       t.timestamps
     end
     add_index :candidates, [:ballot_id, :person_id], unique: true
