@@ -59,10 +59,12 @@ class PartiesController < ApplicationController
 
   def set_level
     @level = Level.from_param(params[:level_id]).first
+    missing unless @level
   end
 
   def set_party
     @party = @level.parties.from_param(params[:id]).first
+    missing unless @party
   end
 
   def set_section

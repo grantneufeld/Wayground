@@ -55,6 +55,7 @@ class LevelsController < ApplicationController
 
   def set_level
     @level = Level.from_param(params[:id]).first
+    missing unless @level
   end
 
   def set_section
