@@ -9,13 +9,13 @@ gem 'pg'
 #gem 'queue_classic', '2.0.0rc12'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', '~> 4.0.0', require: false
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier', '>= 1.3.0', require: false
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.0.0', require: false
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -27,7 +27,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder', '~> 1.2', require: false
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -63,7 +63,7 @@ group :development do
   gem 'roodi', require: false # https://github.com/martinjandrews/roodi
   gem 'tailor', require: false # https://github.com/turboladen/tailor
   # gem validation
-  gem 'bundler-audit' # https://github.com/postmodern/bundler-audit
+  gem 'bundler-audit', require: false # https://github.com/postmodern/bundler-audit
 end
 
 group :test do
