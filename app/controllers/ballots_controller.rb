@@ -21,6 +21,7 @@ class BallotsController < ApplicationController
 
   def show
     page_metadata(title: "Ballot for “#{@office.name}”")
+    @candidates = @ballot.candidates
   end
 
   def new; end
@@ -60,16 +61,20 @@ class BallotsController < ApplicationController
 
   def set_level
     @level = Level.from_param(params[:level_id]).first
+    missing unless @level
   end
 
   def set_election
     @election = @level.elections.from_param(params[:election_id]).first
+    missing unless @election
   end
 
   def set_ballot
     # ballot inherits its filename from office
     @office = @level.offices.from_param(params[:id]).first
+    missing unless @office
     @ballot = @election.ballots.where(office_id: @office.id).first
+    missing unless @ballot
   end
 
   def prep_new

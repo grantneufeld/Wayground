@@ -4,9 +4,11 @@ election ||= @election || ballot.election
 level ||= @level || election.level
 office ||= @office || ballot.office
 user ||= @user
+candidates ||= @candidates || ballot.candidates
 
 %><%= render 'elections/breadcrumb', { election: election } %>
-<h1><%= link_to election.name, [level, election] %> ballot for <%= link_to office.name, [level, office] %><%
+<h1><%= link_to election.name, [level, election] %>
+<br />ballot for <%= link_to office.name, [level, office] %><%
 if ballot.is_byelection
   %> (byelection)<%
 end
@@ -41,6 +43,9 @@ if user.present?
       [:delete, level, election, ballot], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
     )
   end
+  if ballot.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('New Candidate', new_level_election_ballot_candidate_path(level, election, ballot), class: 'action')
+  end
   if user.has_authority_for_area(Ballot.authority_area, :can_create)
     actions << link_to('New Ballot', new_level_election_ballot_path(level, election), class: 'action')
   end
@@ -52,3 +57,10 @@ if user.present?
 <%
   end
 end -%>
+
+<h2>Candidates</h2>
+<ul>
+<% candidates.each do |candidate|
+  %><li><%= link_to candidate.name, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li><%
+end -%>
+</ul>

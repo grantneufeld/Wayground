@@ -1,6 +1,13 @@
 # encoding: utf-8
 require 'spec_helper'
 require 'ballots_controller'
+require 'level'
+require 'election'
+require 'office'
+require 'ballot'
+require 'person'
+require 'candidate'
+require 'authority'
 
 describe BallotsController do
 
@@ -9,10 +16,19 @@ describe BallotsController do
     Election.delete_all
     Office.delete_all
     Ballot.delete_all
-    @level = FactoryGirl.create(:level, name: 'Ballots Controller Level', filename: 'ballots_controller_level')
-    @election = FactoryGirl.create(:election, level: @level, name: 'Ballots Controller Election', filename: 'ballots_controller_election')
-    @office = FactoryGirl.create(:office, level: @level, name: 'Ballots Controller Office', filename: 'ballots_controller_office')
+    Candidate.delete_all
+    Person.delete_all
+    @level = FactoryGirl.create(:level,
+      name: 'Ballots Controller Level', filename: 'ballots_controller_level'
+    )
+    @election = FactoryGirl.create(:election,
+      level: @level, name: 'Ballots Controller Election', filename: 'ballots_controller_election'
+    )
+    @office = FactoryGirl.create(:office,
+      level: @level, name: 'Ballots Controller Office', filename: 'ballots_controller_office'
+    )
     @ballot = FactoryGirl.create(:ballot, election: @election, office: @office)
+    @candidate = FactoryGirl.create(:candidate, ballot: @ballot)
     Authority.delete_all
     @user_admin = User.first || FactoryGirl.create(:user, name: 'Admin User')
     @user_admin.make_admin!
@@ -70,6 +86,9 @@ describe BallotsController do
     end
     it 'assigns the site section' do
       expect( assigns(:site_section) ).to eq :ballots
+    end
+    it 'assigns a list of candidates as @candidates' do
+      expect( assigns(:candidates).to_a ).to eq [@candidate]
     end
   end
 
@@ -202,7 +221,8 @@ describe BallotsController do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
+      patch :update, id: ballot.to_param, ballot: {},
+        level_id: @level.to_param, election_id: @election.to_param
       expect( response.status ).to eq 403
     end
 
@@ -210,12 +230,14 @@ describe BallotsController do
       it 'updates the requested ballot' do
         set_logged_in_admin
         Ballot.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
-        patch :update, id: ballot.to_param, ballot: { 'these' => 'params' }, level_id: @level.to_param, election_id: @election.to_param
+        patch :update, id: ballot.to_param, ballot: { 'these' => 'params' },
+          level_id: @level.to_param, election_id: @election.to_param
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          patch :update, id: ballot.to_param, ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param
+          patch :update, id: ballot.to_param, ballot: valid_attributes,
+            level_id: @level.to_param, election_id: @election.to_param
         end
         it 'assigns the requested ballot as @ballot' do
           expect( assigns(:ballot) ).to eq(ballot)
@@ -237,7 +259,8 @@ describe BallotsController do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         Ballot.any_instance.stub(:save).and_return(false)
-        patch :update, id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
+        patch :update, id: ballot.to_param, ballot: {},
+          level_id: @level.to_param, election_id: @election.to_param
       end
       it 'assigns the ballot as @ballot' do
         expect( assigns(:ballot) ).to eq(ballot)
