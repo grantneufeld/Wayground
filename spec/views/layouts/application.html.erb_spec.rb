@@ -138,10 +138,10 @@ describe "layouts/application.html.erb" do
         render
       end
       it "should flag the usermenu as signed-in" do
-        rendered.should match('<div id="usermenu" class="signed-in"')
+        rendered.should match(/<div id="usermenu"[^>]* class="(?:[^"]* )?signed-in/)
       end
-      it "should show the name of the signed-in user" do
-        rendered.should match('<p id="username">Test Tester')
+      it "should identify the name of the signed-in user" do
+        rendered.should match(/<div id="usermenu"[^>]* title="[^"]*Test Tester/)
       end
       it "should link to the user’s account" do
         rendered.should match('<a href="/account">Your Account</a>')
@@ -155,7 +155,7 @@ describe "layouts/application.html.erb" do
       it "should show Twitter as the source" do
         session[:source] = 'twitter'
         render
-        rendered.should match(/<img( src="\/icon\/site\/twitter\.png(\?[^"]*)?"| alt="\(via Twitter\)"| title="via Twitter"| height="[^"]+"| width="[^"]+"){5} *\/>/)
+        rendered.should match(/<div id="usermenu"[^>]* class="(?:[^"]+ )?twitter/)
       end
     end
   end

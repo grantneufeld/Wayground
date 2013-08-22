@@ -4,3 +4,151 @@
 .party-unregistered{
   font-style:italic;
 }
+
+
+body{font-family:$font_text; margin:0em; padding:0em; font-size:12pt;}
+h1,h2,h3,h4,h5,h6{font-family:$font_title_condensed; font-weight:normal;}
+h1{font-size:2.5em;}
+h2{font-size:1.75em;}
+h1,h2,h3,h4,h5,h6,ol,p,ul{margin:0em;}
+* + h2, * + p{margin-top:0.5em;}
+ul{padding:0em 0em 0em 2em;}
+
+a:link{color:#00B; text-decoration:none;}
+a:visited{color:#409; text-decoration:none;}
+a:link:hover, a:visited:hover{color:#00F; text-decoration:underline;}
+a:link:active, a:visited:active{color:#F00; text-decoration:none;}
+
+tbody{vertical-align:top;}
+
+.truncate{display:none;}
+.nowrap{white-space:nowrap;}
+
+header{
+  background:#333; color:white; margin:0em; padding:0em 1.5em;
+  h1, a, a:link, a:visited, a:link:hover, a:visited:hover, a:link:active, a:visited:active{
+    color:white; text-decoration:none;
+  }
+  h1{
+    font-family:$font_title; font-weight:bold; text-align:center; line-height:1.1em;
+    margin-top:-0.2em;
+  }
+  #subtitle{display:none;}
+}
+
+nav{
+  background:white; color:black; margin:0em; padding:0em;
+  font-weight:bold; font-family:$font_title; font-size:1.2em;
+  + *{margin-top:1em;}
+  a:link{color:#000; white-space:nowrap; font-family:$font_title;}
+  a:visited{color:#306;}
+  a:link:hover, a:visited:hover{background:#EEE; color:#00F; text-decoration:none;}
+  a:link:active, a:visited:active{color:#F00;}
+  ul{list-style:none; margin:0em; padding:0em;}
+  li{margin:0em; padding:0em; border-bottom:thin solid #CCC;}
+  li > a{padding:0.5em 1em; display:block;}
+  li > a:before{
+    margin:0em; padding:0em; font-size: 1em;
+  }
+}
+@media (min-width:481px) {
+  nav{border-bottom:thin solid #CCC; text-align:center;}
+  nav li{display:inline; border:0px none;}
+  nav li > a{display:inline; padding:0.25em 1em; line-height:2em; border-radius:1em;}
+}
+
+// breadcrumb
+#breadcrumb{
+  list-style-type:none; margin:0em; padding:0em 1.25em;
+  > li{
+    display:inline; font-size:0.85em; white-space:nowrap;
+    a{
+      text-decoration:none;
+    }
+    + li:before{content:'... ';}
+  }
+  > li.highlight{
+    font-weight:bold;
+  }
+  &:after{content:':';}
+}
+
+// flash
+#flash{
+  margin:0em; padding:0.5em 1em;
+  > p{
+    font-size:1em; margin:0em; padding:0.75em; @include border-radius(0.25em); max-width:38em;
+    + p{margin-top:0.5em;}
+  }
+}
+
+section{margin:1em 1em 0em;}
+
+.section-heading{margin-top:1em; padding-top:0.2em; border-top:thin solid rgba(0,0,0,0.33);}
+
+
+footer{
+  background:#333; color:white; margin:2em 0em 0em; padding:1em 2em;
+  a:link{color:#BBF;}
+  a:visited{color:#CAF;}
+  a:link:hover, a:visited:hover{color:#99F;}
+  a:link:active, a:visited:active{color:#F66;}
+}
+
+section > *, footer > *{max-width:50em; overflow:hidden;}
+
+.website .label, .emailadr .label, .phone .label, .address .label,
+.facebook .label, .flickr .label, .google .label, .linkedin .label,
+.twitter .label, .vimeo .label, .youtube .label
+{
+  display:none;
+}
+.website:before,
+.emailadr:before,
+.phone:before,
+.address:before,
+.facebook:before,
+.flickr:before,
+.google:before,
+.linkedin:before,
+.twitter:before,
+.vimeo:before,
+.youtube:before
+{
+  @include iconFontStyle;
+  opacity:0.66;
+  padding-right:0.25em;
+}
+.website:before{content: $icon-globe;}
+.emailadr:before{content: $icon-envelope-alt;}
+.phone:before{content: $icon-phone;}
+.address:before{content: $icon-map-marker;}
+.facebook:before{content: $icon-facebook-sign;}
+.flickr:before{content: $icon-flickr;}
+.google:before{content: $icon-google-plus-sign;}
+.linkedin:before{content: $icon-linkedin-sign;}
+.twitter:before{content: $icon-twitter;}
+.vimeo:before{content: $icon-facetime-video;}
+.youtube:before{content: $icon-youtube;}
+
+.vcard{
+  margin-left:1em; margin-top:0.25em;
+  + .vcard{margin-top:0.5em;}
+  h3{font-weight:bold;}
+  .website, .emailadr, .phone, .address,
+  .facebook, .flickr, .google, .linkedin, .twitter, .vimeo, .youtube
+  {
+    margin-left:1em;
+    line-height:1.4em;
+    white-space:nowrap;
+  }
+}
+
+
+@media (min-width:481px) {
+  h1,h2,h3,h4,h5,h6{font-family:$font_title;}
+  section{margin-left:2em; margin-right:2em;}
+}
+@media (min-width:641px) {
+  .truncate{display:inline;}
+}

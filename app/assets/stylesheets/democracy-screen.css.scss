@@ -1,0 +1,82 @@
+// User Menu
+#usermenu{
+  position:fixed; top:0; right:0;
+  text-align:right;
+  &:before{
+    @include iconFontStyle;
+    opacity:0.5;
+    padding:0.25em;
+    content: $icon-power-off;
+  }
+  &:hover:before{
+    opacity:0.9;
+  };
+  &.signed-in:before{
+    content: $icon-user;
+  }
+  &.facebook:before{
+    content: $icon-facebook-sign;
+  };
+  &.twitter:before{
+    content: $icon-twitter;
+  };
+  p{display:none;}
+  ul{
+    display:none;
+    list-style-type:none; margin:0em; padding:0.5em;
+    background:#999; background:rgba(0,0,0,0.33);
+    li{
+      @include buttonListitem;
+      > a:after{
+        @include iconFontStyle;
+        opacity:0.66;
+        padding:0.25em;
+        content: $icon-chevron-right;
+      }
+    }
+  }
+  &:hover ul, &.hover ul{display:block;}
+}
+
+// Breadcrumb
+#breadcrumb{
+  background:white; border-bottom:thin solid #DDD;
+  background:-webkit-gradient(linear, center top, center bottom, from(white), to(#F7F7F7));
+  background:-moz-linear-gradient(top, white, #F7F7F7);
+  background:linear-gradient(top, white, #F7F7F7);
+}
+
+// Flash notice
+#flash{
+  > p{
+    background:#333;
+    background:-webkit-gradient(linear, center top, center bottom,
+      from(rgba(64,64,64,0.6)), color-stop(0.5, rgba(0,0,0,0.7)), to(rgba(0,0,0,0.9))
+    );
+    color:white; text-shadow:1px 1px 1px black;
+  }
+  > p.alert{
+    background:#600;
+    background:-webkit-gradient(linear, center top, center bottom,
+      from(rgba(255,0,0,0.6)), color-stop(0.5, rgba(0,0,0,0.7)), to(rgba(0,0,0,0.9))
+    );
+    font-weight:bold;
+  }
+}
+
+// Actions
+.actions{
+  background:#DDD;
+  background:x-webkit-gradient(linear,
+    center top, center bottom,
+    from(#b4c0ce), color-stop(0.5, #8b9db5), color-stop(0.5, #8095b0), to(#6e83a2)
+  );
+  box-shadow:inset 0px 2px 6px rgba(0,0,0,0.2);
+  color:black;
+  @include border-radius(0.3em);
+  margin:0.5em auto; padding:0.2em 0.5em;
+  > a, > a:link, > a:visited{
+    @include buttonActionStyle;
+    @include buttonActionFormat;
+  }
+}

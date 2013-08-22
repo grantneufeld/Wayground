@@ -1,0 +1,24 @@
+@mixin iconFontStyle {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  vertical-align: -10%;
+  font-size: 1.33333em;
+  text-align:center;
+};
+
+$icon-envelope-alt: "\f003";
+$icon-user: "\f007";
+$icon-power-off: "\f011";
+$icon-facetime-video: "\f03d";
+$icon-map-marker: "\f041";
+$icon-chevron-right: "\f054";
+$icon-facebook-sign: "\f082";
+$icon-phone: "\f095";
+$icon-globe: "\f0ac";
+$icon-linkedin-sign: "\f08c";
+$icon-twitter: "\f099";
+$icon-google-plus-sign: "\f0d4";
+$icon-flickr: "\f16e";
+$icon-youtube: "\f167";

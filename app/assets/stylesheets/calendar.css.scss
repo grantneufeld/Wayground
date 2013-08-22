@@ -34,7 +34,10 @@ table.calendar{
       > th{padding:0.2em 0.5em; vertical-align:middle;}
     }
     // The column headers that display the day of the week.
-    > tr.day-names{background:#555; color:white;}
+    > tr.day-names th{
+      font-family:$font_title_condensed;
+      background:#555; color:white;
+    }
   }
   > tbody {
     > tr:nth-child(even){
@@ -66,6 +69,7 @@ table.calendar{
         }
         // Container for information shown in a given date’s box. Used to constrain the size.
         > .date_content{
+          font-family:$font_text_condensed;
           clear:right; max-height:8em; overflow:auto; margin:0em; padding:0em;
           p{border-top:thin solid #CCC;}
         }
@@ -78,6 +82,7 @@ table.calendar{
       }
     }
   }
+  h1{font-size:1.75em;}
   // The little box displaying the number for the day of the month.
   .day{
     display:block; float:right; min-width:1.2em; padding:0.1em 0.25em;
@@ -89,4 +94,10 @@ table.calendar{
   .day:link:active, .day:visited:active{background:#DDF; color:red;}
   // Modify the display of the day of the month when there are zero events.
   .day.empty{background:#779; color:white;}
+}
+
+@media (min-width:481px) {
+  table.calendar > thead > tr.day-names th{
+    font-family:$font_title;
+  }
 }

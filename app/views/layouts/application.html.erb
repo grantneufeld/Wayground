@@ -27,7 +27,7 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <link rel="icon" href="/favicon.png" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
-<!--link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold" rel="stylesheet" type="text/css"-->
+<!--link href='http://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700,700italic,500,300,300italic,500italic|Ubuntu+Condensed&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
 <%= stylesheet_link_tag 'application', media: 'all' %>
 <% #= stylesheet_link_tag 'screen', media: 'screen'
 -%>
@@ -37,10 +37,18 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+<style type="text/css" media="screen,print">
+@font-face {
+font-family: 'FontAwesome';
+src: url('/fonts/fontawesome-webfont.eot?v=3.2.1');
+src: url('/fonts/fontawesome-webfont.eot?#iefix&v=3.2.1') format('embedded-opentype'), url('/fonts/fontawesome-webfont.woff?v=3.2.1') format('woff'), url('/fonts/fontawesome-webfont.ttf?v=3.2.1') format('truetype'), url('/fonts/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1') format('svg');
+font-weight: normal; font-style: normal;
+}
+</style>
 <%= csrf_meta_tags %>
 <%= metadata_presenter.present_metatags -%>
 <%= yield :head -%>
-</head><body onTouchEnd="return true;">
+</head><body>
 
 <header role="banner">
 <%
@@ -50,24 +58,33 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <% unless Wayground::Application::DESCRIPTION.blank?
   %><p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
 <% end -%>
-<div id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>" onTouchEnd="return false;">
-<% if current_user.nil?
-    if false # don’t show login or registration options, for now
-    %><p>Signed Out</p>
-<ul><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li></ul><%
-    end
-  else
-    %><p id="username"><%= current_user.name %><%
-    case session[:source]
-    when 'twitter'
-      %><%= image_tag('/icon/site/twitter.png', alt: '(via Twitter)', title: 'via Twitter', size: '16x16') %><%
-    when 'facebook'
-      %><%= image_tag('/icon/site/facebook.png', alt: '(via Facebook)', title: 'via Facebook', size: '16x16') %><%
-    end
-    %></p>
-<ul><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li></ul><%
+
+<%
+
+if current_user
+  usermenu_class = 'signed-in'
+  usermenu_title = "Signed in as #{current_user.name}"
+  case session[:source]
+  when 'twitter'
+    usermenu_class += ' twitter'
+    usermenu_title += ' (via Twitter)'
+  when 'facebook'
+    usermenu_class += ' facebook'
+    usermenu_title += ' (via Facebook)'
+  end
+else
+  usermenu_class = 'signed-out'
+end
+%>
+<div id="usermenu" class="<%= usermenu_class %>" title="<%= usermenu_title %>">
+<%
+if current_user.nil?
+  %><ul><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li></ul><%
+else
+  %><ul><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li></ul><%
   end %>
 </div>
+
 <%
 #<form action="" method="get" accept-charset="utf-8" id="globalsearch" role="search">
 #<p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
@@ -77,9 +94,13 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
-  calendar: {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))}
+  candidate_list: { title: 'Candidate List 2013', path: '/levels/calgary/elections/2013/ballots' },
+  calendar: { title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m')) },
+  twitter: { title: 'Twitter Resources', path: '/twitter', class: 'twitter' }
 }
 site_hidden_sections = {
+  levels: { title: 'Levels', path: levels_path },
+  people: { title: 'People', path: people_path },
   projects: {title: 'Projects', path: projects_path},
   pages: {title: 'Pages', path: pages_path},
   documents: {title: 'Documents', path: documents_path},
@@ -93,7 +114,7 @@ site_hidden_sections = {
 }
 if @site_section
   current_section = site_sections[@site_section] || site_hidden_sections[@site_section]
-  if current_section
+  if false # current_section
     %><p><%= link_to current_section[:title], current_section[:path] %></p>
 <%
   end
@@ -107,12 +128,11 @@ site_sections.each do |key, nav_section|
   else
     %><li><%
   end
-  %><%= link_to nav_section[:title], nav_section[:path] %></li>
+  %><%= link_to nav_section[:title], nav_section[:path], class: nav_section[:class] %></li>
 <%
 end
-%><li class="more"></li>
+-%>
 </ul></nav>
-<div id="headerspace"></div>
 
 <%
 
@@ -245,4 +265,8 @@ if @versioned_item || content_for?(:actions)
 <p id="copyright">Copyright ©2007-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.
 <br />Except where otherwise indicated, all text is freely licensed under a <a href="http://creativecommons.org/licenses/by/2.5/ca/">Creative Commons License</a> requiring attribution for any reuse (including derivative work). See individual photo/media attributions for licensing details of non-text content.</p>
 </footer>
+
+<script>
+jQuery("header>h1").fitText(1.0, { minFontSize: '12px', maxFontSize: '50px'});
+</script>
 </body></html>

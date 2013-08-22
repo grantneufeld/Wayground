@@ -14,7 +14,7 @@ next_month = this_month.next_month
 </ul>
 <h1><%= @date.strftime('%B') %> <%= link_to @date.year, calendar_year_path(year: @date.year) %></h1>
 </th></tr>
-<tr class="day-names"><th>Sunday</th> <th>Monday</th> <th>Tuesday</th> <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th></tr>
+<tr class="day-names"><th>Sun<span class="truncate">day</span></th> <th>Mon<span class="truncate">day</span></th> <th>Tues<span class="truncate">day</span></th> <th>Wed<span class="truncate">nesday</span></th> <th>Thurs<span class="truncate">day</span></th> <th>Fri<span class="truncate">day</span></th> <th>Sat<span class="truncate">urday</span></th></tr>
 </thead>
 <tbody>
 <%

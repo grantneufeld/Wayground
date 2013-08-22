@@ -1,6 +1,7 @@
 //= require_self
 @charset "UTF-8";
 @import "helpers.css.scss";
+@import "icons.css.scss";
 
 // development
 // Uncomment this line to get a grid highlighting key break points for page width:
@@ -13,13 +14,12 @@
 //@media all and (min-width:1025px) {html{background-color:#969;}}
 
 @import "common.css.scss";
-@import "wayground.css.scss";
 @import "columns.css.scss";
 @import "events.css.scss";
 @import "calendar.css.scss";
 @import "gallery.css.scss";
 @media screen {
-  @import "wayground-screen.css.scss";
+  @import "democracy-screen.css.scss";
 }
 @media print {
   @import "wayground-print.css.scss";
