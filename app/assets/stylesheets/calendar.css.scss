@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 section.calendar{
-  max-width:none; padding:0em 0em 1em;
+  max-width:none; margin:0em; padding:0em 0em 1em;
   > *{margin-left:1em; margin-right:1em;}
   > .calendar{margin-left:0em; margin-right:0em;}
 }
