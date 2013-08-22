@@ -1,0 +1,43 @@
+<%
+require 'wayground_form_builder'
+
+# requires `candidate_form` local variable
+# optional `candidate`, `ballot`, `election`, `level` local variables
+candidate ||= candidate_form.candidate
+ballot ||= candidate.ballot
+election ||= ballot.election
+level ||= election.level
+
+if candidate.persisted?
+  form_url = level_election_ballot_candidate_path(level, election, ballot, candidate)
+  method = :patch
+else
+  form_url = level_election_ballot_candidates_path(level, election, ballot)
+  method = :post
+end
+%><%= form_for(candidate_form, url: form_url, method: method, builder: WaygroundFormBuilder) do |f| %>
+<%= show_errors(candidate_form) %>
+<table><tbody>
+<tr><th><%= f.label :name %></th>
+  <td><%= f.text_field :name %></td></tr>
+<tr><th><%= f.label :filename %></th>
+  <td><%= f.text_field :filename %></td></tr>
+<tr><th><%= f.label :announced_on %></th>
+  <td><%= f.date_field :announced_on %> (date)</td></tr>
+<tr><th><%= f.label :quit_on %></th>
+  <td><%= f.date_field :quit_on %> (date)</td></tr>
+<tr><th></th><td><%= f.check_box :is_rumoured %> <%= f.label :is_rumoured %></td></tr>
+<tr><th></th><td><%= f.check_box :is_confirmed %> <%= f.label :is_confirmed %></td></tr>
+<tr><th></th><td><%= f.check_box :is_incumbent %> <%= f.label :is_incumbent %></td></tr>
+<tr><th></th><td><%= f.check_box :is_leader %> <%= f.label :is_leader %></td></tr>
+<tr><th></th><td><%= f.check_box :is_acclaimed %> <%= f.label :is_acclaimed %></td></tr>
+<tr><th></th><td><%= f.check_box :is_elected %> <%= f.label :is_elected %></td></tr>
+<tr><th><%= f.label :vote_count %></th>
+  <td><%= f.text_field :vote_count, size: 12 %></td></tr>
+
+<tr><th><%= f.label :bio %></th>
+  <td><%= f.text_area :bio, rows: 6 %></td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Candidate') %></td></tr></tfoot>
+</table>
+<% end %>

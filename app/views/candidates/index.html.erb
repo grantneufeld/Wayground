@@ -1,0 +1,16 @@
+<%
+# requires @candidates, @ballot, @election, @user
+election ||= @election || @ballot.election
+level ||= @level || @election.level
+%><%= render 'elections/breadcrumb', { election: @election } %>
+<h1>Candidates for <%= @ballot.office.name %></h1>
+<ul>
+<% @candidates.each do |candidate|
+  %><%= render 'list_item', { candidate: candidate } %><%
+end
+%></ul>
+<%
+if @user && @user.has_authority_for_area(Candidate.authority_area, :can_create)
+  %><p class="actions"><%= link_to 'New Candidate', new_level_election_ballot_candidate_path(level, election, @ballot), class: 'action' %></p>
+<%
+end -%>

@@ -1,0 +1,6 @@
+<%= render 'elections/breadcrumb', { election: @election } %>
+<h1>Delete “<%= link_to @candidate.name, [@level, @election, @ballot, @candidate] %>” Candidate?</h1>
+
+<%= form_tag([@level, @election, @ballot, @candidate], method: :delete) do %>
+<p><%= submit_tag "Delete Candidate" %></p>
+<% end %>

@@ -1,0 +1,12 @@
+<%
+# requires ballot
+election ||= ballot.election
+level ||= election.level
+skip_highlight ||= false
+
+%><%= render 'levels/breadcrumb', { level: level, skip_highlight: true } %>
+<%= render 'elections/breadcrumb', { election: election, skip_highlight: true } %>
+<%
+@site_breadcrumbs ||= []
+@site_breadcrumbs << { text: ballot.office.name, url: [level, election, ballot], highlight: !(skip_highlight) }
+%>

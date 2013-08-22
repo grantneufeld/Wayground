@@ -1,0 +1,62 @@
+<%
+candidate ||= @candidate
+ballot ||= @ballot || candidate.ballot
+election ||= @election || ballot.election
+office ||= @office || ballot.office
+level ||= @level || election.level
+person ||= @person || candidate.person
+user ||= @user
+
+%><%= render 'ballots/breadcrumb', { ballot: ballot } %>
+<h1><%= candidate.name %>,
+<br />candidate for <%= link_to office.name, [level, election, ballot] %><%
+if candidate.is_confirmed
+  %> (confirmed)<%
+end %>
+<br />in <%= link_to election.name, [level, election] %></h1>
+<%
+
+dates = []
+dates << "Candidacy announced on #{candidate.announced_on.to_datetime.to_s(:simple_date)}." if candidate.announced_on?
+dates << "Withdrew from election on #{candidate.quit_on.to_datetime.to_s(:simple_date)}." if candidate.quit_on
+if dates.size > 0
+  %><p><%= safe_join(dates, "\n<br />".html_safe) %></p>
+<%
+end
+
+vote_count = candidate.vote_count
+if vote_count > 0
+  %><p>Received <%= vote_count %> votes.</p>
+<%
+end
+
+if user.present?
+  actions = []
+  if candidate.has_authority_for_user_to?(user, :can_update)
+    actions << link_to('Edit', edit_level_election_ballot_candidate_path(level, election, ballot, candidate), class: 'action')
+  end
+  if candidate.has_authority_for_user_to?(user, :can_delete)
+    actions << link_to('Delete',
+      [:delete, level, election, ballot, candidate], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    )
+  end
+  if user.has_authority_for_area(Candidate.authority_area, :can_create)
+    actions << link_to('New Candidate', new_level_election_ballot_candidate_path(level, election, ballot), class: 'action')
+  end
+  if actions.size > 0
+    %>
+<p class="actions">
+<%= safe_join(actions, separator + "\n".html_safe) %>
+</p>
+<%
+  end
+end -%>
+
+<%
+bio = person.bio
+if bio.present?
+  %><h2>Biography</h2>
+<p><%= bio %></p>
+<%
+end
+-%>
