@@ -161,16 +161,6 @@ describe Candidate do
     end
     describe "of filename" do
       let(:required) { $required = {name: 'Required'} }
-      it "should fail if filename is blank" do
-        candidate = @ballot.candidates.build(required.merge(filename: ''))
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
-      it "should fail if filename is nil" do
-        candidate = @ballot.candidates.build(required)
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
       it 'should fail if filename is a duplicate for the ballot' do
         FactoryGirl.create(:candidate, ballot: @ballot, filename: 'duplicate-on-ballot')
         candidate = @ballot.candidates.build(required.merge(filename: 'duplicate-on-ballot'))
@@ -183,24 +173,9 @@ describe Candidate do
         candidate.person = @person
         expect( candidate.valid? ).to be_true
       end
-      it 'should fail if filename contains invalid characters' do
-        candidate = @ballot.candidates.build(required.merge(filename: 'Has invalid characters!'))
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
     end
     describe "of name" do
       let(:required) { $required = {filename: 'required'} }
-      it "should fail if name is blank" do
-        candidate = @ballot.candidates.build(required.merge(name: ''))
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
-      it "should fail if name is nil" do
-        candidate = @ballot.candidates.build(required)
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
       it 'should fail if name is a duplicate for the ballot' do
         FactoryGirl.create(:candidate, ballot: @ballot, name: 'Duplicate On Ballot')
         candidate = @ballot.candidates.build(required.merge(name: 'Duplicate On Ballot'))
@@ -213,18 +188,6 @@ describe Candidate do
         candidate.person = @person
         expect( candidate.valid? ).to be_true
       end
-      it 'should fail if name contains invalid characters' do
-        candidate = @ballot.candidates.build(required.merge(name: "Invalid\r"))
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
-    end
-    describe 'of quit_on' do
-      it 'should fail if quit_on is before announced_on' do
-        candidate = @ballot.candidates.build(required.merge(announced_on: '2001-02-03', quit_on: '2001-02-02'))
-        candidate.person = @person
-        expect( candidate.valid? ).to be_false
-      end
     end
   end
 
@@ -232,7 +195,7 @@ describe Candidate do
     before(:all) do
       @ballot = FactoryGirl.create(:ballot)
       @scoped_candidate1 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'DEF', vote_count: 345)
-      @scoped_candidate2 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'GHI', vote_count: 123)
+      @scoped_candidate2 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'GHI', vote_count: 123, filename: 'the_param')
       @scoped_candidate3 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'ABC', vote_count: 234)
     end
     describe '.by_name' do
@@ -247,6 +210,19 @@ describe Candidate do
         expect( @ballot.candidates.by_vote_count.to_a ).to eq(
           [@scoped_candidate1, @scoped_candidate3, @scoped_candidate2]
         )
+      end
+    end
+    describe '.from_param' do
+      it 'should return the election that matches the param' do
+        election = Candidate.where(filename: 'the_param').first
+        unless election
+          election = @level.elections.new(filename: 'the_param', name: 'Candidate From Param', end_on: '2002-03-04')
+          election.save!
+        end
+        expect( Candidate.from_param('the_param') ).to eq [election]
+      end
+      it 'should return an empty list for a non-existent param' do
+        expect( Candidate.from_param('non-existent-param') ).to eq []
       end
     end
   end

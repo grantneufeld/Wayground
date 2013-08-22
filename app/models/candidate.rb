@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
-require 'filename_validator'
 
 # Represents the candidacy of a Person on a Ballot.
 class Candidate < ActiveRecord::Base
@@ -17,19 +16,15 @@ class Candidate < ActiveRecord::Base
   has_many :contacts, as: :item
 
   validates :ballot_id, presence: true
-  validates :person_id, presence: true, uniqueness: { scope: :ballot_id }
-  validates :filename, presence: true, filename: true, uniqueness: { scope: :ballot_id }
-  validates :name, presence: true, format: { with: /\A[^\r\n\t<>&]+\z/ }, uniqueness: { scope: :ballot_id }
-  validate :validate_dates
-
-  def validate_dates
-    if quit_on? && announced_on? && quit_on < announced_on
-      errors.add(:quit_on, 'must be on or after the date candidacy was announced on')
-    end
-  end
+  validates :person_id, uniqueness: { scope: :ballot_id }
+  validates :name,      uniqueness: { scope: :ballot_id }
+  validates :filename,  uniqueness: { scope: :ballot_id }
 
   scope :by_name, -> { order(:name) }
   scope :by_vote_count, -> { order('vote_count DESC, name') }
+  scope :from_param, ->(param) do
+    where(filename: param)
+  end
 
   def to_param
     filename
