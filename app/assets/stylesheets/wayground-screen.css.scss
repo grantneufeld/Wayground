@@ -1,19 +1,5 @@
 body{background:#CCC url('/images/stripe.png'); color:black; -webkit-text-size-adjust:none;}
 
-#loading-indicator{
-  z-index:110;
-  position:fixed; left:50%; top:0em;
-  width:8em;
-  margin:-1em 0em 0em -4em;
-  padding:2em 1em 1em;
-  text-align:center;
-  background:rgba(255,255,191,0.95);
-  border:2px solid red;
-  box-shadow:0px 0px 10px red, inset -4px -4px 2px rgba(255,255,255,0.75), inset 2px 2px 4px rgba(0,0,0,0.25);
-  @include border-radius(0.25em);
-  font-weight:bold;
-}
-
 body > header{background:#666; background:-webkit-gradient(linear, center top, center bottom, from(rgba(0,0,0,0.8)), color-stop(0.2, rgba(0,0,0,0.66)), to(rgba(0,0,0,0.66))); background:-moz-linear-gradient(top, rgba(0,0,0,0.8), rgba(0,0,0,0.66) 20%, rgba(0,0,0,0.66));
 background:linear-gradient(top, rgba(0,0,0,0.8), rgba(0,0,0,0.66) 20%, rgba(0,0,0,0.66)); color:white; position:fixed; top:0; left:0; height:2em; z-index:100;}
 body > header > h1 a{color:white; background:transparent; text-decoration:none;}

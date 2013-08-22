@@ -13,5 +13,4 @@
 //= require jquery
 // #skip#= require jquery-ui
 // #skip#= require jquery_ujs
-//= require turbolinks
 //= require_tree .
