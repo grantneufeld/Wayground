@@ -70,14 +70,11 @@ describe PartyPresenter do
     it 'should identify the level' do
       expect( presenter.present_heading ).to match /Test Level/
     end
-    #context 'debugging' do
-    #  let(:party_extra_attrs) { $party_extra_attrs = {name: 'DEBUG'} }
-      it 'should include the linked party name' do
-        expect( presenter.present_heading ).to match(
-          /<a href="\/levels\/test_level\/parties\/test_party">Test Party<\/a>/
-        )
-      end
-    #end
+    it 'should include the linked party name' do
+      expect( presenter.present_heading ).to match(
+        /<a href="\/levels\/test_level\/parties\/test_party">Test Party<\/a>/
+      )
+    end
     it 'should include the abbreviation' do
       expect( presenter.present_heading ).to match 'TP'
     end
