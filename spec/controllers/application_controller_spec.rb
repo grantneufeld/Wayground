@@ -33,13 +33,6 @@ describe ApplicationController do
   context "#unauthorized" do
   end
 
-  context "#browser_dont_cache" do
-    it "should set the page metadata nocache flag" do
-      controller.send(:browser_dont_cache)
-      expect( controller.send(:page_metadata).nocache ).to be_true
-    end
-  end
-
   context "#paginate" do
     it "should setup a bunch of variables" do
       controller.params ||= {}

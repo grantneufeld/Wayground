@@ -127,7 +127,7 @@ describe EventsController do
   describe "GET new" do
     it "fails if not logged in" do
       get :new
-      response.status.should eq 403
+      response.status.should eq 401
     end
 
     it "assigns a new event as @event" do
@@ -140,7 +140,7 @@ describe EventsController do
   describe "POST create" do
     it "fails if not logged in" do
       post :create, :event => valid_attributes
-      response.status.should eq 403
+      response.status.should eq 401
     end
 
     describe "with valid params" do
