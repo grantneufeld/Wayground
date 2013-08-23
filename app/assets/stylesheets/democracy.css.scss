@@ -36,27 +36,6 @@ header{
   #subtitle{display:none;}
 }
 
-nav{
-  background:white; color:black; margin:0em; padding:0em;
-  font-weight:bold; font-family:$font_title; font-size:1.2em;
-  + *{margin-top:1em;}
-  a:link{color:#000; white-space:nowrap; font-family:$font_title;}
-  a:visited{color:#306;}
-  a:link:hover, a:visited:hover{background:#EEE; color:#00F; text-decoration:none;}
-  a:link:active, a:visited:active{color:#F00;}
-  ul{list-style:none; margin:0em; padding:0em;}
-  li{margin:0em; padding:0em; border-bottom:thin solid #CCC;}
-  li > a{padding:0.5em 1em; display:block;}
-  li > a:before{
-    margin:0em; padding:0em; font-size: 1em;
-  }
-}
-@media (min-width:481px) {
-  nav{border-bottom:thin solid #CCC; text-align:center;}
-  nav li{display:inline; border:0px none;}
-  nav li > a{display:inline; padding:0.25em 1em; line-height:2em; border-radius:1em;}
-}
-
 // breadcrumb
 #breadcrumb{
   list-style-type:none; margin:0em; padding:0em 1.25em;
@@ -97,7 +76,7 @@ footer{
 
 section > *, footer > *{max-width:50em; overflow:hidden;}
 
-.website .label, .emailadr .label, .phone .label, .address .label,
+.website .label, .emailadr .label, .phone .label, .address .label, .cal .label,
 .facebook .label, .flickr .label, .google .label, .linkedin .label,
 .twitter .label, .vimeo .label, .youtube .label
 {
@@ -107,6 +86,7 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
 .emailadr:before,
 .phone:before,
 .address:before,
+.cal:before,
 .facebook:before,
 .flickr:before,
 .google:before,
@@ -118,11 +98,13 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
   @include iconFontStyle;
   opacity:0.66;
   padding-right:0.25em;
+  vertical-align:top;
 }
 .website:before{content: $icon-globe;}
 .emailadr:before{content: $icon-envelope-alt;}
 .phone:before{content: $icon-phone;}
 .address:before{content: $icon-map-marker;}
+.cal:before{content: $icon-calendar; font-size: 1em;}
 .facebook:before{content: $icon-facebook-sign;}
 .flickr:before{content: $icon-flickr;}
 .google:before{content: $icon-google-plus-sign;}
@@ -135,7 +117,7 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
   margin-left:1em; margin-top:0.25em;
   + .vcard{margin-top:0.5em;}
   h3{font-weight:bold;}
-  .website, .emailadr, .phone, .address,
+  .website, .emailadr, .phone, .address, .cal,
   .facebook, .flickr, .google, .linkedin, .twitter, .vimeo, .youtube
   {
     margin-left:1em;

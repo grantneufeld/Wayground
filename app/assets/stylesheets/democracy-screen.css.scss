@@ -38,6 +38,73 @@
   &:hover ul, &.hover ul{display:block;}
 }
 
+// Navigation Menus
+
+$navigationBorderColor: #CCC;
+@mixin navigationLinks{
+  background:white; color:black; margin:0em; padding:0em;
+  font-weight:bold; font-family:$font_title; font-size:1.2em;
+  a:link{color:#000; white-space:nowrap; font-family:$font_title;}
+  a:visited{color:#306;}
+  a:link, a:visited{
+    &:hover{background:#EEE; color:#00F; text-decoration:none;}
+    &:active{color:#F00;}
+  }
+  ul{list-style:none; margin:0em; padding:0em;}
+  li{
+    margin:0em; padding:0em;
+    > a{
+      padding:0.5em 1em; display:block;
+      &:before{margin:0em; padding:0em; font-size: 1em;}
+    }
+  }
+}
+@mixin navigationLinksBorderBottom{
+  + *{margin-top:1em;}
+  li{border-bottom:thin solid $navigationBorderColor;}
+}
+@mixin navigationLinksBorderTop{
+  margin-top:1em;
+  li{border-top:thin solid $navigationBorderColor;}
+}
+@mixin navigationLinks481plus{
+  text-align:center;
+  li{
+    display:inline; border:0px none;
+    > a{display:inline; padding:0.25em 1em; line-height:2em; border-radius:1em;}
+  }
+}
+@mixin navigationLinksBorderBottom481plus{
+  border-bottom:thin solid $navigationBorderColor;
+}
+@mixin navigationLinksBorderTop481plus{
+  border-top:thin solid $navigationBorderColor;
+}
+
+nav{
+  @include navigationLinks;
+  @include navigationLinksBorderBottom;
+}
+@media (min-width:481px) {
+  nav{
+    @include navigationLinks481plus;
+    @include navigationLinksBorderBottom481plus;
+  }
+}
+
+// Sub-navigation Menu
+#subnavmenu{
+  @include navigationLinks;
+  @include navigationLinksBorderTop;
+  + footer{margin-top:0em;}
+}
+@media (min-width:481px) {
+  #subnavmenu{
+    @include navigationLinks481plus;
+    @include navigationLinksBorderTop481plus;
+  }
+}
+
 // Breadcrumb
 #breadcrumb{
   background:white; border-bottom:thin solid #DDD;
@@ -66,6 +133,7 @@
 
 // Actions
 .actions{
+  display:block;
   background:#DDD;
   background:x-webkit-gradient(linear,
     center top, center bottom,
@@ -79,4 +147,9 @@
     @include buttonActionStyle;
     @include buttonActionFormat;
   }
+}
+footer .actions{
+  background:rgba(255,255,255,0.2);
+  color:white;
+  margin:0em 0em;
 }

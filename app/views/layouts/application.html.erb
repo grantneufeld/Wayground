@@ -95,7 +95,9 @@ else
 today = Date.today
 site_sections = {
   candidate_list: { title: 'Candidate List 2013', path: '/levels/calgary/elections/2013/ballots' },
-  calendar: { title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m')) },
+  calendar: { title: 'Calendar',
+    path: calendar_month_path(year: today.year, month: today.strftime('%m')), class: 'cal'
+  },
   twitter: { title: 'Twitter Resources', path: '/twitter', class: 'twitter' }
 }
 site_hidden_sections = {
@@ -112,16 +114,8 @@ site_hidden_sections = {
   paths: {title: 'Paths', path: paths_path},
   settings: {title: 'Settings', path: settings_path}
 }
-if @site_section
-  current_section = site_sections[@site_section] || site_hidden_sections[@site_section]
-  if false # current_section
-    %><p><%= link_to current_section[:title], current_section[:path] %></p>
-<%
-  end
-end
 %><ul>
 <%
-
 site_sections.each do |key, nav_section|
   if @site_section == key
     %><li class="current"><%
