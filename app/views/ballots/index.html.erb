@@ -1,14 +1,18 @@
 <%
 # requires @ballots, @election, @user
 level ||= @level || @election.level
+
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcard" />
+<%
+end
+
 %><%= render 'elections/breadcrumb', { election: @election } %>
 <h1>Ballots for <%= @election.name %></h1>
-<ul>
 <% @ballots.each do |ballot|
-  %><%= render 'list_item', { ballot: ballot } %><%
+  %><%= render 'index_item', { ballot: ballot } %><%
 end
-%></ul>
-<%
+
 if @user && @user.has_authority_for_area(Ballot.authority_area, :can_create)
   %><p class="actions"><%= link_to 'New Ballot', new_level_election_ballot_path(level, @election), class: 'action' %></p>
 <%
