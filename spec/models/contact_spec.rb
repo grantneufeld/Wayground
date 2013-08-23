@@ -176,4 +176,23 @@ describe Contact do
     end
   end
 
+  describe 'scopes' do
+    before(:all) do
+      Contact.delete_all
+      @contact2 = @item.contacts.create(is_public: true, name: '2 public', position: 2)
+      @contact3 = @item.contacts.create(is_public: false, name: '3 private', position: 3)
+      @contact1 = @item.contacts.create(is_public: false, name: '1 private', position: 1)
+      @item.reload
+    end
+    describe '.only_public' do
+      it 'should exclude contacts that have ‘is_public’ set to false' do
+        expect( @item.contacts.only_public.to_a ).to eq [@contact2]
+      end
+    end
+    describe 'default' do
+      it 'should order the contacts in ascending order by position' do
+        expect( @item.contacts.to_a ).to eq [@contact1, @contact2, @contact3]
+      end
+    end
+  end
 end

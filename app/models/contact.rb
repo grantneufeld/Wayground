@@ -23,6 +23,9 @@ class Contact < ActiveRecord::Base
     format: { with: /\A[a-z0-9_\-]+\z/i, message: 'invalid Twitter id' }
   validates :url, http_url: true, allow_blank: true
 
+  scope :only_public, -> { where(is_public: true) }
+  default_scope { order(:position) }
+
   # TODO: parse phone numbers to make more consistent format
   # TODO: auto-fill country, province and city with site defaults
 
