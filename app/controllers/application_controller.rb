@@ -32,7 +32,6 @@ class ApplicationController < ActionController::Base
   def unauthorized
     page_metadata(title: 'Unauthorized', nocache: true)
     flash.now[:alert] ||= 'You are not authorized for accessing the requested resource'
-    browser_dont_cache
     render :template => 'authorities/unauthorized', :status => '403 Forbidden'
   end
 
@@ -40,8 +39,7 @@ class ApplicationController < ActionController::Base
   def login_required
     page_metadata(title: 'Sign In Required', nocache: true)
     flash.now[:alert] ||= 'You must sign in to access the requested resource'
-    browser_dont_cache
-    render :template => 'authorities/login_required', :status => '403 Forbidden'
+    render :template => 'authorities/login_required', :status => '401 Unauthorized'
   end
 
   def page_metadata(params={})
@@ -51,10 +49,6 @@ class ApplicationController < ActionController::Base
       @page_metadata = Wayground::PageMetadata.new(params)
     end
     @page_metadata
-  end
-
-  def browser_dont_cache
-    page_metadata.nocache = true
   end
 
   # set the remember me cookie for a user’s session

@@ -73,7 +73,7 @@ describe ProjectsController do
   describe "GET new" do
     it "fails if not logged in" do
       get :new
-      response.status.should eq 403
+      response.status.should eq 401
     end
 
     it "assigns a new project as @project" do
