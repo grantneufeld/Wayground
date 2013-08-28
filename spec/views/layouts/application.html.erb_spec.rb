@@ -12,8 +12,12 @@ describe "layouts/application.html.erb" do
       def page_metadata
         @page_metadata ||= Wayground::PageMetadata.new
       end
+      def page_submenu_items
+        []
+      end
       helper_method :current_user
       helper_method :page_metadata
+      helper_method :page_submenu_items
     end
   end
 
@@ -70,9 +74,9 @@ describe "layouts/application.html.erb" do
   # @site_section: lower-case string label for the active section of the website.
   describe "@site_section" do
     it "should set the class to current for the specified section in the navmenu if true" do
-      @site_section = :pages
+      assign(:site_section, :calendar)
       render
-      rendered.should match(/<li class="current"><a href="\/pages">Pages<\/a><\/li>/)
+      rendered.should match(/<li class="current"><a[^>]* href="\/calendar\/[0-9]+\/[0-9]+"[^>]*>Calendar<\/a><\/li>/)
     end
     it "should not set a current section in the navmenu if not set" do
       @site_section = nil

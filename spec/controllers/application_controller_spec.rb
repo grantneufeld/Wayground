@@ -6,7 +6,8 @@ require 'document'
 require 'active_record'
 
 describe ApplicationController do
-  context "#current_user" do
+
+  describe '#current_user' do
     # use controller.send(:current_user) to access the protected method
     it "should return nil when user is not signed-in" do
       request.cookies['remember_token'] = nil
@@ -27,13 +28,52 @@ describe ApplicationController do
     end
   end
 
-  context "#missing" do
+  describe '#missing' do
   end
 
-  context "#unauthorized" do
+  describe '#unauthorized' do
   end
 
-  context "#paginate" do
+  describe '#login_requried' do
+  end
+
+  describe '#page_metadata' do
+  end
+
+  describe '#add_submenu_item' do
+    before(:each) do
+      reset_submenu_items(controller)
+    end
+    it 'should add the given item to the submenu items' do
+      item = { title: 'Test Submenu Item', path: 'submenu', attrs: { submenu: 'test' } }
+      controller.send(:add_submenu_item, item)
+      expect( controller.send(:page_submenu_items) ).to eq [item]
+    end
+  end
+
+  describe '#page_submenu_items' do
+    before(:each) do
+      reset_submenu_items(controller)
+    end
+    it 'should default to an empty array' do
+      expect( controller.send(:page_submenu_items) ).to eq []
+    end
+    it 'should return an array of the submenu items that have been added' do
+      item1 = { title: 'One', path: '1', attrs: { test: 'one' } }
+      item2 = { title: 'Two', path: '2', attrs: { other: 'two' } }
+      controller.send(:add_submenu_item, item1)
+      controller.send(:add_submenu_item, item2)
+      expect( controller.send(:page_submenu_items) ).to eq [item1, item2]
+    end
+  end
+
+  describe '#cookie_set_remember_me' do
+  end
+
+  describe '#cookie_set_remember_me_permanent' do
+  end
+
+  describe '#paginate' do
     it "should setup a bunch of variables" do
       controller.params ||= {}
       controller.params.merge!({:page => '2', :max => '10'})
@@ -47,5 +87,15 @@ describe ApplicationController do
       assigns[:source_total].should eq 12
       assigns[:selected_total].should eq 2
     end
+  end
+
+end
+
+
+# HELPERS
+
+def reset_submenu_items(controller)
+  if controller.instance_variable_defined?('@page_submenu_items')
+    controller.instance_variable_set('@page_submenu_items', nil)
   end
 end
