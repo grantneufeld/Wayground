@@ -1,6 +1,8 @@
 # encoding: utf-8
 require 'external_link'
 require 'event'
+require 'level'
+require 'person'
 
 # This controller must always be a sub-controller (e.g., /events/:event_id/external_links).
 class ExternalLinksController < ApplicationController
@@ -84,8 +86,19 @@ class ExternalLinksController < ApplicationController
 
   # all actions for this controller should have an item that the external link(s) are attached to.
   def set_item
-    if params[:event_id].present?
+    @item = nil
+    if params[:candidate_id]
+      level = Level.from_param(params[:level_id]).first
+      election = level.elections.from_param(params[:election_id]).first
+      office = level.offices.from_param(params[:ballot_id]).first
+      ballot = election.ballots.where(office_id: office.id).first
+      @item = ballot.candidates.from_param(params[:candidate_id]).first
+    end
+    if !@item && params[:event_id]
       @item = Event.find(params[:event_id])
+    end
+    if !@item && params[:person_id]
+      @item = Person.from_param(params[:person_id]).first
     end
     missing unless @item
   end

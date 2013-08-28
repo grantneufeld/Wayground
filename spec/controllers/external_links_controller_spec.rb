@@ -16,6 +16,17 @@ describe ExternalLinksController do
     @event = FactoryGirl.create(:event)
     # create an extra ExternalLink on the event
     FactoryGirl.create(:external_link, item: @event, position: 1)
+    Person.destroy_all
+    Candidate.destroy_all
+    Ballot.destroy_all
+    Office.destroy_all
+    Election.destroy_all
+    Level.destroy_all
+    @level = FactoryGirl.create(:level)
+    @election = FactoryGirl.create(:election, level: @level)
+    @office = FactoryGirl.create(:office, level: @level)
+    @ballot = FactoryGirl.create(:ballot, election: @election, office: @office)
+    @candidate = FactoryGirl.create(:candidate, ballot: @ballot, party: nil)
   end
 
   def set_logged_in_admin
@@ -33,6 +44,10 @@ describe ExternalLinksController do
   end
 
   let(:event) { @event }
+  let(:level) { @level }
+  let(:election) { @election }
+  let(:ballot) { @ballot }
+  let(:candidate) { @candidate }
   let(:external_link) { $external_link = FactoryGirl.create(:external_link, :item => event, :position => 99)}
 
   describe "GET 'index'" do
@@ -49,6 +64,14 @@ describe ExternalLinksController do
       it 'assigns the event as @item' do
         get :index, event_id: event.to_param
         assigns(:item).should eq(event)
+      end
+    end
+    context 'with a candidate_id param' do
+      it "assigns the candidate as @item" do
+        get :index,
+          candidate_id: candidate.to_param, ballot_id: ballot.to_param,
+          election_id: election.to_param, level_id: level.to_param
+        assigns(:item).should eq(candidate)
       end
     end
   end

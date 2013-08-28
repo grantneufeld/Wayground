@@ -32,6 +32,7 @@ Wayground::Application.routes.draw do
       resources :ballots do
         resources :candidates do
           resources :contacts
+          resources :external_links
         end
       end
     end
@@ -42,6 +43,7 @@ Wayground::Application.routes.draw do
   end
   resources :people do
     resources :contacts
+    resources :external_links
   end
 
   # CONTENT
