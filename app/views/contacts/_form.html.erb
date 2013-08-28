@@ -1,0 +1,57 @@
+<%
+require 'wayground_form_builder'
+
+# requires `contact` local variable
+item ||= contact.item
+
+if contact.persisted?
+  form_url = contact.items_for_path
+  method = :patch
+else
+  form_url = item.items_for_path << :contacts
+  method = :post
+end
+%><%= form_for(contact, url: form_url, method: method, builder: WaygroundFormBuilder) do |f| %>
+<%= show_errors(contact) %>
+<%= hidden_field_tag :item_type, item.class.name %>
+<%= hidden_field_tag :item_id, item.id %>
+<table><tbody>
+<tr><th></th><td><%= f.check_box :is_public %> <%= f.label :is_public %></td></tr>
+<tr><th><%= f.label :name %></th>
+  <td><%= f.text_field :name, size: 40 %></td></tr>
+<tr><th><%= f.label :organization %></th>
+  <td><%= f.text_field :organization, size: 40 %></td></tr>
+<tr><th><%= f.label :email %></th>
+  <td><%= f.email_field :email, size: 40 %></td></tr>
+<tr><th><%= f.label :twitter %></th>
+  <td>@<%= f.text_field :twitter, size: 30 %></td></tr>
+<tr><th><%= f.label :url %></th>
+  <td><%= f.url_field :url, size: 40 %></td></tr>
+<tr><th><%= f.label :phone %></th>
+  <td><%= f.phone_field :phone, size: 15 %></td></tr>
+<tr><th><%= f.label :phone2 %></th>
+  <td><%= f.phone_field :phone2, size: 15 %></td></tr>
+<tr><th><%= f.label :fax %></th>
+  <td><%= f.phone_field :fax, size: 15 %></td></tr>
+<tr><th><%= f.label :address1 %></th>
+  <td><%= f.text_field :address1, size: 40 %></td></tr>
+<tr><th><%= f.label :address2 %></th>
+  <td><%= f.text_field :address2, size: 40 %></td></tr>
+<tr><th><%= f.label :city %></th>
+  <td><%= f.text_field :city, size: 30 %></td></tr>
+<tr><th><%= f.label :province %></th>
+  <td><%= f.text_field :province, size: 30 %></td></tr>
+<tr><th><%= f.label :country %></th>
+  <td><%= f.text_field :country, size: 30 %></td></tr>
+<tr><th><%= f.label :postal %></th>
+  <td><%= f.text_field :postal, size: 16 %></td></tr>
+<tr><th><%= f.label :position %></th>
+  <td><%= f.number_field :position, size: 4 %></td></tr>
+<tr><th><%= f.label :confirmed_at %></th>
+  <td><%= f.datetime_field :confirmed_at %> (date &amp; time)</td></tr>
+<tr><th><%= f.label :expires_at %></th>
+  <td><%= f.datetime_field :expires_at %> (date &amp; time)</td></tr>
+</tbody>
+<tfoot><tr><th></th><td class="actions"><%= f.submit('Save Contact') %></td></tr></tfoot>
+</table>
+<% end %>

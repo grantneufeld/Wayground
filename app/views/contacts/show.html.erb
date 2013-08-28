@@ -1,0 +1,48 @@
+<%
+require 'contact_presenter'
+
+contact ||= @contact
+item ||= @item || contact.item
+user ||= @user
+presenter = ContactPresenter.new(view: self, contact: contact, user: user)
+
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcard" />
+<%
+end
+
+set_main_section_class 'vcard'
+
+%>
+<h1><%
+unless contact.is_public
+  %>Private <%
+end %>Contact for <%= link_to item.descriptor, item.items_for_path, class: 'fn' %></h1>
+<%
+
+if contact.name.present? || contact.organization.present?
+  %><p><%= safe_join([contact.name, contact.organization], "\n<br />".html_safe) %></p>
+<%
+end
+
+%><p><%= presenter.present_attributes("<br />".html_safe) %></p>
+<% 
+
+
+if user.present?
+  if contact.has_authority_for_user_to?(user, :can_update)
+    add_submenu_item(title: "Edit",
+      path: ([:edit] + contact.items_for_path)
+    )
+  end
+  if contact.has_authority_for_user_to?(user, :can_delete)
+    add_submenu_item(title: 'Delete', path: ([:delete] + contact.items_for_path),
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
+    )
+  end
+  if contact.has_authority_for_user_to?(@user, :can_create) 
+    add_submenu_item(title: 'Add Contact',
+      path: ([:new] + item.items_for_path) << :contact
+    )
+  end
+end -%>

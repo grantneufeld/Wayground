@@ -30,7 +30,9 @@ Wayground::Application.routes.draw do
     get 'new/:parent_id' => 'levels#new', on: :collection, as: :new_level_with_parent
     resources :elections do
       resources :ballots do
-        resources :candidates
+        resources :candidates do
+          resources :contacts
+        end
       end
     end
     resources :offices do
@@ -38,7 +40,9 @@ Wayground::Application.routes.draw do
     end
     resources :parties
   end
-  resources :people
+  resources :people do
+    resources :contacts
+  end
 
   # CONTENT
   resources :paths

@@ -1,0 +1,3 @@
+<h1>Edit Contact: <%= @contact.descriptor %> for <%= link_to @item.descriptor, @item.items_for_path %></h1>
+
+<%= render 'form', { contact: @contact, item: @item } %>

@@ -1,0 +1,28 @@
+<%
+require 'contact_presenter'
+
+item ||= @item
+contacts ||= @contacts || item.contacts
+user ||= @user
+
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcard" />
+<%
+end
+
+-%>
+<h1>Contacts for <%= link_to item.descriptor, item.items_for_path, class: 'fn' %></h1>
+
+<% @contacts.each do |contact|
+  presenter = ContactPresenter.new(view: self, contact: contact, user: user)
+  %><h2><%= link_to "Contact #{contact.position}", contact.items_for_path %></h2>
+<p class="vcard"><%= presenter.present_attributes %></p>
+<%
+end
+
+if user && item.has_authority_for_user_to?(user, :can_create)
+  add_submenu_item(title: "Add Contact for #{item.descriptor}",
+    path: ([:new] + item.items_for_path) << :contact
+  )
+end
+-%>

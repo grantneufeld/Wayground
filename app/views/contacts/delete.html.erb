@@ -1,0 +1,5 @@
+<h1>Delete contact “<%= @contact.descriptor %>” for “<%= link_to @item.descriptor, @item.items_for_path %>”?</h1>
+
+<%= form_tag(@item.items_for_path, method: :delete) do %>
+<p><%= submit_tag "Delete Contact" %></p>
+<% end %>
