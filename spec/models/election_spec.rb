@@ -192,4 +192,13 @@ describe Election do
     end
   end
 
+  describe '#items_for_path' do
+    it 'should return an array of the level and self' do
+      level = Level.new
+      election = level.elections.build
+      election.level = level
+      expect( election.items_for_path ).to eq [level, election]
+    end
+  end
+
 end

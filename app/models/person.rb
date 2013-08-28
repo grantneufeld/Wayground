@@ -34,4 +34,12 @@ class Person < ActiveRecord::Base
     self.aliases = value.split(/ *, */)
   end
 
+  def descriptor
+    fullname
+  end
+
+  def items_for_path
+    [self]
+  end
+
 end

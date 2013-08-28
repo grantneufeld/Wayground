@@ -141,4 +141,11 @@ describe Level do
     end
   end
 
+  describe '#items_for_path' do
+    it 'should return an array of just the level' do
+      level = Level.new
+      expect( level.items_for_path ).to eq [level]
+    end
+  end
+
 end

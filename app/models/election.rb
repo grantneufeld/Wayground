@@ -52,4 +52,8 @@ class Election < ActiveRecord::Base
     filename
   end
 
+  def items_for_path
+    level.items_for_path << self
+  end
+
 end

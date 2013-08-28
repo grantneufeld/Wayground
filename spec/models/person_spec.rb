@@ -124,4 +124,18 @@ describe Person do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the fullname' do
+      person = Person.new(fullname: 'The Name')
+      expect( person.descriptor ).to eq 'The Name'
+    end
+  end
+
+  describe '#items_for_path' do
+    it 'should return an array of just the person' do
+      person = Person.new
+      expect( person.items_for_path ).to eq [person]
+    end
+  end
+
 end

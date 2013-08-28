@@ -29,4 +29,12 @@ class Contact < ActiveRecord::Base
   # TODO: parse phone numbers to make more consistent format
   # TODO: auto-fill country, province and city with site defaults
 
+  def descriptor
+    name || organization || "#{item.descriptor} contact #{position}"
+  end
+
+  def items_for_path
+    item.items_for_path << self
+  end
+
 end

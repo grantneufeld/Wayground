@@ -233,4 +233,24 @@ describe Candidate do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the name' do
+      candidate = Candidate.new(name: 'The Name')
+      expect( candidate.descriptor ).to eq 'The Name'
+    end
+  end
+
+  describe '#items_for_path' do
+    it 'should return an array of the level, election, ballot and candidate' do
+      level = Level.new
+      election = level.elections.build
+      election.level = level
+      ballot = election.ballots.build
+      ballot.election = election
+      candidate = ballot.candidates.build
+      candidate.ballot = ballot
+      expect( candidate.items_for_path ).to eq [level, election, ballot, candidate]
+    end
+  end
+
 end

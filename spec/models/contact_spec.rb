@@ -195,4 +195,55 @@ describe Contact do
       end
     end
   end
+
+  describe '#descriptor' do
+    let(:item) { $item = Person.new(fullname: 'The Item') }
+    context 'with all applicable values' do
+      it 'should return the name' do
+        contact = item.contacts.build(name: 'The Name', organization: 'The Org', position: 123)
+        contact.item = item
+        expect( contact.descriptor ).to eq 'The Name'
+      end
+    end
+    context 'with no name' do
+      it 'should return the organization' do
+        contact = item.contacts.build(organization: 'The Org', position: 123)
+        contact.item = item
+        expect( contact.descriptor ).to eq 'The Org'
+      end
+    end
+    context 'with no name or organization' do
+      it 'should return the item descriptor and position' do
+        contact = item.contacts.build(position: 123)
+        contact.item = item
+        expect( contact.descriptor ).to eq 'The Item contact 123'
+      end
+    end
+  end
+
+  describe '#items_for_path' do
+    context 'with a person as item' do
+      it 'should return an array of the person and contact' do
+        person = Person.new
+        contact = person.contacts.build
+        contact.item = person
+        expect( contact.items_for_path ).to eq [person, contact]
+      end
+    end
+    context 'with a candidate as item' do
+      it 'should return an array of the level, election, ballot, candidate and contact' do
+        level = Level.new
+        election = level.elections.build
+        election.level = level
+        ballot = election.ballots.build
+        ballot.election = election
+        candidate = ballot.candidates.build
+        candidate.ballot = ballot
+        contact = candidate.contacts.build
+        contact.item = candidate
+        expect( contact.items_for_path ).to eq [level, election, ballot, candidate, contact]
+      end
+    end
+  end
+
 end

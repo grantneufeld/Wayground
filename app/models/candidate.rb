@@ -14,6 +14,7 @@ class Candidate < ActiveRecord::Base
   belongs_to :party
   belongs_to :submitter, class_name: "User"
   has_many :contacts, as: :item
+  has_many :external_links, as: :item
 
   validates :ballot_id, presence: true
   validates :person_id, uniqueness: { scope: :ballot_id }
@@ -28,6 +29,14 @@ class Candidate < ActiveRecord::Base
 
   def to_param
     filename
+  end
+
+  def descriptor
+    name
+  end
+
+  def items_for_path
+    ballot.items_for_path << self
   end
 
 end

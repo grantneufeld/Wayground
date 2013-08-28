@@ -312,6 +312,20 @@ describe ExternalLink do
         expect( external_link.items_for_path ).to eq [event, external_link]
       end
     end
+    context 'with a candidate as item' do
+      it 'should return an array of the level, election, ballot, candidate and external_link' do
+        level = Level.new
+        election = level.elections.build
+        election.level = level
+        ballot = election.ballots.build
+        ballot.election = election
+        candidate = ballot.candidates.build
+        candidate.ballot = ballot
+        external_link = candidate.external_links.build
+        external_link.item = candidate
+        expect( external_link.items_for_path ).to eq [level, election, ballot, candidate, external_link]
+      end
+    end
   end
 
 end
