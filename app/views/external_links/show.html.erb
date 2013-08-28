@@ -3,9 +3,11 @@ external_link ||= @external_link
 item ||= @item || external_link.item
 user ||= @user
 
+presenter = ExternalLinkPresenter.new(view: self, link: external_link, user: user)
+
 -%>
 <h1>External Link for <%= link_to item.descriptor, item.items_for_path %></h1>
-<p><%= link_to external_link.title, external_link.url, class: "url #{(external_link.site)}".rstrip!, target: '_blank' %>
+<p><%= presenter.present_link %>
 <br />URL: <%= external_link.url %><%
 if external_link.site.present?
   %>
