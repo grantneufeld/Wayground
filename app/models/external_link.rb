@@ -21,6 +21,7 @@ class ExternalLink < ActiveRecord::Base
 
   before_validation :set_default_position
   before_validation :set_title
+  before_validation :set_site
 
   # Set the position to the end of the list of external links for the item,
   # if it is not already set.
@@ -54,6 +55,16 @@ class ExternalLink < ActiveRecord::Base
         when /\A[a-z]+:\/*([^:\/]+)/
           $1 # use the url’s domain
         end
+      end
+    end
+  end
+
+  def set_site
+    if site.blank? && domain
+      match = domain.match /\A(?:.*\.)?(facebook|flickr|instagram|linkedin|twitter|vimeo|youtube).com\z/
+      self.site = match[1] if match
+      if site.blank? && domain == 'plus.google.com'
+        self.site = 'google'
       end
     end
   end
