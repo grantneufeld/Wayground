@@ -1,9 +1,14 @@
-<h1>External Links for <%= link_to @item.title, @item %></h1>
-<% if @external_links.count > 0
+<%
+external_links ||= @external_links
+item ||= @item
+
+-%>
+<h1>External Links for <%= link_to item.descriptor, item.items_for_path %></h1>
+<% if external_links.count > 0
   %><ul>
 <%
-  @external_links.each do |external_link|
-    %><%= render 'external_link', {:user => @user, :item => @item, :external_link => external_link} %>
+  external_links.each do |external_link|
+    %><%= render 'external_link', { user: @user, item: item, external_link: external_link } %>
 <%
   end
 %></ul>
@@ -11,7 +16,10 @@
   %><p>No external links for this item.</p>
 <% end -%>
 <%
+
+
 if @user.present?
-  %><p class="actions"><%= link_to 'New External Link', new_event_external_link_path(@item), :class => 'action' %></p>
-<%
+  if item.has_authority_for_user_to?(@user, :can_create)
+    add_submenu_item(title: 'New External Link', path: ([:new] + item.items_for_path + [:external_link]))
+  end
 end -%>

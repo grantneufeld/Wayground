@@ -1,6 +1,4 @@
-<% # encoding: utf-8
+<h1>Editing External Link “<%= link_to @external_link.descriptor, @external_link.items_for_path %>”
+<br />for <%= link_to @item.descriptor, @item.items_for_path %></h1>
 
-%><h1>Editing External Link “<%= link_to @external_link.title, [@item, @external_link] %>”
-<br />for <%= link_to @item.title, @item %></h1>
-
-<%= render 'form', {:item => @item, :external_link => @external_link} %>
+<%= render 'form', { item: @item, external_link: @external_link } %>

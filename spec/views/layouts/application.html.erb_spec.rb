@@ -12,8 +12,12 @@ describe "layouts/application.html.erb" do
       def page_metadata
         @page_metadata ||= Wayground::PageMetadata.new
       end
+      def page_submenu_items
+        []
+      end
       helper_method :current_user
       helper_method :page_metadata
+      helper_method :page_submenu_items
     end
   end
 

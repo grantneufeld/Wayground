@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'external_link'
+require 'event'
 
 # This controller must always be a sub-controller (e.g., /events/:event_id/external_links).
 class ExternalLinksController < ApplicationController
@@ -11,14 +13,13 @@ class ExternalLinksController < ApplicationController
   before_action :set_new_external_link, only: [:new, :create]
 
   def index
-    page_metadata(title: "#{@item.title}: External Links")
-    #@external_links = paginate(@item.external_links)
+    page_metadata(title: "#{@item.descriptor}: External Links")
     @external_links = @item.external_links
     @user = current_user
   end
 
   def show
-    page_metadata(title: "#{@item.title}: #{@external_link.title}")
+    page_metadata(title: "#{@item.descriptor}: #{@external_link.title}")
   end
 
   def new
@@ -26,7 +27,7 @@ class ExternalLinksController < ApplicationController
 
   def create
     if @external_link.save
-      redirect_to([@item, @external_link], notice: 'The external link has been saved.')
+      redirect_to(@external_link.items_for_path, notice: 'The external link has been saved.')
     else
       render action: "new"
     end
@@ -39,7 +40,7 @@ class ExternalLinksController < ApplicationController
   def update
     page_metadata(title: "Edit External Link: #{@external_link.title}")
     if @external_link.update(params[:external_link])
-      redirect_to([@item, @external_link], notice: 'The external link has been saved.')
+      redirect_to(@external_link.items_for_path, notice: 'The external link has been saved.')
     else
       render action: "edit"
     end
@@ -51,7 +52,7 @@ class ExternalLinksController < ApplicationController
 
   def destroy
     @external_link.destroy
-    redirect_to(@item)
+    redirect_to(@item.items_for_path)
   end
 
   protected
@@ -86,11 +87,13 @@ class ExternalLinksController < ApplicationController
     if params[:event_id].present?
       @item = Event.find(params[:event_id])
     end
+    missing unless @item
   end
 
   # Most of the actions for this controller receive the id of an ExternalLink as a parameter.
   def set_external_link
     @external_link = @item.external_links.find(params[:id])
+    missing unless @external_link
   end
 
   def set_new_external_link

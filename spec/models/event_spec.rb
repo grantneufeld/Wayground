@@ -935,4 +935,18 @@ describe Event do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the title' do
+      event = Event.new(title: 'Test Event')
+      expect( event.descriptor ).to eq 'Test Event'
+    end
+  end
+
+  describe '#items_for_path' do
+    it 'should return an array of just the event' do
+      event = Event.new
+      expect( event.items_for_path ).to eq [event]
+    end
+  end
+
 end

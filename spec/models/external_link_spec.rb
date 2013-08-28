@@ -187,6 +187,52 @@ describe ExternalLink do
     end
   end
 
+  describe '#set_site' do
+    context 'with the site already set' do
+      it 'should leave the site as is' do
+        elink = ExternalLink.new(url: 'http://test.tld/')
+        elink.site = 'already.set'
+        elink.set_site
+        expect( elink.site ).to eq 'already.set'
+      end
+    end
+    context 'with no url' do
+      it 'should leave the site blank' do
+        elink = ExternalLink.new
+        elink.set_site
+        expect( elink.site ).to be_nil
+      end
+    end
+    context 'with an url with no domain' do
+      it 'should leave the site blank' do
+        elink = ExternalLink.new(url: '/no/domain')
+        elink.set_site
+        expect( elink.site ).to be_nil
+      end
+    end
+    context 'with a facebook url' do
+      it 'should set the site to “facebook”' do
+        elink = ExternalLink.new(url: 'https://www.facebook.com/something')
+        elink.set_site
+        expect( elink.site ).to eq 'facebook'
+      end
+    end
+    context 'with a youtube url' do
+      it 'should set the site to “youtube”' do
+        elink = ExternalLink.new(url: 'http://www.youtube.com/something')
+        elink.set_site
+        expect( elink.site ).to eq 'youtube'
+      end
+    end
+    context 'with a google plus url' do
+      it 'should set the site to “google”' do
+        elink = ExternalLink.new(url: 'https://plus.google.com/1234567890/about')
+        elink.set_site
+        expect( elink.site ).to eq 'google'
+      end
+    end
+  end
+
   describe "#url=" do
     it "should set the url attribute" do
       elink = ExternalLink.new
@@ -234,4 +280,38 @@ describe ExternalLink do
       )
     end
   end
+
+  describe '#domain' do
+    context 'with no url' do
+      it 'should return nil' do
+        link = ExternalLink.new
+        expect( link.domain ).to be_nil
+      end
+    end
+    context 'with an url' do
+      it 'should return just the domain' do
+        link = ExternalLink.new(url: 'https://an.url.with.lots.of.stuff:80/etc/etc.html')
+        expect( link.domain ).to eq 'an.url.with.lots.of.stuff'
+      end
+    end
+  end
+
+  describe '#descriptor' do
+    it 'should return the title' do
+      link = ExternalLink.new(title: 'Test Link')
+      expect( link.descriptor ).to eq 'Test Link'
+    end
+  end
+
+  describe '#items_for_path' do
+    context 'with an event as item' do
+      it 'should return an array of the event and external_link' do
+        event = Event.new
+        external_link = event.external_links.build
+        external_link.item = event
+        expect( external_link.items_for_path ).to eq [event, external_link]
+      end
+    end
+  end
+
 end

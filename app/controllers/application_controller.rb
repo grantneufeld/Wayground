@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
   helper_method :page_metadata
+  helper_method :add_submenu_item
+  helper_method :page_submenu_items
 
   rescue_from ActiveRecord::RecordNotFound, :with => :missing
   rescue_from Wayground::AccessDenied, :with => :unauthorized
@@ -49,6 +51,15 @@ class ApplicationController < ActionController::Base
       @page_metadata = Wayground::PageMetadata.new(params)
     end
     @page_metadata
+  end
+
+  def add_submenu_item(params)
+    @page_submenu_items ||= []
+    @page_submenu_items << { title: params[:title], path: params[:path], attrs: params[:attrs] }
+  end
+
+  def page_submenu_items
+    @page_submenu_items ||= []
   end
 
   # set the remember me cookie for a user’s session

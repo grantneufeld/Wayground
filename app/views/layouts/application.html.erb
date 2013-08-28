@@ -8,7 +8,7 @@ require 'metadata_presenter'
 # page_metadata.description: Plain text string to be used as the value for the <meta name="description"> tag.
 # @site_section: symbol for the active section of the website. E.g.: :events
 # @site_breadcrumbs: An array of hashes {text: ?, url: ?} describing the hierarchical navigation parentage of the current item.
-# @page_submenu_items: An array of hashes {title: ?, path: ?} to use to create links in the submenu for the page.
+# page_submenu_items: An array of hashes {title: ?, path: ?} to use to create links in the submenu for the page. Use the `add_submenu_item` method to add items.
 # @page_main_class: a name to include in the class attribute of the id="main" wrapper around the page-specific content. Set this using the `set_main_section_class` helper.
 
 # Blocks - all are optional. Called with ‘content_for :block_name do … end’.
@@ -224,12 +224,12 @@ when :authorities
 else
   submenu_items = []
 end
-submenu_items << @page_submenu_items if @page_submenu_items
+submenu_items += page_submenu_items
 if submenu_items.size > 0
   %><ul id="subnavmenu">
 <%
   submenu_items.each do |submenu_item|
-    %><li><%= link_to submenu_item[:title], submenu_item[:path] %></li>
+    %><li><%= link_to submenu_item[:title], submenu_item[:path], submenu_item[:attrs] %></li>
 <%
   end
 %></ul>

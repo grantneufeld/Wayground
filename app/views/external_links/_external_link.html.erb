@@ -1,10 +1,12 @@
 <%
 # Expects external_link, item and user to be set
 
-%><li><%= link_to external_link.title, external_link.url, :class => "url #{(external_link.site)}".rstrip!, :target => '_blank' %><%
+%><li><%= link_to external_link.title, external_link.url, class: "url #{(external_link.site)}".rstrip!, target: '_blank' %>
+<br /><%= link_to 'Details', external_link.items_for_path, class: 'action' %><%
 if external_link.has_authority_for_user_to?(user, :can_update) %>
-<br /><%= link_to 'Edit', [:edit, item, external_link], :class => 'action' %><%
+<%= link_to 'Edit', [:edit] + external_link.items_for_path, class: 'action' %><%
   if external_link.has_authority_for_user_to?(user, :can_delete) %>
-<%= link_to 'Delete', [:delete, item, external_link], :data => {confirm: 'Are you sure?'}, :method => :delete, :class => 'action' %><%
+<%= link_to 'Delete', [:delete] + external_link.items_for_path,
+  data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' %><%
   end
 end %></li>

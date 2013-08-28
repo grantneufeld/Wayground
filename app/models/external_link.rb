@@ -21,6 +21,7 @@ class ExternalLink < ActiveRecord::Base
 
   before_validation :set_default_position
   before_validation :set_title
+  before_validation :set_site
 
   # Set the position to the end of the list of external links for the item,
   # if it is not already set.
@@ -58,6 +59,16 @@ class ExternalLink < ActiveRecord::Base
     end
   end
 
+  def set_site
+    if site.blank? && domain
+      match = domain.match /\A(?:.*\.)?(facebook|flickr|instagram|linkedin|twitter|vimeo|youtube).com\z/
+      self.site = match[1] if match
+      if site.blank? && domain == 'plus.google.com'
+        self.site = 'google'
+      end
+    end
+  end
+
   def url=(url_str)
     write_attribute(:url, UrlCleaner.clean(url_str))
   end
@@ -75,4 +86,20 @@ class ExternalLink < ActiveRecord::Base
     # the element tag
     "<a href=\"#{url}\"#{attrs.join}>#{title}</a>"
   end
+
+  def domain
+    if url.present?
+      match = url.match /\A[a-z]+:\/*([^:\/]+)/
+      match[1] if match
+    end
+  end
+
+  def descriptor
+    title
+  end
+
+  def items_for_path
+    item.items_for_path << self
+  end
+
 end
