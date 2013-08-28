@@ -116,12 +116,8 @@ module Wayground
 
       def add_errors_from(messages)
         messages.each do |key, value|
-          if value.is_a? Array
-            value.each do |msg|
-              self.errors.add(key, msg)
-            end
-          else
-            self.errors.add(key, value)
+          value.each do |msg|
+            self.errors.add(key, msg)
           end
         end
       end
@@ -148,19 +144,11 @@ module Wayground
       end
 
       def persist
-        if @candidate
-          @candidate.attributes = candidate_attributes
-        else
-          @candidate = ballot.candidates.build(candidate_attributes)
-        end
-        if @candidate.person
-          @candidate.person.filename ||= filename if filename.present?
-          @candidate.person.fullname ||= name if name.present?
-          @candidate.person.bio = bio if bio.present?
-        else
-          @candidate.person = Person.new(person_attributes)
-        end
-        @candidate.save && @candidate.person.save
+        candidate.attributes = candidate_attributes
+        person.filename ||= filename if filename.present?
+        person.fullname ||= name if name.present?
+        person.bio = bio if bio.present?
+        candidate.save && person.save
       end
 
       def candidate_attributes
