@@ -104,7 +104,7 @@ class BallotsController < ApplicationController
       (@ballot && @ballot.has_authority_for_user_to?(@user, action)) ||
       (@user && @user.has_authority_for_area(Ballot.authority_area, action))
     )
-      raise Wayground::AccessDenied
+      unauthorized
     end
   end
 

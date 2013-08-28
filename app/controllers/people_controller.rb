@@ -82,7 +82,7 @@ class PeopleController < ApplicationController
       (@person && @person.has_authority_for_user_to?(@user, action)) ||
       (@user && @user.has_authority_for_area(Person.authority_area, action))
     )
-      raise Wayground::AccessDenied
+      unauthorized
     end
   end
 

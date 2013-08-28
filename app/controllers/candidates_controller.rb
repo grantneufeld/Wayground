@@ -115,7 +115,7 @@ class CandidatesController < ApplicationController
       (@candidate && @candidate.has_authority_for_user_to?(@user, action)) ||
       (@user && @user.has_authority_for_area(Candidate.authority_area, action))
     )
-      raise Wayground::AccessDenied
+      unauthorized
     end
   end
 

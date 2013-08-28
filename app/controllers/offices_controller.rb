@@ -94,7 +94,7 @@ class OfficesController < ApplicationController
       (@office && @office.has_authority_for_user_to?(@user, action)) ||
       (@user && @user.has_authority_for_area(Office.authority_area, action))
     )
-      raise Wayground::AccessDenied
+      unauthorized
     end
   end
 

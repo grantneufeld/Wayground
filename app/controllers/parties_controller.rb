@@ -91,7 +91,7 @@ class PartiesController < ApplicationController
       (@party && @party.has_authority_for_user_to?(@user, action)) ||
       (@user && @user.has_authority_for_area(Party.authority_area, action))
     )
-      raise Wayground::AccessDenied
+      unauthorized
     end
   end
 
