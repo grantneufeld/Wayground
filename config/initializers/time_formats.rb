@@ -12,7 +12,7 @@ tzoff_hours = tzoff_minutes / 60
 tzoff_minutes = tzoff_minutes % 60
 
 Time::DATE_FORMATS[:db] = "%Y-%m-%d %H:%M:%S"
-Time::DATE_FORMATS[:time_date] = "%-l:%M:%S %p on %A, %B %-e, %Y" # 3:45:00 PM on Friday, March 1, 2013
+Time::DATE_FORMATS[:time_date] = "%-l:%M %p on %A, %B %-e, %Y" # 3:45 PM on Friday, March 1, 2013
 Time::DATE_FORMATS[:simple_date] = "%B %-e, %Y" # April 1, 2005
 Time::DATE_FORMATS[:form_field_date] = "%B %-e, %Y" # June 2, 2011
 Time::DATE_FORMATS[:form_field_datetime] = "%B %-e, %Y at %-l:%M %p" # May 5, 2018 at 4:56 PM
