@@ -22,6 +22,8 @@ class CandidatesController < ApplicationController
 
   def show
     page_metadata(title: "Candidate for “#{@office.name}”")
+    @contacts = @candidate.contacts.only_public
+    @external_links = @candidate.external_links
   end
 
   def new; end

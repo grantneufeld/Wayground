@@ -34,12 +34,20 @@ describe 'candidates/show.html.erb' do
     $candidate.person = person
     $candidate
   end
+  let(:contact) do
+    $contact = candidate.contacts.build(name: 'Stub Contact', email: 'stub@contact.test')
+  end
+  let(:external_link) do
+    $external_link = candidate.external_links.build(title: 'Stub Link', url: 'http://link.test/')
+  end
 
   before(:each) do
     assign(:level, level)
     assign(:election, election)
     assign(:ballot, ballot)
     assign(:candidate, candidate)
+    assign(:contacts, [contact])
+    assign(:external_links, [external_link])
     render
   end
   it 'renders the name' do

@@ -1,5 +1,10 @@
 <%
+require 'contact_presenter'
+require 'external_link_presenter'
+
 candidate ||= @candidate
+contacts ||= @contacts
+external_links ||= @external_links
 ballot ||= @ballot || candidate.ballot
 election ||= @election || ballot.election
 office ||= @office || ballot.office
@@ -7,13 +12,18 @@ level ||= @level || election.level
 person ||= @person || candidate.person
 user ||= @user
 
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcard" />
+<%
+end
+
 %><%= render 'ballots/breadcrumb', { ballot: ballot } %>
-<h1><%= candidate.name %>,
-<br />candidate for <%= link_to office.name, [level, election, ballot] %><%
-if candidate.is_confirmed
-  %> (confirmed)<%
-end %>
-<br />in <%= link_to election.name, [level, election] %></h1>
+<h1><%= candidate.name %></h1>
+<p>Candidate for <%= link_to office.name, [level, election, ballot] %><%
+if candidate.is_rumoured
+  %> <span class="rumoured">(unconfirmed)</span><%
+end %>.
+<br />in <%= link_to election.name, [level, election] %> (<%= link_to level.name, level %>).</p>
 <%
 
 dates = []
@@ -30,25 +40,54 @@ if vote_count > 0
 <%
 end
 
+if contacts.count > 0
+  %><h2>Contacts</h2>
+<%
+  contacts.each do |contact|
+    presenter = ContactPresenter.new(view: self, contact: contact, user: user)
+    %><p class="vcard"><%= presenter.present_attributes("<br />".html_safe) %></p>
+<%
+  end
+end
+
+if external_links.count > 0
+  %><h2>Links</h2>
+<ul class="link-list">
+<%
+  external_links.each do |link|
+    presenter = ExternalLinkPresenter.new(view: self, link: link, user: user)
+    %><%= presenter.present_link_in(:li) %>
+<%
+  end
+  %></ul>
+<%
+end
+
 if user.present?
-  actions = []
   if candidate.has_authority_for_user_to?(user, :can_update)
-    actions << link_to('Edit', edit_level_election_ballot_candidate_path(level, election, ballot, candidate), class: 'action')
+    add_submenu_item(title: "Edit",
+      path: edit_level_election_ballot_candidate_path(level, election, ballot, candidate)
+    )
   end
   if candidate.has_authority_for_user_to?(user, :can_delete)
-    actions << link_to('Delete',
-      [:delete, level, election, ballot, candidate], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    add_submenu_item(title: 'Delete', path: [:delete, level, election, ballot, candidate],
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
+    )
+  end
+  if candidate.has_authority_for_user_to?(@user, :can_create)
+    add_submenu_item(title: 'Add Contact',
+      path: new_level_election_ballot_candidate_contact_path(level, election, ballot, candidate)
+    )
+  end
+  if candidate.has_authority_for_user_to?(@user, :can_create)
+    add_submenu_item(title: 'Add Link',
+      path: new_level_election_ballot_candidate_external_link_path(level, election, ballot, candidate)
     )
   end
   if user.has_authority_for_area(Candidate.authority_area, :can_create)
-    actions << link_to('New Candidate', new_level_election_ballot_candidate_path(level, election, ballot), class: 'action')
-  end
-  if actions.size > 0
-    %>
-<p class="actions">
-<%= safe_join(actions, separator + "\n".html_safe) %>
-</p>
-<%
+    add_submenu_item(title: 'New Candidate',
+      path: new_level_election_ballot_candidate_path(level, election, ballot)
+    )
   end
 end -%>
 
