@@ -1,16 +1,22 @@
 <%
+require 'contact_presenter'
+require 'external_link_presenter'
+
 # requires ballot
 election ||= ballot.election
 office ||= ballot.office
 level ||= election.level
+user ||= nil
+
 -%>
 <h2><%= link_to office.name, [level, election, ballot] %></h2>
-<% ballot.candidates.each do |candidate|
+<%
+ballot.candidates.each do |candidate|
   div_classes = ['vcard']
   div_classes << 'rumoured' if candidate.is_rumoured?
   div_classes << 'elected' if candidate.is_elected?
   div_classes << 'quit' if candidate.quit_on?
-  -%><div class="<%= div_classes.join(' ') %>">
+  %><div class="<%= div_classes.join(' ') %>">
 <h3 class="fn"><%= link_to candidate.name, [level, election, ballot, candidate], class: 'url' %></h3>
 <%
   if candidate.vote_count > 0
@@ -19,27 +25,15 @@ level ||= election.level
   end
   contact = candidate.contacts.only_public.first
   if contact
-    if contact.url
-      # FIXME: strip url down to minimal text (e.g., “http://abc/” becomes just “abc”)
-      %><span class="website"><span class="label">Website: </span><%= linkto contact.url, contact.url, class: 'url' %></span>
+    presenter = ContactPresenter.new(view: self, contact: contact, user: user)
+    %><%= presenter.present_attributes_short %><%
+  end
+  links = candidate.external_links.where('site IN (?)', %w(facebook flickr google linkedin youtube))
+  links.each do |link|
+    presenter = ExternalLinkPresenter.new(view: self, link: link, user: user)
+    %><%= presenter.present_link_in(:span) %>
 <%
-    end
-    if contact.email
-      %><span class="emailadr"><span class="label">Email: </span><%= linkto contact.email, "mailto:#{contact.email}", class: 'email' %></span>
+  end
+  %></div>
 <%
-    end
-    if contact.phone
-      %><span class="phone"><span class="label">Phone: </span><span class="tel"><%= contact.phone %></span></span>
-<%
-    end
-    if contact.address1 || contact.address2
-      %><span class="address"><span class="label">Office: </span><span class="adr"><span class="street-address"><%= [contact.address1, contact.address2].join('; ') %></span></span></span>
-<%
-    end
-    if contact.twitter
-      %><span class="twitter"><span class="label">Twitter: </span><%= linkto contact.twitter, "https://twitter.com/#{contact.twitter}", class: 'url' %></span>
-<%
-    end
-  end -%>
-</div>
-<% end -%>
+end -%>

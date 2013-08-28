@@ -1,19 +1,58 @@
 <%
 # requires @ballots, @election, @user
-level ||= @level || @election.level
+ballots ||= @ballots
+election ||= @election
+level ||= @level || election.level
+user ||= @user
 
 content_for(:head) do
   %><link rel="profile" href="http://microformats.org/profile/hcard" />
 <%
 end
 
-%><%= render 'elections/breadcrumb', { election: @election } %>
-<h1>Ballots for <%= @election.name %></h1>
-<% @ballots.each do |ballot|
-  %><%= render 'index_item', { ballot: ballot } %><%
+
+%><%= render 'elections/breadcrumb', { election: election } %>
+<h1>Ballots for <%= election.name %><%
+if election.end_on %>
+<br /><%= election.end_on.to_datetime.to_s(:plain_date) %><%
+end %></h1>
+
+<p>Unconfirmed candidates are in <span class="rumoured">italics</span>.</p>
+
+<%
+section = nil
+section_counter = 0
+section_links = []
+@ballots.each do |ballot|
+  if ballot.section != section
+    section = ballot.section
+    section_counter += 1
+    if section_counter > 1
+      section_links << link_to(section, "ballot-section-#{section_counter}")
+    end
+  end
+end
+if section_links.size > 0
+  %><p>(Skip to <%= safe_join(section_links, ', ') %>.)</p>
+<%
 end
 
-if @user && @user.has_authority_for_area(Ballot.authority_area, :can_create)
-  %><p class="actions"><%= link_to 'New Ballot', new_level_election_ballot_path(level, @election), class: 'action' %></p>
+section = nil
+section_counter = 0
+@ballots.each do |ballot|
+  if ballot.section != section
+    section = ballot.section
+    section_counter += 1
+    %><h1 id="ballot-section-<%= section_counter %>" class="section-heading"><%= section %></h1>
 <%
-end -%>
+  end
+  %><%= render 'index_item', { ballot: ballot, user: user } %><%
+end
+
+if user && user.has_authority_for_area(Ballot.authority_area, :can_create)
+  add_submenu_item(title: "New Ballot",
+    path: new_level_election_ballot_path(level, election)
+  )
+end
+
+-%>
