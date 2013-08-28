@@ -63,4 +63,10 @@ class HtmlPresenter
     "\n".html_safe
   end
 
+  # Strip away details from an url to simplify it for human reading.
+  def url_for_print(url)
+    # strip leading `http://` (or `https://`), and trailing `/`
+    url.gsub(/^https?:\/\//, '').gsub(/[\/\.]+$/, '')
+  end
+
 end

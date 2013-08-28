@@ -128,4 +128,25 @@ describe HtmlPresenter do
     end
   end
 
+  describe '#url_for_print' do
+    context 'with an http url' do
+      it 'should strip the “http://” part' do
+        expect( presenter.url_for_print('http://test.url/etc') ).to eq 'test.url/etc'
+      end
+    end
+    context 'with an https url' do
+      it 'should strip the “http://” part' do
+        expect( presenter.url_for_print('https://ssl.test.url/secure') ).to eq 'ssl.test.url/secure'
+      end
+    end
+    context 'with a trailing slash' do
+      it 'should strip the trailing slash' do
+        expect( presenter.url_for_print('http://slash.url/') ).to eq 'slash.url'
+      end
+      it 'should strip the trailing slash after multiple path parts' do
+        expect( presenter.url_for_print('http://multi.url/some/stuff/') ).to eq 'multi.url/some/stuff'
+      end
+    end
+  end
+
 end
