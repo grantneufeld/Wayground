@@ -238,10 +238,11 @@ end -%>
 
 <footer role="contentinfo">
 <%
-if @versioned_item || content_for?(:actions)
+show_versions = @versioned_item && @versioned_item.versions.count > 1
+if show_versions || content_for?(:actions)
   %><p class="actions">
 <%
-  if @versioned_item && @versioned_item.versions.count > 1
+  if show_versions
     if @versioned_item.is_a? Page
       %><%= link_to 'Versions', page_versions_path(@versioned_item), class: 'action',
         title: 'Previous versions of this Page' %>
@@ -255,7 +256,7 @@ if @versioned_item || content_for?(:actions)
 <% end -%>
 <%= yield :footer -%>
 <p id="about"><a href="/about">About <%= Wayground::Application::NAME %></a>.</p>
-<p>Our <a href="/accountability">Accountability Statement</a> addresses how we try to fulfill the principles of transparency, openness, equality and accessibility.</p>
+<p>Our <a href="/accountability">Accountability Statement</a> addresses how we try to fulfill the principles of transparency, openness, equality, and accessibility.</p>
 <p id="copyright">Copyright ©2007-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.
 <br />Except where otherwise indicated, all text is freely licensed under a <a href="http://creativecommons.org/licenses/by/2.5/ca/">Creative Commons License</a> requiring attribution for any reuse (including derivative work). See individual photo/media attributions for licensing details of non-text content.</p>
 </footer>

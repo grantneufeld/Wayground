@@ -4,10 +4,13 @@
 .party-unregistered{
   font-style:italic;
 }
+.rumoured{
+  font-style:italic;
+}
 
 
 body{font-family:$font_text; margin:0em; padding:0em; font-size:12pt;}
-h1,h2,h3,h4,h5,h6{font-family:$font_title_condensed; font-weight:normal;}
+h1,h2,h3,h4,h5,h6,h1 *,h2 *,h3 *,h4 *,h5 *,h6 *{font-family:$font_title_condensed; font-weight:normal;}
 h1{font-size:2.5em;}
 h2{font-size:1.75em;}
 h1,h2,h3,h4,h5,h6,ol,p,ul{margin:0em;}
@@ -76,15 +79,23 @@ footer{
 
 section > *, footer > *{max-width:50em; overflow:hidden;}
 
-.website .label, .emailadr .label, .phone .label, .address .label, .cal .label,
+.link-list{
+  list-style-type:none;
+}
+
+// Icons
+
+.website .label, .home .label, .emailadr .label, .phone .label, .fax .label, .address .label, .cal .label,
 .facebook .label, .flickr .label, .google .label, .linkedin .label,
 .twitter .label, .vimeo .label, .youtube .label
 {
   display:none;
 }
 .website:before,
+.home:before,
 .emailadr:before,
 .phone:before,
+.fax:before,
 .address:before,
 .cal:before,
 .facebook:before,
@@ -101,8 +112,10 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
   vertical-align:top;
 }
 .website:before{content: $icon-globe;}
+.home:before{content: $icon-home;}
 .emailadr:before{content: $icon-envelope-alt;}
 .phone:before{content: $icon-phone;}
+.fax:before{content: $icon-print;}
 .address:before{content: $icon-map-marker;}
 .cal:before{content: $icon-calendar; font-size: 1em;}
 .facebook:before{content: $icon-facebook-sign;}
@@ -117,7 +130,7 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
   margin-left:1em; margin-top:0.25em;
   + .vcard{margin-top:0.5em;}
   h3{font-weight:bold;}
-  .website, .emailadr, .phone, .address, .cal,
+  .website, .home, .emailadr, .phone, .fax, .address, .cal,
   .facebook, .flickr, .google, .linkedin, .twitter, .vimeo, .youtube
   {
     margin-left:1em;
@@ -128,7 +141,7 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
 
 
 @media (min-width:481px) {
-  h1,h2,h3,h4,h5,h6{font-family:$font_title;}
+  h1,h2,h3,h4,h5,h6,h1 *,h2 *,h3 *,h4 *,h5 *,h6 *{font-family:$font_title;}
   section{margin-left:2em; margin-right:2em;}
 }
 @media (min-width:641px) {

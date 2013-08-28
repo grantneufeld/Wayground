@@ -7,6 +7,7 @@
     opacity:0.5;
     padding:0.25em;
     content: $icon-power-off;
+    text-shadow:0px 0px 2px black;
   }
   &:hover:before{
     opacity:0.9;
@@ -108,9 +109,6 @@ nav{
 // Breadcrumb
 #breadcrumb{
   background:white; border-bottom:thin solid #DDD;
-  background:-webkit-gradient(linear, center top, center bottom, from(white), to(#F7F7F7));
-  background:-moz-linear-gradient(top, white, #F7F7F7);
-  background:linear-gradient(top, white, #F7F7F7);
 }
 
 // Flash notice
