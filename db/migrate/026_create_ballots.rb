@@ -3,6 +3,8 @@ class CreateBallots < ActiveRecord::Migration
     create_table :ballots do |t|
       t.belongs_to :election, null: false
       t.belongs_to :office, null: false
+      t.integer :position, null: false, default: 999
+      t.string :section
       t.date :term_start_on
       t.date :term_end_on
       t.boolean :is_byelection, null: false, default: false
@@ -12,6 +14,7 @@ class CreateBallots < ActiveRecord::Migration
     end
     # only allow one ballot for a given office in a given election
     add_index :ballots, [:election_id, :office_id], unique: true
+    add_index :ballots, [:election_id, :office_id, :position]
     add_index :ballots, :office_id
   end
 end

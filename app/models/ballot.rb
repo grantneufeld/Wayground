@@ -6,7 +6,7 @@ require 'http_url_validator'
 # Represents an election at a level of government.
 class Ballot < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :term_start_on, :term_end_on, :is_byelection, :url, :description
+  attr_accessible :position, :section, :term_start_on, :term_end_on, :is_byelection, :url, :description
 
   belongs_to :election
   belongs_to :office
@@ -18,6 +18,8 @@ class Ballot < ActiveRecord::Base
   validates :url, http_url: true, allow_blank: true
   validate :validate_dates
   validate :validate_office_level
+
+  default_scope { order(:position) }
 
   def validate_dates
     if term_end_on? && term_start_on? && term_end_on < term_start_on
@@ -49,6 +51,10 @@ class Ballot < ActiveRecord::Base
     else
       "#{title} for #{area}"
     end
+  end
+
+  def items_for_path
+    election.items_for_path << self
   end
 
 end

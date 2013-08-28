@@ -16,6 +16,10 @@ if offices
   <td><%= select_tag 'office_id', options_from_collection_for_select(offices, 'to_param', 'name', office_id), include_blank: true %></td></tr>
 <%
 end -%>
+<tr><th><%= f.label :position %></th>
+  <td><%= f.number_field :position %></td></tr>
+<tr><th><%= f.label :section %></th>
+  <td><%= f.text_field :section %></td></tr>
 <tr><th><%= f.label :term_start_on %></th>
   <td><%= f.date_field :term_start_on %> (date)</td></tr>
 <tr><th><%= f.label :term_end_on %></th>

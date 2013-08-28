@@ -13,7 +13,14 @@ if ballot.is_byelection
   %> (byelection)<%
 end
 %></h1>
+
+<p>Position <%= ballot.position %> in the ballots for the election.</p>
+
+<% if ballot.section?
+  -%><h2><%= ballot.section %></h2>
+
 <%
+end
 
 dates = []
 dates << "Term begins on #{ballot.term_start_on.to_datetime.to_s(:simple_date)}." if ballot.term_start_on?
@@ -32,31 +39,7 @@ if ballot.description?
   %><p><%= ballot.description %></p>
 <%
 end
-
-if user.present?
-  actions = []
-  if ballot.has_authority_for_user_to?(user, :can_update)
-    actions << link_to('Edit', edit_level_election_ballot_path(level, election, ballot), class: 'action')
-  end
-  if ballot.has_authority_for_user_to?(user, :can_delete)
-    actions << link_to('Delete',
-      [:delete, level, election, ballot], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
-    )
-  end
-  if ballot.has_authority_for_user_to?(user, :can_update)
-    actions << link_to('New Candidate', new_level_election_ballot_candidate_path(level, election, ballot), class: 'action')
-  end
-  if user.has_authority_for_area(Ballot.authority_area, :can_create)
-    actions << link_to('New Ballot', new_level_election_ballot_path(level, election), class: 'action')
-  end
-  if actions.size > 0
-    %>
-<p class="actions">
-<%= safe_join(actions, separator + "\n".html_safe) %>
-</p>
-<%
-  end
-end -%>
+-%>
 
 <h2>Candidates</h2>
 <ul>
@@ -64,3 +47,24 @@ end -%>
   %><li><%= link_to candidate.name, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li><%
 end -%>
 </ul>
+<%
+
+if user
+  if ballot.has_authority_for_user_to?(user, :can_update)
+    add_submenu_item(title: 'Edit Ballot', path: edit_level_election_ballot_path(level, election, ballot))
+  end
+  if ballot.has_authority_for_user_to?(user, :can_delete)
+    add_submenu_item(title: 'Delete Ballot',
+      path: delete_level_election_ballot_path(level, election, ballot),
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
+    )
+  end
+  if user.has_authority_for_area(Ballot.authority_area, :can_create)
+    add_submenu_item(title: 'New Ballot', path: new_level_election_ballot_path(level, election))
+    add_submenu_item(title: 'Add Candidate',
+      path: new_level_election_ballot_candidate_path(level, election, ballot)
+    )
+  end
+end
+
+-%>
