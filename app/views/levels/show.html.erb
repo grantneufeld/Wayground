@@ -15,29 +15,6 @@ if level.url?
 <%
 end
 
-if user.present?
-  actions = []
-  if level.has_authority_for_user_to?(user, :can_update)
-    actions << link_to('Edit', edit_level_path(level), class: 'action')
-  end
-  if level.has_authority_for_user_to?(user, :can_delete)
-    actions << link_to('Delete',
-      [:delete, level], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
-    )
-  end
-  if user_can_create
-    actions << link_to('New Level', new_level_path, class: 'action')
-    actions << link_to('New Sub-Level', new_level_with_parent_levels_path(level), class: 'action')
-  end
-  if actions.size > 0
-    %>
-<p class="actions">
-<%= safe_join(actions, separator + "\n".html_safe) %>
-</p>
-<%
-  end
-end
-
 
 children = level.children
 if children.count > 0
@@ -50,7 +27,8 @@ if children.count > 0
     %><li><%= link_to child.name, child %></li>
 <%
   end
-  %></ul></section>
+  %></ul>
+</section>
 <%
   end
 end
@@ -59,17 +37,12 @@ end
 content_for(:other_sections) do
   %>
 <section><h2>Offices</h2>
-<ul>
-<%
-level.offices.each do |office|
-  %><%= render 'offices/list_item', { office: office } %><%
-end
-%></ul><%
-if user_can_create
-  %><p class="actions"><%= link_to('New Office', new_level_office_path(level), class: 'action') %></p>
-<%
-end
-%></section>
+<ul><%
+  level.offices.each do |office|
+    %><%= render 'offices/list_item', { office: office } %><%
+  end
+  %></ul>
+</section>
 <%
 end
 
@@ -77,39 +50,60 @@ end
 content_for(:other_sections) do
   %>
 <section><h2>Elections</h2>
-<ul>
-<%
-level.elections.order('end_on DESC').each do |election|
-  %><%= render 'elections/list_item', { election: election } %><%
-end
-%></ul><%
-if user_can_create
-  %><p class="actions"><%= link_to('New Election', new_level_election_path(level), class: 'action') %></p>
-<%
-end
-%></section>
+<ul><%
+  level.elections.order('end_on DESC').each do |election|
+    %><%= render 'elections/list_item', { election: election } %><%
+  end
+  %></ul>
+</section>
 <%
 end
 
 
-if level.parties.count > 0 || user_can_create
+if level.parties.count > 0
   content_for(:other_sections) do
     %>
 <section><h2>Parties</h2>
-<ul>
-<%
+<ul><%
   level.parties.order('name').each do |party|
     %><%= render 'parties/list_item', { party: party, user: @user } %><%
   end
-  %></ul><%
-  if user_can_create
-    %><p class="actions"><%= link_to('New Party', new_level_party_path(level), class: 'action') %></p>
-<%
-  end
-  %></section>
+  %></ul>
+</section>
 <%
   end
 end
 
+
+if user
+  if level.has_authority_for_user_to?(user, :can_update)
+    add_submenu_item(title: 'Edit Level', path: edit_level_path(level))
+  end
+  if level.has_authority_for_user_to?(user, :can_delete)
+    add_submenu_item(title: 'Delete Level',
+      path: [:delete, level],
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' }
+    )
+  end
+  if user.has_authority_for_area(Level.authority_area, :can_create)
+    add_submenu_item(title: 'New Level', path: new_level_path)
+    add_submenu_item(title: 'New Sub-Level', path: new_level_with_parent_levels_path(level))
+  end
+  if user.has_authority_for_area(Office.authority_area, :can_create)
+    add_submenu_item(title: 'Add Office',
+      path: new_level_office_path(level)
+    )
+  end
+  if user.has_authority_for_area(Election.authority_area, :can_create)
+    add_submenu_item(title: 'Add Election',
+      path: new_level_election_path(level)
+    )
+  end
+  if user.has_authority_for_area(Party.authority_area, :can_create)
+    add_submenu_item(title: 'Add Party',
+      path: new_level_party_path(level)
+    )
+  end
+end
 
 -%>

@@ -36,25 +36,23 @@ if office.description?
 <%
 end
 
-if user.present?
-  actions = []
+if user
   if office.has_authority_for_user_to?(user, :can_update)
-    actions << link_to('Edit', edit_level_office_path(level, office), class: 'action')
+    add_submenu_item(title: 'Edit Office', path: edit_level_office_path(level, office))
   end
   if office.has_authority_for_user_to?(user, :can_delete)
-    actions << link_to('Delete',
-      [:delete, level, office], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
+    add_submenu_item(title: 'Delete Office',
+      path: delete_level_office_path(level, office),
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
   if user.has_authority_for_area(Office.authority_area, :can_create)
-    actions << link_to('New Office', new_level_office_path(level), class: 'action')
-    actions << link_to('New Successor Office', new_office_with_previous_level_offices_path(level, office), class: 'action', title: 'If this office has been replaced (e.g., during redistricting)')
+    add_submenu_item(title: 'New Office', path: new_level_office_path(level))
+    add_submenu_item(title: 'New Successor Office',
+      path: new_office_with_previous_level_offices_path(level, office),
+      attrs: { title: 'If this office has been replaced (e.g., during redistricting)' }
+    )
   end
-  if actions.size > 0
-    %>
-<p class="actions">
-<%= safe_join(actions, separator + "\n".html_safe) %>
-</p>
-<%
-  end
-end -%>
+end
+
+-%>

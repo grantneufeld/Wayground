@@ -27,28 +27,6 @@ if election.description?
 <%
 end
 
-if user.present?
-  actions = []
-  if election.has_authority_for_user_to?(user, :can_update)
-    actions << link_to('Edit', edit_level_election_path(level, election), class: 'action')
-  end
-  if election.has_authority_for_user_to?(user, :can_delete)
-    actions << link_to('Delete',
-      [:delete, level, election], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
-    )
-  end
-  if user.has_authority_for_area(Election.authority_area, :can_create)
-    actions << link_to('New Election', new_level_election_path(level), class: 'action')
-  end
-  if actions.size > 0
-    %>
-<p class="actions">
-<%= safe_join(actions, separator + "\n".html_safe) %>
-</p>
-<%
-  end
-end
-
 
 content_for(:other_sections) do
   %>
@@ -58,13 +36,27 @@ content_for(:other_sections) do
   election.ballots.each do |ballot|
     %><%= render 'ballots/list_item', { ballot: ballot, user: user } %><%
   end
-  %></ul><%
-  if user.present? && user.has_authority_for_area(Ballot.authority_area, :can_create)
-    %><p class="actions"><%= link_to('New Ballot', new_level_election_ballot_path(level, election), class: 'action') %></p>
+  %></ul>
+</section>
 <%
+end
+
+if user
+  if election.has_authority_for_user_to?(user, :can_update)
+    add_submenu_item(title: 'Edit Election', path: edit_level_election_path(level, election))
   end
-  %></section>
-<%
+  if election.has_authority_for_user_to?(user, :can_delete)
+    add_submenu_item(title: 'Delete Election',
+      path: delete_level_election_path(level, election),
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
+    )
+  end
+  if user.has_authority_for_area(Election.authority_area, :can_create)
+    add_submenu_item(title: 'New Election', path: new_level_election_path(level))
+  end
+  if user.has_authority_for_area(Ballot.authority_area, :can_create)
+    add_submenu_item(title: 'Add Ballot', path: new_level_election_ballot_path(level, election))
+  end
 end
 
 -%>
