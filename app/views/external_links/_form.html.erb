@@ -1,10 +1,21 @@
-<%= form_for([item, external_link]) do |f| %>
+<%
+# requires `external_link` local variable
+item ||= external_link.item
+
+if external_link.persisted?
+  form_url = external_link.items_for_path
+  method = :patch
+else
+  form_url = item.items_for_path << :external_links
+  method = :post
+end
+%><%= form_for(external_link, url: form_url, method: method) do |f| %>
 <%= show_errors(external_link) %>
 <table><tbody>
 <tr><th><%= f.label :url, 'Weblink' %></th>
-  <td><%= f.url_field :url, placeholder: 'http://' %></td></tr>
+  <td><%= f.url_field :url, size: 60, placeholder: 'http://' %></td></tr>
 <tr><th><%= f.label :title %></th>
-  <td><%= f.text_field :title %></td></tr>
+  <td><%= f.text_field :title, size: 60 %></td></tr>
 </tbody>
 <tfoot><tr><th></th><td class="actions"><%= f.submit('Save External Link') %></td></tr></tfoot>
 </table>

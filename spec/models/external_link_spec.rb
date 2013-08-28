@@ -234,4 +234,38 @@ describe ExternalLink do
       )
     end
   end
+
+  describe '#domain' do
+    context 'with no url' do
+      it 'should return nil' do
+        link = ExternalLink.new
+        expect( link.domain ).to be_nil
+      end
+    end
+    context 'with an url' do
+      it 'should return just the domain' do
+        link = ExternalLink.new(url: 'https://an.url.with.lots.of.stuff:80/etc/etc.html')
+        expect( link.domain ).to eq 'an.url.with.lots.of.stuff'
+      end
+    end
+  end
+
+  describe '#descriptor' do
+    it 'should return the title' do
+      link = ExternalLink.new(title: 'Test Link')
+      expect( link.descriptor ).to eq 'Test Link'
+    end
+  end
+
+  describe '#items_for_path' do
+    context 'with an event as item' do
+      it 'should return an array of the event and external_link' do
+        event = Event.new
+        external_link = event.external_links.build
+        external_link.item = event
+        expect( external_link.items_for_path ).to eq [event, external_link]
+      end
+    end
+  end
+
 end

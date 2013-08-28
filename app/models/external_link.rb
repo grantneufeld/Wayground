@@ -75,4 +75,20 @@ class ExternalLink < ActiveRecord::Base
     # the element tag
     "<a href=\"#{url}\"#{attrs.join}>#{title}</a>"
   end
+
+  def domain
+    if url.present?
+      match = url.match /\A[a-z]+:\/*([^:\/]+)/
+      match[1] if match
+    end
+  end
+
+  def descriptor
+    title
+  end
+
+  def items_for_path
+    item.items_for_path << self
+  end
+
 end

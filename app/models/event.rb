@@ -326,4 +326,14 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # General
+
+  def descriptor
+    title
+  end
+
+  def items_for_path
+    [self]
+  end
+
 end

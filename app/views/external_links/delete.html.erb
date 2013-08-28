@@ -1,8 +1,6 @@
-<% # encoding: utf-8
+<h1>Delete “<%= link_to @external_link.descriptor, @external_link.items_for_path %>” External Link
+<br />from <%= link_to @item.descriptor, @item.items_for_path %>?</h1>
 
-%><h1>Delete “<%= link_to @external_link.title, [@item, @external_link] %>” External Link
-<br />from <%= link_to @item.title, @item %>?</h1>
-
-<%= form_tag([@item, @external_link], :method => :delete) do %>
+<%= form_tag(@external_link.items_for_path, method: :delete) do %>
 <p><%= submit_tag "Delete External Link" %></p>
 <% end %>

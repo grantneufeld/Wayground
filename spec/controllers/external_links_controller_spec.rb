@@ -13,6 +13,9 @@ describe ExternalLinksController do
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
     # create some extraneous ExternalLinks to make sure we’re not loading :all when we want a subset
     FactoryGirl.create_list(:external_link, 2)
+    @event = FactoryGirl.create(:event)
+    # create an extra ExternalLink on the event
+    FactoryGirl.create(:external_link, item: @event, position: 1)
   end
 
   def set_logged_in_admin
@@ -29,12 +32,7 @@ describe ExternalLinksController do
     {:title => 'Valid Title', :url => 'http://valid.url/'}
   end
 
-  let(:event) do
-    $event = FactoryGirl.create(:event)
-    # create an extra ExternalLink on the event
-    FactoryGirl.create(:external_link, :item => $event, :position => 1)
-    $event
-  end
+  let(:event) { @event }
   let(:external_link) { $external_link = FactoryGirl.create(:external_link, :item => event, :position => 99)}
 
   describe "GET 'index'" do
@@ -42,14 +40,16 @@ describe ExternalLinksController do
       get 'index', :event_id => event.id
       response.should be_success
     end
-    it "assigns the event as @item" do
-      get :index, :event_id => event.id
-      assigns(:item).should eq(event)
-    end
-    it "assigns the event’s external_links as @external_links" do
+    it "assigns the item’s external_links as @external_links" do
       external_links = [event.external_links.first, external_link]
       get :index, :event_id => event.id
       assigns(:external_links).should eq(external_links)
+    end
+    context 'with an event_id param' do
+      it 'assigns the event as @item' do
+        get :index, event_id: event.to_param
+        assigns(:item).should eq(event)
+      end
     end
   end
 

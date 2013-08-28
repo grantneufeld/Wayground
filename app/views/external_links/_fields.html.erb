@@ -1,6 +1,6 @@
 <%= f.hidden_field :id %>
 <table><tbody><tr><th><%= f.label :url, 'Weblink' %></th>
-  <td><%= f.url_field :url, :placeholder => 'http://' %>
+  <td><%= f.url_field :url, size: 60, placeholder: 'http://' %>
   <%= f.check_box :_destroy %><%= f.label :_destroy, 'Remove' %></td></tr>
 <tr><th><%= f.label :title %></th>
-  <td><%= f.text_field :title %></td></tr></tbody></table>
+  <td><%= f.text_field :title, size: 60 %></td></tr></tbody></table>
