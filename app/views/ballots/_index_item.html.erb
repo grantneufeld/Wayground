@@ -11,7 +11,7 @@ user ||= nil
 -%>
 <h2><%= link_to office.name, [level, election, ballot] %></h2>
 <%
-ballot.candidates.each do |candidate|
+ballot.candidates.running.each do |candidate|
   div_classes = ['vcard']
   div_classes << 'rumoured' if candidate.is_rumoured?
   div_classes << 'elected' if candidate.is_elected?

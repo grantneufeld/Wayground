@@ -21,7 +21,8 @@ class BallotsController < ApplicationController
 
   def show
     page_metadata(title: "Ballot for “#{@office.name}”")
-    @candidates = @ballot.candidates
+    @candidates = @ballot.candidates.running
+    @candidates_who_quit = @ballot.candidates.not_running
   end
 
   def new; end

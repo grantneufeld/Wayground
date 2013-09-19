@@ -4,7 +4,8 @@ election ||= @election || ballot.election
 level ||= @level || election.level
 office ||= @office || ballot.office
 user ||= @user
-candidates ||= @candidates || ballot.candidates
+candidates ||= @candidates || ballot.candidates.running
+candidates_who_quit ||= @candidates_who_quit
 
 %><%= render 'elections/breadcrumb', { election: election } %>
 <h1><%= link_to election.name, [level, election] %>
@@ -47,7 +48,17 @@ end
   %><li><%= link_to candidate.name, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li><%
 end -%>
 </ul>
+
 <%
+if candidates_who_quit && candidates_who_quit.count > 0
+  %><p>The following potential candidates have withdrawn from the race:</p>
+<ul><%
+  candidates_who_quit.each do |candidate|
+    %><li><%= link_to candidate.name, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li><%
+  end
+  %></ul>
+<%
+end
 
 if user
   if ballot.has_authority_for_user_to?(user, :can_update)

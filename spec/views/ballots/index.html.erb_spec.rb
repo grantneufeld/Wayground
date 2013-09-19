@@ -28,8 +28,9 @@ describe "ballots/index.html.erb" do
     assign(:level, level)
     assign(:election, election)
     ballot.stub(:to_param).and_return('abc')
-    assign(:ballots, [ballot, ballot])
     candidate
+    ballot.stub_chain(:candidates, :running).and_return([candidate])
+    assign(:ballots, [ballot, ballot])
     render
   end
   it "should present a list of the ballots" do

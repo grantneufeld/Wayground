@@ -9,6 +9,7 @@ describe Candidate do
     Person.delete_all
     @ballot = FactoryGirl.create(:ballot)
     @person = FactoryGirl.create(:person, filename: 'candidate_person_1')
+    @person2 = FactoryGirl.create(:person, filename: 'candidate_person_2')
   end
 
   describe "acts_as_authority_controlled" do
@@ -194,8 +195,12 @@ describe Candidate do
   describe 'scopes' do
     before(:all) do
       @ballot = FactoryGirl.create(:ballot)
-      @scoped_candidate1 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'DEF', vote_count: 345)
-      @scoped_candidate2 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'GHI', vote_count: 123, filename: 'the_param')
+      @scoped_candidate1 = FactoryGirl.create(:candidate,
+        ballot: @ballot, name: 'DEF', vote_count: 345, quit_on: 1.month.ago.to_date
+      )
+      @scoped_candidate2 = FactoryGirl.create(:candidate,
+        ballot: @ballot, name: 'GHI', vote_count: 123, filename: 'the_param'
+      )
       @scoped_candidate3 = FactoryGirl.create(:candidate, ballot: @ballot, name: 'ABC', vote_count: 234)
     end
     describe '.by_name' do
@@ -223,6 +228,18 @@ describe Candidate do
       end
       it 'should return an empty list for a non-existent param' do
         expect( Candidate.from_param('non-existent-param') ).to eq []
+      end
+    end
+    describe '.running' do
+      it 'should be all the candidates that have not quit' do
+        expect( @ballot.candidates.running.by_name.to_a ).to eq(
+          [@scoped_candidate3, @scoped_candidate2]
+        )
+      end
+    end
+    describe '.not_running' do
+      it 'should be all the candidates that have quit' do
+        expect( @ballot.candidates.not_running.to_a ).to eq [@scoped_candidate1]
       end
     end
   end
