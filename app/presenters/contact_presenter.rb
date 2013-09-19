@@ -33,7 +33,7 @@ class ContactPresenter < HtmlPresenter
   def present_url
     return html_blank unless contact.url.present?
     html_tag_with_newline(:span, class: 'home', title: 'Website') do
-      html_tag(:span, class: 'label') { 'Website: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Website: '.html_safe } +
       view.link_to(url_for_print(contact.url), contact.url, class: 'url')
     end
   end
@@ -41,7 +41,7 @@ class ContactPresenter < HtmlPresenter
   def present_email
     return html_blank unless contact.email.present?
     html_tag_with_newline(:span, class: 'emailadr', title: 'Email') do
-      html_tag(:span, class: 'label') { 'Email: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Email: '.html_safe } +
       view.link_to(contact.email, "mailto:#{contact.email}", class: 'email')
     end
   end
@@ -49,7 +49,7 @@ class ContactPresenter < HtmlPresenter
   def present_phone
     return html_blank unless contact.phone.present?
     html_tag_with_newline(:span, class: 'phone', title: 'Phone') do
-      html_tag(:span, class: 'label') { 'Phone: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Phone: '.html_safe } +
       html_tag(:span, class: 'tel') { contact.phone }
     end
   end
@@ -57,7 +57,7 @@ class ContactPresenter < HtmlPresenter
   def present_phone2
     return html_blank unless contact.phone2.present?
     html_tag_with_newline(:span, class: 'phone', title: 'Phone') do
-      html_tag(:span, class: 'label') { 'Phone: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Phone: '.html_safe } +
       html_tag(:span, class: 'tel') { contact.phone2 }
     end
   end
@@ -65,7 +65,7 @@ class ContactPresenter < HtmlPresenter
   def present_fax
     return html_blank unless contact.fax.present?
     html_tag_with_newline(:span, class: 'fax tel', title: 'Fax') do
-      html_tag(:span, class: 'label type') { 'Fax: '.html_safe } + 
+      html_tag(:span, class: 'label type') { 'Fax: '.html_safe } +
       html_tag(:span, class: 'value') { contact.fax }
     end
   end
@@ -74,7 +74,7 @@ class ContactPresenter < HtmlPresenter
     return html_blank unless address_info_present?
     separator ||= ';'.html_safe + newline
     html_tag_with_newline(:span, class: 'address', title: 'Address') do
-      html_tag(:span, class: 'label') { 'Address: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Address: '.html_safe } +
       html_tag(:span, class: 'adr') do
         parts = []
         part = present_street_address
@@ -89,7 +89,7 @@ class ContactPresenter < HtmlPresenter
   def present_address_short
     return html_blank unless contact.address1.present? || contact.address2.present?
     html_tag_with_newline(:span, class: 'address', title: 'Address') do
-      html_tag(:span, class: 'label') { 'Address: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Address: '.html_safe } +
       html_tag(:span, class: 'adr') { present_street_address }
     end
   end
@@ -116,7 +116,7 @@ class ContactPresenter < HtmlPresenter
   def present_twitter
     return html_blank unless contact.twitter.present?
     html_tag_with_newline(:span, class: 'twitter', title: 'Twitter') do
-      html_tag(:span, class: 'label') { 'Twitter: '.html_safe } + 
+      html_tag(:span, class: 'label') { 'Twitter: '.html_safe } +
       view.link_to("@#{contact.twitter}", "https://twitter.com/#{contact.twitter}", class: 'url')
     end
   end

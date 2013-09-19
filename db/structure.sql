@@ -133,6 +133,8 @@ CREATE TABLE ballots (
     id integer NOT NULL,
     election_id integer NOT NULL,
     office_id integer NOT NULL,
+    "position" integer DEFAULT 999 NOT NULL,
+    section character varying(255),
     term_start_on date,
     term_end_on date,
     is_byelection boolean DEFAULT false NOT NULL,
@@ -1581,6 +1583,13 @@ CREATE UNIQUE INDEX filename ON users USING btree (filename);
 --
 
 CREATE UNIQUE INDEX index_ballots_on_election_id_and_office_id ON ballots USING btree (election_id, office_id);
+
+
+--
+-- Name: index_ballots_on_election_id_and_office_id_and_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_ballots_on_election_id_and_office_id_and_position ON ballots USING btree (election_id, office_id, "position");
 
 
 --

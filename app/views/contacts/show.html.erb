@@ -26,7 +26,7 @@ if contact.name.present? || contact.organization.present?
 end
 
 %><p><%= presenter.present_attributes("<br />".html_safe) %></p>
-<% 
+<%
 
 
 if user.present?
@@ -40,7 +40,7 @@ if user.present?
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
-  if contact.has_authority_for_user_to?(@user, :can_create) 
+  if contact.has_authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'Add Contact',
       path: ([:new] + item.items_for_path) << :contact
     )

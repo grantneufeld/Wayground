@@ -60,15 +60,7 @@ class ContactsController < ApplicationController
 
   def set_item
     @item = nil
-    if params[:item_type] && params[:item_id]
-      case params[:item_type]
-      when 'Candidate'
-        @item = Candidate.find(params[:item_id])
-      when 'Person'
-        @item = Person.find(params[:item_id])
-      end
-    end
-    if !@item && params[:candidate_id]
+    if params[:candidate_id]
       level = Level.from_param(params[:level_id]).first
       election = level.elections.from_param(params[:election_id]).first
       office = level.offices.from_param(params[:ballot_id]).first

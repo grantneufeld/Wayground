@@ -43,7 +43,6 @@ Wayground::Application.routes.draw do
   end
   resources :people do
     resources :contacts
-    resources :external_links
   end
 
   # CONTENT

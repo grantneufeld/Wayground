@@ -45,6 +45,9 @@ describe ContactsController do
   let(:ballot) { @ballot }
   let(:candidate) { @candidate }
   let(:contact) { $contact = FactoryGirl.create(:contact, item: person, position: 99) }
+  let(:private_contact) do
+    $contact = FactoryGirl.create(:contact, item: person, position: 99, is_public: false)
+  end
 
   describe 'GET “index”' do
     it 'returns http success' do
@@ -88,6 +91,18 @@ describe ContactsController do
     it 'returns http missing if invalid item id' do
       get 'show', person_id: (person.id + 1000), id: contact.id
       expect( response.status ).to eq 404
+    end
+    context 'with a private contact' do
+      it 'returns http unauthorized if the user does not have access' do
+        set_logged_in_user
+        get 'show', person_id: person.to_param, id: private_contact.id
+        expect( response.status ).to eq 403
+      end
+      it 'assigns the requested private contact as @contact if the user has access' do
+        set_logged_in_admin
+        get 'show', person_id: person.to_param, id: private_contact.id
+        expect( assigns(:contact) ).to eq(private_contact)
+      end
     end
   end
 

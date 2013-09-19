@@ -13,8 +13,6 @@ else
 end
 %><%= form_for(contact, url: form_url, method: method, builder: WaygroundFormBuilder) do |f| %>
 <%= show_errors(contact) %>
-<%= hidden_field_tag :item_type, item.class.name %>
-<%= hidden_field_tag :item_id, item.id %>
 <table><tbody>
 <tr><th></th><td><%= f.check_box :is_public %> <%= f.label :is_public %></td></tr>
 <tr><th><%= f.label :name %></th>

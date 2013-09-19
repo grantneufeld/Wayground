@@ -2,7 +2,6 @@
 require 'external_link'
 require 'event'
 require 'level'
-require 'person'
 
 # This controller must always be a sub-controller (e.g., /events/:event_id/external_links).
 class ExternalLinksController < ApplicationController
@@ -96,9 +95,6 @@ class ExternalLinksController < ApplicationController
     end
     if !@item && params[:event_id]
       @item = Event.find(params[:event_id])
-    end
-    if !@item && params[:person_id]
-      @item = Person.from_param(params[:person_id]).first
     end
     missing unless @item
   end
