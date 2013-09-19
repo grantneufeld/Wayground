@@ -51,7 +51,7 @@ class EventPresenter < HtmlPresenter
 
   def present_schedule_with_date
     if event.is_allday?
-      present_time_allday
+      present_time(:plain_date)
     else
       present_time(:plain_datetime)
     end

@@ -38,6 +38,12 @@ describe HttpUrlValidator do
       expect( item.valid? ).to be_true
     end
   end
+  context 'with an url with a bunch of weird, but allowed, characters' do
+    let(:url) { $url = 'https://url.tld/AZaz09+:.-/%26~_@?=&#' }
+    it "should be valid" do
+      expect( item.valid? ).to be_true
+    end
+  end
   context "with an invalid url" do
     let(:url) { $url = 'invalid://url.tld/' }
     it "should return false" do
