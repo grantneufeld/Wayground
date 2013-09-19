@@ -152,9 +152,9 @@ describe EventPresenter do
 
   describe "#present_schedule_with_date" do
     context "with an all day event" do
-      let(:event) { $event = Event.new(is_allday: true) }
-      it "should call through to present_time_allday" do
-        presenter.should_receive(:present_time_allday)
+      let(:event) { $event = Event.new(is_allday: true, start_at: start_at) }
+      it "should call through to present_time set to format with just the date" do
+        presenter.should_receive(:present_time).with(:plain_date)
         presenter.present_schedule_with_date
       end
     end
