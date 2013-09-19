@@ -14,7 +14,6 @@ class Tag < ActiveRecord::Base
 
   default_scope { order(:tag) }
 
-  validates :item_type, :item_id, presence: true
   validates :tag, presence: true, uniqueness: { scope: [:item_type, :item_id] },
     format: { with: /\A[a-z0-9]+\z/ }
   validate :title_must_match_tag
