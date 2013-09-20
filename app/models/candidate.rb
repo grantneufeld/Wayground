@@ -29,6 +29,8 @@ class Candidate < ActiveRecord::Base
   scope :running, -> { where('quit_on IS NULL OR quit_on > NOW()') }
   scope :not_running, -> { where('quit_on IS NOT NULL AND quit_on <= NOW()') }
 
+  default_scope { by_name }
+
   def to_param
     filename
   end
