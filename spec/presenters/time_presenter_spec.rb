@@ -63,7 +63,7 @@ describe TimePresenter do
     let(:time) { $time = Time.zone.parse('2000-01-02 1:00 AM MST') }
     let(:presenter) { $presenter = presenter = TimePresenter.new(time) }
     it "should show the time" do
-      expect( presenter.microformat_start ).to match />1:00 AM</
+      expect( presenter.microformat_start ).to match />1:00am</
     end
     it "should set the html class to dtstart" do
       expect( presenter.microformat_start ).to match /<time [^>]*class="dtstart"/
@@ -72,7 +72,7 @@ describe TimePresenter do
       expect( presenter.microformat_start ).to match ' datetime="2000-01-02T01:00:00-07:00"'
     end
     it "should accept a time format for the time" do
-      expect( presenter.microformat_start(:plain_datetime) ).to match />Sunday, January +2, 2000 at +1:00 AM</
+      expect( presenter.microformat_start(:plain_datetime) ).to match />Sunday, January +2, 2000 at +1:00am</
     end
   end
 
@@ -80,7 +80,7 @@ describe TimePresenter do
     let(:time) { $time = Time.zone.parse('2000-01-02 1:00 AM MST') }
     let(:presenter) { $presenter = presenter = TimePresenter.new(time) }
     it "should show the time" do
-      expect( presenter.microformat_end ).to match '>1:00 AM<'
+      expect( presenter.microformat_end ).to match '>1:00am<'
     end
     it "should set the html class to dtend" do
       expect( presenter.microformat_end ).to match ' class="dtend"'
@@ -89,7 +89,7 @@ describe TimePresenter do
       expect( presenter.microformat_end ).to match ' datetime="2000-01-02T01:00:00-07:00"'
     end
     it "should accept a time format for the time" do
-      expect( presenter.microformat_end(:plain_datetime) ).to match />Sunday, January +2, 2000 at +1:00 AM</
+      expect( presenter.microformat_end(:plain_datetime) ).to match />Sunday, January +2, 2000 at +1:00am</
     end
   end
 

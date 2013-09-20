@@ -171,12 +171,12 @@ describe EventPresenter do
       let(:event) { $event = Event.new(start_at: '2005-06-07 8am') }
       it "should be a microformat dtstart time element containing the start time" do
         expect( presenter.present_time ).to eq(
-          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">8:00 AM</time>"
+          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">8:00am</time>"
         )
       end
       it "should accept a time_format parameter" do
         expect( presenter.present_time(:plain_datetime) ).to eq(
-          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">Tuesday, June 7, 2005 at 8:00 AM</time>"
+          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">Tuesday, June 7, 2005 at 8:00am</time>"
         )
       end
       it "should be html safe" do
@@ -187,7 +187,7 @@ describe EventPresenter do
       let(:event) { $event = Event.new(start_at: '2005-06-07 8am', end_at: '2005-06-07 9am') }
       it "should start with the microformat dtstart time element containing the start time" do
         expect( presenter.present_time ).to match(
-          /\A<time class="dtstart" datetime="2005-06-07T08:00:00-06:00">8:00 AM<\/time>/
+          /\A<time class="dtstart" datetime="2005-06-07T08:00:00-06:00">8:00am<\/time>/
         )
       end
       it "should have an em-dash separating the start and end times" do
@@ -195,7 +195,7 @@ describe EventPresenter do
       end
       it "should end with the microformat dtend time element containing the end time" do
         expect( presenter.present_time ).to match(
-          /<time class="dtend" datetime="2005-06-07T09:00:00-06:00">9:00 AM<\/time>\z/
+          /<time class="dtend" datetime="2005-06-07T09:00:00-06:00">9:00am<\/time>\z/
         )
       end
       it "should be html safe" do
@@ -206,7 +206,7 @@ describe EventPresenter do
       let(:event) { $event = Event.new(start_at: '2005-06-07 8am', end_at: '2005-06-09 9am') }
       it "should start with the microformat dtstart time element containing the start time" do
         expect( presenter.present_time ).to match(
-          /\A<time class="dtstart" datetime="2005-06-07T08:00:00-06:00">8:00 AM<\/time>/
+          /\A<time class="dtstart" datetime="2005-06-07T08:00:00-06:00">8:00am<\/time>/
         )
       end
       it "should have the word “to” between the start and end times" do
@@ -214,7 +214,7 @@ describe EventPresenter do
       end
       it "should end with the microformat dtend time element containing the end date and time" do
         expect( presenter.present_time ).to match(
-          /<time class="dtend" datetime="2005-06-09T09:00:00-06:00">Thursday, June +9, 2005 at +9:00 AM<\/time>\z/
+          /<time class="dtend" datetime="2005-06-09T09:00:00-06:00">Thursday, June +9, 2005 at +9:00am<\/time>\z/
         )
       end
       it "should be html safe" do

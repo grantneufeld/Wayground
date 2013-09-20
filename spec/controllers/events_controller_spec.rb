@@ -28,7 +28,7 @@ describe EventsController do
   # Event. As you add validations to Event, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {:start_at => '2012-01-02 03:04:05', :title => 'event controller title'}
+    { start_at: '2012-01-02 03:04:05', title: 'event controller title', tag_list: 'test, tag' }
   end
 
   describe "GET index" do

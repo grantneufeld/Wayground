@@ -7,7 +7,7 @@ describe Tag do
   before(:all) do
     Event.delete_all
     User.delete_all
-    @event = FactoryGirl.create(:event)
+    @event = Event.new
   end
 
   describe "attribute mass assignment security" do
@@ -43,41 +43,41 @@ describe Tag do
 
   describe "validations" do
     it "should validate with the minimum required values" do
+      expect( Tag.new(tag: 'test').valid? ).to be_true
+    end
+    it "should validate given an item" do
       expect( @event.tags.build(tag: 'test').valid? ).to be_true
     end
-    it "should fail without an item" do
-      expect( Tag.new(tag: 'test').valid? ).to be_false
-    end
     it "should fail without a tag" do
-      expect( @event.tags.build.valid? ).to be_false
+      expect( Tag.new.valid? ).to be_false
     end
     it "should fail with a tag with uppercase characters" do
-      expect( @event.tags.build(tag: 'Test').valid? ).to be_false
+      expect( Tag.new(tag: 'Test').valid? ).to be_false
     end
     it "should fail with a tag with uppercase characters" do
-      expect( @event.tags.build(tag: 'Test').valid? ).to be_false
+      expect( Tag.new(tag: 'Test').valid? ).to be_false
     end
     it "should fail with a tag with accented characters" do
-      expect( @event.tags.build(tag: 'tést').valid? ).to be_false
+      expect( Tag.new(tag: 'tést').valid? ).to be_false
     end
     it "should fail with a tag with white-space" do
-      expect( @event.tags.build(tag: 'te st').valid? ).to be_false
+      expect( Tag.new(tag: 'te st').valid? ).to be_false
     end
     it "should fail with a tag with punctuation" do
-      expect( @event.tags.build(tag: 'test.').valid? ).to be_false
+      expect( Tag.new(tag: 'test.').valid? ).to be_false
     end
     it "should pass with a blank title" do
-      tag = @event.tags.build(title: '')
+      tag = Tag.new(title: '')
       tag.tag = 'test'
       expect( tag.valid? ).to be_true
     end
     it "should pass if title matches tag" do
-      tag = @event.tags.build(title: 'Tést.')
+      tag = Tag.new(title: 'Tést.')
       tag.tag = 'test'
       expect( tag.valid? ).to be_true
     end
     it "should fail if title doesn’t match the tag" do
-      tag = @event.tags.build(title: 'no match')
+      tag = Tag.new(title: 'no match')
       tag.tag = 'test'
       expect( tag.valid? ).to be_false
     end
