@@ -7,6 +7,13 @@ user ||= @user
 candidates ||= @candidates || ballot.candidates.running
 candidates_who_quit ||= @candidates_who_quit
 
+content_for(:head) do
+  %><link rel="profile" href="http://microformats.org/profile/hcard" />
+<%
+end
+
+# TODO: display metadata about the ballot: ballot.position and ballot.section
+
 %><%= render 'elections/breadcrumb', { election: election } %>
 <h1><%= link_to election.name, [level, election] %>
 <br />ballot for <%= link_to office.name, [level, office] %><%
@@ -14,14 +21,7 @@ if ballot.is_byelection
   %> (byelection)<%
 end
 %></h1>
-
-<p>Position <%= ballot.position %> in the ballots for the election.</p>
-
-<% if ballot.section?
-  -%><h2><%= ballot.section %></h2>
-
 <%
-end
 
 dates = []
 dates << "Term begins on #{ballot.term_start_on.to_datetime.to_s(:simple_date)}." if ballot.term_start_on?
@@ -43,15 +43,13 @@ end
 -%>
 
 <h2>Candidates</h2>
-<ul>
 <% candidates.each do |candidate|
-  %><li><%= link_to candidate.name, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li><%
+  %><%= render 'candidates/candidate_brief', { candidate: candidate, user: user } %><%
 end -%>
-</ul>
 
 <%
 if candidates_who_quit && candidates_who_quit.count > 0
-  %><p>The following potential candidates have withdrawn from the race:</p>
+  %><p>The following potential candidates did not enter, or withdrew from, the race:</p>
 <ul><%
   candidates_who_quit.each do |candidate|
     %><li><%= link_to candidate.name, level_election_ballot_candidate_path(level, election, ballot, candidate) %></li><%
@@ -62,18 +60,21 @@ end
 
 if user
   if ballot.has_authority_for_user_to?(user, :can_update)
-    add_submenu_item(title: 'Edit Ballot', path: edit_level_election_ballot_path(level, election, ballot))
+    add_submenu_item(title: 'Edit Ballot',
+      path: edit_level_election_ballot_path(level, election, ballot),
+      attrs: { class: 'edit' }
+    )
   end
   if ballot.has_authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete Ballot',
       path: delete_level_election_ballot_path(level, election, ballot),
-      attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
+      attrs: { data: { confirm: 'Are you sure?' }, method: :delete, class: 'delete' }
     )
   end
   if user.has_authority_for_area(Ballot.authority_area, :can_create)
-    add_submenu_item(title: 'New Ballot', path: new_level_election_ballot_path(level, election))
     add_submenu_item(title: 'Add Candidate',
-      path: new_level_election_ballot_candidate_path(level, election, ballot)
+      path: new_level_election_ballot_candidate_path(level, election, ballot),
+      attrs: { class: 'new' }
     )
   end
 end

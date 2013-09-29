@@ -28,7 +28,13 @@ describe 'ballots/show.html.erb' do
     $ballot
   end
   let(:candidates) do
-    $candidates = [ballot.candidates.build(filename: 'cnd', name: 'Stub Candidate Name')]
+    $candidates = [candidate]
+  end
+  let(:candidate) do
+    $candidate = ballot.candidates.build(filename: 'cnd', name: 'Stub Candidate Name')
+    $candidate.stub(:persisted?).and_return(true)
+    $candidate.ballot = ballot
+    $candidate
   end
 
   before(:each) do

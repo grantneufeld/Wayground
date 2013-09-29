@@ -22,6 +22,8 @@ describe "ballots/index.html.erb" do
   end
   let(:candidate) do
     $candidate = ballot.candidates.build(filename: 'cnd', name: 'Stub Candidate')
+    $candidate.ballot = ballot
+    $candidate
   end
   
   before(:each) do

@@ -7,6 +7,7 @@ user ||= @user
 
 content_for(:head) do
   %><link rel="profile" href="http://microformats.org/profile/hcard" />
+<link rel="alternate" href="<%= level_election_ballots_path(level, election, format: 'csv') %>" type="text/csv" title="Comma-separated data table" />
 <%
 end
 
@@ -16,8 +17,6 @@ end
 if election.end_on %>
 <br /><%= election.end_on.to_datetime.to_s(:plain_date) %><%
 end %></h1>
-
-<p>Unconfirmed candidates are in <span class="rumoured">italics</span>.</p>
 
 <%
 section = nil
@@ -37,6 +36,10 @@ if section_links.size > 0
 <%
 end
 
+%>
+<p><%= link_to 'Download in CSV format', level_election_ballots_path(level, election, format: 'csv'), type: 'text/csv', class: 'download' %> (usable by spreadsheet software and databases).</p>
+<%
+
 section = nil
 section_counter = 0
 @ballots.each do |ballot|
@@ -46,7 +49,11 @@ section_counter = 0
     %><h1 id="ballot-section-<%= section_counter %>" class="section-heading"><%= section %></h1>
 <%
   end
-  %><%= render 'index_item', { ballot: ballot, user: user } %><%
+  %><h2><%= link_to ballot.descriptor, ballot.items_for_path %></h2>
+<%
+  ballot.candidates.running.each do |candidate|
+    %><%= render 'candidates/candidate_brief', { candidate: candidate, user: user } %><%
+  end
 end
 
 if user && user.has_authority_for_area(Ballot.authority_area, :can_create)
