@@ -76,7 +76,7 @@ describe "layouts/application.html.erb" do
     it "should set the class to current for the specified section in the navmenu if true" do
       assign(:site_section, :calendar)
       render
-      rendered.should match(/<li class="current"><a[^>]* href="\/calendar\/[0-9]+\/[0-9]+"[^>]*>Calendar<\/a><\/li>/)
+      rendered.should match(/<li class="current"><a[^>]* href="\/calendar"[^>]*>Calendar<\/a><\/li>/)
     end
     it "should not set a current section in the navmenu if not set" do
       @site_section = nil

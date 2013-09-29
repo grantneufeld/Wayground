@@ -118,7 +118,7 @@ end
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
-  calendar: {title: 'Calendar', path: calendar_month_path(year: today.year, month: today.strftime('%m'))},
+  calendar: { title: 'Calendar', path: calendar_path, class: 'cal' },
   projects: {title: 'Projects', path: projects_path},
   pages: {title: 'Pages', path: pages_path},
   documents: {title: 'Documents', path: documents_path},
@@ -203,13 +203,6 @@ end
 <%
 # An optional submenu. Normally styled to be fixed to the bottom of the page.
 case @site_section
-when :events
-  submenu_items = [
-    {title: 'New Event', path: new_event_path},
-    {title: 'Upcoming Events', path: events_path},
-    {title: 'Past Events', path: events_path(r: 'past')},
-    {title: 'All Events', path: events_path(r: 'all')}
-  ]
 when :projects
   submenu_items = [
     {title: 'New Project', path: new_project_path}
@@ -252,13 +245,13 @@ else
 end
 submenu_items += page_submenu_items
 if submenu_items.size > 0
-  %><ul id="subnavmenu">
+  %><div id="subnavmenu"><ul>
 <%
   submenu_items.each do |submenu_item|
     %><li><%= link_to submenu_item[:title], submenu_item[:path], submenu_item[:attrs] %></li>
 <%
   end
-%></ul>
+%></ul></div>
 <%
 end -%>
 

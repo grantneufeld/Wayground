@@ -21,7 +21,16 @@ end -%>
 -%>
 <%= render 'events', {:events => @events, :user => @user} %>
 <%
-if @user.present?
-  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
-<%
-end -%>
+
+add_submenu_item(title: 'Upcoming Events', path: events_path, attrs: { class: 'list' })
+add_submenu_item(title: 'Past Events', path: events_path(r: 'past'), attrs: { class: 'list' })
+add_submenu_item(title: 'All Events', path: events_path(r: 'all'), attrs: { class: 'list' })
+add_submenu_item(title: 'Calendar View', path: calendar_path, attrs: { class: 'cal' })
+add_submenu_item(title: 'Calendar Subscription Options',
+  path: calendar_subscribe_path, attrs: { class: 'subscribe' }
+)
+
+if @user && @user.has_authority_for_area(Event.authority_area, :can_create)
+  add_submenu_item(title: 'New Event', path: new_event_path, attrs: { class: 'new' })
+end
+-%>

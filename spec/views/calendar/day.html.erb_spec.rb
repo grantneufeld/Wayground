@@ -3,13 +3,16 @@ require 'spec_helper'
 
 describe "calendar/day.html.erb" do
   before(:all) do
-    @user = User.first || FactoryGirl.create(:user)
+    User.delete_all
+    @admin = FactoryGirl.create(:user, name: 'Admin User')
+    @user = FactoryGirl.create(:user, name: 'Normal User')
   end
   before(:each) do
     @date = assign(:date, Date.new(2013, 3, 4))
     @event1 = stub_model(Event, id: 123, title: 'Test Title', start_at: Time.zone.parse('2013-03-04 1pm'))
     @event2 = stub_model(Event, id: 234, title: 'Test Title', start_at: Time.zone.parse('2013-03-04 2pm'))
     @events = assign(:events, [])
+    view.stub(:add_submenu_item)
   end
   context "with no user" do
     before(:each) do
@@ -20,10 +23,6 @@ describe "calendar/day.html.erb" do
       expect( view.view_flow.content[:head] ).to match(
         /<link rel="profile" href="http:\/\/microformats\.org\/profile\/hcalendar" \/>/
       )
-    end
-    it "should set the main section class to calendar" do
-      view.should_receive(:set_main_section_class).with('calendar')
-      render
     end
     it "should render a link to the previous day" do
       render
@@ -94,9 +93,16 @@ describe "calendar/day.html.erb" do
         )
       end
     end
-    it "should show the new event action" do
+  end
+  context 'with an admin user' do
+    before(:each) do
+      assign(:user, @admin)
+    end
+    it 'should add the new event link to the submenu' do
+      view.should_receive(:add_submenu_item).with(
+        title: 'New Event', path: '/events/new', attrs: { class: 'new' }
+      )
       render
-      expect( rendered ).to match /<a (?:|[^>]+ )href="\/events\/new"/
     end
   end
 end
