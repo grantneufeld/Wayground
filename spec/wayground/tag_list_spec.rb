@@ -48,8 +48,7 @@ describe Wayground::TagList do
       item.tag_list = 'â, B'
       item.save!
       item.reload
-      list = Wayground::TagList.new(tags: item.tags, editor: item.user)
-      list.tags = 'A,"C"'
+      item.tag_list = 'A,"C"'
       item.save!
       item.reload
       expect( Wayground::TagList.new(tags: item.tags).to_s ).to eq 'A, C'
@@ -168,8 +167,8 @@ describe Wayground::TagList do
         tags = [tag]
         list = Wayground::TagList.new(tags: tags)
         list.determine_existing_tags
-        Tag.any_instance.should_receive(:update!).with(title: 'different title').and_return(true)
         list.update_existing_tag('different title')
+        expect( tag.title ).to eq 'different title'
       end
     end
   end

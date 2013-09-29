@@ -26,6 +26,7 @@ describe "events/show.html.erb" do
       :country => "Country",
       :location_url => "http://location.url.tld/"
     ))
+    view.stub(:add_submenu_item)
   end
 
   it "renders the expected text" do

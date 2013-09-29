@@ -7,7 +7,6 @@ content_for(:head) do
   %><link rel="profile" href="http://microformats.org/profile/hcalendar" />
 <%
 end
-set_main_section_class 'calendar'
 
 date = @date # Date.new(@date.year, @date.month, @date.day)
 prev_date = date - 1.day
@@ -29,7 +28,16 @@ events.all.each do |event|
 end
 %>
 <%
-if @user.present?
-  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
-<%
-end -%>
+
+
+add_submenu_item(title: 'Month View', path: calendar_month_path(@date.year, @date.strftime('%m')), attrs: { class: 'cal' })
+add_submenu_item(title: 'Year View', path: calendar_year_path(@date.year), attrs: { class: 'cal' })
+add_submenu_item(title: 'Events List View', path: events_path, attrs: { class: 'list' })
+add_submenu_item(title: 'Calendar Subscription Options',
+  path: calendar_subscribe_path, attrs: { class: 'subscribe' }
+)
+
+if @user && @user.has_authority_for_area(Event.authority_area, :can_create)
+  add_submenu_item(title: 'New Event', path: new_event_path, attrs: { class: 'new' })
+end
+-%>

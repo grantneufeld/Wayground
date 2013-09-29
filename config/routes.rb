@@ -74,6 +74,8 @@ Wayground::Application.routes.draw do
   # Calendar
   month_regexp = /0[1-9]|1[0-2]/
   year_regexp = /\d{4}/
+  get 'calendar' => 'calendar#index', as: :calendar
+  get 'calendar/subscribe' => 'calendar#subscribe', as: :calendar_subscribe
   get "calendar/:year/:month/:day" => 'calendar#day', as: :calendar_day,
     constraints: { year: year_regexp, month: month_regexp, day: /0[1-9]|[1-3]\d/ }
   get "calendar/:year/:month" => 'calendar#month', as: :calendar_month,

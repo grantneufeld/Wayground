@@ -11,6 +11,7 @@ module Wayground
     def initialize(params={})
       @tags = params[:tags] || []
       @editor = params[:editor]
+      @modified = []
     end
 
     def to_s
@@ -73,8 +74,9 @@ module Wayground
       tag_text = Tag.new.taggify_text(title)
       tag = @existing_tags[tag_text]
       if tag
-        if tag.title != title
-          tag.update!(title: title)
+        if title != tag.title
+          tag.title = title
+          @modified << tag
         end
         @existing_tags.delete(tag_text)
       end
@@ -84,18 +86,28 @@ module Wayground
     def new_tag(title)
       tag = tags.build(title: title)
       tag.user = editor
+      @modified << tag
       tag
     end
 
     # destroy any existing tags that weren’t in the passed in tag list string
     def remove_leftover_existing_tags
       @existing_tags.each do |key, tag|
+        tags.delete(tag)
         tag.destroy
       end
+      @existing_tags = {}
+    end
+
+    def save!
+      @modified.each do |tag|
+        tag.save!
+      end
+      @modified = []
     end
 
     # convenience methods for testing only
-    attr_accessor :existing_tags, :tagged
+    attr_accessor :existing_tags, :tagged, :modified
 
   end
 

@@ -91,40 +91,6 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
 {
   display:none;
 }
-.website:before,
-.home:before,
-.emailadr:before,
-.phone:before,
-.fax:before,
-.address:before,
-.cal:before,
-.facebook:before,
-.flickr:before,
-.google:before,
-.linkedin:before,
-.twitter:before,
-.vimeo:before,
-.youtube:before
-{
-  @include iconFontStyle;
-  opacity:0.66;
-  padding-right:0.25em;
-  vertical-align:top;
-}
-.website:before{content: $icon-globe;}
-.home:before{content: $icon-home;}
-.emailadr:before{content: $icon-envelope-alt;}
-.phone:before{content: $icon-phone;}
-.fax:before{content: $icon-print;}
-.address:before{content: $icon-map-marker;}
-.cal:before{content: $icon-calendar; font-size: 1em;}
-.facebook:before{content: $icon-facebook-sign;}
-.flickr:before{content: $icon-flickr;}
-.google:before{content: $icon-google-plus-sign;}
-.linkedin:before{content: $icon-linkedin-sign;}
-.twitter:before{content: $icon-twitter;}
-.vimeo:before{content: $icon-facetime-video;}
-.youtube:before{content: $icon-youtube;}
 
 .vcard{
   margin-left:1em; margin-top:0.25em;

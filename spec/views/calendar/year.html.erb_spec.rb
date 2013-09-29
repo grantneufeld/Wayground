@@ -3,7 +3,8 @@ require 'spec_helper'
 describe "calendar/year.html.erb" do
   before(:all) do
     @date = assign(:date, Date.new(2013, 1, 1))
-    @user = User.first || FactoryGirl.create(:user)
+    User.delete_all
+    @admin = FactoryGirl.create(:user, name: 'Admin User')
     @total_event_count = assign(:total_event_count, 30)
     @event_counts = assign(:event_counts,
       {
@@ -11,6 +12,9 @@ describe "calendar/year.html.erb" do
         7 => 19, 8 => 20, 9 => 21, 10 => 22, 11 => 23, 12 => 24
       }
     )
+  end
+  before(:each) do
+    view.stub(:add_submenu_item)
   end
   context "with no user" do
     before(:all) do
@@ -38,11 +42,15 @@ describe "calendar/year.html.erb" do
       expect( rendered ).to match /<a href="\/calendar\/2013\/12"[^>]*>December<\/a>.* 24 events/
     end
   end
-  context "with a user" do
-    it "should show the new event link" do
-      assign(:user, @user)
+  context 'with an admin user' do
+    before(:each) do
+      assign(:user, @admin)
+    end
+    it 'should add the new event link to the submenu' do
+      view.should_receive(:add_submenu_item).with(
+        title: 'New Event', path: '/events/new', attrs: { class: 'new' }
+      )
       render
-      expect( rendered ).to match /<a (?:|[^>]+ )href="\/events\/new"/
     end
   end
 end

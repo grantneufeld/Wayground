@@ -9,7 +9,9 @@
 };
 
 $icon-calendar: "\f073";
+$icon-calendar-empty: "\f133";
 $icon-chevron-right: "\f054";
+$icon-download: "\f019";
 $icon-envelope-alt: "\f003";
 $icon-facebook-sign: "\f082";
 $icon-facetime-video: "\f03d";
@@ -18,10 +20,63 @@ $icon-globe: "\f0ac";
 $icon-google-plus-sign: "\f0d4";
 $icon-home: "\f015";
 $icon-linkedin-sign: "\f08c";
+$icon-list: "\f03a";
 $icon-map-marker: "\f041";
 $icon-phone: "\f095";
+$icon-plus-sign: "\f055";
 $icon-power-off: "\f011";
 $icon-print: "\f02f";
+$icon-rss: "\f09e";
+$icon-tag: "\f02b";
+$icon-tags: "\f02c";
 $icon-twitter: "\f099";
+$icon-twitter-sign: "\f081";
 $icon-user: "\f007";
 $icon-youtube: "\f167";
+
+.address:before,
+.cal:before,
+.download:before,
+.emailadr:before,
+.fax:before,
+.home:before,
+.list:before,
+.new:before,
+.phone:before,
+.subscribe:before,
+.tag:before,
+.website:before,
+.facebook:before,
+.flickr:before,
+.google:before,
+.linkedin:before,
+.twitter:before,
+.twitter-sign:before,
+.vimeo:before,
+.youtube:before
+{
+  @include iconFontStyle;
+  opacity:0.66;
+  padding-right:0.25em;
+  vertical-align:top;
+}
+.address:before{content: $icon-map-marker;}
+.cal:before{content: $icon-calendar; font-size: 1em;}
+.download:before{content: $icon-download;}
+.emailadr:before{content: $icon-envelope-alt;}
+.fax:before{content: $icon-print;}
+.home:before{content: $icon-home;}
+.list:before{content: $icon-home;}
+.new:before{content: $icon-plus-sign;}
+.phone:before{content: $icon-phone;}
+.subscribe:before{content: $icon-rss;}
+.tag:before{content: $icon-tag;}
+.website:before{content: $icon-globe;}
+.facebook:before{content: $icon-facebook-sign;}
+.flickr:before{content: $icon-flickr;}
+.google:before{content: $icon-google-plus-sign;}
+.linkedin:before{content: $icon-linkedin-sign;}
+.twitter:before{content: $icon-twitter;}
+.twitter-sign:before{content: $icon-twitter-sign;}
+.vimeo:before{content: $icon-facetime-video;}
+.youtube:before{content: $icon-youtube;}

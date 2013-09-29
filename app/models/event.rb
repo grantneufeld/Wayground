@@ -93,6 +93,7 @@ class Event < ActiveRecord::Base
   before_save :approve_if_authority
   after_update :flag_as_modified_for_sourcing
   after_save :add_version
+  after_save :save_tag_list
 
   def initialize(*args)
     super(*args)
@@ -242,7 +243,7 @@ class Event < ActiveRecord::Base
   end
 
   def tag_list
-    Wayground::TagList.new(tags: tags, editor: editor)
+    @tag_list ||= Wayground::TagList.new(tags: tags, editor: editor)
   end
 
   # Take a comma-separated string of tag titles,
@@ -250,7 +251,12 @@ class Event < ActiveRecord::Base
   # update any changed titles of tags that do exist,
   # remove existing tags that are not in the supplied list.
   def tag_list=(value)
+    @tag_list = nil
     tag_list.tags = value
+  end
+
+  def save_tag_list
+    tag_list.save!
   end
 
   # VALUES

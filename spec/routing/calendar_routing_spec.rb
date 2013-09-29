@@ -3,6 +3,16 @@ require "spec_helper"
 describe CalendarController do
   describe "routing" do
 
+    it 'handles the index path' do
+      expect( get: '/calendar' ).to route_to(
+        controller: 'calendar', action: 'index'
+      )
+    end
+    it 'handles the subscription path' do
+      expect( get: '/calendar/subscribe' ).to route_to(
+        controller: 'calendar', action: 'subscribe'
+      )
+    end
     it "handles paths to a given calendar year" do
       expect( get: '/calendar/1999' ).to route_to(
         controller: 'calendar', action: 'year', year: '1999'

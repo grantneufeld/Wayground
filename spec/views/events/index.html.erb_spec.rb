@@ -53,6 +53,7 @@ describe "events/index.html.erb" do
         :location_url => "Location Url"
       )
     ])
+    view.stub(:add_submenu_item)
   end
 
   it "renders a list of events" do

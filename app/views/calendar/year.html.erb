@@ -25,7 +25,14 @@ end
 <p class="smallprint">(The total for the year may not match the sum of the months because some events may span multiple months and be counted multiple times.)</p>
 </div>
 <%
-if @user.present?
-  %><p class="actions"><%= link_to 'New Event', new_event_path, :class => 'action' %></p>
-<%
-end -%>
+
+
+add_submenu_item(title: 'Events List View', path: events_path, attrs: { class: 'list' })
+add_submenu_item(title: 'Calendar Subscription Options',
+  path: calendar_subscribe_path, attrs: { class: 'subscribe' }
+)
+
+if @user && @user.has_authority_for_area(Event.authority_area, :can_create)
+  add_submenu_item(title: 'New Event', path: new_event_path, attrs: { class: 'new' })
+end
+-%>

@@ -26,13 +26,39 @@ metadata_presenter = MetadataPresenter.new(metadata)
 <%= metadata_presenter.present_title %>
 <link rel="icon" href="/favicon.png" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<% # Source: http://www.google.com/webfonts/family?family=Ubuntu&subset=latin -%>
-<!--link href='http://fonts.googleapis.com/css?family=Ubuntu:400,400italic,700,700italic,500,300,300italic,500italic|Ubuntu+Condensed&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'-->
+<style type="text/css" media="screen,print">
+@font-face {
+font-family:'FontAwesome'; font-weight:normal; font-style:normal;
+src:url('/fonts/fontawesome-webfont.eot?v=3.2.1');
+src:url('/fonts/fontawesome-webfont.eot?#iefix&v=3.2.1') format('embedded-opentype'), url('/fonts/fontawesome-webfont.woff?v=3.2.1') format('woff'), url('/fonts/fontawesome-webfont.ttf?v=3.2.1') format('truetype'), url('/fonts/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1') format('svg');
+}
+@font-face {
+font-family: 'Ubuntu'; font-weight:400; font-style:normal;
+src:url('/fonts/Ubuntu/Ubuntu.eot');
+src:local('Ubuntu'), url('/fonts/Ubuntu/Ubuntu.eot') format('embedded-opentype'), url('/fonts/Ubuntu/Ubuntu.woff') format('woff'), url('/fonts/Ubuntu/Ubuntu.ttf') format('truetype');
+}
+@font-face {
+font-family: 'Ubuntu'; font-weight:700; font-style:normal;
+src:url('/fonts/Ubuntu/Ubuntu-Bold.eot');
+src:local('Ubuntu Bold'), local('Ubuntu-Bold'), url('/fonts/Ubuntu/Ubuntu-Bold.eot') format('embedded-opentype'), url('/fonts/Ubuntu/Ubuntu-Bold.woff') format('woff'), url('/fonts/Ubuntu/Ubuntu-Bold.ttf') format('truetype');
+}
+@font-face {
+font-family: 'Ubuntu'; font-weight:400; font-style:italic;
+src:url('/fonts/Ubuntu/Ubuntu-Italic.eot');
+src:local('Ubuntu Italic'), local('Ubuntu-Italic'), url('/fonts/Ubuntu/Ubuntu-Italic.eot') format('embedded-opentype'), url('/fonts/Ubuntu/Ubuntu-Italic.woff') format('woff'), url('/fonts/Ubuntu/Ubuntu-Italic.ttf') format('truetype');
+}
+@font-face {
+font-family: 'Ubuntu'; font-weight:700; font-style:italic;
+src:url('/fonts/Ubuntu/Ubuntu-BoldItalic.eot');
+src:local('Ubuntu Bold Italic'), local('Ubuntu-BoldItalic'), url('/fonts/Ubuntu/Ubuntu-BoldItalic.eot') format('embedded-opentype'), url('/fonts/Ubuntu/Ubuntu-BoldItalic.woff') format('woff'), url('/fonts/Ubuntu/Ubuntu-BoldItalic.ttf') format('truetype');
+}
+@font-face {
+font-family: 'UbuntuCondensed'; font-weight:400; font-style:normal;
+src:url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.eot');
+src:local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.eot') format('embedded-opentype'), url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.woff') format('woff'), url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.ttf') format('truetype');
+}
+</style>
 <%= stylesheet_link_tag 'application', media: 'all' %>
-<% #= stylesheet_link_tag 'screen', media: 'screen'
--%>
-<% #= stylesheet_link_tag 'print', media: 'print'
--%>
 <%= javascript_include_tag 'application' %>
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
@@ -79,25 +105,24 @@ end
 <div id="usermenu" class="<%= usermenu_class %>" title="<%= usermenu_title %>">
 <%
 if current_user.nil?
-  %><ul><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li></ul><%
+  %><ul>
+<li><%= link_to 'Register as New User', signup_path %></li>
+<li><%= link_to 'Sign In', signin_path %></li>
+</ul><%
 else
-  %><ul><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li></ul><%
-  end %>
+  %><ul>
+<li><%= link_to 'Your Account', account_path %></li>
+<li><%= link_to 'Sign Out', signout_path %></li>
+</ul><%
+end %>
 </div>
-
-<%
-#<form action="" method="get" accept-charset="utf-8" id="globalsearch" role="search">
-#<p><input name="key" type="text" size="24" placeholder="Search this website" required><input type="submit" value="Search"></p>
-#</form>
-%></header>
+</header>
 
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
   candidate_list: { title: 'Candidate List 2013', path: '/levels/calgary/elections/2013/ballots' },
-  calendar: { title: 'Calendar',
-    path: calendar_month_path(year: today.year, month: today.strftime('%m')), class: 'cal'
-  },
+  calendar: { title: 'Calendar', path: calendar_path, class: 'cal' },
   twitter: { title: 'Twitter Resources', path: '/twitter', class: 'twitter' }
 }
 site_hidden_sections = {
@@ -177,13 +202,6 @@ end
 <%
 # An optional submenu. Normally styled to be fixed to the bottom of the page.
 case @site_section
-when :events
-  submenu_items = [
-    {title: 'New Event', path: new_event_path},
-    {title: 'Upcoming Events', path: events_path},
-    {title: 'Past Events', path: events_path(r: 'past')},
-    {title: 'All Events', path: events_path(r: 'all')}
-  ]
 when :projects
   submenu_items = [
     {title: 'New Project', path: new_project_path}
@@ -226,13 +244,13 @@ else
 end
 submenu_items += page_submenu_items
 if submenu_items.size > 0
-  %><ul id="subnavmenu">
+  %><div id="subnavmenu"><ul>
 <%
   submenu_items.each do |submenu_item|
     %><li><%= link_to submenu_item[:title], submenu_item[:path], submenu_item[:attrs] %></li>
 <%
   end
-%></ul>
+%></ul></div>
 <%
 end -%>
 

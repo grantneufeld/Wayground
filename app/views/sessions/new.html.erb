@@ -1,6 +1,13 @@
-<h1>Sign In</h1>
-<p><%= render :partial => 'sessions/authentication_links' %></p>
-<p>If you are a registered user, you can sign in here:</p>
+<div class="columns cols2">
+<div class="column col1">
+
+<ul id="remote-signin"><%= render partial: 'sessions/authentication_links' %></ul>
+<%= render partial: 'users/remote_signin_explanation' %>
+
+</div>
+<div class="column col2 lastcol">
+
+<p>If you previously registered with an email address and password, you can sign in here:</p>
 <%= form_tag signin_path do %>
 <table><tbody>
 <tr><th><%= label_tag :email %></th><td><%= email_field_tag :email, params[:email] %></td></tr>
@@ -10,3 +17,7 @@
 <tfoot><tr><th></th><td><%= submit_tag "Sign In" %></td></tr></tfoot>
 </table>
 <% end %>
+
+</div>
+<div class="closeblock"></div>
+</div>

@@ -1,10 +1,12 @@
 <div class="columns cols2">
 <div class="column col1">
-<h1>Sign Up Using Your Existing Account</h1>
-<p><%= render :partial => 'sessions/authentication_links' %></p>
-</div>
 
+<ul id="remote-signin"><%= render partial: 'sessions/authentication_links' %></ul>
+<%= render partial: 'remote_signin_explanation' %>
+
+</div>
 <div class="column col2 lastcol">
+
 <h1>Sign Up Here</h1>
 <%= form_for @user, :url => signup_path do |f| %>
 <%= show_errors(@user) %>
@@ -17,6 +19,7 @@
 <tfoot><tr><th></th><td><%= f.submit 'Sign Up' %></td></tr></tfoot>
 </table>
 <% end %>
+
 </div>
 <div class="closeblock"></div>
 </div>

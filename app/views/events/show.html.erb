@@ -76,28 +76,44 @@ if event.tags.count > 0
 end
 
 
-if @user.present?
-  %><p class="actions"><%
+if @user
   if event.has_authority_for_user_to?(@user, :can_update)
-    %><%= link_to 'Edit', edit_event_path(event), class: 'action' %><%= separator %>
-<%
+    add_submenu_item(title: 'Edit', path: edit_event_path(event), attrs: { class: 'edit' })
   end
   if !(event.is_approved?) && event.has_authority_for_user_to?(@user, :can_approve)
-    %><%= link_to 'Approve', approve_event_path(event), data: {confirm: "Are you sure you want to approve the event “#{event.title}”?"}, method: :post, class: 'action' %><%= separator %>
-<%
+    add_submenu_item(title: 'Approve', path: approve_event_path(event),
+      attrs: {
+        class: 'approve',
+        data: { confirm: "Are you sure you want to approve the event “#{event.title}”?" },
+        method: :post
+      }
+    )
   end
   if event.has_authority_for_user_to?(@user, :can_delete)
     if event.has_authority_for_user_to?(@user, :can_update)
-      %><%= link_to 'Merge', merge_event_path(event), class: 'action', title: 'Merge with another Event (you must know the event id)' %><%= separator %>
-<%
+      add_submenu_item(title: 'Merge', path: merge_event_path(event),
+        attrs: { class: 'merge', title: 'Merge with another existing Event' }
+      )
     end
-    %><%= link_to 'Delete', [:delete, event], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%= separator %>
-<%
+    add_submenu_item(title: 'Delete', path: [:delete, event],
+      attrs: { class: 'delete', data: { confirm: 'Are you sure?' }, method: :delete }
+    )
   end
   if event.has_authority_for_user_to?(@user, :can_create)
-    %><%= link_to 'Add External Link', new_event_external_link_path(event), class: 'action' %><%= separator %>
-<%
+    add_submenu_item(title: 'Add External Link', path: new_event_external_link_path(event),
+      attrs: { class: 'new' }
+    )
   end
-  %></p>
-<%
-end -%>
+end
+
+date = event.start_at
+add_submenu_item(title: 'Calendar View', path: calendar_month_path(date.year, date.strftime('%m')), attrs: { class: 'cal' })
+add_submenu_item(title: 'Events List View', path: events_path, attrs: { class: 'list' })
+add_submenu_item(title: 'Calendar Subscription Options',
+  path: calendar_subscribe_path, attrs: { class: 'subscribe' }
+)
+
+if @user && @user.has_authority_for_area(Event.authority_area, :can_create)
+  add_submenu_item(title: 'New Event', path: new_event_path, attrs: { class: 'new' })
+end
+-%>
