@@ -30,7 +30,7 @@ end
 
 content_for(:other_sections) do
   %>
-<section><h2>Ballots</h2>
+<section><h2><%= link_to 'Ballots', (election.items_for_path << :ballots) %></h2>
 <ul>
 <%
   election.ballots.each do |ballot|

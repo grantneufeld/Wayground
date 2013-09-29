@@ -36,6 +36,17 @@ if office.description?
 <%
 end
 
+if office.ballots.count > 0
+  %><h2>Elections</h2>
+<ul><%
+  office.ballots.each do |ballot|
+    %><li><%= link_to ballot.election.descriptor, ballot.items_for_path %></li>
+<%
+  end
+  %></ul>
+<%
+end
+
 if user
   if office.has_authority_for_user_to?(user, :can_update)
     add_submenu_item(title: 'Edit Office', path: edit_level_office_path(level, office))

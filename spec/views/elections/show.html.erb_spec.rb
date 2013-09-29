@@ -11,7 +11,11 @@ describe 'elections/show.html.erb' do
       description: 'Stub description.'
     }
   end
-  let(:election) { $election = level.elections.build(election_attrs) }
+  let(:election) do
+    $election = level.elections.build(election_attrs)
+    $election.level = level
+    $election
+  end
 
   before(:each) do
     assign(:level, level)
