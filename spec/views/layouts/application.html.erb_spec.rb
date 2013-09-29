@@ -159,7 +159,7 @@ describe "layouts/application.html.erb" do
       it "should show Twitter as the source" do
         session[:source] = 'twitter'
         render
-        rendered.should match(/<img( src="\/icon\/site\/twitter\.png(\?[^"]*)?"| alt="\(via Twitter\)"| title="via Twitter"| height="[^"]+"| width="[^"]+"){5} *\/>/)
+        rendered.should match(/<img( src="\/icon\/site\/twitter\.png(\?[^"]*)?"| alt="\(via Twitter\)"| height="[^"]+"| width="[^"]+"){4} *\/>/)
       end
     end
   end

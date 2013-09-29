@@ -76,17 +76,38 @@ src:local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('/fonts/Ubu
 <% unless Wayground::Application::DESCRIPTION.blank?
   %><p id="subtitle"><%= Wayground::Application::DESCRIPTION %></p>
 <% end -%>
-<div id="usermenu" class="<%= current_user.nil? ? "signed-out" : "signed-in" %>" onTouchEnd="return false;">
+
+<%
+
+if current_user
+  usermenu_class = 'signed-in'
+  usermenu_title = "Signed in as #{current_user.name}"
+  case session[:source]
+  when 'twitter'
+    usermenu_class += ' twitter'
+    usermenu_title += ' (via Twitter)'
+  when 'facebook'
+    usermenu_class += ' facebook'
+    usermenu_title += ' (via Facebook)'
+  end
+else
+  usermenu_class = 'signed-out'
+end
+%>
+<div id="usermenu" class="<%= usermenu_class %>" title="<%= usermenu_title %>" onTouchEnd="return false;">
 <% if current_user.nil?
     %><p>Signed Out</p>
-<ul><li><%= link_to 'Register as New User', signup_path %></li><li><%= link_to 'Sign In', signin_path %></li></ul><%
+<ul>
+<li><%= link_to 'Register as New User', signup_path %></li>
+<li><%= link_to 'Sign In', signin_path %></li>
+</ul><%
   else
     %><p id="username"><%= current_user.name %><%
     case session[:source]
     when 'twitter'
-      %><%= image_tag('/icon/site/twitter.png', alt: '(via Twitter)', title: 'via Twitter', size: '16x16') %><%
+      %><%= image_tag('/icon/site/twitter.png', alt: '(via Twitter)', size: '16x16') %><%
     when 'facebook'
-      %><%= image_tag('/icon/site/facebook.png', alt: '(via Facebook)', title: 'via Facebook', size: '16x16') %><%
+      %><%= image_tag('/icon/site/facebook.png', alt: '(via Facebook)', size: '16x16') %><%
     end
     %></p>
 <ul><li><%= link_to 'Your Account', account_path %></li><li><%= link_to 'Sign Out', signout_path %></li></ul><%
