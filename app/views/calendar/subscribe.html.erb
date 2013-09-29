@@ -1,0 +1,17 @@
+<h1>Subscribe to the Calendar</h1>
+<p><%= link_to 'Subscribe to this calendar in your calendar application',
+  events_url(protocol: 'webcal', format: 'ics'),
+  class: 'ics',
+  title: 'Calendar subscription link, compatible with most calendar applications' %>.</p>
+<p>This should work for most iCalendar (.ics) compatible calendars (such as iPhone, Google Calendar, etc.).</p>
+<h2>Troubleshooting</h2>
+<p>If the above link does not work on your system, try copying and pasting the following link into your calendar application (there is usually an option to &ldquo;Subscribe&hellip;&rdquo; where you can enter the weblink/URL):
+<br /><%
+url = events_url(format: 'ics')
+%><%= link_to url, url, format: 'text/icalendar' %></p>
+<%
+
+add_submenu_item(title: 'Calendar View', path: calendar_path, attrs: { class: 'cal' })
+add_submenu_item(title: 'Events List View', path: events_path, attrs: { class: 'list' })
+
+-%>

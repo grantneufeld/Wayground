@@ -6,11 +6,18 @@ require 'event/year'
 
 # Present calendar views of events.
 class CalendarController < ApplicationController
-  before_action :set_user
-  before_action :require_year
-  before_action :require_month, except: [:year]
+  before_action :set_user, except: [:index]
+  before_action :require_year, only: [:year, :month, :day]
+  before_action :require_month, only: [:month, :day]
   before_action :require_day, only: [:day]
-  before_action :set_section
+  before_action :set_section, except: [:index]
+
+  def index
+    today = Date.today
+    redirect_to calendar_month_url(year: today.year, month: today.strftime('%m'))
+  end
+
+  def subscribe; end
 
   def year
     year = @date.year

@@ -29,6 +29,25 @@ describe CalendarController do
       start_at: '2005-02-28 00:00AM', end_at: '2005-02-28 01:00AM')
   end
 
+  describe 'GET "index"' do
+    it 'redirects to the current calendar month' do
+      get 'index'
+      date = Date.today
+      expect( response ).to redirect_to(calendar_month_url(date.year, date.strftime('%m')))
+    end
+  end
+
+  describe 'GET "subscribe"' do
+    it 'should return http success' do
+      get 'subscribe'
+      expect( response ).to be_success
+    end
+    it 'should use the subscribe view' do
+      get 'subscribe'
+      expect( response ).to render_template('subscribe')
+    end
+  end
+
   describe "GET 'year'" do
     it "should return http success" do
       get 'year', year: '2000'
