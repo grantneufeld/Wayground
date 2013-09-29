@@ -56,7 +56,7 @@ $navigationBorderColor: #CCC;
     margin:0em; padding:0em;
     > a{
       padding:0.5em 1em; display:block;
-      &:before{margin:0em; padding:0em; font-size: 1em;}
+      &:before{margin:0em; padding:0em 0.25em 0em 0em; font-size: 1em;}
     }
   }
 }
@@ -90,6 +90,16 @@ nav{
   nav{
     @include navigationLinks481plus;
     @include navigationLinksBorderBottom481plus;
+  }
+}
+
+#remote-signin{
+  @include navigationLinks;
+}
+@media (min-width:481px) {
+  #remote-signin{
+    @include navigationLinks481plus;
+    text-align:left;
   }
 }
 

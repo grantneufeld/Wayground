@@ -85,9 +85,10 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
 
 // Icons
 
-.website .label, .home .label, .emailadr .label, .phone .label, .fax .label, .address .label, .cal .label,
+.address .label, .cal .label, .download .label, .emailadr .label, .fax .label, .home .label,
+.list .label, .new .label, .phone .label, .subscribe .label, .website .label,
 .facebook .label, .flickr .label, .google .label, .linkedin .label,
-.twitter .label, .vimeo .label, .youtube .label
+.twitter .label, .twitter-sign .label, .vimeo .label, .youtube .label
 {
   display:none;
 }
@@ -96,8 +97,8 @@ section > *, footer > *{max-width:50em; overflow:hidden;}
   margin-left:1em; margin-top:0.25em;
   + .vcard{margin-top:0.5em;}
   h3{font-weight:bold;}
-  .website, .home, .emailadr, .phone, .fax, .address, .cal,
-  .facebook, .flickr, .google, .linkedin, .twitter, .vimeo, .youtube
+  .address, .cal, .emailadr, .fax, .home, .list, .new, .phone, .subscribe, .website,
+  .facebook, .flickr, .google, .linkedin, .twitter, .twitter-sign, .vimeo, .youtube
   {
     margin-left:1em;
     line-height:1.4em;

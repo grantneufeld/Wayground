@@ -63,14 +63,6 @@ src:local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('/fonts/Ubu
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
-<style type="text/css" media="screen,print">
-@font-face {
-font-family: 'FontAwesome';
-src: url('/fonts/fontawesome-webfont.eot?v=3.2.1');
-src: url('/fonts/fontawesome-webfont.eot?#iefix&v=3.2.1') format('embedded-opentype'), url('/fonts/fontawesome-webfont.woff?v=3.2.1') format('woff'), url('/fonts/fontawesome-webfont.ttf?v=3.2.1') format('truetype'), url('/fonts/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1') format('svg');
-font-weight: normal; font-style: normal;
-}
-</style>
 <%= csrf_meta_tags %>
 <%= metadata_presenter.present_metatags -%>
 <%= yield :head -%>
@@ -106,7 +98,9 @@ end
 <%
 if current_user.nil?
   %><ul>
+<% if false %>
 <li><%= link_to 'Register as New User', signup_path %></li>
+<% end -%>
 <li><%= link_to 'Sign In', signin_path %></li>
 </ul><%
 else
@@ -275,6 +269,7 @@ if show_versions || content_for?(:actions)
 <%= yield :footer -%>
 <p id="about"><a href="/about">About <%= Wayground::Application::NAME %></a>.</p>
 <p>Our <a href="/accountability">Accountability Statement</a> addresses how we try to fulfill the principles of transparency, openness, equality, and accessibility.</p>
+<p>Our <a href="/privacy">Privacy Policy</a> explains what information we use, record, and display, about users of this website.</p>
 <p id="copyright">Copyright ©2007-<%= Time.now.strftime('%Y') %> <%= Wayground::Application::NAME %>.
 <br />Except where otherwise indicated, all text is freely licensed under a <a href="http://creativecommons.org/licenses/by/2.5/ca/">Creative Commons License</a> requiring attribution for any reuse (including derivative work). See individual photo/media attributions for licensing details of non-text content.</p>
 </footer>
