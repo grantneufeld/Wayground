@@ -1,0 +1,51 @@
+<%
+# requires @ballots
+
+# encode string elements to be safe for csv fields
+def csvize(str)
+  if str
+    str.gsub! /"/, "\\\""
+    "\"#{str}\"".html_safe
+  else
+    ''.html_safe
+  end
+end
+
+def merge_parts(items)
+  items = items.reject { |item| item.blank? }
+  items.join("\n")
+end
+
+
+%>Section ID,Ballot ID,Ballot Name,Candidate,Website,Email,Twitter,Phone,Office,Links
+<%
+
+section = nil
+section_counter = 0
+
+@ballots.each do |ballot|
+  if ballot.section != section
+    section = ballot.section
+    section_counter += 1
+  end
+  ballot_prefix = "#{section_counter},#{ballot.position},#{csvize(ballot.descriptor)}".html_safe
+  ballot.candidates.running.each do |candidate|
+    contact = candidate.contacts.only_public.first || Contact.new
+    %><%= ballot_prefix
+    %>,<%= csvize(candidate.name)
+    %>,<%= csvize(contact.url)
+    %>,<%= csvize(contact.email)
+    %>,<%= contact.twitter.present? ? csvize("@#{contact.twitter}") : ''
+    %>,<%= csvize(merge_parts([contact.phone, contact.phone2]))
+    %>,<%= csvize(merge_parts([contact.address1, contact.address2]))
+    %>,<%
+    links = []
+    candidate.external_links.each do |link|
+      links << link.url
+    end
+    %><%= csvize(merge_parts(links)) %>
+<%
+  end
+end
+
+-%>
