@@ -158,6 +158,15 @@ describe Ballot do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the name of the office' do
+      office = Office.new(name: 'The Name')
+      ballot = office.ballots.build()
+      ballot.office = office
+      expect( ballot.descriptor ).to eq 'The Name'
+    end
+  end
+
   describe '#items_for_path' do
     it 'should return an array of the level, election and ballot' do
       level = Level.new

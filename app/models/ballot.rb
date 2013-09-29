@@ -53,6 +53,10 @@ class Ballot < ActiveRecord::Base
     end
   end
 
+  def descriptor
+    office.name
+  end
+
   def items_for_path
     election.items_for_path << self
   end

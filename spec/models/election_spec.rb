@@ -192,6 +192,13 @@ describe Election do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the name' do
+      election = Election.new(name: 'The Name')
+      expect( election.descriptor ).to eq 'The Name'
+    end
+  end
+
   describe '#items_for_path' do
     it 'should return an array of the level and self' do
       level = Level.new
