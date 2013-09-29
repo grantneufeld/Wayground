@@ -46,7 +46,9 @@ if contacts.count > 0
   contacts.each do |contact|
     presenter = ContactPresenter.new(view: self, contact: contact, user: user)
     %><p class="vcard"><%= presenter.present_attributes("<br />".html_safe) %></p>
-<%
+<%  if user
+      %><p><%= presenter.present_actions %></p>
+<%  end
   end
 end
 
@@ -82,11 +84,6 @@ if user.present?
   if candidate.has_authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'Add Link',
       path: new_level_election_ballot_candidate_external_link_path(level, election, ballot, candidate)
-    )
-  end
-  if user.has_authority_for_area(Candidate.authority_area, :can_create)
-    add_submenu_item(title: 'New Candidate',
-      path: new_level_election_ballot_candidate_path(level, election, ballot)
     )
   end
 end -%>

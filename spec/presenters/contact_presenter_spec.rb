@@ -5,16 +5,26 @@ require_relative 'view_double'
 require 'person'
 
 describe ContactPresenter do
+  before(:all) do
+    User.delete_all
+    @admin_user = FactoryGirl.create(:user)
+    @normal_user = FactoryGirl.create(:user)
+  end
+
   let(:view) { $view = ViewDouble.new }
-  let(:item) { $item = Person.new(fullname: 'item') }
+  let(:item) do
+    $item = Person.new(filename: 'item')
+  end
   let(:contact_attrs) { $contact_attrs = { name: 'Contact'} }
   let(:contact) do
     $contact = item.contacts.build(contact_attrs)
     $contact.item = item
+    $contact.id = 123
     $contact
   end
+  let(:user) { $user = nil }
 
-  let(:presenter) { $presenter = ContactPresenter.new(view: view, contact: contact) }
+  let(:presenter) { $presenter = ContactPresenter.new(view: view, contact: contact, user: user) }
 
   describe 'initialization' do
     it 'should take a view parameter' do
@@ -576,6 +586,42 @@ describe ContactPresenter do
       end
       it 'should be html safe' do
         expect( presenter.present_dates.html_safe? ).to be_true
+      end
+    end
+  end
+
+  describe '#present_actions' do
+    context 'with no user' do
+      it 'should return an empty string' do
+        expect( presenter.present_actions ).to eq ''
+      end
+      it 'should be html safe' do
+        expect( presenter.present_actions.html_safe? ).to be_true
+      end
+    end
+    context 'with a user' do
+      let(:user) { $user = @normal_user }
+      it 'should return an empty string' do
+        expect( presenter.present_actions ).to eq ''
+      end
+      it 'should be html safe' do
+        expect( presenter.present_actions.html_safe? ).to be_true
+      end
+    end
+    context 'with an admin user' do
+      let(:user) { $user = @admin_user }
+      it 'should contain an edit link' do
+        expect( presenter.present_actions ).to match(
+          /<a (?:[^>]* )?href="\/people\/item\/contacts\/123\/edit"[^>]*>Edit/
+        )
+      end
+      it 'should contain a delete link' do
+        expect( presenter.present_actions ).to match(
+          /<a (?:[^>]* )?href="\/people\/item\/contacts\/123\/delete"[^>]*>Delete/
+        )
+      end
+      it 'should be html safe' do
+        expect( presenter.present_actions.html_safe? ).to be_true
       end
     end
   end
