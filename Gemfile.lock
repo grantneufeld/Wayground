@@ -1,25 +1,7 @@
-GIT
-  remote: https://github.com/grantneufeld/metriknit.git
-  revision: ec588a5bb14780e9c0f3b21a6770c5a6e6b82d0b
-  specs:
-    metriknit (0.0.1)
-      brakeman
-      bundler
-      cane
-      churn
-      flog
-      json
-      rails_best_practices
-      railties
-      rake
-      reek
-      roodi
-      tailor
-
 GEM
   remote: https://rubygems.org/
   specs:
-    ZenTest (4.9.2)
+    ZenTest (4.9.4)
     actionmailer (4.0.0)
       actionpack (= 4.0.0)
       mail (~> 2.5.3)
@@ -47,30 +29,30 @@ GEM
     addressable (2.3.4)
     arel (4.0.0)
     arrayfields (4.9.0)
-    atomic (1.1.9)
+    atomic (1.1.14)
     autotest-fsevent (0.2.8)
       sys-uname
     autotest-growl (0.2.16)
     autotest-rails (4.1.2)
       ZenTest (~> 4.5)
-    awesome_print (1.1.0)
+    awesome_print (1.2.0)
     backports (3.3.3)
     bcrypt-ruby (3.0.1)
-    brakeman (2.0.0)
+    brakeman (2.1.2)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
       haml (>= 3.0, < 5.0)
       highline (~> 1.6.19)
       multi_json (~> 1.2)
       ruby2ruby (~> 2.0.5)
-      ruby_parser (~> 3.1.1)
+      ruby_parser (~> 3.2.2)
       sass (~> 3.0)
-      slim (~> 1.3.6)
+      slim (>= 1.3.6, < 3.0)
       terminal-table (~> 1.4)
     builder (3.1.4)
-    bundler-audit (0.1.2)
+    bundler-audit (0.2.0)
       bundler (~> 1.2)
-    cane (2.5.2)
+    cane (2.6.0)
       parallel
     capybara (2.1.0)
       mime-types (>= 1.16)
@@ -78,15 +60,15 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    chronic (0.9.1)
-    churn (0.0.29)
+    chronic (0.10.2)
+    churn (0.0.34)
       chronic (>= 0.2.3)
       hirb
       json_pure
       main
       ruby_parser (~> 3.0)
       sexp_processor (~> 4.1)
-    code_analyzer (0.3.2)
+    code_analyzer (0.4.3)
       sexp_processor
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -131,7 +113,7 @@ GEM
     flay (2.3.0)
       ruby_parser (~> 3.0)
       sexp_processor (~> 4.0)
-    flog (4.1.0)
+    flog (4.1.2)
       ruby_parser (~> 3.1, > 3.1.0)
       sexp_processor (~> 4.0)
     gherkin (2.12.0)
@@ -143,7 +125,7 @@ GEM
     hike (1.2.3)
     hirb (0.7.1)
     httpauth (0.2.0)
-    i18n (0.6.4)
+    i18n (0.6.5)
     jbuilder (1.4.2)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
@@ -169,7 +151,7 @@ GEM
     mime-types (1.23)
     mini_portile (0.5.0)
     minitest (4.7.5)
-    multi_json (1.7.7)
+    multi_json (1.8.0)
     multipart-post (1.2.0)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
@@ -194,7 +176,7 @@ GEM
     omniauth-twitter (1.0.0)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    parallel (0.7.0)
+    parallel (0.8.4)
     pg (0.15.1)
     pickle (0.4.11)
       cucumber (>= 0.8)
@@ -213,13 +195,14 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.0.0)
       sprockets-rails (~> 2.0.0)
-    rails_best_practices (1.13.8)
+    rails_best_practices (1.14.4)
       activesupport
       awesome_print
-      code_analyzer
+      code_analyzer (>= 0.4.3)
       colored
       erubis
       i18n
+      require_all
       ruby-progressbar
     railties (4.0.0)
       actionpack (= 4.0.0)
@@ -229,12 +212,13 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
-    reek (1.3.1)
+    reek (1.3.3)
       ruby2ruby (~> 2.0.2)
-      ruby_parser (~> 3.1.1)
+      ruby_parser (~> 3.1, >= 3.1.1)
       sexp_processor
-    roodi (2.1.0)
-      ruby_parser
+    require_all (1.3.1)
+    roodi (3.1.1)
+      ruby_parser (~> 3.2, >= 3.2.2)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -250,13 +234,13 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    ruby-progressbar (1.1.1)
+    ruby-progressbar (1.2.0)
     ruby2ruby (2.0.6)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
-    ruby_parser (3.1.3)
+    ruby_parser (3.2.2)
       sexp_processor (~> 4.1)
-    sass (3.2.9)
+    sass (3.2.11)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
       sass (>= 3.1.10)
@@ -264,14 +248,14 @@ GEM
     sdoc (0.3.20)
       json (>= 1.1.3)
       rdoc (~> 3.10)
-    sexp_processor (4.2.1)
+    sexp_processor (4.3.0)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    slim (1.3.9)
-      temple (~> 0.6.3)
-      tilt (~> 1.3, >= 1.3.3)
+    slim (2.0.1)
+      temple (~> 0.6.6)
+      tilt (>= 1.3.3, < 2.1)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -283,21 +267,21 @@ GEM
       sprockets (~> 2.8)
     sys-uname (0.9.2)
       ffi (>= 1.0.0)
-    tailor (1.2.1)
+    tailor (1.3.0)
       log_switch (>= 0.3.0)
       term-ansicolor (>= 1.0.5)
       text-table (>= 1.2.2)
-    temple (0.6.5)
+    temple (0.6.6)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
     terminal-table (1.4.5)
     text-table (1.2.3)
     thor (0.18.1)
-    thread_safe (0.1.0)
+    thread_safe (0.1.3)
       atomic
     tilt (1.4.1)
     timecop (0.6.1)
-    tins (0.8.2)
+    tins (0.11.0)
     treetop (1.4.14)
       polyglot
       polyglot (>= 0.3.1)
@@ -320,9 +304,9 @@ DEPENDENCIES
   autotest-growl (>= 0.2.9)
   autotest-rails (>= 4.1.2)
   bcrypt-ruby (~> 3.0.0)
-  brakeman (>= 1.9.5)
+  brakeman
   bundler-audit
-  cane (~> 2.5.2)
+  cane
   capybara
   chronic (>= 0.8.0)
   churn
@@ -338,7 +322,6 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   launchy (>= 2.1.2)
-  metriknit!
   omniauth (>= 1.1.0)
   omniauth-facebook (>= 1.3.0)
   omniauth-twitter (>= 0.0.11)

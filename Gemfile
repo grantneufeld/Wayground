@@ -52,9 +52,8 @@ gem 'virtus', '>= 0.5.5'
 
 group :development do
   # code analysis tools:
-  gem 'metriknit', git: 'https://github.com/grantneufeld/metriknit.git', require: false
-  gem 'brakeman', '>= 1.9.5', require: false # http://brakemanscanner.org/
-  gem 'cane', '~> 2.5.2', require: false # https://github.com/square/cane
+  gem 'brakeman', require: false # http://brakemanscanner.org/
+  gem 'cane', require: false # https://github.com/square/cane
   gem 'churn', require: false # https://github.com/danmayer/churn
   gem 'flay', require: false # https://github.com/seattlerb/flay
   gem 'flog', require: false # https://github.com/seattlerb/flog

@@ -1,2 +1,2 @@
-LongMethod:
+TooManyStatements:
   max_statements: 9
