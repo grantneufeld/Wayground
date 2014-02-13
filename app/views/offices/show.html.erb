@@ -63,6 +63,10 @@ if user
       path: new_office_with_previous_level_offices_path(level, office),
       attrs: { title: 'If this office has been replaced (e.g., during redistricting)' }
     )
+    add_submenu_item(title: 'Add External Link',
+      path: new_level_office_external_link_path(level, office),
+      attrs: { class: 'new' }
+    )
   end
 end
 

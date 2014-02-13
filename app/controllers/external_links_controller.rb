@@ -86,12 +86,17 @@ class ExternalLinksController < ApplicationController
   # all actions for this controller should have an item that the external link(s) are attached to.
   def set_item
     @item = nil
+    level = Level.from_param(params[:level_id]).first if params[:level_id]
+    office = level.offices.from_param(params[:ballot_id]).first if params[:ballot_id]
     if params[:candidate_id]
-      level = Level.from_param(params[:level_id]).first
       election = level.elections.from_param(params[:election_id]).first
-      office = level.offices.from_param(params[:ballot_id]).first
       ballot = election.ballots.where(office_id: office.id).first
       @item = ballot.candidates.from_param(params[:candidate_id]).first
+    elsif params[:ballot_id]
+      election = level.elections.from_param(params[:election_id]).first
+      @item = election.ballots.where(office_id: office.id).first
+    elsif params[:office_id]
+      @item = level.offices.from_param(params[:office_id]).first
     end
     if !@item && params[:event_id]
       @item = Event.find(params[:event_id])

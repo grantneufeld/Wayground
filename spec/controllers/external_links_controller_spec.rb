@@ -46,6 +46,7 @@ describe ExternalLinksController do
   let(:event) { @event }
   let(:level) { @level }
   let(:election) { @election }
+  let(:office) { @office }
   let(:ballot) { @ballot }
   let(:candidate) { @candidate }
   let(:external_link) { $external_link = FactoryGirl.create(:external_link, :item => event, :position => 99)}
@@ -72,6 +73,18 @@ describe ExternalLinksController do
           candidate_id: candidate.to_param, ballot_id: ballot.to_param,
           election_id: election.to_param, level_id: level.to_param
         assigns(:item).should eq(candidate)
+      end
+    end
+    context 'with a ballot_id param' do
+      it 'assigns the ballot as @item' do
+        get :index, ballot_id: ballot.to_param, election_id: election.to_param, level_id: level.to_param
+        expect(assigns(:item)).to eq ballot
+      end
+    end
+    context 'with an office_id param' do
+      it 'assigns the office as @item' do
+        get :index, office_id: office.to_param, level_id: level.to_param
+        expect(assigns(:item)).to eq office
       end
     end
   end

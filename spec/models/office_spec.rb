@@ -177,4 +177,10 @@ describe Office do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the name' do
+      expect(Office.new(name: 'Described').descriptor).to eq 'Described'
+    end
+  end
+
 end

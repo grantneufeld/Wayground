@@ -80,6 +80,10 @@ if user
       path: new_level_election_ballot_candidate_path(level, election, ballot),
       attrs: { class: 'new' }
     )
+    add_submenu_item(title: 'Add External Link',
+      path: new_level_election_ballot_external_link_path(level, election, ballot),
+      attrs: { class: 'new' }
+    )
   end
 end
 

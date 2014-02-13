@@ -11,6 +11,7 @@ class Ballot < ActiveRecord::Base
   belongs_to :election
   belongs_to :office
   has_many :candidates
+  has_many :external_links, as: :item
 
   validates :election_id, presence: true
   # only one ballot for a given office in a given election

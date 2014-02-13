@@ -34,10 +34,12 @@ Wayground::Application.routes.draw do
           resources :contacts
           resources :external_links
         end
+        resources :external_links
       end
     end
     resources :offices do
       get 'new/:previous_id' => 'offices#new', on: :collection, as: :new_office_with_previous
+      resources :external_links
     end
     resources :parties
   end

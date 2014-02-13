@@ -12,6 +12,7 @@ class Office < ActiveRecord::Base
   belongs_to :previous, class_name: 'Office'
   has_many :ballots
   has_many :office_holders
+  has_many :external_links, as: :item
 
   validates :level_id, presence: true
   validates :filename, presence: true, uniqueness: { scope: :level_id }, format: { with: /\A[a-z0-9_\-]+\z/ }
@@ -39,6 +40,10 @@ class Office < ActiveRecord::Base
 
   def to_param
     filename
+  end
+
+  def descriptor
+    name
   end
 
 end
