@@ -6,11 +6,17 @@ set_main_section_class 'calendar'
 this_month = @date # Date.new(@date.year, @date.month, 1)
 prev_month = this_month.prev_month
 next_month = this_month.next_month
+earliest_date = Event.earliest_date
+last_date = Event.last_date
 %><table class="calendar">
 <thead><tr><th colspan="7">
 <ul class="calendar-nav">
+<% if earliest_date && prev_month.end_of_month >= earliest_date -%>
 <li><%= link_to '<', calendar_month_path(year: prev_month.year, month: prev_month.strftime('%m')), title: prev_month.strftime('%B %Y'), class: 'prev' %></li>
+<% end
+if last_date && next_month.beginning_of_month <= last_date -%>
 <li><%= link_to '>', calendar_month_path(year: next_month.year, month: next_month.strftime('%m')), title: next_month.strftime('%B %Y'), class: 'next' %></li>
+<% end -%>
 </ul>
 <h1><%= @date.strftime('%B') %> <%= link_to @date.year, calendar_year_path(year: @date.year) %></h1>
 </th></tr>

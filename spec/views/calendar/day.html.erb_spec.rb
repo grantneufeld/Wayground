@@ -24,17 +24,23 @@ describe "calendar/day.html.erb" do
         /<link rel="profile" href="http:\/\/microformats\.org\/profile\/hcalendar" \/>/
       )
     end
-    it "should render a link to the previous day" do
-      render
-      expect( rendered ).to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/03"/
-    end
-    it "should render a link to the next day" do
-      render
-      expect( rendered ).to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/05"/
+    context 'with earlier and later events' do
+      it 'should render a link to the previous day' do
+        Event.stub(:earliest_date).and_return(Date.parse('2000-01-01'))
+        render
+        expect(rendered).to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/03"/
+      end
+      it 'should render a link to the next day' do
+        Event.stub(:last_date).and_return(Date.parse('2100-01-01'))
+        render
+        expect(rendered).to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/05"/
+      end
     end
     context "with no events" do
       before(:each) do
-        @events = assign(:events, [])
+        Event.stub(:earliest_date).and_return(nil)
+        Event.stub(:last_date).and_return(nil)
+        Event.stub(:count).and_return(0)
       end
       it "should render the calendar heading" do
         render
@@ -43,6 +49,14 @@ describe "calendar/day.html.erb" do
       it "should not render any events" do
         render
         expect( rendered ).not_to match /<[^>]+ class="(?:|[^"] )vevent(?:| [^"])"/
+      end
+      it 'should not render a link to the previous day' do
+        render
+        expect(rendered).not_to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/03"/
+      end
+      it 'should render a link to the next day' do
+        render
+        expect(rendered).not_to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/05"/
       end
     end
     context "with 1 event" do

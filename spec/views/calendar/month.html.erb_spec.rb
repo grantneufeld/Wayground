@@ -22,13 +22,32 @@ describe "calendar/month.html.erb" do
       view.should_receive(:set_main_section_class).with('calendar')
       render
     end
-    it "should render a link to the previous month" do
-      render
-      expect( rendered ).to match /<a [^>]*href="\/calendar\/2013\/02"[^>]*>/
+    context 'with earlier and later events' do
+      it 'should render a link to the previous month' do
+        Event.stub(:earliest_date).and_return(Date.parse('2000-01-01'))
+        render
+        expect(rendered).to match /<a [^>]*href="\/calendar\/2013\/02"[^>]*>/
+      end
+      it 'should render a link to the next month' do
+        Event.stub(:last_date).and_return(Date.parse('2100-01-01'))
+        render
+        expect(rendered).to match /<a [^>]*href="\/calendar\/2013\/04"[^>]*>/
+      end
     end
-    it "should render a link to the next month" do
-      render
-      expect( rendered ).to match /<a [^>]*href="\/calendar\/2013\/04"[^>]*>/
+    context 'with no events' do
+      before(:each) do
+        Event.stub(:earliest_date).and_return(nil)
+        Event.stub(:last_date).and_return(nil)
+        Event.stub(:count).and_return(0)
+      end
+      it 'should not render a link to the previous month' do
+        render
+        expect(rendered).not_to match /<a [^>]*href="\/calendar\/2013\/02"[^>]*>/
+      end
+      it 'should not render a link to the next month' do
+        render
+        expect(rendered).not_to match /<a [^>]*href="\/calendar\/2013\/04"[^>]*>/
+      end
     end
     it "should render the calendar heading" do
       render
