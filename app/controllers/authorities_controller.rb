@@ -36,7 +36,7 @@ class AuthoritiesController < ApplicationController
     page_metadata(title: 'New Authority')
 
     if @authority.save
-      redirect_to(@authority, notice: 'Authority was successfully created.')
+      redirect_to(authority_url(@authority.to_param), notice: 'Authority was successfully created.')
     else
       render action: "new"
     end

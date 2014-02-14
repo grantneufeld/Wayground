@@ -27,10 +27,10 @@ describe SettingsController do
   end
 
   def set_logged_in_admin
-    controller.stub!(:current_user).and_return(@user_admin)
+    controller.stub(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub!(:current_user).and_return(@user_normal)
+    controller.stub(:current_user).and_return(@user_normal)
   end
 
   describe "GET initialize_defaults" do

@@ -107,7 +107,7 @@ describe SessionsController do
       before(:all) do
         @user = FactoryGirl.create(:user)
         @user_token = @user.tokens.create(token: 'valid user to sign out token')
-        User.stub!(:find).with(@user.id).and_return(@user)
+        User.stub(:find).with(@user.id).and_return(@user)
       end
       it "should clear the remember_token cookie" do
         request.cookies['remember_token'] = "#{@user_token.token}/#{@user.id}"

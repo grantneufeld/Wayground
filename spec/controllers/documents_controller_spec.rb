@@ -15,7 +15,7 @@ describe DocumentsController do
   end
 
   def set_logged_in_admin(stubs={})
-    controller.stub!(:current_user).and_return(mock_admin(stubs))
+    controller.stub(:current_user).and_return(mock_admin(stubs))
   end
   def mock_admin(stubs={})
     @mock_admin ||= mock_model(User, {:id => 1, :email => 'test+mockadmin@wayground.ca', :name => 'The Admin', :has_authority_for_area => mock_admin_authority, :has_authority_for_item => mock_admin_authority}.merge(stubs))

@@ -12,7 +12,7 @@ describe UsersController do
   end
 
   def set_logged_in(stubs={})
-    controller.stub!(:current_user).and_return(mock_user(stubs))
+    controller.stub(:current_user).and_return(mock_user(stubs))
   end
 
   describe "GET 'profile'" do

@@ -134,7 +134,7 @@ describe "layouts/application.html.erb" do
 
   describe "with signed-in user" do
     before do
-      controller.stub!(:current_user).and_return(mock_model(User, :name => "Test Tester"))
+      controller.stub(:current_user).and_return(mock_model(User, :name => "Test Tester"))
     end
 
     describe "via password" do

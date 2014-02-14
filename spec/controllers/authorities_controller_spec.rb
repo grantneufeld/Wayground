@@ -16,10 +16,10 @@ describe AuthoritiesController do
   end
 
   def set_logged_in_admin(stubs={})
-    controller.stub!(:current_user).and_return(mock_admin(stubs))
+    controller.stub(:current_user).and_return(mock_admin(stubs))
   end
   def set_logged_in_user(stubs={})
-    controller.stub!(:current_user).and_return(mock_user(stubs))
+    controller.stub(:current_user).and_return(mock_user(stubs))
   end
 
   def mock_authority(stubs={})
