@@ -19,7 +19,7 @@ class Image < ActiveRecord::Base
 
   # prefer originals over other formats; then prefer larger over smaller dimensions
   def get_best_variant
-    image_variants.largest.originals.first
+    image_variants.originals.largest.first
   end
 
 end
