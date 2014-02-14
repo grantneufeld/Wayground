@@ -261,6 +261,19 @@ class Event < ActiveRecord::Base
 
   # VALUES
 
+  # return the earliest date that an event occurs on
+  def self.earliest_date
+    event = first
+    event.start_at.to_date if event
+  end
+
+  # return the last date that an event occurs on
+  def self.last_date
+    # TODO: potentially take into account the last end_date if it is > the last start_date
+    event = last
+    event.start_at.to_date if event
+  end
+
   def is_multi_day
     end_at? && start_at.to_date != end_at.to_date
   end
