@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 def class_from_item_string(class_name)
   if class_name.downcase == 'item'
     User

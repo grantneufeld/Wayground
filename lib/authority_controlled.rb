@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Add the ‘acts_as_authority_controlled’ line to your ActiveRecord models as desired.
 # See the method definition below for options.
 #

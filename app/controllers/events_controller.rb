@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'event/day_events'
 
 # Access events.

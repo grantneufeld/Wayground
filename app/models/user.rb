@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'authority_controlled'
 require 'email_validator'
 require 'crypted_password'

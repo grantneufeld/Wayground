@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # User registration and updating.
 # Accessed by users as the singular resource “/account”,
 # and by admins as the plural resources “/users”.

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'external_link_presenter'
 require_relative 'view_double'

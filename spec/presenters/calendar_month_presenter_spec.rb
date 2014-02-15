@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'calendar_month_presenter'
 require 'event'

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Merger
 
   # TODO: Transactionalize mergers so failures can rollback any changes

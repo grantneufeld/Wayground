@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'sources_controller'
 require 'authority'

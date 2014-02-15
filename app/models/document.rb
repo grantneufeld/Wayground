@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Metadata for a data file. (The actual file data is kept in Datastore.)
 class Document < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content'

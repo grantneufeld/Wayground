@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Web pages.
 class Page < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content'

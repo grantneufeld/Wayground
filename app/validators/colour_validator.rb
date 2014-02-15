@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_model/validator'
 
 # Validate that a given value is a 3 or 6 digit hexadecimal colour (with hash symbol),

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class PathsController < ApplicationController
   before_action :set_path, except: [:sitepath, :index, :new, :create]
   before_action :requires_view_authority, only: [:show]

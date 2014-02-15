@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Wayground
 
   # Turns a token for an object to remember (i.e., User) into a string usable in cookies.

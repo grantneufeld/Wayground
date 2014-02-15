@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'import/icalendar_reader'
 require 'open-uri'
 require 'event'

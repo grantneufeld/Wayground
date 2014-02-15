@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Wayground
 
   # Takes a cookie token string (“token/id”) and extracts the “id” and “token”.

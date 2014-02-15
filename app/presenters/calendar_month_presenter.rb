@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'html_presenter'
 require 'event_presenter'
 require 'date'

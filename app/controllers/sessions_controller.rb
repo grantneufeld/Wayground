@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'login/password_login'
 require 'login/oauth_login'
 require 'authentication'

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Assign remote Sources and queue them for processing.
 class SourcesController < ApplicationController
   before_action :set_user

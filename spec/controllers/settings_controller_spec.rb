@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 # Most of this is based on the rspec scaffold generated tests.

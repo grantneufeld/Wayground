@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'stringio'
 require 'import/icalendar_date'
 

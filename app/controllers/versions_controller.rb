@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Reviewing versions of arbitrary items (such as Pages or Events).
 # This controller is always routed as a sub-controller to an item class (e.g., pages/1/versions).
 class VersionsController < ApplicationController

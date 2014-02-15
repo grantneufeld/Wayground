@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'user'
 
 class Authority < ActiveRecord::Base

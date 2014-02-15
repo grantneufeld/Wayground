@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # A stand-in for views when testing presenters.
 # TODO: find the better way to do this (I seem to recall seeing one once online, but have been unable to re-find it)
 class ViewDouble

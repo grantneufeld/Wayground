@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Used to store the metadata for a data file.
 class CreateDocuments < ActiveRecord::Migration
   def self.up

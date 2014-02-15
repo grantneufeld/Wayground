@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Extensions to the standard form builder.
 # Make available by calling `form_for(my_object, :builder => WaygroundFormBuilder)`.
 class WaygroundFormBuilder < ActionView::Helpers::FormBuilder

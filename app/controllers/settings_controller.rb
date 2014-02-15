@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class SettingsController < ApplicationController
   before_action :set_setting, except: [:initialize_defaults, :index, :new, :create]
   before_action :requires_view_authority, only: [:index, :show]

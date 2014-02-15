@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Records a “version” (or “edit”) of a given “versionable” item.
 # Versionable items must have a `has_many :versions, as: :item` relation,
 # and they are responsible for generating their own Version records.

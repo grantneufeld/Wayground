@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'login/base'
 require_relative 'login_interface'

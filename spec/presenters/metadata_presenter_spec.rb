@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'metadata_presenter'
 require 'image_variant'

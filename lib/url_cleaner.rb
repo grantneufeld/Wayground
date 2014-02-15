@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Utility class that cleans up URLs.
 # Removes extraneous parameters or hashes.
 # Forces https where supported.

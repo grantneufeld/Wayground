@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'url_cleaner'
 require 'http_url_validator'
 

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # System-wide settings.
 class Setting < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Admin', :item_authority_flag_field => :always_private

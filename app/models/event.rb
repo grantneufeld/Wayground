@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 require 'tag_list'

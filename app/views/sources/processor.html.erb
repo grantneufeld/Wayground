@@ -1,6 +1,4 @@
-<% # encoding: utf-8
-
-%><h1>Process Source: <%= link_to @source.name, @source %>?</h1>
+<h1>Process Source: <%= link_to @source.name, @source %>?</h1>
 
 <%= form_tag(processor_source_path(@source), :method => :post) do %>
 <p>Are you sure you want to load the remote source?

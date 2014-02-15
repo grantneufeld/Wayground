@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class HtmlPresenter
 
   # Generate an html tag with a newline appended.

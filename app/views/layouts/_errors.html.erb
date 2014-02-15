@@ -1,5 +1,4 @@
-<% # encoding: utf-8
-# requires ‘item’ be an object that has an errors method that works like ActiveRecord.
+<% # requires ‘item’ be an object that has an errors method that works like ActiveRecord.
 
 if item.errors.any?
   heading ||= "#{pluralize(item.errors.count, "error")} prevented this #{item.class.name} from being saved:"

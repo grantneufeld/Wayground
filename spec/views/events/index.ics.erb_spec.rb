@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe "events/index.ics.erb" do

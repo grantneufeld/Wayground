@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'url_cleaner'
 
 # Utility class that cleans up text.

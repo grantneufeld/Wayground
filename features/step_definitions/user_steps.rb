@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Some of these methods are derived from the ones that come from Clearance.
 
 

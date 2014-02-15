@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Tracks items generated from processing Sources.
 # Items can be most models in the system, but must respond to the `name` method.
 class SourcedItem < ActiveRecord::Base

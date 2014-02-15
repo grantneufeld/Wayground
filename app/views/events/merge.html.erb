@@ -1,6 +1,4 @@
-<% # encoding: utf-8
-
-%><h1>Merge Event: “<%= link_to @event.title, @event %>”?</h1>
+<h1>Merge Event: “<%= link_to @event.title, @event %>”?</h1>
 
 <%= form_tag(merge_event_path(@event), :method => :post) do %>
 <table><tbody>

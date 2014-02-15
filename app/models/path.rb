@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Defines custom URLs (“paths”) for arbitrary items on the site,
 # or to redirect local URLs to other local paths or to remote URLs.
 class Path < ActiveRecord::Base

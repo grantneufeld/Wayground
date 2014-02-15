@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'user_token'
 require 'rememberer'
 require 'page_metadata'

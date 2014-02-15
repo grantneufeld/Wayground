@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Sources for data, linking to processors to use to generate local items from that data.
 # Types of sources might include RSS feeds, iCalendars, APIs, microformat scrapings, etc.
 # May be dynamically maintained so the local items generated from the Source

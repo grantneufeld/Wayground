@@ -1,6 +1,4 @@
-<% # encoding: utf-8
-
-%><%= form_for(@page) do |f| %>
+<%= form_for(@page) do |f| %>
 <% if @page.parent.present?
     %><%= hidden_field_tag('parent', @page.parent.id) %>
 <% end -%>

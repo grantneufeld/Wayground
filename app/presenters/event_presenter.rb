@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'html_presenter'
 require 'date'
 require 'time_presenter'

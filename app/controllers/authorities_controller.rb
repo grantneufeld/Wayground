@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Set authorities (permissions / access-control) for users.
 class AuthoritiesController < ApplicationController
   before_action :requires_view_authority, only: [:index, :show]

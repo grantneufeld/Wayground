@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Wayground
 
   # title: Used in the <title> meta tag. If blank, defaults to the site title.

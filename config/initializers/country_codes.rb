@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 COUNTRY_CODES_SHORTLIST = {
   'CA' => 'Canada'
 }

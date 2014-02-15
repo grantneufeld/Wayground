@@ -1,6 +1,3 @@
-# encoding: utf-8
-
-
 # Populating the Events data
 
 Given /^there are (\d+) upcoming events$/ do |count_str|

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 # For testing purposes, currently relying on the following models:

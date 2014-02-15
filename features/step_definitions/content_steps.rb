@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 When /^(?:|I )create a web page as "([^\"]+)"$/ do |filename|
   visit new_page_path
   fill_in 'Filename', :with => filename
