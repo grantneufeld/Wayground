@@ -186,6 +186,7 @@ describe CalendarMonthPresenter do
         before(:each) do
           Event.stub(:earliest_date).and_return(@day)
           Event.stub(:last_date).and_return(@day)
+          Event.stub(:count).and_return(1)
         end
         let(:events) { [Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))] }
         it 'should return an anchor element' do
