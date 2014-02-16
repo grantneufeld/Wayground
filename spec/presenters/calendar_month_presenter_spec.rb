@@ -123,7 +123,8 @@ describe CalendarMonthPresenter do
         expect( result ).to match /<\/td>[\r\n]*\z/
       end
       it "should call through to present_day_elements" do
-        presenter.should_receive(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
+        presenter.should_receive(:present_day_elements).with(@day).
+          and_return('present_day_elements'.html_safe)
         result = presenter.present_day(@day)
         expect( result ).to match /present_day_elements/
       end
@@ -298,8 +299,12 @@ describe CalendarMonthPresenter do
     context "with events to carryover" do
       before(:all) do
         @e1 = Event.new(start_at: Time.zone.parse('2003-01-01 1pm'))
-        @e2 = Event.new(start_at: Time.zone.parse('2003-01-01 2pm'), end_at: Time.zone.parse('2003-01-03 3pm'))
-        @e3 = Event.new(start_at: Time.zone.parse('2003-01-02 3pm'), end_at: Time.zone.parse('2003-01-03 4pm'))
+        @e2 = Event.new(
+          start_at: Time.zone.parse('2003-01-01 2pm'), end_at: Time.zone.parse('2003-01-03 3pm')
+        )
+        @e3 = Event.new(
+          start_at: Time.zone.parse('2003-01-02 3pm'), end_at: Time.zone.parse('2003-01-03 4pm')
+        )
         @e4 = Event.new(start_at: Time.zone.parse('2003-01-03 4pm'))
         presenter = CalendarMonthPresenter.new(year: 2003, month: 1, events: [@e1, @e2, @e3, @e4])
         @first_day_events = presenter.get_day_events(Date.parse('2003-01-01'))
@@ -422,7 +427,11 @@ describe CalendarMonthPresenter do
       presenter = CalendarMonthPresenter.new(view: view, events: events)
       result = presenter.present_day_events_list(events)
       expect( result ).to match(
-        /\A<ul>[\r\n]*<li><a href="#{path}"[^>]*>6:30pm: Event 1<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 2<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 3<\/a><\/li>[\r\n]*<\/ul>\z/
+        /\A<ul>[\r\n]*
+        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 1<\/a><\/li>[\r\n]+
+        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 2<\/a><\/li>[\r\n]+
+        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 3<\/a><\/li>[\r\n]*
+        <\/ul>\z/x
       )
     end
   end

@@ -1,5 +1,6 @@
 require 'image'
 
+# Access Images.
 class ImagesController < ApplicationController
   before_action :set_user
   before_action :set_image, except: [:index, :new, :create]
@@ -14,7 +15,8 @@ class ImagesController < ApplicationController
   end
 
   def show
-    page_metadata(title: 'Image' + (@image.title? ? " “#{@image.title}”" : ''), description: @image.description)
+    title = 'Image' + (@image.title? ? " “#{@image.title}”" : '')
+    page_metadata(title: title, description: @image.description)
   end
 
   def new

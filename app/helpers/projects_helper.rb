@@ -1,3 +1,4 @@
+# Helpers available to project views.
 module ProjectsHelper
   def project_smart_path(project)
     if project.filename?

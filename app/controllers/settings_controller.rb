@@ -1,3 +1,4 @@
+# Administer site-wide Settings.
 class SettingsController < ApplicationController
   before_action :set_setting, except: [:initialize_defaults, :index, :new, :create]
   before_action :requires_view_authority, only: [:index, :show]
@@ -11,7 +12,7 @@ class SettingsController < ApplicationController
   # Currently, just the global_start_date.
   def initialize_defaults
     Setting.set_defaults(
-      {:global_start_date => Time.now.to_date}.merge((params[:settings] || {}))
+      { global_start_date: Time.now.to_date }.merge((params[:settings] || {}))
     )
     flash.notice = 'Settings have been initialized to defaults (where not already set).'
     redirect_to settings_url

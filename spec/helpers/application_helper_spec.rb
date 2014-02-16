@@ -50,7 +50,14 @@ describe ApplicationHelper do
       @default_max = 20
       @source_total = 42
       @selected_total = 10
-      helper.show_pagination_selector.should match /<p class="pagination">Pages:\s*<a [^>]+>First<\/a>\s*<a [^>]+>1<\/a>\s*<a [^>]+>2<\/a>\s*<a [^>]+>3<\/a>\s*<a [^>]+>4<\/a>\s*<a [^>]+>5<\/a>\s*<a [^>]+>Last<\/a>\s*<\/p>/
+      expect(helper.show_pagination_selector).to match(
+        /<p\ class="pagination">Pages:\s*
+        <a\ [^>]+>First<\/a>\s*
+        <a\ [^>]+>1<\/a>\s*<a\ [^>]+>2<\/a>\s*<a\ [^>]+>3<\/a>\s*
+        <a\ [^>]+>4<\/a>\s*<a\ [^>]+>5<\/a>\s*
+        <a\ [^>]+>Last<\/a>\s*
+        <\/p>/x
+      )
     end
   end
 

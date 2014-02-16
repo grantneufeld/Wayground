@@ -29,7 +29,8 @@ class AuthoritiesController < ApplicationController
 
   # POST /authorities
   def create
-    @authority = Authority.build_from_params(authority_params: params[:authority], authorized_by: current_user)
+    authority_params = { authority_params: params[:authority], authorized_by: current_user }
+    @authority = Authority.build_from_params(authority_params)
     @user = @authority.user
     page_metadata(title: 'New Authority')
 
@@ -79,7 +80,7 @@ class AuthoritiesController < ApplicationController
 
   # Breadcrumbs for actions on this controller start with the index page.
   def set_site_location
-    @site_breadcrumbs = [{:text => 'Authorities', :url => authorities_path}]
+    @site_breadcrumbs = [{ text: 'Authorities', url: authorities_path }]
   end
 
   def requires_view_authority

@@ -161,8 +161,9 @@ module Wayground
         # assume there are no sub-elements
         while (line = get_next_line) && !(line =~ /^END:#{name}$/)
           # just record any timezone element attributes directly
-          if (match = line.match(/^([^:]+):(.+)$/))
-            element[match[1]] = {value: clean_string(match[2])}
+          match = line.match(/^([^:]+):(.+)$/)
+          if match
+            element[match[1]] = { value: clean_string(match[2]) }
           end
         end
         element

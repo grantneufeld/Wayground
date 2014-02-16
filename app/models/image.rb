@@ -11,7 +11,7 @@ class Image < ActiveRecord::Base
 
   has_many :image_variants, dependent: :delete_all
   accepts_nested_attributes_for :image_variants,
-    reject_if: lambda {|variant| variant[:url].blank? || variant[:style].blank? }, allow_destroy: true
+    reject_if: lambda { |variant| variant[:url].blank? || variant[:style].blank? }, allow_destroy: true
 
   validates :attribution_url, http_url: true, allow_blank: true
   validates :license_url, http_url: true, allow_blank: true

@@ -1,3 +1,4 @@
+# Access Projects.
 class ProjectsController < ApplicationController
   before_action :set_user
   before_action :set_project, except: [:index, :new, :create]

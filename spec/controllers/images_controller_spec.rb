@@ -7,7 +7,9 @@ describe ImagesController do
     Authority.delete_all
     @user_admin = User.first || FactoryGirl.create(:user, name: 'Admin User')
     @user_admin.make_admin!
-    @user_normal = User.where('users.id != ?', @user_admin.id).first || FactoryGirl.create(:user, name: 'Normal User')
+    @user_normal = (
+      User.where('users.id != ?', @user_admin.id).first || FactoryGirl.create(:user, name: 'Normal User')
+    )
   end
 
   def set_logged_in_admin

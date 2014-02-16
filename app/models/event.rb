@@ -85,7 +85,7 @@ class Event < ActiveRecord::Base
   }
   scope :tagged, ->(tag) {
     tag = Tag.new.taggify_text(tag)
-    joins(:tags).where(tags: {tag: tag})
+    joins(:tags).where(tags: { tag: tag })
   }
 
   before_create :set_timezone

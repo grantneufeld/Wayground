@@ -1,5 +1,6 @@
 # A stand-in for views when testing presenters.
-# TODO: find the better way to do this (I seem to recall seeing one once online, but have been unable to re-find it)
+# TODO: find the better way to mock/double view methods
+# (I seem to recall seeing one once online, but have been unable to re-find it)
 class ViewDouble
   def approve_event_path(event)
     '/events/123/approve'
@@ -61,7 +62,8 @@ class ViewDouble
 
   private
 
-  # copied from ERB::Util#html_escape in rails/activesupport/lib/active_support/core_ext/string/output_safety.rb
+  # copied from ERB::Util#html_escape in
+  # rails/activesupport/lib/active_support/core_ext/string/output_safety.rb
   HTML_ESCAPE = { '&' => '&amp;', '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "'" => '&#x27;' }
   def html_escape(s)
     s = s.to_s

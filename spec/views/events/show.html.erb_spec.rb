@@ -50,7 +50,9 @@ describe "events/show.html.erb" do
     ))
     render
     expect( rendered ).to match(
-      /<h2 class="cancelled summary"><span class="status" title="CANCELLED">Cancelled:<\/span>[ \r\n\t]+Title<\/h2>/
+      /<h2\ class="cancelled\ summary">
+      <span\ class="status"\ title="CANCELLED">Cancelled:<\/span>
+      [\ \r\n\t]+Title<\/h2>/x
     )
   end
 end

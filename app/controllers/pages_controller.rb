@@ -1,3 +1,4 @@
+# Manage “static” Pages.
 class PagesController < ApplicationController
   before_action :set_page, except: [:index, :new, :create]
   before_action :requires_create_authority, only: [:new, :create]

@@ -18,16 +18,29 @@ describe PathsController do
     controller.stub(:current_user).and_return(mock_user(stubs))
   end
   def mock_admin(stubs={})
-    @mock_admin ||= mock_model(User, {:id => 1, :email => 'test+mockadmin@wayground.ca', :name => 'The Admin', :has_authority_for_area => mock_admin_authority}.merge(stubs))
+    @mock_admin ||= mock_model(
+      User, {
+        id: 1, email: 'test+mockadmin@wayground.ca', name: 'The Admin',
+        has_authority_for_area: mock_admin_authority
+      }.merge(stubs)
+    )
   end
   def mock_user(stubs={})
-    @mock_user ||= mock_model(User, {:id => 2, :email => 'test+mockuser@wayground.ca', :name => 'A. User', :has_authority_for_area => nil}.merge(stubs))
+    @mock_user ||= mock_model(
+      User, {
+        id: 2, email: 'test+mockuser@wayground.ca', name: 'A. User', has_authority_for_area: nil
+      }.merge(stubs)
+    )
   end
   def mock_authority(stubs={})
-    @mock_authority ||= mock_model(Authority, {:area => 'Content', :user => @mock_user}.merge(stubs)).as_null_object
+    @mock_authority ||= mock_model(
+      Authority, { area: 'Content', user: @mock_user }.merge(stubs)
+    ).as_null_object
   end
   def mock_admin_authority(stubs={})
-    @mock_admin_authority ||= mock_model(Authority, {:area => 'Content', :is_owner => true, :user => @mock_admin}.merge(stubs)).as_null_object
+    @mock_admin_authority ||= mock_model(
+      Authority, { area: 'Content', is_owner: true, user: @mock_admin }.merge(stubs)
+    ).as_null_object
   end
 
   def mock_path(stubs={})

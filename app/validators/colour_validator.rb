@@ -17,7 +17,10 @@ class ColourValidator < ActiveModel::EachValidator
   end
 
   def css_color_names
-    %w(aqua black blue cyan fuchsia gray green lime magenta maroon navy olive purple red silver teal white yellow)
+    %w(
+      aqua black blue cyan fuchsia gray green lime magenta
+      maroon navy olive purple red silver teal white yellow
+    )
   end
 
 end

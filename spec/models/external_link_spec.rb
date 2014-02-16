@@ -92,8 +92,9 @@ describe ExternalLink do
         elink.valid?.should be_false
       end
       it "should fail if url is too long" do
-        elink = ExternalLink.new(:title => 'A', :url => 'http://url.test/' + ('c' * 1008)) # 1024 - 'http://url.test/'.size
-        elink.valid?.should be_false
+        elink = ExternalLink.new(title: 'A', url: 'http://url.test/' + ('c' * 1008))
+        # (1008 == 1024 - 'http://url.test/'.size)
+        expect(elink.valid?).to be_false
       end
     end
     describe "of position" do

@@ -15,7 +15,7 @@ class ExternalLink < ActiveRecord::Base
   validates_presence_of :item_type, :item_id, :on => :update
   validates_presence_of :title
   validates_length_of :title, :within => 1..255
-  validates :url, presence: true, length: {in: 1..1023}, http_url: true
+  validates :url, presence: true, length: { in: 1..1023 }, http_url: true
   validates_numericality_of :position, :only_integer => true, :greater_than => 0
 
   before_validation :set_default_position
@@ -79,7 +79,7 @@ class ExternalLink < ActiveRecord::Base
     # id
     attrs << " id=\"#{attributes[:id]}\"" unless attributes[:id].blank?
     # class
-    classes = [attributes[:class], site].delete_if {|val| val.blank?}
+    classes = [attributes[:class], site].delete_if { |val| val.blank? }
     class_str = classes.join(' ')
     attrs << " class=\"#{class_str}\"" unless class_str.blank?
     # the element tag

@@ -1,9 +1,10 @@
+# Helpers available to all views.
 module ApplicationHelper
   # Generate the errors report to show with a form.
   # item: the item to get the errors from
   # heading: the optional error message, shown as a heading above the list of errors
   def show_errors(item, heading=nil)
-    render partial: 'layouts/errors', locals: {item: item, heading: heading}
+    render partial: 'layouts/errors', locals: { item: item, heading: heading }
   end
 
   # Set the class of the main section of the page.
@@ -14,7 +15,7 @@ module ApplicationHelper
   # Generate the pagination header, telling the user where they are in the pagination.
   # item_plural: The pluralized name of the type of item (e.g., “documents”).
   def show_pagination_header(item_plural = nil)
-    render partial: 'layouts/pagination_header', locals: {item_plural: item_plural}
+    render partial: 'layouts/pagination_header', locals: { item_plural: item_plural }
   end
 
   # Generate the pagination selector (links to numbered pages), if there is more than one page.
@@ -36,15 +37,17 @@ module ApplicationHelper
       gsub(/([^\r\n])(\r\n?|\n)([^\r\n])/, '\1<br />\3'). # convert single line-breaks to br elements
       gsub(/([^\r\n])(\r\n?|\n)([^\r\n])/, '\1<br />\3'). # repeat because of my sloppy regexp
       gsub(/[\r\n][\r\n]+/, "\n"). # mush together all linebreak types into single linebreaks
-      gsub(/^(.+)$/, '<p>\1</p>' ). # convert remaining lines to paragraphs
+      gsub(/^(.+)$/, '<p>\1</p>'). # convert remaining lines to paragraphs
       html_safe # mark as safe html
   end
 
   # Convert a string to html, but only using line breaks (no block elements like paragraphs)
   def simple_text_to_html_breaks(text)
     CGI.escapeHTML(text.strip).
-      gsub(/(\r\n?(\r\n?)+|\n\n+)/, '<br /><br />'). # convert sequences of more than one line break to 2 br elements
-      gsub(/[\r\n]+/, '<br />'). # convert remaining line breaks to single br elements
+      # convert sequences of more than one line break to 2 br elements
+      gsub(/(\r\n?(\r\n?)+|\n\n+)/, '<br /><br />').
+      # convert remaining line breaks to single br elements
+      gsub(/[\r\n]+/, '<br />').
       html_safe
   end
 

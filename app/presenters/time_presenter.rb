@@ -1,5 +1,7 @@
 require 'html_presenter'
 
+# Methods for presenting times (and dates) in specific formats.
+# Includes microformats.
 class TimePresenter < HtmlPresenter
   attr_accessor :time
 
@@ -47,7 +49,7 @@ class TimePresenter < HtmlPresenter
 
   def microformat(params={}, &block)
     html_class = params[:html_class] || 'dtstart'
-    html_tag('time', {class: html_class, datetime: time.to_s(:microformat)}, &block)
+    html_tag('time', { class: html_class, datetime: time.to_s(:microformat) }, &block)
   end
 
 

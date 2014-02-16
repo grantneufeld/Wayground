@@ -1,3 +1,4 @@
+# Access Items and redirects by arbitrary url paths.
 class PathsController < ApplicationController
   before_action :set_path, except: [:sitepath, :index, :new, :create]
   before_action :requires_view_authority, only: [:show]
@@ -115,7 +116,7 @@ class PathsController < ApplicationController
 
   # Breadcrumbs for actions on this controller start with the index page.
   def set_breadcrumbs
-    @site_breadcrumbs = [{:text => 'Paths', :url => paths_path}]
+    @site_breadcrumbs = [{ text: 'Paths', url: paths_path }]
   end
 
   def set_new
@@ -139,9 +140,9 @@ class PathsController < ApplicationController
   end
 
   def render_item_as_page(item)
-      @page = item
-      page_metadata(title: @page.title, description: @page.description)
-      @site_breadcrumbs = @page.breadcrumbs
-      render template: 'paths/page'
+    @page = item
+    page_metadata(title: @page.title, description: @page.description)
+    @site_breadcrumbs = @page.breadcrumbs
+    render template: 'paths/page'
   end
 end

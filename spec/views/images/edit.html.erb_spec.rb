@@ -42,7 +42,9 @@ describe "images/edit.html.erb" do
       label_prefix = "image_image_variants_attributes_0_"
       name_prefix = "image[image_variants_attributes][0]"
       assert_select "input##{label_prefix}id", name: "#{name_prefix}[id]", type: 'hidden'
-      assert_select "input##{label_prefix}height", name: "#{name_prefix}[height]", type: 'number', value: '123'
+      assert_select(
+        "input##{label_prefix}height", name: "#{name_prefix}[height]", type: 'number', value: '123'
+      )
       assert_select "input##{label_prefix}width", name: "#{name_prefix}[width]", type: 'number', value: '234'
       assert_select "input##{label_prefix}format", name: "#{name_prefix}[format]", value: 'gif'
       assert_select "select##{label_prefix}style", name: "#{name_prefix}[style]" do

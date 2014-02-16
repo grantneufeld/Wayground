@@ -7,7 +7,13 @@ class TextCleaner
   # White-space runs.
   def self.clean(string)
     return nil if string.nil?
-    # clear trailing whitespace, leading whitespace, whitespace runs, excessive blank lines
-    string.gsub(/\r\n?/, "\n").gsub(/[ \t]+$/, '').gsub(/^[ \t]+/, '').gsub(/([ \t])[ \t]+/, '\1').gsub(/(\n\n)\n+/, '\1')
+    # clear trailing whitespace,
+    string.gsub(/\r\n?/, "\n").gsub(/[ \t]+$/, '').
+      # leading whitespace,
+      gsub(/^[ \t]+/, '').
+      # whitespace runs,
+      gsub(/([ \t])[ \t]+/, '\1').
+      # excessive blank lines.
+      gsub(/(\n\n)\n+/, '\1')
   end
 end

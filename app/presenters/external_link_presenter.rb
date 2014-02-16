@@ -32,7 +32,7 @@ class ExternalLinkPresenter < HtmlPresenter
     view.link_to(link.title, link.url, class: link_url_class, title: link.title, target: '_blank')
   end
 
-protected
+  protected
 
   def link_class
     if link.site.present?

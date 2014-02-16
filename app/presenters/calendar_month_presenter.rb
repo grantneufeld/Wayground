@@ -35,7 +35,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_week(week)
     html_tag_with_newline(:tr) do
-      view.safe_join(week.map {|day| present_day(day) })
+      view.safe_join(week.map { |day| present_day(day) })
     end
   end
 
@@ -101,7 +101,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_day_events_list(events_list)
     html_tag(:ul) do
-      view.safe_join(events_list.map {|event| present_event_in_list(event) })
+      view.safe_join(events_list.map { |event| present_event_in_list(event) })
     end
   end
 

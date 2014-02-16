@@ -4,7 +4,9 @@ describe DocumentsController do
   describe "routing" do
 
     it "routes to #download" do
-      get('/download/1/filename.txt').should route_to('documents#download', :id => '1', :filename => 'filename', :format => 'txt')
+      expect(get('/download/1/filename.txt')).to route_to(
+        'documents#download', id: '1', filename: 'filename', format: 'txt'
+      )
     end
 
     it "routes to #index" do

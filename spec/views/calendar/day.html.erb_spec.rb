@@ -43,7 +43,11 @@ describe "calendar/day.html.erb" do
       end
       it "should render the calendar heading" do
         render
-        expect( rendered ).to match /<h1>0 events on Monday, <a href="\/calendar\/2013\/03"[^>]*>March<\/a> 4, <a href="\/calendar\/2013"[^>]*>2013<\/a><\/h1>/
+        expect(rendered).to match(
+          /<h1>0\ events\ on\ Monday,
+          \ <a\ href="\/calendar\/2013\/03"[^>]*>March<\/a>\ 4,
+          \ <a\ href="\/calendar\/2013"[^>]*>2013<\/a><\/h1>/x
+        )
       end
       it "should not render any events" do
         render
@@ -64,7 +68,11 @@ describe "calendar/day.html.erb" do
       end
       it "should render the calendar heading" do
         render
-        expect( rendered ).to match /<h1>1 event on Monday, <a href="\/calendar\/2013\/03"[^>]*>March<\/a> 4, <a href="\/calendar\/2013"[^>]*>2013<\/a><\/h1>/
+        expect(rendered).to match(
+          /<h1>1\ event\ on\ Monday,
+          \ <a\ href="\/calendar\/2013\/03"[^>]*>March<\/a>\ 4,
+          \ <a\ href="\/calendar\/2013"[^>]*>2013<\/a><\/h1>/x
+        )
       end
     end
     context "with multiple events" do
@@ -73,7 +81,11 @@ describe "calendar/day.html.erb" do
       end
       it "should render the calendar heading" do
         render
-        expect( rendered ).to match /<h1>2 events on Monday, <a href="\/calendar\/2013\/03"[^>]*>March<\/a> 4, <a href="\/calendar\/2013"[^>]*>2013<\/a><\/h1>/
+        expect(rendered).to match(
+          /<h1>2\ events\ on\ Monday,
+          \ <a\ href="\/calendar\/2013\/03"[^>]*>March<\/a>\ 4,
+          \ <a\ href="\/calendar\/2013"[^>]*>2013<\/a><\/h1>/x
+        )
       end
     end
     it "should not show the new event action" do
@@ -92,8 +104,10 @@ describe "calendar/day.html.erb" do
         @event1.stub(:has_authority_for_user_to?).and_return(true)
         @event1.stub(:is_approved?).and_return(false)
         render
-        expect( rendered ).to match(
-          /<a (?:|[^>]+ )href="\/events\/123\/edit"[^•]+<a (?:|[^>]+ )href="\/events\/123\/approve"[^•]+<a (?:|[^>]+ )href="\/events\/123\/delete"[^•]+/
+        expect(rendered).to match(
+          /<a\ (?:|[^>]+\ )href="\/events\/123\/edit"[^•]+
+          <a\ (?:|[^>]+\ )href="\/events\/123\/approve"[^•]+
+          <a\ (?:|[^>]+\ )href="\/events\/123\/delete"[^•]+/x
         )
       end
     end

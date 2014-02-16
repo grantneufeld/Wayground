@@ -17,7 +17,12 @@ ActiveRecord::Base.class_eval do
   #    E.g., Path (custom url) gets it’s authority info through it’s item (typically a Page).
   def self.acts_as_authority_controlled(options={})
     # check if already loaded
-    return if self.included_modules.include?(AuthorityControlled::InstanceMethods) || self.included_modules.include?(AuthorityControlled::InheritInstanceMethods)
+    if (
+      self.included_modules.include?(AuthorityControlled::InstanceMethods) ||
+      self.included_modules.include?(AuthorityControlled::InheritInstanceMethods)
+    )
+      return
+    end
 
     inherits_from = options[:inherits_from]
 
@@ -34,7 +39,7 @@ ActiveRecord::Base.class_eval do
           true
         end
       end
-    # TODO: implement the following chunk of code when there’s a class that needs non-private viewable items (e.g., Page)
+    # TODO: implement the following when there’s a class that needs non-private viewable items (e.g., Page)
     elsif options[:item_authority_flag_field] == :always_viewable
       # use the default methods set on ActiveRecord
     else
@@ -51,7 +56,8 @@ ActiveRecord::Base.class_eval do
     # define the authority area for the model
     option_area = options[:authority_area]
     if option_area == 'global'
-      raise Wayground::ModelAuthorityAreaCannotBeGlobal, 'cannot use "global" as an authority area, it is reserved'
+      raise Wayground::ModelAuthorityAreaCannotBeGlobal,
+        'cannot use "global" as an authority area, it is reserved'
     elsif option_area.present?
       # override the authority area for the class
       class_eval "
@@ -145,6 +151,7 @@ end
 
 # Additions for classes to be set up as Authority controlled.
 module AuthorityControlled
+  # Standard instance methods for authority controlled models.
   module InstanceMethods
     # action_type = :can_create, :can_view, :can_update, :can_delete, :can_invite, :can_permit, :can_approve
 

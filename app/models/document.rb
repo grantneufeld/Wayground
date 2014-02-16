@@ -17,18 +17,21 @@ class Document < ActiveRecord::Base
   before_save :generate_path
   before_update :update_path
 
-  # TODO: use a helper/module to specify filename validations since the same validations occur across multiple models
+  # TODO: create a validator class for filenames with extensions
   validates_length_of :filename, :within => 1..127
   validates_format_of :filename,
-    :with=>/\A(\/|([\w_~\+\-]+)(\.[\w_]+)?\/?)\z/,
-    :message=>'must only be letters, numbers, dashes and underscores, with an optional extension; e.g., “a-filename_1.txt”'
+    with: /\A(\/|([\w_~\+\-]+)(\.[\w_]+)?\/?)\z/,
+    message: (
+      'must only be letters, numbers, dashes and underscores, with an optional extension;' +
+      ' e.g., “a-filename_1.txt”'
+    )
   validates_presence_of :content_type
   validates_format_of :content_type, :with => /\A[a-z\-]+\/[a-z\+\-]+\z/,
     :message => "is not a valid content type"
   # require data to be set, but allow it to be empty
-  validates_presence_of :datastore, :unless => Proc.new {|doc| doc.data == ''}
+  validates_presence_of :datastore, unless: Proc.new { |doc| doc.data == '' }
 
-  # TODO: try to figure out a way to genericize the for_user scope so it can come from the authority_controlled library instead
+  # TODO: genericize the for_user scope so it can come from the authority_controlled library instead
   scope :for_user, lambda { |user|
     if user.nil?
       # if anonymous user, don’t allow any authority controlled documents
@@ -167,9 +170,9 @@ class Document < ActiveRecord::Base
     })
     # set Cache-control to “private/public, max-age=?, no-transform” where max-age is in seconds
     if is_authority_restricted?
-      cache_params = {:max_age => 30.minutes, :public => false}
+      cache_params = { max_age: 30.minutes, public: false }
     else
-      cache_params = {:max_age => 1.day, :public => true}
+      cache_params = { max_age: 1.day, public: true }
     end
     response.cache_control.merge!(cache_params.merge!(:extras => ['no-transform']))
   end

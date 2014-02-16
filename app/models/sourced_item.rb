@@ -19,7 +19,10 @@ class SourcedItem < ActiveRecord::Base
 
   # last_sourced_at should not be set in the future.
   def validate_dates
-    if last_sourced_at? && source.present? && source.last_updated_at? && (last_sourced_at.to_datetime > source.last_updated_at.to_datetime)
+    if (
+      last_sourced_at? && source.present? && source.last_updated_at? &&
+      (last_sourced_at.to_datetime > source.last_updated_at.to_datetime)
+    )
       errors.add(:last_sourced_at, 'must not be after the last update of the source')
     end
   end

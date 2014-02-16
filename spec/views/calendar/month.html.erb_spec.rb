@@ -54,7 +54,9 @@ describe "calendar/month.html.erb" do
     end
     it "should render the event on the 14th" do
       render
-      expect( rendered ).to match /<a href="\/events\/#{@event.id}" title="6pm: Test Event">6pm: Test Event<\/a>/
+      expect(rendered).to match(
+        /<a href="\/events\/#{@event.id}" title="6pm: Test Event">6pm: Test Event<\/a>/
+      )
     end
   end
   context "with an admin user" do

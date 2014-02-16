@@ -112,7 +112,8 @@ describe ExternalLinkPresenter do
   describe '#present_link' do
     it 'should generate an “a” tag' do
       expect( presenter.present_link ).to eq(
-        '<a href="http://external.link/" class="url website" title="External Link" target="_blank">External Link</a>'
+        '<a href="http://external.link/" class="url website" title="External Link" target="_blank">' +
+        'External Link</a>'
       )
     end
   end

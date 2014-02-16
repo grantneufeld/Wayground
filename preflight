@@ -60,7 +60,7 @@ echo "Generating cane report..."
 bundle exec cane --style-measure 110 --parallel > reports/cane.txt
 echo ""
 echo "Generating churn report..."
-bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,preflight,spec/factories.rb,README.rdoc" > reports/churn.txt
+bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,preflight,spec/factories.rb,README.md" > reports/churn.txt
 echo ""
 echo "Generating flay reports..."
 bundle exec rake flay:app > reports/flay-app.txt

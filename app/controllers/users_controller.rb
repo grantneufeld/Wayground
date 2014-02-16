@@ -37,16 +37,17 @@ class UsersController < ApplicationController
 
   def confirm
     if @user.email_confirmed
-      message = {:notice => "Your email address was already confirmed."}
+      message = { notice: "Your email address was already confirmed." }
     elsif @user.confirm_code!(params[:confirmation_code])
-      message = {:notice => "Thank-you for confirming your email address."}
+      message = { notice: "Thank-you for confirming your email address." }
     else
-      message = {:alert => "Invalid confirmation code. Your email has not been confirmed."}
+      message = { alert: "Invalid confirmation code. Your email has not been confirmed." }
     end
     redirect_to account_url, message
   rescue
-    redirect_to account_url, :status => 500,
-      :alert => "We are sorry. There was a problem while trying to update your information. Please try again or contact a system administrator."
+    redirect_to account_url, status: 500,
+      alert: "We are sorry. There was a problem while trying to update your information. " +
+        "Please try again or contact a system administrator."
   end
 
 
@@ -73,7 +74,7 @@ class UsersController < ApplicationController
 
   # Breadcrumbs for actions on this controller start with the index page.
   def set_site_location
-    @site_breadcrumbs = [{:text => 'Users', :url => account_path}]
+    @site_breadcrumbs = [{ text: 'Users', url: account_path }]
   end
 
   def cant_be_signed_in

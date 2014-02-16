@@ -1,3 +1,5 @@
+# Common methods for presenting textual content in html format.
+# Generally used as a parent class for other presenters.
 class HtmlPresenter
 
   # Generate an html tag with a newline appended.
