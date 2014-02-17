@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
 
   # validation conditionals
   def local_authentication_required?
-    authentications[0].nil?
+    !(authentications[0])
   end
   def password_present?
     password.present?
@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
   # If the timezone is set for a user, it must be valid.
   # TODO: make this some kind of helper since it shows up in both the User and Event models.
   def validate_timezone
-    if timezone.present? && ActiveSupport::TimeZone[timezone].nil?
+    if timezone.present? && !(ActiveSupport::TimeZone[timezone])
       errors.add(:timezone, 'must be a recognized timezone name')
     end
   end
@@ -136,7 +136,7 @@ class User < ActiveRecord::Base
   def make_admin!(area = 'global', authorizing_user = nil)
     authority = self.authorizations.for_area(area).first
     if authority
-      authority.authorized_by = authorizing_user unless authorizing_user.nil?
+      authority.authorized_by = authorizing_user if authorizing_user
       authority.update!(
         :is_owner => true, :can_create => true, :can_view => true,
         :can_update => true, :can_delete => true, :can_invite => true,
@@ -180,7 +180,7 @@ class User < ActiveRecord::Base
   end
 
   def has_authority_for_area(area, action_type = :can_view)
-    if action_type.nil?
+    if !action_type
       self.authorizations.for_area_or_global(area).first
     elsif action_type == :is_owner
       self.authorizations.for_area_or_global(area).where_owner.first

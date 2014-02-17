@@ -100,8 +100,9 @@ class PagesController < ApplicationController
   def set_new_page
     page_metadata(title: 'New Page')
     @page = Page.new(params[:page])
-    if params[:parent].present?
-      @page.parent = Page.find(params[:parent])
+    parent_id = params[:parent]
+    if parent_id.present?
+      @page.parent = Page.find(parent_id)
       @site_breadcrumbs = @page.breadcrumbs
     end
   end

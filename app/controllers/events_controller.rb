@@ -1,4 +1,5 @@
 require 'event/day_events'
+require 'event/event_selector'
 
 # Access events.
 class EventsController < ApplicationController
@@ -13,29 +14,11 @@ class EventsController < ApplicationController
   before_action :set_editor, only: [:create, :update, :destroy, :approve, :merge, :perform_merge]
 
   def index
-    @range = params[:r]
-    case @range
-    when 'all'
-      title = 'Events'
-      @events = Event.where(nil)
-    when 'past'
-      title = 'Events: Past'
-      @events = Event.past
-    else
-      title = 'Events: Upcoming'
-      @events = Event.upcoming
-      @range = nil
-    end
-    unless @user && @user.has_authority_for_area(Event.authority_area, :can_approve)
-      @events = @events.approved
-    end
-    @tag = params[:tag]
-    if @tag.present?
-      @events = @events.tagged(@tag)
-      title += " (tagged “#{@tag}”)"
-    end
-    # TODO: paginate Events#index
-    page_metadata(title: title)
+    selector = Wayground::Event::EventSelector.new(params.merge(user: @user))
+    @events = selector.events
+    @range = selector.range
+    @tag = selector.tag
+    page_metadata(title: selector.title)
   end
 
   def show
@@ -43,14 +26,15 @@ class EventsController < ApplicationController
       title: "#{@event.start_at.to_s(:simple_date)}: #{@event.title}", description: @event.description
     )
     if @event.is_cancelled
-      flash.now.alert = 'This event has been cancelled.'
+      message = 'This event has been cancelled.'
     elsif @event.is_tentative
-      flash.now.alert = 'This event is tentative.'
+      message = 'This event is tentative.'
     end
     unless @event.is_approved?
       page_metadata.nocache = true
-      flash.now.alert = 'This event listing has not been approved by a moderator yet.'
+      message = 'This event listing has not been approved by a moderator yet.'
     end
+    flash.now.alert = message if message
   end
 
   def new

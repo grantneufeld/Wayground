@@ -124,6 +124,18 @@ class Authority < ActiveRecord::Base
   def merge_into!(destination_authority)
     raise TypeError unless destination_authority.is_a? Authority
     raise Wayground::UserMismatch unless destination_authority.user == user
+    merge_values(destination_authority)
+    if destination_authority.save
+      self.destroy
+      true
+    else
+      false
+    end
+  end
+
+  private
+
+  def merge_values(destination_authority)
     destination_authority.is_owner ||= is_owner
     destination_authority.can_create ||= can_create
     destination_authority.can_view ||= can_view
@@ -132,12 +144,6 @@ class Authority < ActiveRecord::Base
     destination_authority.can_invite ||= can_invite
     destination_authority.can_permit ||= can_permit
     destination_authority.can_approve ||= can_approve
-    if destination_authority.save
-      self.destroy
-      true
-    else
-      false
-    end
   end
 
 end

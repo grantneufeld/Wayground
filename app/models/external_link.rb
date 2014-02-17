@@ -26,9 +26,9 @@ class ExternalLink < ActiveRecord::Base
   # if it is not already set.
   def set_default_position
     # only set the position if it isn’t already set
-    if position.nil?
+    unless position
       new_position = 1
-      unless item.nil?
+      if item
         # get the external link on the item that has the highest position
         last_link = item.external_links.order('position DESC').first
         if last_link
@@ -77,7 +77,8 @@ class ExternalLink < ActiveRecord::Base
   def to_html(attributes = {})
     attrs = []
     # id
-    attrs << " id=\"#{attributes[:id]}\"" unless attributes[:id].blank?
+    attributes_id = attributes[:id]
+    attrs << " id=\"#{attributes_id}\"" unless attributes_id.blank?
     # class
     classes = [attributes[:class], site].delete_if { |val| val.blank? }
     class_str = classes.join(' ')

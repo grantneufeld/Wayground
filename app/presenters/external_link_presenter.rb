@@ -25,18 +25,21 @@ class ExternalLinkPresenter < HtmlPresenter
   end
 
   def present_link_as_url_class
-    view.link_to(link.title, link.url, class: 'url', title: link.title, target: '_blank')
+    link_title = link.title
+    view.link_to(link_title, link.url, class: 'url', title: link_title, target: '_blank')
   end
 
   def present_link
-    view.link_to(link.title, link.url, class: link_url_class, title: link.title, target: '_blank')
+    link_title = link.title
+    view.link_to(link_title, link.url, class: link_url_class, title: link_title, target: '_blank')
   end
 
   protected
 
   def link_class
-    if link.site.present?
-      html_escape(link.site)
+    link_site = link.site
+    if link_site.present?
+      html_escape(link_site)
     else
       'website'.html_safe
     end

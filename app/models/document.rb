@@ -64,11 +64,11 @@ class Document < ActiveRecord::Base
   }
 
   def determine_size
-    self.size = (data.nil? ? 0 : data.size)
+    self.size = (data ? data.size : 0)
   end
 
   def generate_path(sitepath = nil)
-    if container_path.present? && path.nil?
+    if container_path.present? && !path
       self.path = Path.new(:sitepath => (sitepath || calculate_sitepath))
       path.item = self
     end
@@ -76,7 +76,7 @@ class Document < ActiveRecord::Base
 
   def update_path
     sitepath = calculate_sitepath
-    if sitepath.nil?
+    if !sitepath
       if path
         path.destroy
         self.path = nil

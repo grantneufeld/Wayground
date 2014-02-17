@@ -24,14 +24,14 @@ class Page < ActiveRecord::Base
   validates_presence_of :title
 
   def generate_path
-    if self.path.nil?
+    unless path
       self.path = Path.new(:sitepath => self.calculate_sitepath)
       self.path.item = self
     end
   end
 
   def update_path
-    if self.path.nil?
+    if !(path)
       generate_path
     else
       self.path.update!(sitepath: self.calculate_sitepath)
@@ -60,7 +60,7 @@ class Page < ActiveRecord::Base
   end
 
   def sitepath
-    path.sitepath unless path.nil?
+    path.sitepath if path
   end
 
 end

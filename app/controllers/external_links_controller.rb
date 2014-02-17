@@ -83,9 +83,8 @@ class ExternalLinksController < ApplicationController
 
   # all actions for this controller should have an item that the external link(s) are attached to.
   def set_item
-    if params[:event_id].present?
-      @item = Event.find(params[:event_id])
-    end
+    event_id = params[:event_id]
+    @item = Event.find(event_id) if event_id.present?
     missing unless @item
   end
 

@@ -43,14 +43,7 @@ class Source < ActiveRecord::Base
 
   # Run the processor defined by this Source.
   def run_processor(user = nil, approve = false)
-    case processor
-    when 'iCalendar'
-      run_icalendar_processor(user, approve)
-    when 'IcalProcessor'
-      run_icalendar_processor(user, approve)
-    else
-      nil
-    end
+    run_icalendar_processor(user, approve) if %w(iCalendar IcalProcessor).include?(processor)
   end
 
   def run_icalendar_processor(user, approve)

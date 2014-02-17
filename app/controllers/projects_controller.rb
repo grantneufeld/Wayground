@@ -83,11 +83,12 @@ class ProjectsController < ApplicationController
 
   # Most of the actions for this controller receive the id of an Project as a parameter.
   def set_project
-    if params[:projecturl].present?
-      if params[:projecturl].match /\A[0-9]+\z/
-        @project = Project.find(params[:projecturl].to_i)
+    project_url = params[:projecturl]
+    if project_url.present?
+      if project_url.match /\A[0-9]+\z/
+        @project = Project.find(project_url.to_i)
       else
-        @project = Project.where(filename: params[:projecturl]).first
+        @project = Project.where(filename: project_url).first
       end
     else
       @project = Project.find(params[:id])

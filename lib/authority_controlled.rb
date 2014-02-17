@@ -32,6 +32,13 @@ ActiveRecord::Base.class_eval do
         def is_authority_restricted?
           self.#{inherits_from}.present? && self.#{inherits_from}.is_authority_restricted?
         end
+        def authority_area
+          if self.#{inherits_from}
+            self.#{inherits_from}.authority_area
+          else
+            self.class.authority_area
+          end
+        end
       "
     elsif options[:item_authority_flag_field] == :always_private
       class_eval do
@@ -67,17 +74,6 @@ ActiveRecord::Base.class_eval do
     else
       # just fall back on the authority_area method inherited from ActiveRecord (defined below)
     end
-    if inherits_from.present?
-      class_eval "
-        def authority_area
-          if self.#{inherits_from}
-            self.#{inherits_from}.authority_area
-          else
-            self.class.authority_area
-          end
-        end
-      "
-    end
 
     class_eval do
       # FIXME: make this work with scopes somehow so it can be used with restrictions like order and where
@@ -111,15 +107,15 @@ ActiveRecord::Base.class_eval do
   end
 
   def self.allowed_for_user(user = nil, action = :can_view)
-    if user.nil?
-      action == :can_view ? all : []
-    else
+    if user
       # TODO: there is probably a more efficient way to do this
       items = []
       all.each do |item|
         items << item if item.has_authority_for_user_to?(user, action)
       end
       items
+    else
+      action == :can_view ? all : []
     end
   end
 

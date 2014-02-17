@@ -39,7 +39,7 @@ module Wayground
       private
 
       def create_authentication!
-        if current_user.nil?
+        unless current_user
           user = user_class.new(name: auth_name, email: user_info['email'])
           self.current_user = user
         end
@@ -69,7 +69,8 @@ module Wayground
       def url_from_provider
         case provider
         when 'facebook'
-          auth['urls']['Facebook'] if auth['urls'].present?
+          urls = auth['urls']
+          urls['Facebook'] if urls.present?
         when 'twitter'
           "https://twitter.com/#{user_info['nickname']}"
         else

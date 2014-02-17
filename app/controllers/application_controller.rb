@@ -81,17 +81,15 @@ class ApplicationController < ActionController::Base
   # @selected_total: The number of items being displayed on the page.
   def paginate(source)
     @default_max ||= 20
-    @max = params[:max].to_i if params[:max].present?
+    @max = params[:max]
+    @max = @max.to_i if @max
     @max ||= @default_max
-    @pagenum = params[:page].to_i if params[:page].present?
-    @pagenum ||= 1
-    @pagenum = 1 if @pagenum < 1
+    @pagenum = pagenum_from_param(params[:page])
     @source_total = source.count
     items = source.limit(@max).offset((@pagenum - 1) * @max)
     @selected_total = items.size
     items
   end
-
 
   private
 
@@ -104,4 +102,16 @@ class ApplicationController < ActionController::Base
   def current_user=(user)
     @current_user = user
   end
+
+  # determine which page number to use, for pagination
+  def pagenum_from_param(page_param)
+    pagenum = page_param
+    if pagenum
+      pagenum = pagenum.to_i
+      pagenum = 1 if pagenum < 1
+    end
+    pagenum ||= 1
+    pagenum
+  end
+
 end

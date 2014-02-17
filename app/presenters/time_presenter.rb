@@ -18,9 +18,10 @@ class TimePresenter < HtmlPresenter
   end
 
   def brief_just_the_hour
-    if time.hour == 0
+    hour = time.hour
+    if hour == 0
       'midnight'.html_safe
-    elsif time.hour == 12
+    elsif hour == 12
       'noon'.html_safe
     else
       time.strftime('%l%P').strip.html_safe

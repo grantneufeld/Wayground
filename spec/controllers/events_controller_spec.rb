@@ -47,9 +47,9 @@ describe EventsController do
       get :index
       assigns(:events).should eq([@event1, @event2])
     end
-    it "should assign nil to @range" do
+    it "should assign nil to @range the default “upcoming”" do
       get :index, {}
-      expect( assigns(:range) ).to be_nil
+      expect(assigns(:range)).to eq 'upcoming'
     end
     context "past events" do
       it "assigns all approved past events as @events" do
