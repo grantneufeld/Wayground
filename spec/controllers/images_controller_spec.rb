@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'images_controller'
 
@@ -8,14 +7,16 @@ describe ImagesController do
     Authority.delete_all
     @user_admin = User.first || FactoryGirl.create(:user, name: 'Admin User')
     @user_admin.make_admin!
-    @user_normal = User.where('users.id != ?', @user_admin.id).first || FactoryGirl.create(:user, name: 'Normal User')
+    @user_normal = (
+      User.where('users.id != ?', @user_admin.id).first || FactoryGirl.create(:user, name: 'Normal User')
+    )
   end
 
   def set_logged_in_admin
-    controller.stub!(:current_user).and_return(@user_admin)
+    controller.stub(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub!(:current_user).and_return(@user_normal)
+    controller.stub(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) { $valid_attributes = {} }

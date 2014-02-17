@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe VersionsController do
@@ -25,7 +24,7 @@ describe VersionsController do
       version = page.versions.first
       user = version.user
       FactoryGirl.create(:owner_authority, item: page, user: user)
-      controller.stub!(:current_user).and_return(user)
+      controller.stub(:current_user).and_return(user)
       get :index, page_id: page.id
       expect( assigns(:versions).to_a ).to eq(page.versions.to_a)
     end

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'url_cleaner'
 require 'http_url_validator'
 
@@ -16,7 +15,7 @@ class ExternalLink < ActiveRecord::Base
   validates_presence_of :item_type, :item_id, :on => :update
   validates_presence_of :title
   validates_length_of :title, :within => 1..255
-  validates :url, presence: true, length: {in: 1..1023}, http_url: true
+  validates :url, presence: true, length: { in: 1..1023 }, http_url: true
   validates_numericality_of :position, :only_integer => true, :greater_than => 0
 
   before_validation :set_default_position
@@ -27,9 +26,9 @@ class ExternalLink < ActiveRecord::Base
   # if it is not already set.
   def set_default_position
     # only set the position if it isn’t already set
-    if position.nil?
+    unless position
       new_position = 1
-      unless item.nil?
+      if item
         # get the external link on the item that has the highest position
         last_link = item.external_links.order('position DESC').first
         if last_link
@@ -78,9 +77,10 @@ class ExternalLink < ActiveRecord::Base
   def to_html(attributes = {})
     attrs = []
     # id
-    attrs << " id=\"#{attributes[:id]}\"" unless attributes[:id].blank?
+    attributes_id = attributes[:id]
+    attrs << " id=\"#{attributes_id}\"" unless attributes_id.blank?
     # class
-    classes = [attributes[:class], site].delete_if {|val| val.blank?}
+    classes = [attributes[:class], site].delete_if { |val| val.blank? }
     class_str = classes.join(' ')
     attrs << " class=\"#{class_str}\"" unless class_str.blank?
     # the element tag

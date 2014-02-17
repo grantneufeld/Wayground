@@ -1,5 +1,4 @@
-# encoding: utf-8
-
+# Manage “static” Pages.
 class PagesController < ApplicationController
   before_action :set_page, except: [:index, :new, :create]
   before_action :requires_create_authority, only: [:new, :create]
@@ -101,8 +100,9 @@ class PagesController < ApplicationController
   def set_new_page
     page_metadata(title: 'New Page')
     @page = Page.new(params[:page])
-    if params[:parent].present?
-      @page.parent = Page.find(params[:parent])
+    parent_id = params[:parent]
+    if parent_id.present?
+      @page.parent = Page.find(parent_id)
       @site_breadcrumbs = @page.breadcrumbs
     end
   end

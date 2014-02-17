@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'factory_girl'
 
 FactoryGirl.define do
@@ -122,7 +121,8 @@ FactoryGirl.define do
   factory :source do
     processor 'iCalendar'
     url       'test://factory.tld/factory.ics'
-    method    'get'
+    # FIXME: change `Source#method` to `Source#http_method` to avoid method name collisions
+    #method    'get'
     sequence(:title) { |n| "Factory Source #{n}" }
   end
 

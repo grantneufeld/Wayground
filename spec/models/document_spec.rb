@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe Document do
@@ -70,7 +69,9 @@ describe Document do
         document.valid?.should be_true
       end
       it "should allow letters, numbers, dashes, underscores and a file extension in the filename" do
-        document = Document.new(:custom_filename => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz_01234567.89')
+        document = Document.new(
+          custom_filename: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz_01234567.89'
+        )
         document.content_type = 'text/plain'
         document.data = ''
         document.valid?.should be_true
@@ -113,11 +114,11 @@ describe Document do
       @admin = FactoryGirl.create(:user)
       @admin.make_admin!
       @user = FactoryGirl.create(:user)
-      @admin_doc = FactoryGirl.create(:document, :filename => 'admin', :is_authority_controlled => true)
-      @controlled_doc = FactoryGirl.create(:document, :filename => 'controlled', :is_authority_controlled => true)
+      @admin_doc = FactoryGirl.create(:document, filename: 'admin', is_authority_controlled: true)
+      @controlled_doc = FactoryGirl.create(:document, filename: 'controlled', is_authority_controlled: true)
       @user.set_authority_on_item(@controlled_doc)
-      @public_doc = FactoryGirl.create(:document, :filename => 'public')
-      @user_doc = FactoryGirl.create(:document, :filename => 'user', :is_authority_controlled => true, :user => @user)
+      @public_doc = FactoryGirl.create(:document, filename: 'public')
+      @user_doc = FactoryGirl.create(:document, filename: 'user', is_authority_controlled: true, user: @user)
     end
     it "should find everything for admins" do
       Document.for_user(@admin).order(:filename).should eq [

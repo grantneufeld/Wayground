@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'image'
 require 'http_url_validator'
@@ -11,8 +10,8 @@ class ImageVariant < ActiveRecord::Base
 
   # can’t require the image to be set before initial save when using nested attribute forms
   validates :image_id, presence: true, on: :update
-  validates :height, numericality: {only_integer: true, greater_than: 0}, allow_nil: true
-  validates :width, numericality: {only_integer: true, greater_than: 0}, allow_nil: true
+  validates :height, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  validates :width, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :format, presence: true
   validates :style, presence: true # original scaled preview? square?
   validates :url, presence: true, http_url: true

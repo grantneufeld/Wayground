@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Sources for data, linking to processors to use to generate local items from that data.
 # Types of sources might include RSS feeds, iCalendars, APIs, microformat scrapings, etc.
 # May be dynamically maintained so the local items generated from the Source
@@ -45,14 +43,7 @@ class Source < ActiveRecord::Base
 
   # Run the processor defined by this Source.
   def run_processor(user = nil, approve = false)
-    case processor
-    when 'iCalendar'
-      run_icalendar_processor(user, approve)
-    when 'IcalProcessor'
-      run_icalendar_processor(user, approve)
-    else
-      nil
-    end
+    run_icalendar_processor(user, approve) if %w(iCalendar IcalProcessor).include?(processor)
   end
 
   def run_icalendar_processor(user, approve)

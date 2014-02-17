@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'html_presenter'
 require 'date'
 require 'time_presenter'
@@ -28,7 +27,7 @@ class EventPresenter < HtmlPresenter
     classes = []
     classes << 'cancelled'.html_safe if event.is_cancelled?
     classes << 'tentative'.html_safe if event.is_tentative?
-    (classes.size > 0) ? {class: classes} : {}
+    (classes.size > 0) ? { class: classes } : {}
   end
 
   def present_status
@@ -103,7 +102,7 @@ class EventPresenter < HtmlPresenter
     chunks = [
       present_minimal_location, present_description, present_organizer, present_action_menu
     ]
-    chunks.reject! {|chunk| chunk.empty? }
+    chunks.reject! { |chunk| chunk.empty? }
     view.safe_join(chunks, newline + html_tag(:br))
   end
 
@@ -189,7 +188,7 @@ class EventPresenter < HtmlPresenter
   # city, province, country
   def present_location_region
     elements = [present_location_city, present_location_province, present_location_country]
-    elements.delete_if {|item| item.blank? }
+    elements.delete_if { |item| item.blank? }
     view.safe_join(elements, ', '.html_safe)
   end
 
@@ -238,7 +237,7 @@ class EventPresenter < HtmlPresenter
 
   def present_action_menu
     actions = [present_edit_action, present_approve_action, present_delete_action]
-    actions.reject! {|action| action == '' }
+    actions.reject! { |action| action == '' }
     unless actions.empty?
       view.safe_join(actions, view.separator + newline)
     else
@@ -264,7 +263,7 @@ class EventPresenter < HtmlPresenter
 
   def append_approve_action_link
     view.link_to('Approve', view.approve_event_path(event),
-      data: {confirm: "Are you sure you want to approve the event “#{event.title}”?"},
+      data: { confirm: "Are you sure you want to approve the event “#{event.title}”?" },
       method: :post, class: 'action'
     )
   end
@@ -272,7 +271,7 @@ class EventPresenter < HtmlPresenter
   def present_delete_action
     if user && event.has_authority_for_user_to?(user, :can_delete)
       view.link_to('Delete', [:delete, event],
-        data: {confirm: 'Are you sure?'}, method: :delete, class: 'action'
+        data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
       ).html_safe
     else
       html_blank
@@ -282,7 +281,7 @@ class EventPresenter < HtmlPresenter
   protected
 
   def join_chunks(chunks, separator=', ')
-    chunks.reject! {|chunk| chunk.empty? }
+    chunks.reject! { |chunk| chunk.empty? }
     view.safe_join(chunks, separator)
   end
 

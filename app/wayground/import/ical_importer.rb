@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'import/icalendar_reader'
 require 'open-uri'
 require 'event'
@@ -114,9 +113,10 @@ module Wayground
       def create_event(ievent, params = {}) #editor: ical_editor, approve_by = nil)
         # TODO: split out location details, from icalendar events, into applicable fields
         external_links_attributes = {}
-        if ievent['URL']
+        ievent_url = ievent['URL']
+        if ievent_url
           external_links_attributes[:external_links_attributes] = [
-            {url: ievent['URL'][:value]}
+            { url: ievent_url[:value] }
           ]
         end
         event = ::Event.new(

@@ -1,7 +1,7 @@
-# encoding: utf-8
 require 'html_presenter'
 require 'event_presenter'
 require 'date'
+require 'event'
 require 'time_presenter'
 require 'event/day_events'
 require 'event/events_by_date'
@@ -35,7 +35,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_week(week)
     html_tag_with_newline(:tr) do
-      view.safe_join(week.map {|day| present_day(day) })
+      view.safe_join(week.map { |day| present_day(day) })
     end
   end
 
@@ -55,10 +55,15 @@ class CalendarMonthPresenter < HtmlPresenter
     day_events = events_by_date[day]
     day_num_class = 'day'
     day_num_class << ' empty' unless (day_events && day_events.count > 0) || @carryover.count > 0
-    view.link_to(
-      day.day, view.calendar_day_path_for_date(day),
-      class: day_num_class, title: day.to_time.to_s(:simple_date)
-    )
+    if Event.count == 0 || (day < Event.earliest_date) || (day > Event.last_date)
+      # the day is outside the range of events; don't link it
+      html_tag(:span, class: day_num_class, title: day.to_time.to_s(:simple_date)) { day.day.to_s }
+    else
+      view.link_to(
+        day.day, view.calendar_day_path_for_date(day),
+        class: day_num_class, title: day.to_time.to_s(:simple_date)
+      )
+    end
   end
 
   def present_day_content(day)
@@ -96,7 +101,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_day_events_list(events_list)
     html_tag(:ul) do
-      view.safe_join(events_list.map {|event| present_event_in_list(event) })
+      view.safe_join(events_list.map { |event| present_event_in_list(event) })
     end
   end
 

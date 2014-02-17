@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 require 'tag_list'
@@ -86,7 +85,7 @@ class Event < ActiveRecord::Base
   }
   scope :tagged, ->(tag) {
     tag = Tag.new.taggify_text(tag)
-    joins(:tags).where(tags: {tag: tag})
+    joins(:tags).where(tags: { tag: tag })
   }
 
   before_create :set_timezone
@@ -260,6 +259,19 @@ class Event < ActiveRecord::Base
   end
 
   # VALUES
+
+  # return the earliest date that an event occurs on
+  def self.earliest_date
+    event = first
+    event.start_at.to_date if event
+  end
+
+  # return the last date that an event occurs on
+  def self.last_date
+    # TODO: potentially take into account the last end_date if it is > the last start_date
+    event = last
+    event.start_at.to_date if event
+  end
 
   def is_multi_day
     end_at? && start_at.to_date != end_at.to_date

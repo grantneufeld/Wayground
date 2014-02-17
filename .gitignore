@@ -14,6 +14,7 @@ Capfile
 /db/*.sqlite3-journal
 /db/development_structure.sql
 /log/*.log
+/public/assets/*.*
 /public/cache/**/*
 /public/ckeditor/_samples/*
 /public/ckeditor/_source/*

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_model/validator'
 
 # Validate that a given value is valid as a Wayground-style filename (with no extension).

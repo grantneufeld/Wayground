@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'calendar_month_presenter'
 require 'event'
@@ -124,7 +123,8 @@ describe CalendarMonthPresenter do
         expect( result ).to match /<\/td>[\r\n]*\z/
       end
       it "should call through to present_day_elements" do
-        presenter.should_receive(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
+        presenter.should_receive(:present_day_elements).with(@day).
+          and_return('present_day_elements'.html_safe)
         result = presenter.present_day(@day)
         expect( result ).to match /present_day_elements/
       end
@@ -156,32 +156,95 @@ describe CalendarMonthPresenter do
   describe "#present_day_num" do
     context "with events" do
       before(:all) do
-        event = Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))
-        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2007, month: 9, events: [event])
-        day = Date.parse '2007-09-27'
-        @result = presenter.present_day_num(day)
+        @day = Date.parse '2007-09-27'
       end
-      it "should return an anchor element" do
-        expect( @result ).to match /\A<a [^>]*href="\/calendar\/2007\/09\/27"[^>]*>.*<\/a>\z/
+      before(:each) do
+        @presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2007, month: 9, events: events)
       end
-      it "should not include the empty class in the anchor" do
-        expect( @result ).not_to match /\A<a [^>]*class="(?:|[^"]* )empty(?:| [^"]*)"/
+      let(:result) { @presenter.present_day_num(@day) }
+      let(:events) { [] }
+      context 'with an event on the day' do
+        before(:each) do
+          Event.stub(:earliest_date).and_return(@day)
+          Event.stub(:last_date).and_return(@day)
+        end
+        let(:events) { [Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))] }
+        it 'should not include the empty class in the anchor' do
+          expect(result).not_to match(/ class="(?:|[^"]* )empty(?:| [^"]*)"/)
+        end
       end
-      it "should have the day number as the content with the anchor element" do
-        expect( @result ).to match /\A<a [^>]*>27<\/a>\z/
+      context 'with no events on the day' do
+        before(:each) do
+          Event.stub(:earliest_date).and_return(@day)
+          Event.stub(:last_date).and_return(@day)
+        end
+        it 'should include the empty class in the anchor' do
+          expect(result).to match(/ class="(?:|[^"]* )empty(?:| [^"]*)"/)
+        end
       end
-      it "should return an html safe string" do
-        expect( @result.html_safe? ).to be_true
+      context 'with the only event on the day' do
+        before(:each) do
+          Event.stub(:earliest_date).and_return(@day)
+          Event.stub(:last_date).and_return(@day)
+          Event.stub(:count).and_return(1)
+        end
+        let(:events) { [Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))] }
+        it 'should return an anchor element' do
+          expect(result).to match /\A<a [^>]*href="\/calendar\/2007\/09\/27"[^>]*>.*<\/a>\z/
+        end
+        it 'should have the date as the title of the anchor element' do
+          expect(result).to match /\A<a [^>]*title="September 27, 2007"/
+        end
+        it 'should have the day number as the content with the anchor element' do
+          expect(result).to match /\A<a [^>]*>27<\/a>\z/
+        end
+        it 'should return an html safe string' do
+          expect(result.html_safe?).to be_true
+        end
       end
-    end
-    context "with an empty list" do
-      before(:all) do
-        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2005, month: 10, events: [])
-        day = Date.parse '2005-10-31'
-        @result = presenter.present_day_num(day)
+      context 'with the day before the earliest event' do
+        before(:each) do
+          Event.stub(:earliest_date).and_return(Date.parse('2007-09-28'))
+          Event.stub(:last_date).and_return(Date.parse('2008-09-10'))
+        end
+        it 'should return the unanchored date' do
+          expect(result).to match /\A<span [^>]+>27<\/span>\z/
+        end
+        it 'should have the date as the title of the span element' do
+          expect(result).to match /\A<span [^>]*title="September 27, 2007"/
+        end
+        it 'should return an html safe string' do
+          expect(result.html_safe?).to be_true
+        end
       end
-      it "should include the empty class in the anchor" do
-        expect( @result ).to match /\A<a [^>]*class="(?:|[^"]* )empty(?:| [^"]*)"/
+      context 'with the day after the last event' do
+        before(:each) do
+          Event.stub(:earliest_date).and_return(Date.parse('2007-01-01'))
+          Event.stub(:last_date).and_return(Date.parse('2007-09-26'))
+        end
+        it 'should return the unanchored date' do
+          expect(result).to match /\A<span [^>]+>27<\/span>\z/
+        end
+        it 'should have the date as the title of the span element' do
+          expect(result).to match /\A<span [^>]*title="September 27, 2007"/
+        end
+        it 'should return an html safe string' do
+          expect(result.html_safe?).to be_true
+        end
+      end
+      context 'with no events' do
+        before(:each) do
+          Event.stub(:count).and_return(0)
+        end
+        it 'should return the unanchored date' do
+          expect(result).to match /\A<span [^>]+>27<\/span>\z/
+        end
+        it 'should have the date as the title of the span element' do
+          expect(result).to match /\A<span [^>]*title="September 27, 2007"/
+        end
+        it 'should return an html safe string' do
+          expect(result.html_safe?).to be_true
+        end
       end
     end
   end
@@ -236,8 +299,12 @@ describe CalendarMonthPresenter do
     context "with events to carryover" do
       before(:all) do
         @e1 = Event.new(start_at: Time.zone.parse('2003-01-01 1pm'))
-        @e2 = Event.new(start_at: Time.zone.parse('2003-01-01 2pm'), end_at: Time.zone.parse('2003-01-03 3pm'))
-        @e3 = Event.new(start_at: Time.zone.parse('2003-01-02 3pm'), end_at: Time.zone.parse('2003-01-03 4pm'))
+        @e2 = Event.new(
+          start_at: Time.zone.parse('2003-01-01 2pm'), end_at: Time.zone.parse('2003-01-03 3pm')
+        )
+        @e3 = Event.new(
+          start_at: Time.zone.parse('2003-01-02 3pm'), end_at: Time.zone.parse('2003-01-03 4pm')
+        )
         @e4 = Event.new(start_at: Time.zone.parse('2003-01-03 4pm'))
         presenter = CalendarMonthPresenter.new(year: 2003, month: 1, events: [@e1, @e2, @e3, @e4])
         @first_day_events = presenter.get_day_events(Date.parse('2003-01-01'))
@@ -360,7 +427,11 @@ describe CalendarMonthPresenter do
       presenter = CalendarMonthPresenter.new(view: view, events: events)
       result = presenter.present_day_events_list(events)
       expect( result ).to match(
-        /\A<ul>[\r\n]*<li><a href="#{path}"[^>]*>6:30pm: Event 1<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 2<\/a><\/li>[\r\n]+<li><a href="#{path}"[^>]*>6:30pm: Event 3<\/a><\/li>[\r\n]*<\/ul>\z/
+        /\A<ul>[\r\n]*
+        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 1<\/a><\/li>[\r\n]+
+        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 2<\/a><\/li>[\r\n]+
+        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 3<\/a><\/li>[\r\n]*
+        <\/ul>\z/x
       )
     end
   end

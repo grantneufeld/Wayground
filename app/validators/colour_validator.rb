@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_model/validator'
 
 # Validate that a given value is a 3 or 6 digit hexadecimal colour (with hash symbol),
@@ -18,7 +17,10 @@ class ColourValidator < ActiveModel::EachValidator
   end
 
   def css_color_names
-    %w(aqua black blue cyan fuchsia gray green lime magenta maroon navy olive purple red silver teal white yellow)
+    %w(
+      aqua black blue cyan fuchsia gray green lime magenta
+      maroon navy olive purple red silver teal white yellow
+    )
   end
 
 end

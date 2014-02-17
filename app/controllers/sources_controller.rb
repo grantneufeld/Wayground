@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Assign remote Sources and queue them for processing.
 class SourcesController < ApplicationController
   before_action :set_user
@@ -61,9 +59,12 @@ class SourcesController < ApplicationController
     page_metadata(title: "Process Source: #{@source.name}")
     processor = @source.run_processor(@user, params[:approve] == 'all')
     msgs = ['Processing complete.']
-    msgs << "#{processor.new_events.size} items were created." if processor.new_events.size > 0
-    msgs << "#{processor.updated_events.size} items were updated." if processor.updated_events.size > 0
-    msgs << "#{processor.skipped_ievents.size} items were skipped." if processor.skipped_ievents.size > 0
+    new_events_size = processor.new_events.size
+    msgs << "#{new_events_size} items were created." if new_events_size > 0
+    updated_events_size = processor.updated_events.size
+    msgs << "#{updated_events_size} items were updated." if updated_events_size > 0
+    skipped_ievents_size = processor.skipped_ievents.size
+    msgs << "#{skipped_ievents_size} items were skipped." if skipped_ievents_size > 0
     redirect_to @source, :notice => msgs.join('<br />').html_safe
   end
 

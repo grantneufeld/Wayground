@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class String
 
   # Apply “folding” to a string, inserting a character sequence every number of characters.

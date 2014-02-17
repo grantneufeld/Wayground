@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 # For testing purposes, currently relying on the following models:
@@ -10,6 +9,13 @@ PRIVATE_AUTHORITY_CLASS = User
 SELECTIVE_AUTHORITY_CLASS = Page
 # - Path as an authority controlled model that inherits authorities from another model (Page)
 INHERITED_AUTHORITY_CLASS = Path
+
+# Reopen User class to test handling of duplicate calls to acts_as_authority_controlled
+class User < ActiveRecord::Base
+  acts_as_authority_controlled item_authority_flag_field: :always_private
+  acts_as_authority_controlled item_authority_flag_field: :always_private
+end
+
 
 # Ideally, these tests would use one-off classes to test the application of authority controlled functions.
 # However, ActiveRecord hits the database and custom sub-classes would have to have matching tables
@@ -34,7 +40,7 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
     it "should allow viewing for models that are not set as authority_controlled" do
       NO_AUTHORITY_CLASS.new.has_authority_for_user_to?.should be_true
     end
-    it "should not allow users to change models that are not set as authority_controlled, without authority" do
+    it 'should not allow unauthorized users to change models that are not set as authority_controlled' do
       NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_update).should be_false
     end
     it "should refer to authority_area authorities for change actions when not set as authority_controlled" do

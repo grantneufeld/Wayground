@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'bcrypt'
 require 'crypted_password'
 

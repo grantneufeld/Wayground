@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.2'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -9,13 +9,13 @@ gem 'pg'
 #gem 'queue_classic', '2.0.0rc12'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0', require: false
+gem 'sass-rails', '~> 4.0.1', require: false
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0', require: false
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0', require: false
+gem 'coffee-rails', '~> 4.0.1', require: false
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -38,14 +38,14 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'debugger', group: [:development, :test]
 
 # deprecated compatibility
-gem 'protected_attributes'
+gem 'protected_attributes', '>= 1.0.5'
 
 # To support OAuth access
 gem 'omniauth', '>= 1.1.0'
 gem 'omniauth-facebook', '>= 1.3.0'
 gem 'omniauth-twitter', '>= 0.0.11'
 
-gem 'tzinfo', '>= 0.3.33'
+gem 'tzinfo', '>= 0.3.38'
 
 # ActiveRecord-style attributes on plain objects
 gem 'virtus', '>= 0.5.5'
@@ -55,6 +55,10 @@ group :development do
   gem 'brakeman', require: false # http://brakemanscanner.org/
   gem 'cane', require: false # https://github.com/square/cane
   gem 'churn', require: false # https://github.com/danmayer/churn
+    gem 'arrayfields', require: false # dependency for using main which is a dependency of churn
+    gem 'fattr', require: false # dependency for using main which is a dependency of churn
+    gem 'map', require: false # dependency for using main which is a dependency of churn
+    gem 'pry', require: false # dependency for using main which is a dependency of churn
   gem 'flay', require: false # https://github.com/seattlerb/flay
   gem 'flog', require: false # https://github.com/seattlerb/flog
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices

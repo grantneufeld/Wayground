@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe EventsController do
@@ -13,10 +12,10 @@ describe EventsController do
   end
 
   def set_logged_in_admin
-    controller.stub!(:current_user).and_return(@user_admin)
+    controller.stub(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub!(:current_user).and_return(@user_normal)
+    controller.stub(:current_user).and_return(@user_normal)
   end
 
   def mock_event(stubs={})
@@ -48,9 +47,9 @@ describe EventsController do
       get :index
       assigns(:events).should eq([@event1, @event2])
     end
-    it "should assign nil to @range" do
+    it "should assign nil to @range the default “upcoming”" do
       get :index, {}
-      expect( assigns(:range) ).to be_nil
+      expect(assigns(:range)).to eq 'upcoming'
     end
     context "past events" do
       it "assigns all approved past events as @events" do

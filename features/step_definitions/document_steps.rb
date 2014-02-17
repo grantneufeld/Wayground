@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 Given /^a document "([^\"]*)"$/ do |filename|
   FactoryGirl.create(:document, :filename => filename)
 end

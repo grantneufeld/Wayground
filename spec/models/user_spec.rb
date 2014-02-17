@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'user'
 require 'authority'
@@ -250,17 +249,19 @@ describe User do
       user.make_admin!('Content')
       user.authorizations.for_area_or_global('Content').for_action(:is_owner).first.should_not be_nil
     end
-    it "should not change the authorizing user when authorizing user not provided for a pre-existing authority" do
+    it "should not change the authorizing user when user not provided for a pre-existing authority" do
       authority = FactoryGirl.create(:authority, {area: 'global', authorized_by: @admin})
       user = authority.user
       user.make_admin!
-      user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == @admin
+      authorization = user.authorizations.for_area_or_global('global').for_action(:is_owner).first
+      expect(authorization.authorized_by).to eq @admin
     end
     it "should assign the authorizing user when provided for a pre-existing authority" do
       authority = FactoryGirl.create(:authority, {area: 'global', authorized_by: @admin})
       user = authority.user
       user.make_admin!('global', user)
-      user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == user
+      authorization = user.authorizations.for_area_or_global('global').for_action(:is_owner).first
+      expect(authorization.authorized_by).to eq user
     end
     it "should create a global admin Authority for a previously authority-less user" do
       user = FactoryGirl.create(:user)
@@ -275,12 +276,14 @@ describe User do
     it "should set the authorizing user to self when authorizing user not provided" do
       user = FactoryGirl.create(:user)
       user.make_admin!()
-      user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == user
+      authorization = user.authorizations.for_area_or_global('global').for_action(:is_owner).first
+      expect(authorization.authorized_by).to eq user
     end
     it "should change the authorizing user when provided" do
       user = FactoryGirl.create(:user)
       user.make_admin!('global', @admin)
-      user.authorizations.for_area_or_global('global').for_action(:is_owner).first.authorized_by.should == @admin
+      authorization = user.authorizations.for_area_or_global('global').for_action(:is_owner).first
+      expect(authorization.authorized_by).to eq @admin
     end
   end
 

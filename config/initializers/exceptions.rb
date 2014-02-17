@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Wayground
   # attempt to access an area/action the user does not have authority for
   class AccessDenied < Exception; end

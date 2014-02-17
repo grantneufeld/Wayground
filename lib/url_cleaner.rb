@@ -1,11 +1,15 @@
-# encoding: utf-8
-
 # Utility class that cleans up URLs.
 # Removes extraneous parameters or hashes.
 # Forces https where supported.
 # Strips surrounding whitespace.
 class UrlCleaner
-  URL_MAP = /\A[ \t\r\n]*(?<protocol>[a-z\-]+)(?<delimiter>\:\/*)(?<user>[A-Za-z0-9_\+\-]+@)?(?<domain>[a-z0-9\-\.]+)(?<port>\:[0-9]+)?(?<path>[^\?]*)(?<params>\?.*)?[ \t\r\n]*\z/
+  URL_MAP = /\A[\ \t\r\n]*
+    (?<protocol>[a-z\-]+)(?<delimiter>\:\/*)
+    (?<user>[A-Za-z0-9_\+\-]+@)?
+    (?<domain>[a-z0-9\-\.]+)(?<port>\:[0-9]+)?
+    (?<path>[^\?]*)
+    (?<params>\?.*)?
+    [ \t\r\n]*\z/x
 
   # Cleanup and return an URL string.
   # expects a valid URL as a String.

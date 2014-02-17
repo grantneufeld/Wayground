@@ -1,4 +1,4 @@
-<% # encoding: utf-8
+<%
 content_for(:head) do
   %><link rel="profile" href="http://microformats.org/profile/hcalendar" />
 <%
@@ -6,10 +6,16 @@ end
 
 prev_year = @date.year - 1
 next_year = @date.year + 1
+earliest_date = Event.earliest_date
+last_date = Event.last_date
 %><div class="calendar">
 <ul class="calendar-nav">
+<% if earliest_date && @date.prev_year.end_of_year >= earliest_date -%>
 <li><%= link_to '<', calendar_year_path(prev_year), title: prev_year.to_s, class: 'prev' %></li>
+<% end
+if last_date && @date.next_year.beginning_of_year <= last_date -%>
 <li><%= link_to '>', calendar_year_path(next_year), title: next_year.to_s, class: 'next' %></li>
+<% end -%>
 </ul>
 <h1><%= @total_event_count %> event<%= @total_event_count == 1 ? '' : 's' %> in <%= @date.year %></h1>
 <ul>

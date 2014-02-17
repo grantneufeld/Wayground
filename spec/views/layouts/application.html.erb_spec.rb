@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'page_metadata'
 
@@ -85,12 +84,18 @@ describe "layouts/application.html.erb" do
     end
   end
 
-  # @site_breadcrumbs: An array of hashes {:text => ?, :url => ?} describing the hierarchical navigation parentage of the current item.
+  # @site_breadcrumbs: An array of hashes { text: ?, url: ? }
+  #   describing the hierarchical navigation parentage of the current item.
   describe "@site_breadcrumbs" do
     it "should set the breadcrumbs if true" do
       @site_breadcrumbs = [{:text => "Test", :url => '/test'}, {:text => "Test2", :url => '/test2'}]
       render
-      rendered.should match(/<ul id="breadcrumb">[ \t\r\n]*<li><a href="\/test">Test<\/a><\/li>[ \t\r\n]*<li><a href="\/test2">Test2<\/a><\/li>[ \t\r\n]*<\/ul>/)
+      expect(rendered).to match(
+        /<ul\ id="breadcrumb">[\ \t\r\n]*
+        <li><a\ href="\/test">Test<\/a><\/li>[\ \t\r\n]*
+        <li><a\ href="\/test2">Test2<\/a><\/li>[\ \t\r\n]*
+        <\/ul>/x
+      )
     end
     it "should not have breadcrumbs if not set" do
       @site_breadcrumbs = nil
@@ -134,7 +139,7 @@ describe "layouts/application.html.erb" do
 
   describe "with signed-in user" do
     before do
-      controller.stub!(:current_user).and_return(mock_model(User, :name => "Test Tester"))
+      controller.stub(:current_user).and_return(mock_model(User, :name => "Test Tester"))
     end
 
     describe "via password" do
@@ -159,7 +164,9 @@ describe "layouts/application.html.erb" do
       it "should show Twitter as the source" do
         session[:source] = 'twitter'
         render
-        rendered.should match(/<div id="usermenu"[^>]* class="(?:[^"]+ )?twitter/)
+        expect(rendered).to match(
+          /<div id="usermenu"[^>]* class="(?:[^"]+ )?twitter/
+        )
       end
     end
   end

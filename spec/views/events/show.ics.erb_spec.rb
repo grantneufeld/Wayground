@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe "events/show.ics.erb" do
@@ -19,7 +18,10 @@ describe "events/show.ics.erb" do
       is_cancelled: false,
       is_featured: false,
       title: "A Title That Extends Beyond Seventy-Five Characters So We Can Test Line Folding",
-      description: "A description that goes on, and on, so it can exceed two lines of seventy-five characters. This should serve as a good test of the line folding. At least, that’s what I hope.",
+      description: (
+        "A description that goes on, and on, so it can exceed two lines of seventy-five characters." +
+        " This should serve as a good test of the line folding. At least, that’s what I hope."
+      ),
       content: "Content",
       organizer: "Organizer",
       organizer_url: "http://organizer.tld/",
@@ -40,7 +42,7 @@ describe "events/show.ics.erb" do
   end
 
   it "renders the expected text" do
-    render
+    render template: 'events/show.ics.erb'
     rendered.should match(/\ABEGIN:VEVENT\r/)
     rendered.should match(/^UID:123.event@calgarydemocracy.ca\r/)
     rendered.should match(/^CREATED:20010203T110506Z\r/)
@@ -51,7 +53,11 @@ describe "events/show.ics.erb" do
       /^SUMMARY:A Title That Extends Beyond Seventy-Five Characters So We Can Test (\r\n?|\n) Line Folding\r/
     )
     rendered.should match(
-      /^DESCRIPTION:A description that goes on\\, and on\\, so it can exceed two line\r\n s of seventy-five characters\. This should serve as a good test of the line\r\n  folding\. At least\\, that’s what I hope\.\r/
+      /^DESCRIPTION:A\ description\ that\ goes\ on\\,\ and\ on\\,
+      \ so\ it\ can\ exceed\ two\ line\r\n
+      \ s\ of\ seventy-five\ characters\.
+      \ This\ should\ serve\ as\ a\ good\ test\ of\ the\ line\r\n
+      \ \ folding\.\ At\ least\\,\ that’s\ what\ I\ hope\.\r/x
     )
     rendered.should match(/^CLASS:PUBLIC\r/)
     rendered.should match(/^URL:http:\/\/[a-z0-9\.]+\/events\/123\r/)

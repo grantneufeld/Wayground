@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'html_presenter'
 
 # Meta elements to go in the head element.
@@ -46,7 +45,11 @@ class MetadataPresenter < HtmlPresenter
   end
 
   # The tags that are just used by OpenGraph
-  # og:type: “activity”?, Groups: “cause”, Organizations: “government”, “non_profit”, “school”, People: “author”, “politician”, “public_figure”, Places: “City”, “Country”, “state_province”, Websites: “website” site root, “article” site page.
+  # og:type: “activity”?, Groups: “cause”,
+  # Organizations: “government”, “non_profit”, “school”,
+  # People: “author”, “politician”, “public_figure”,
+  # Places: “City”, “Country”, “state_province”,
+  # Websites: “website” site root, “article” site page.
   def present_open_graph_specific
     og_tag(:type, graph_type)
   end

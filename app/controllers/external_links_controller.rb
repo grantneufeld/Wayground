@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'external_link'
 require 'event'
 require 'level'
@@ -98,9 +97,8 @@ class ExternalLinksController < ApplicationController
     elsif params[:office_id]
       @item = level.offices.from_param(params[:office_id]).first
     end
-    if !@item && params[:event_id]
-      @item = Event.find(params[:event_id])
-    end
+    event_id = params[:event_id]
+    @item = Event.find(event_id) if !@item && event_id.present?
     missing unless @item
   end
 

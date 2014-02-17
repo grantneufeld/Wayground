@@ -1,10 +1,10 @@
-# encoding: utf-8
 require 'date'
 require 'event'
 
 module Wayground
   module Event
 
+    # Information about Events for a given year.
     class Year
       attr_reader :year
 

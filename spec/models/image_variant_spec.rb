@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'image_variant'
 require 'image'
@@ -160,7 +159,7 @@ describe ImageVariant do
           @variants << @scaled
         end
         it "should return all the variants" do
-          expect( @image.image_variants.order(:id).originals.to_a ).to eq @variants
+          expect( @image.image_variants.originals.order(:id).to_a ).to eq @variants
         end
       end
     end

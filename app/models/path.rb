@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Defines custom URLs (“paths”) for arbitrary items on the site,
 # or to redirect local URLs to other local paths or to remote URLs.
 class Path < ActiveRecord::Base
@@ -11,20 +9,26 @@ class Path < ActiveRecord::Base
   before_validation :clean_sitepath, :clean_redirect
 
   validates_format_of :sitepath,
-    :with=>/\A\/(([\w%_~\+\-]+\/?)+(\.[\w%_\-]+|\/)?)?\z/,
-    :message => 'must begin with a ‘/’ and be letters, numbers, dashes, percentage signs, underscores and/or slashes, with an optional extension'
+    with: /\A\/(([\w%_~\+\-]+\/?)+(\.[\w%_\-]+|\/)?)?\z/,
+    message: (
+      'must begin with a ‘/’ and be letters, numbers, dashes, percentage signs, ' +
+      'underscores and/or slashes, with an optional extension'
+    )
   validates_uniqueness_of :sitepath
   validates_presence_of :redirect,
-    :if=>Proc.new {|path| (path.item.nil? && path.item_id.nil?)},
-    :message => 'must have a redirect url/path if not attached to an item on the website'
-  validates_format_of :redirect, :allow_nil => true,
-    :with => /\A(https?:\/\/.+|\/(([\w%~_\?=&\-]+\/?)+(\.[\w%~_\?=&#\-]+|\/)?)?)\z/,
-    :message => 'must begin with a valid URL (including ‘http://’) or a valid root-relative sitepath (starts with a slash ‘/’)'
+    if: Proc.new { |path| (path.item.nil? && path.item_id.nil?) },
+    message: 'must have a redirect url/path if not attached to an item on the website'
+  validates_format_of :redirect, allow_nil: true,
+    with: /\A(https?:\/\/.+|\/(([\w%~_\?=&\-]+\/?)+(\.[\w%~_\?=&#\-]+|\/)?)?)\z/,
+    message: (
+      'must begin with a valid URL (including ‘http://’) ' +
+      'or a valid root-relative sitepath (starts with a slash ‘/’)'
+    )
 
-  scope :for_sitepath, lambda {|searchpath|
+  scope :for_sitepath, lambda { |searchpath|
     # strip trailing slash, if present
     matches = searchpath.match(/\A(.+)\/\z/)
-    where({:sitepath => (matches ? matches[1] : searchpath)})
+    where({ sitepath: (matches ? matches[1] : searchpath) })
   }
   scope :in_order, -> { order(:sitepath) }
   scope :for_user, lambda { |user|

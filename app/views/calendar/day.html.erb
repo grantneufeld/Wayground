@@ -1,4 +1,4 @@
-<% # encoding: utf-8
+<%
 require 'date'
 require 'event/day_events'
 require 'event_presenter'
@@ -11,9 +11,15 @@ end
 date = @date # Date.new(@date.year, @date.month, @date.day)
 prev_date = date - 1.day
 next_date = date + 1.day
+earliest_date = Event.earliest_date
+last_date = Event.last_date
 %><ul class="calendar-nav">
+<% if earliest_date && prev_date >= earliest_date -%>
 <li><%= link_to '<', calendar_day_path_for_date(prev_date), title: prev_date.to_time.to_s(:simple_date), class: 'prev' %></li>
+<% end
+if last_date && next_date <= last_date -%>
 <li><%= link_to '>', calendar_day_path_for_date(next_date), title: next_date.to_time.to_s(:simple_date), class: 'next' %></li>
+<% end -%>
 </ul>
 <%
 

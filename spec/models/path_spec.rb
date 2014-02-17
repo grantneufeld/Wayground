@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe Path do
@@ -92,11 +91,15 @@ describe Path do
         @admin = FactoryGirl.create(:user)
         @admin.make_admin!
         @user = FactoryGirl.create(:user)
-        @admin_path = FactoryGirl.create(:page, :filename => 'admin', :is_authority_controlled => true).path
-        @controlled_path = FactoryGirl.create(:page, :filename => 'controlled', :is_authority_controlled => true).path
+        @admin_path = FactoryGirl.create(:page, filename: 'admin', is_authority_controlled: true).path
+        @controlled_path = FactoryGirl.create(:page,
+          filename: 'controlled', is_authority_controlled: true
+        ).path
         @user.set_authority_on_item(@controlled_path.item)
-        @public_path = FactoryGirl.create(:redirect_path, :sitepath => '/public')
-        @user_path = FactoryGirl.create(:page, :filename => 'user', :is_authority_controlled => true, :editor => @user).path
+        @public_path = FactoryGirl.create(:redirect_path, sitepath: '/public')
+        @user_path = FactoryGirl.create(:page,
+          filename: 'user', is_authority_controlled: true, editor: @user
+        ).path
         @user.set_authority_on_item(@user_path.item)
       end
       it "should find everything for admins" do

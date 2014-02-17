@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'crypted_password'
 require 'bcrypt'
@@ -17,7 +16,7 @@ module Wayground
         pass = 'test pass'
         expect( (CryptedPassword.new(BCrypt::Password.create(pass)) == pass) ).to be_true
       end
-      it "should return false when the string does not match the one used to generated the crypted password" do
+      it "should return false when string does not match the one used to generated the crypted password" do
         expect( (CryptedPassword.new(BCrypt::Password.create('pass1')) == 'pass2') ).to be_false
       end
     end

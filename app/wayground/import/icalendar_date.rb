@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'date' # for datetime parsing
 require 'tzinfo' # for figuring out timezone offsets
 

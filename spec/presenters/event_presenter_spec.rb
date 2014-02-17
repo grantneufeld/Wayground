@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'event_presenter'
 require_relative 'view_double'
@@ -176,7 +175,7 @@ describe EventPresenter do
       end
       it "should accept a time_format parameter" do
         expect( presenter.present_time(:plain_datetime) ).to eq(
-          "<time class=\"dtstart\" datetime=\"2005-06-07T08:00:00-06:00\">Tuesday, June 7, 2005 at 8:00am</time>"
+          '<time class="dtstart" datetime="2005-06-07T08:00:00-06:00">Tuesday, June 7, 2005 at 8:00am</time>'
         )
       end
       it "should be html safe" do
@@ -214,7 +213,8 @@ describe EventPresenter do
       end
       it "should end with the microformat dtend time element containing the end date and time" do
         expect( presenter.present_time ).to match(
-          /<time class="dtend" datetime="2005-06-09T09:00:00-06:00">Thursday, June +9, 2005 at +9:00am<\/time>\z/
+          /<time\ class="dtend"\ datetime="2005-06-09T09:00:00-06:00">
+          Thursday,\ June\ +9,\ 2005\ at\ +9:00am<\/time>\z/x
         )
       end
       it "should be html safe" do
@@ -236,7 +236,9 @@ describe EventPresenter do
       end
     end
     context "with a multi-day event" do
-      let(:event) { $event = Event.new(is_allday: true, start_at: '2005-06-07 8am', end_at: '2005-06-09 9am') }
+      let(:event) do
+        $event = Event.new(is_allday: true, start_at: '2005-06-07 8am', end_at: '2005-06-09 9am')
+      end
       it "should include a microformat element for the end time" do
         expect( presenter.present_time_allday ).to match(
           /<time class="dtend" datetime="2005-06-09T09:00:00-06:00"/
@@ -375,7 +377,8 @@ describe EventPresenter do
       end
       it "should include the location followed by the address" do
         expect( presenter.present_minimal_location ).to match(
-          /<[^>]+ class="fn org"[^>]*>Test Location<\/[^>]+>,[\r\n]+<[^>]+ class="adr"[^>]*><[^>]+ class="street-address"[^>]*>Test Address</
+          /<[^>]+\ class="fn\ org"[^>]*>Test\ Location<\/[^>]+>,[\r\n]+
+          <[^>]+\ class="adr"[^>]*><[^>]+\ class="street-address"[^>]*>Test\ Address</x
         )
       end
       it "should be html safe" do
@@ -668,7 +671,8 @@ describe EventPresenter do
         )
       end
       it "should run the description through simple_text_to_html_breaks" do
-        view.should_receive(:simple_text_to_html_breaks).with('Test Description').and_return('Test Description')
+        view.should_receive(:simple_text_to_html_breaks).with('Test Description').
+          and_return('Test Description')
         presenter.present_description
       end
       it "should be html safe" do

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe "events/index.ics.erb" do
@@ -44,7 +43,22 @@ describe "events/index.ics.erb" do
   it "renders the expected text" do
     render
     expect( rendered ).to match(
-    /\ABEGIN:VEVENT\r\nUID:123.event@calgarydemocracy.ca\r\nCREATED:20010203T110506Z\r\nDTSTAMP:20010203T040506Z\r\nDTSTART;TZID=America\/Denver:20110203T040506\r\nSUMMARY:Event One\r\nCLASS:PUBLIC\r\nURL:http:\/\/[a-z0-9\.]+\/events\/123\r\nSTATUS:CANCELLED\r\nSEQUENCE:1\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:234.event@calgarydemocracy.ca\r\nCREATED:20010203T110506Z\r\nDTSTAMP:20010203T040506Z\r\nDTSTART;TZID=America\/Denver:20110203T040506\r\nSUMMARY:Event Two\r\nCLASS:PUBLIC\r\nURL:http:\/\/[a-z0-9\.]+\/events\/234\r\nSTATUS:TENTATIVE\r\nSEQUENCE:1\r\nEND:VEVENT(\r\n)?\z/
+      /\ABEGIN:VEVENT\r\n
+      UID:123.event@calgarydemocracy.ca\r\n
+      CREATED:20010203T110506Z\r\nDTSTAMP:20010203T040506Z\r\n
+      DTSTART;TZID=America\/Denver:20110203T040506\r\n
+      SUMMARY:Event\ One\r\nCLASS:PUBLIC\r\n
+      URL:http:\/\/[a-z0-9\.]+\/events\/123\r\n
+      STATUS:CANCELLED\r\nSEQUENCE:1\r\n
+      END:VEVENT\r\n
+      BEGIN:VEVENT\r\n
+      UID:234.event@calgarydemocracy.ca\r\n
+      CREATED:20010203T110506Z\r\nDTSTAMP:20010203T040506Z\r\n
+      DTSTART;TZID=America\/Denver:20110203T040506\r\n
+      SUMMARY:Event\ Two\r\nCLASS:PUBLIC\r\n
+      URL:http:\/\/[a-z0-9\.]+\/events\/234\r\n
+      STATUS:TENTATIVE\r\nSEQUENCE:1\r\n
+      END:VEVENT(\r\n)?\z/x
     )
   end
 end

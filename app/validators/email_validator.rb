@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_model/validator'
 
 # Validate that a given value looks like a valid email address.

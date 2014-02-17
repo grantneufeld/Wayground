@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Web pages.
 class Page < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content'
@@ -18,19 +16,22 @@ class Page < ActiveRecord::Base
 
   validates_length_of :filename, :within => 1..127
   validates_format_of :filename,
-    :with=>/\A(\/|([\w_~\+\-]+)(\.[\w_]+)?\/?)\z/,
-    :message=>'must only be letters, numbers, dashes and underscores, with an optional extension; e.g., “a-filename_1.txt”'
+    with: /\A(\/|([\w_~\+\-]+)(\.[\w_]+)?\/?)\z/,
+    message: (
+      'must only be letters, numbers, dashes and underscores, with an optional extension;' +
+      ' e.g., “a-filename_1.txt”'
+    )
   validates_presence_of :title
 
   def generate_path
-    if self.path.nil?
+    unless path
       self.path = Path.new(:sitepath => self.calculate_sitepath)
       self.path.item = self
     end
   end
 
   def update_path
-    if self.path.nil?
+    if !(path)
       generate_path
     else
       self.path.update!(sitepath: self.calculate_sitepath)
@@ -46,20 +47,20 @@ class Page < ActiveRecord::Base
     self.versions.create!(
       user: editor, edited_at: self.updated_at, edit_comment: edit_comment,
       filename: filename, title: title,
-      values: {description: description, content: content}
+      values: { description: description, content: content }
     )
   end
 
   def breadcrumbs
     if parent
-      parent.breadcrumbs << {:text => parent.title, :url => parent.sitepath}
+      parent.breadcrumbs << { text: parent.title, url: parent.sitepath }
     else
       []
     end
   end
 
   def sitepath
-    path.sitepath unless path.nil?
+    path.sitepath if path
   end
 
 end

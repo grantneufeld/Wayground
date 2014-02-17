@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Configuration and adjustments to Capybara for use with Cucumber.
 
 # this might be extraneous:

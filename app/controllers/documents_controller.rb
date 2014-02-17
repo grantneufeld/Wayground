@@ -1,5 +1,4 @@
-# encoding: utf-8
-
+# Access Documents.
 class DocumentsController < ApplicationController
   before_action :set_document, except: [:index, :new, :create]
   before_action :requires_view_authority, only: [:download, :show]

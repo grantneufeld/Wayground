@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # for storage of system/site-wide settings
 class CreateSettings < ActiveRecord::Migration
   def self.up

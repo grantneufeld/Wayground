@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 tzoff_secs = Time.current.gmt_offset
 if tzoff_secs < 0
   tzoff_negative = true

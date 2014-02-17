@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # User registration and updating.
 # Accessed by users as the singular resource “/account”,
 # and by admins as the plural resources “/users”.
@@ -39,16 +37,17 @@ class UsersController < ApplicationController
 
   def confirm
     if @user.email_confirmed
-      message = {:notice => "Your email address was already confirmed."}
+      message = { notice: "Your email address was already confirmed." }
     elsif @user.confirm_code!(params[:confirmation_code])
-      message = {:notice => "Thank-you for confirming your email address."}
+      message = { notice: "Thank-you for confirming your email address." }
     else
-      message = {:alert => "Invalid confirmation code. Your email has not been confirmed."}
+      message = { alert: "Invalid confirmation code. Your email has not been confirmed." }
     end
     redirect_to account_url, message
   rescue
-    redirect_to account_url, :status => 500,
-      :alert => "We are sorry. There was a problem while trying to update your information. Please try again or contact a system administrator."
+    redirect_to account_url, status: 500,
+      alert: "We are sorry. There was a problem while trying to update your information. " +
+        "Please try again or contact a system administrator."
   end
 
 
@@ -56,7 +55,7 @@ class UsersController < ApplicationController
 
   def set_user
     @user = current_user
-    if @user.nil?
+    unless @user
       redirect_to signin_url, :status => 307,
         :notice => "You must be signed-in to access your account."
     ## TODO: support system admins having access to reviewing or modifying other users
@@ -75,7 +74,7 @@ class UsersController < ApplicationController
 
   # Breadcrumbs for actions on this controller start with the index page.
   def set_site_location
-    @site_breadcrumbs = [{:text => 'Users', :url => account_path}]
+    @site_breadcrumbs = [{ text: 'Users', url: account_path }]
   end
 
   def cant_be_signed_in

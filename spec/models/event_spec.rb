@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe Event do
@@ -832,6 +831,42 @@ describe Event do
         @event.save!
         @event.reload
         expect( @event.tag_list.to_s ).to eq 'change1, change2'
+      end
+    end
+  end
+
+  describe '.earliest_date' do
+    it 'should return the date of the earliest event' do
+      date_string = '1900-01-01 1:00 am'
+      FactoryGirl.create(:event, start_at: date_string )
+      FactoryGirl.create(:event) if Event.count < 2
+      earliest_event_date = Event.earliest_date
+      expect(earliest_event_date).to eq date_string.to_date
+    end
+    context 'with no events' do
+      before(:each) do
+        Event.stub(:first).and_return(nil)
+      end
+      it 'should return nil' do
+        expect(Event.earliest_date).to be_nil
+      end
+    end
+  end
+
+  describe '.last_date' do
+    it 'should return the date of the last event' do
+      date_string = '2300-12-31 11:00 pm'
+      FactoryGirl.create(:event, start_at: date_string )
+      FactoryGirl.create(:event) if Event.count < 2
+      last_event_date = Event.last_date
+      expect(last_event_date).to eq date_string.to_date
+    end
+    context 'with no events' do
+      before(:each) do
+        Event.stub(:last).and_return(nil)
+      end
+      it 'should return nil' do
+        expect(Event.last_date).to be_nil
       end
     end
   end
