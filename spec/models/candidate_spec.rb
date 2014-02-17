@@ -212,7 +212,7 @@ describe Candidate do
     end
     describe '.by_vote_count' do
       it 'should order the candidates by the vote_count in descending order' do
-        expect( @ballot.candidates.by_vote_count.to_a ).to eq(
+        expect( @ballot.candidates.unscoped.by_vote_count.to_a ).to eq(
           [@scoped_candidate1, @scoped_candidate3, @scoped_candidate2]
         )
       end
