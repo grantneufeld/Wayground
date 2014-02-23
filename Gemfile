@@ -52,10 +52,6 @@ group :development do
   gem 'brakeman', require: false # http://brakemanscanner.org/
   gem 'cane', require: false # https://github.com/square/cane
   gem 'churn', require: false # https://github.com/danmayer/churn
-    gem 'arrayfields', require: false # dependency for using main which is a dependency of churn
-    gem 'fattr', require: false # dependency for using main which is a dependency of churn
-    gem 'map', require: false # dependency for using main which is a dependency of churn
-    gem 'pry', require: false # dependency for using main which is a dependency of churn
   gem 'flay', require: false # https://github.com/seattlerb/flay
   gem 'flog', require: false # https://github.com/seattlerb/flog
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
