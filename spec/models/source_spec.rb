@@ -42,7 +42,7 @@ describe Source, type: :model do
     end
     it "should allow refresh_after_at to be set" do
       source = Source.new(refresh_after_at: '2012-06-07 08:09:10')
-      source.refresh_after_at?.should be_true
+      source.refresh_after_at?.should be_truthy
     end
     it "should allow processor to be set" do
       Source.new(processor: 'Test').processor.should eq 'Test'
@@ -72,28 +72,28 @@ describe Source, type: :model do
       $minimum_valid_params = { processor: 'iCalendar', url: 'http://test.tld/test.ics' }
     }
     it "should pass with minimum valid parameters" do
-      Source.new(minimum_valid_params).valid?.should be_true
+      Source.new(minimum_valid_params).valid?.should be_truthy
     end
     describe "of processor" do
       it "should fail if not set" do
         minimum_valid_params.delete :processor
-        Source.new(minimum_valid_params).valid?.should be_false
+        Source.new(minimum_valid_params).valid?.should be_falsey
       end
       it "should fail if set to an invalid value" do
-        Source.new(minimum_valid_params.merge(processor: 'invalid')).valid?.should be_false
+        Source.new(minimum_valid_params.merge(processor: 'invalid')).valid?.should be_falsey
       end
       it "should pass if set to iCalendar" do
         source = Source.new(minimum_valid_params.merge( processor: 'iCalendar' ))
-        source.valid?.should be_true
+        source.valid?.should be_truthy
       end
     end
     describe "of url" do
       it "should fail if not set" do
         minimum_valid_params.delete :url
-        Source.new(minimum_valid_params).valid?.should be_false
+        Source.new(minimum_valid_params).valid?.should be_falsey
       end
       it "should fail if not a valid url format" do
-        Source.new(minimum_valid_params.merge(url: 'invalid url')).valid?.should be_false
+        Source.new(minimum_valid_params.merge(url: 'invalid url')).valid?.should be_falsey
       end
     end
     describe "of method" do
@@ -103,27 +103,27 @@ describe Source, type: :model do
       end
       it "should fail if invalid" do
         source = Source.new(minimum_valid_params.merge( method: 'invalid' ))
-        source.valid?.should be_false
+        source.valid?.should be_falsey
       end
       it "should pass if set to get" do
         source = Source.new(minimum_valid_params.merge( method: 'get' ))
-        source.valid?.should be_true
+        source.valid?.should be_truthy
       end
       it "should pass if set to post" do
         source = Source.new(minimum_valid_params.merge( method: 'post' ))
-        source.valid?.should be_true
+        source.valid?.should be_truthy
       end
     end
     describe "of last_updated_at" do
       it "should fail if greater than the current time" do
         source = Source.new(minimum_valid_params)
         source.last_updated_at = 1.minute.from_now
-        source.valid?.should be_false
+        source.valid?.should be_falsey
       end
       it "should pass if equal to the current time" do
         source = Source.new(minimum_valid_params)
         source.last_updated_at = Time.now
-        source.valid?.should be_true
+        source.valid?.should be_truthy
       end
     end
   end

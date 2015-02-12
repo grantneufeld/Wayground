@@ -15,63 +15,63 @@ describe Page, type: :model do
     describe "of filename" do
       it "should allow the filename to be a single slash for the root path" do
         page = Page.new(:title => 'A', :filename => '/')
-        page.valid?.should be_true
+        page.valid?.should be_truthy
       end
       it "should not allow slashes in the filename, except for the root path" do
         page = Page.new(:title => 'A', :filename => '/filename')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow leading periods in the filename" do
         page = Page.new(:title => 'A', :filename => '.filename')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow trailing periods in the filename" do
         page = Page.new(:title => 'A', :filename => 'filename.')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow series of periods in the filename" do
         page = Page.new(:title => 'A', :filename => 'file..name')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow high-byte characters in the filename" do
         page = Page.new(:title => 'A', :filename => 'ƒilename')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow ampersands in the filename" do
         page = Page.new(:title => 'A', :filename => 'file&name')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow spaces in the filename" do
         page = Page.new(:title => 'A', :filename => 'file name')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       #it "should not allow  in the filename" do
       #  page = Page.new(:filename => 'filename')
-      #  page.valid?.should be_false
+      #  page.valid?.should be_falsey
       #end
       it "should not allow the filename to exceed 127 characters" do
         page = Page.new(:title => 'A', :filename => 'a' * 128)
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should allow the filename to reach 127 characters" do
         page = Page.new(:title => 'A', :filename => 'a' * 127)
-        page.valid?.should be_true
+        page.valid?.should be_truthy
       end
       it "should allow letters, numbers, dashes, underscores and a file extension in the filename" do
         page = Page.new(:title => 'A',
           :filename => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz_01234567.89'
         )
-        page.valid?.should be_true
+        page.valid?.should be_truthy
       end
     end
     describe "of title" do
       it "should not allow a blank title" do
         page = Page.new(:title => '', :filename => 'a')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
       it "should not allow a missing title" do
         page = Page.new(:filename => 'a')
-        page.valid?.should be_false
+        page.valid?.should be_falsey
       end
     end
   end

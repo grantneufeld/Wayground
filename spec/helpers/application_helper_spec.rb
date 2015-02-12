@@ -92,7 +92,7 @@ describe ApplicationHelper, type: :helper do
     end
     it "should produce an html_safe string" do
       str = "Make this html_safe."
-      helper.simple_text_to_html(str).html_safe?.should be_true
+      helper.simple_text_to_html(str).html_safe?.should be_truthy
     end
   end
 
@@ -121,7 +121,7 @@ describe ApplicationHelper, type: :helper do
     end
     it "should produce an html_safe string" do
       str = "Make this html_safe."
-      helper.simple_text_to_html_breaks(str).html_safe?.should be_true
+      helper.simple_text_to_html_breaks(str).html_safe?.should be_truthy
     end
   end
 

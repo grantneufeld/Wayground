@@ -38,57 +38,57 @@ describe ImageVariant, type: :model do
     it "should validate with just the required values" do
       variant = ImageVariant.new(min_params)
       variant.image = image
-      expect( variant.valid? ).to be_true
+      expect( variant.valid? ).to be_truthy
     end
     describe "of image" do
       it "should not validate when image absent on update" do
         variant = FactoryGirl.create(:image_variant)
         variant.image = nil
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
     end
     describe "of height" do
       it "should not validate with a non-intenger number" do
         variant = ImageVariant.new(min_params.merge(height: '3.14'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should not validate with a negative height" do
         variant = ImageVariant.new(min_params.merge(height: '-1'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should not validate with a height of zero" do
         variant = ImageVariant.new(min_params.merge(height: '0'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should validate with a height of 1" do
         variant = ImageVariant.new(min_params.merge(height: '1'))
         variant.image = image
-        expect( variant.valid? ).to be_true
+        expect( variant.valid? ).to be_truthy
       end
     end
     describe "of width" do
       it "should not validate with a non-intenger number" do
         variant = ImageVariant.new(min_params.merge(width: '1.23'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should not validate with a negative width" do
         variant = ImageVariant.new(min_params.merge(width: '-1'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should not validate with a width of zero" do
         variant = ImageVariant.new(min_params.merge(width: '0'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should validate with a width of 1" do
         variant = ImageVariant.new(min_params.merge(width: '1'))
         variant.image = image
-        expect( variant.valid? ).to be_true
+        expect( variant.valid? ).to be_truthy
       end
     end
     describe "of format" do
@@ -96,7 +96,7 @@ describe ImageVariant, type: :model do
         min_params.delete(:format)
         variant = ImageVariant.new(min_params)
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
     end
     describe "of style" do
@@ -104,7 +104,7 @@ describe ImageVariant, type: :model do
         min_params.delete(:style)
         variant = ImageVariant.new(min_params)
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
     end
     describe "of url" do
@@ -112,12 +112,12 @@ describe ImageVariant, type: :model do
         min_params.delete(:url)
         variant = ImageVariant.new(min_params)
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
       it "should not validate when url is invalid" do
         variant = ImageVariant.new(min_params.merge(url: 'invalid'))
         variant.image = image
-        expect( variant.valid? ).to be_false
+        expect( variant.valid? ).to be_falsey
       end
     end
   end

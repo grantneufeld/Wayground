@@ -87,7 +87,7 @@ describe CalendarMonthPresenter do
     end
     it "should return an html safe string" do
       presenter.stub(:present_week).and_return('present_week'.html_safe)
-      expect( presenter.present_weeks.html_safe? ).to be_true
+      expect( presenter.present_weeks.html_safe? ).to be_truthy
     end
   end
 
@@ -106,7 +106,7 @@ describe CalendarMonthPresenter do
     end
     it "should return an html safe string" do
       presenter.stub(:present_day).and_return('present_day'.html_safe)
-      expect( presenter.present_week(@week).html_safe? ).to be_true
+      expect( presenter.present_week(@week).html_safe? ).to be_truthy
     end
   end
 
@@ -131,7 +131,7 @@ describe CalendarMonthPresenter do
       it "should return an html safe string" do
         presenter.stub(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
         result = presenter.present_day(@day)
-        expect( result.html_safe? ).to be_true
+        expect( result.html_safe? ).to be_truthy
       end
     end
     context "outside the presenter’s month" do
@@ -199,7 +199,7 @@ describe CalendarMonthPresenter do
           expect(result).to match /\A<a [^>]*>27<\/a>\z/
         end
         it 'should return an html safe string' do
-          expect(result.html_safe?).to be_true
+          expect(result.html_safe?).to be_truthy
         end
       end
       context 'with the day before the earliest event' do
@@ -214,7 +214,7 @@ describe CalendarMonthPresenter do
           expect(result).to match /\A<span [^>]*title="September 27, 2007"/
         end
         it 'should return an html safe string' do
-          expect(result.html_safe?).to be_true
+          expect(result.html_safe?).to be_truthy
         end
       end
       context 'with the day after the last event' do
@@ -229,7 +229,7 @@ describe CalendarMonthPresenter do
           expect(result).to match /\A<span [^>]*title="September 27, 2007"/
         end
         it 'should return an html safe string' do
-          expect(result.html_safe?).to be_true
+          expect(result.html_safe?).to be_truthy
         end
       end
       context 'with no events' do
@@ -243,7 +243,7 @@ describe CalendarMonthPresenter do
           expect(result).to match /\A<span [^>]*title="September 27, 2007"/
         end
         it 'should return an html safe string' do
-          expect(result.html_safe?).to be_true
+          expect(result.html_safe?).to be_truthy
         end
       end
     end
@@ -264,7 +264,7 @@ describe CalendarMonthPresenter do
         expect( @result ).to match /<div class="date_content">/
       end
       it "should return an html safe string" do
-        expect( @result.html_safe? ).to be_true
+        expect( @result.html_safe? ).to be_truthy
       end
     end
     context "with no events on the day" do
@@ -276,7 +276,7 @@ describe CalendarMonthPresenter do
         expect( @result ).to eq ''
       end
       it "should return an html safe string" do
-        expect( @result.html_safe? ).to be_true
+        expect( @result.html_safe? ).to be_truthy
       end
     end
   end
@@ -349,7 +349,7 @@ describe CalendarMonthPresenter do
         expect( @result ).to eq '<p>2 events</p>'
       end
       it "should return an html safe string" do
-        expect( @result.html_safe? ).to be_true
+        expect( @result.html_safe? ).to be_truthy
       end
     end
     context "with a single event" do
@@ -369,7 +369,7 @@ describe CalendarMonthPresenter do
         expect( @result ).to eq ''
       end
       it "should return an html safe string" do
-        expect( @result.html_safe? ).to be_true
+        expect( @result.html_safe? ).to be_truthy
       end
     end
   end
@@ -387,7 +387,7 @@ describe CalendarMonthPresenter do
       end
       it "should return an html safe string" do
         presenter.stub(:present_day_events_list).with([event]).and_return('events')
-        expect( presenter.present_day_events(event_list).html_safe? ).to be_true
+        expect( presenter.present_day_events(event_list).html_safe? ).to be_truthy
       end
     end
     context "with an empty event list" do
@@ -399,7 +399,7 @@ describe CalendarMonthPresenter do
         expect( @result ).to eq ''
       end
       it "should return an html safe string" do
-        expect( @result.html_safe? ).to be_true
+        expect( @result.html_safe? ).to be_truthy
       end
     end
   end
@@ -407,7 +407,7 @@ describe CalendarMonthPresenter do
   describe "#present_day_events_list" do
     it "should return an html_safe string" do
       presenter = CalendarMonthPresenter.new(view: view, events: [])
-      expect( presenter.present_day_events_list([]).html_safe? ).to be_true
+      expect( presenter.present_day_events_list([]).html_safe? ).to be_truthy
     end
     it "should return the list wrapped in an unordered list element" do
       presenter = CalendarMonthPresenter.new(view: view, events: [])
@@ -454,7 +454,7 @@ describe CalendarMonthPresenter do
       ).to match /\A<li><a href="#{path}"[^>]*>7pm: #{title}<\/a><\/li>\n\z/
     end
     it "should return an html_safe string" do
-      expect( presenter.present_event_in_list(event).html_safe? ).to be_true
+      expect( presenter.present_event_in_list(event).html_safe? ).to be_truthy
     end
     context "with an all-day event" do
       let(:event_params) { $event_params = event_common_params.merge(is_allday: true) }

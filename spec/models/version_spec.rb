@@ -60,21 +60,21 @@ describe Version, type: :model do
     it "should pass when all required fields are set" do
       version = @item.versions.new(edited_at: Time.now)
       version.user = @user
-      expect( version.valid? ).to be_true
+      expect( version.valid? ).to be_truthy
     end
     it "should require an item" do
       version = Version.new(edited_at: Time.now)
       version.user = @user
-      expect( version.valid? ).to be_false
+      expect( version.valid? ).to be_falsey
     end
     it "should require a user" do
       version = @item.versions.new(edited_at: Time.now)
-      expect( version.valid? ).to be_false
+      expect( version.valid? ).to be_falsey
     end
     it "should require an edited at datetime" do
       version = @item.versions.new
       version.user = @user
-      expect( version.valid? ).to be_false
+      expect( version.valid? ).to be_falsey
     end
   end
 
@@ -155,7 +155,7 @@ describe Version, type: :model do
   describe "#is_current?" do
     it "should be true if this is the only version" do
       item = FactoryGirl.create(:event)
-      expect( item.versions[0].is_current? ).to be_true
+      expect( item.versions[0].is_current? ).to be_truthy
     end
     it "should be true if this is the latest version" do
       Version.delete_all
@@ -163,13 +163,13 @@ describe Version, type: :model do
       # create an additional, earlier, version to make sure we’re ordering by date properly
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.day.ago)
       @item.reload
-      expect( version.is_current? ).to be_true
+      expect( version.is_current? ).to be_truthy
     end
     it "should be false if this is not the latest version" do
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 2.weeks.ago)
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.week.from_now)
       middle_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 6.days.from_now)
-      expect( middle_version.is_current? ).to be_false
+      expect( middle_version.is_current? ).to be_falsey
     end
   end
 

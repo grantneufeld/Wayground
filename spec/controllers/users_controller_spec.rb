@@ -44,7 +44,7 @@ describe UsersController, type: :controller do
       # TODO: more descriptive check of the new user form
       response.should be_success
       # should not be a redirect:
-      response.location.blank?.should be_true
+      response.location.blank?.should be_truthy
     end
     it "should not show the form if the user is already signed-in" do
       set_logged_in
@@ -64,14 +64,14 @@ describe UsersController, type: :controller do
     it "should fail if empty form submitted" do
       post 'create'
       # TODO: check that there are errors reported
-      response.location.blank?.should be_true
+      response.location.blank?.should be_truthy
     end
     it "should fail if invalid form submitted" do
       post 'create', :user => {:email => 'invalid email address',
         :password => 'invalid', :password_confirmation => 'doesn’t match'
       }
       # TODO: check that there are errors reported
-      response.location.blank?.should be_true
+      response.location.blank?.should be_truthy
     end
     it "should create a new user record as an admin when valid form submitted" do
       # clear out any existing users so this will be the first, so be made an admin

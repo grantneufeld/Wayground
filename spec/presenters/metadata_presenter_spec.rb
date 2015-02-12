@@ -133,7 +133,7 @@ describe MetadataPresenter do
       end
     end
     it "should be html safe" do
-      expect( MetadataPresenter.new(view: view_stub).present_title.html_safe? ).to be_true
+      expect( MetadataPresenter.new(view: view_stub).present_title.html_safe? ).to be_truthy
     end
   end
 
@@ -168,7 +168,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(big_params.merge(view: view_stub))
-        expect( presenter.present_metatags.html_safe? ).to be_true
+        expect( presenter.present_metatags.html_safe? ).to be_truthy
       end
     end
   end
@@ -181,7 +181,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
-        expect( presenter.present_description.html_safe? ).to be_true
+        expect( presenter.present_description.html_safe? ).to be_truthy
       end
     end
     context "with a description" do
@@ -193,7 +193,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub, description: 'Test.')
-        expect( presenter.present_description.html_safe? ).to be_true
+        expect( presenter.present_description.html_safe? ).to be_truthy
       end
     end
   end
@@ -229,7 +229,7 @@ describe MetadataPresenter do
     end
     it "should be html safe" do
       presenter = MetadataPresenter.new(view: view_stub)
-      expect( presenter.present_open_graph_specific.html_safe? ).to be_true
+      expect( presenter.present_open_graph_specific.html_safe? ).to be_truthy
     end
   end
 
@@ -248,7 +248,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(big_params.merge(view: view_stub))
-        expect( presenter.present_open_graph_common.html_safe? ).to be_true
+        expect( presenter.present_open_graph_common.html_safe? ).to be_truthy
       end
     end
     context "with no params set" do
@@ -262,7 +262,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
-        expect( presenter.present_open_graph_common.html_safe? ).to be_true
+        expect( presenter.present_open_graph_common.html_safe? ).to be_truthy
       end
     end
   end
@@ -275,7 +275,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
-        expect( presenter.present_image.html_safe? ).to be_true
+        expect( presenter.present_image.html_safe? ).to be_truthy
       end
     end
     context "with an image url" do
@@ -287,7 +287,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub, image_url: 'http://image.tld/')
-        expect( presenter.present_image.html_safe? ).to be_true
+        expect( presenter.present_image.html_safe? ).to be_truthy
       end
     end
     context "with an image url and size" do
@@ -305,7 +305,7 @@ describe MetadataPresenter do
         presenter = MetadataPresenter.new(view: view_stub,
           image_url: 'http://image.tld/', image_height: 12, image_width: 34
         )
-        expect( presenter.present_image.html_safe? ).to be_true
+        expect( presenter.present_image.html_safe? ).to be_truthy
       end
     end
   end
@@ -320,7 +320,7 @@ describe MetadataPresenter do
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
         presenter.stub(:twitter_site).and_return(nil)
-        expect( presenter.present_twitter.html_safe? ).to be_true
+        expect( presenter.present_twitter.html_safe? ).to be_truthy
       end
     end
     context "with a site" do
@@ -335,7 +335,7 @@ describe MetadataPresenter do
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
         presenter.stub(:twitter_site).and_return('@test')
-        expect( presenter.present_twitter.html_safe? ).to be_true
+        expect( presenter.present_twitter.html_safe? ).to be_truthy
       end
     end
     context "with a creator" do
@@ -350,7 +350,7 @@ describe MetadataPresenter do
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub, twitter_creator: 'testcreate')
         presenter.stub(:twitter_site).and_return(nil)
-        expect( presenter.present_twitter.html_safe? ).to be_true
+        expect( presenter.present_twitter.html_safe? ).to be_truthy
       end
     end
     context "with a site and creator" do
@@ -366,7 +366,7 @@ describe MetadataPresenter do
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub, twitter_creator: 'testcreate')
         presenter.stub(:twitter_site).and_return('@testsite')
-        expect( presenter.present_twitter.html_safe? ).to be_true
+        expect( presenter.present_twitter.html_safe? ).to be_truthy
       end
     end
   end
@@ -379,7 +379,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub)
-        expect( presenter.present_cache.html_safe? ).to be_true
+        expect( presenter.present_cache.html_safe? ).to be_truthy
       end
     end
     context "with cache flag set to :no" do
@@ -389,7 +389,7 @@ describe MetadataPresenter do
       end
       it "should be html safe" do
         presenter = MetadataPresenter.new(view: view_stub, nocache: true)
-        expect( presenter.present_cache.html_safe? ).to be_true
+        expect( presenter.present_cache.html_safe? ).to be_truthy
       end
     end
   end

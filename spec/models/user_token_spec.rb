@@ -26,21 +26,21 @@ describe UserToken, type: :model do
       user.id = 123
       user_token = UserToken.new(token: 'abc')
       user_token.user = user
-      expect( user_token.valid? ).to be_true
+      expect( user_token.valid? ).to be_truthy
     end
     it "should not validate without a user" do
       user_token = UserToken.new(token: 'abc')
-      expect( user_token.valid? ).to be_false
+      expect( user_token.valid? ).to be_falsey
     end
     it "should not validate without a token" do
       user_token = UserToken.new
       user_token.user = User.new
-      expect( user_token.valid? ).to be_false
+      expect( user_token.valid? ).to be_falsey
     end
     it "should not validate on creation with an expiry datetime that has already passed" do
       user_token = UserToken.new(token: 'abc', expires_at: Time.now)
       user_token.user = User.new
-      expect( user_token.valid? ).to be_false
+      expect( user_token.valid? ).to be_falsey
     end
   end
 

@@ -36,7 +36,7 @@ describe EventPresenter do
       expect( presenter.present_in_list ).to match /[\r\n]+\z/
     end
     it "should be html safe" do
-      expect( presenter.present_in_list.html_safe? ).to be_true
+      expect( presenter.present_in_list.html_safe? ).to be_truthy
     end
   end
 
@@ -54,7 +54,7 @@ describe EventPresenter do
       expect( presenter.present_heading ).to match /[\r\n]+\z/
     end
     it "should be html safe" do
-      expect( presenter.present_heading.html_safe? ).to be_true
+      expect( presenter.present_heading.html_safe? ).to be_truthy
     end
     context "with a cancelled event" do
       let(:event) { $event = Event.new(title: 'Test Title', start_at: start_at, is_cancelled: true) }
@@ -62,7 +62,7 @@ describe EventPresenter do
         expect( presenter.present_heading ).to match /\A<[^>]+ class="cancelled"/
       end
       it "should be html safe" do
-        expect( presenter.present_heading.html_safe? ).to be_true
+        expect( presenter.present_heading.html_safe? ).to be_truthy
       end
     end
     context "with a tentative event" do
@@ -71,7 +71,7 @@ describe EventPresenter do
         expect( presenter.present_heading ).to match /\A<[^>]+ class="tentative"/
       end
       it "should be html safe" do
-        expect( presenter.present_heading.html_safe? ).to be_true
+        expect( presenter.present_heading.html_safe? ).to be_truthy
       end
     end
   end
@@ -107,7 +107,7 @@ describe EventPresenter do
         expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>/
       end
       it "should be html safe" do
-        expect( presenter.present_status.html_safe? ).to be_true
+        expect( presenter.present_status.html_safe? ).to be_truthy
       end
     end
     context "with a tentative event" do
@@ -119,7 +119,7 @@ describe EventPresenter do
         expect( presenter.present_status ).to match /\A<[^>]+ class="status"[^>]*>/
       end
       it "should be html safe" do
-        expect( presenter.present_status.html_safe? ).to be_true
+        expect( presenter.present_status.html_safe? ).to be_truthy
       end
     end
     context "with an event that is not tentative and has not been cancelled" do
@@ -127,7 +127,7 @@ describe EventPresenter do
         expect( presenter.present_status ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_status.html_safe? ).to be_true
+        expect( presenter.present_status.html_safe? ).to be_truthy
       end
     end
   end
@@ -179,7 +179,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_time.html_safe? ).to be_true
+        expect( presenter.present_time.html_safe? ).to be_truthy
       end
     end
     context "with an end time on the same day" do
@@ -198,7 +198,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_time.html_safe? ).to be_true
+        expect( presenter.present_time.html_safe? ).to be_truthy
       end
     end
     context "with an end time on a later day" do
@@ -218,7 +218,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_time.html_safe? ).to be_true
+        expect( presenter.present_time.html_safe? ).to be_truthy
       end
     end
   end
@@ -232,7 +232,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_time_allday.html_safe? ).to be_true
+        expect( presenter.present_time_allday.html_safe? ).to be_truthy
       end
     end
     context "with a multi-day event" do
@@ -250,7 +250,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_time_allday.html_safe? ).to be_true
+        expect( presenter.present_time_allday.html_safe? ).to be_truthy
       end
     end
   end
@@ -266,7 +266,7 @@ describe EventPresenter do
       )
     end
     it "should be html safe" do
-      expect( presenter.present_details.html_safe? ).to be_true
+      expect( presenter.present_details.html_safe? ).to be_truthy
     end
   end
 
@@ -300,7 +300,7 @@ describe EventPresenter do
         expect( presenter.present_details ).to match />1[\r\n]*<br \/>2[\r\n]*<br \/>3</
       end
       it "should be html safe" do
-        expect( presenter.present_details.html_safe? ).to be_true
+        expect( presenter.present_details.html_safe? ).to be_truthy
       end
       context "with a user" do
         let(:user) { $user = User.new }
@@ -322,7 +322,7 @@ describe EventPresenter do
         expect( presenter.present_details ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_details.html_safe? ).to be_true
+        expect( presenter.present_details.html_safe? ).to be_truthy
       end
       context "with a user" do
         let(:user) { $user = User.new }
@@ -348,7 +348,7 @@ describe EventPresenter do
         expect( presenter.present_minimal_location ).to match /<[^>]+ class="fn org"[^>]*>Test Location</
       end
       it "should be html safe" do
-        expect( presenter.present_minimal_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_truthy
       end
     end
     context "with an event address" do
@@ -367,7 +367,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_minimal_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_truthy
       end
     end
     context "with both an event address and an event location" do
@@ -382,7 +382,7 @@ describe EventPresenter do
         )
       end
       it "should be html safe" do
-        expect( presenter.present_minimal_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_truthy
       end
     end
     context "with no location or address" do
@@ -390,7 +390,7 @@ describe EventPresenter do
         expect( presenter.present_minimal_location ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_minimal_location.html_safe? ).to be_true
+        expect( presenter.present_minimal_location.html_safe? ).to be_truthy
       end
     end
   end
@@ -415,7 +415,7 @@ describe EventPresenter do
         expect( presenter.present_location_block ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_block.html_safe? ).to be_true
+        expect( presenter.present_location_block.html_safe? ).to be_truthy
       end
     end
   end
@@ -430,7 +430,7 @@ describe EventPresenter do
         expect( presenter.present_location_org ).to match />Test Location</
       end
       it "should be html safe" do
-        expect( presenter.present_location_org.html_safe? ).to be_true
+        expect( presenter.present_location_org.html_safe? ).to be_truthy
       end
     end
     context "with location and location url" do
@@ -445,7 +445,7 @@ describe EventPresenter do
         expect( presenter.present_location_org ).to match />Test Location</
       end
       it "should be html safe" do
-        expect( presenter.present_location_org.html_safe? ).to be_true
+        expect( presenter.present_location_org.html_safe? ).to be_truthy
       end
     end
     context "with no location details" do
@@ -453,7 +453,7 @@ describe EventPresenter do
         expect( presenter.present_location_org ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_org.html_safe? ).to be_true
+        expect( presenter.present_location_org.html_safe? ).to be_truthy
       end
     end
   end
@@ -469,7 +469,7 @@ describe EventPresenter do
         expect( presenter.present_location_address ).to match '>Address<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_address.html_safe? ).to be_true
+        expect( presenter.present_location_address.html_safe? ).to be_truthy
       end
     end
     context "with no location details" do
@@ -477,7 +477,7 @@ describe EventPresenter do
         expect( presenter.present_location_address ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_address.html_safe? ).to be_true
+        expect( presenter.present_location_address.html_safe? ).to be_truthy
       end
     end
   end
@@ -494,7 +494,7 @@ describe EventPresenter do
         expect( presenter.present_location_full_address ).to match />Address[\r\n]*<br \/>[\r\n]*Region</
       end
       it "should be html safe" do
-        expect( presenter.present_location_full_address.html_safe? ).to be_true
+        expect( presenter.present_location_full_address.html_safe? ).to be_truthy
       end
     end
     context "with just the region" do
@@ -507,7 +507,7 @@ describe EventPresenter do
         expect( presenter.present_location_full_address ).to match />Region</
       end
       it "should be html safe" do
-        expect( presenter.present_location_full_address.html_safe? ).to be_true
+        expect( presenter.present_location_full_address.html_safe? ).to be_truthy
       end
     end
     context "with no location details" do
@@ -515,7 +515,7 @@ describe EventPresenter do
         expect( presenter.present_location_full_address ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_full_address.html_safe? ).to be_true
+        expect( presenter.present_location_full_address.html_safe? ).to be_truthy
       end
     end
   end
@@ -530,7 +530,7 @@ describe EventPresenter do
         expect( presenter.present_location_street_address ).to match '>123 Test<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_street_address.html_safe? ).to be_true
+        expect( presenter.present_location_street_address.html_safe? ).to be_truthy
       end
     end
     context "with address and location_url" do
@@ -545,7 +545,7 @@ describe EventPresenter do
         expect( presenter.present_location_street_address ).to match '>123 Test<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_street_address.html_safe? ).to be_true
+        expect( presenter.present_location_street_address.html_safe? ).to be_truthy
       end
     end
     context "with just a location_url" do
@@ -557,7 +557,7 @@ describe EventPresenter do
         expect( presenter.present_location_street_address ).to match '>http://loc.tld/<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_street_address.html_safe? ).to be_true
+        expect( presenter.present_location_street_address.html_safe? ).to be_truthy
       end
     end
     context "with no location details" do
@@ -565,7 +565,7 @@ describe EventPresenter do
         expect( presenter.present_location_street_address ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_street_address.html_safe? ).to be_true
+        expect( presenter.present_location_street_address.html_safe? ).to be_truthy
       end
     end
   end
@@ -580,7 +580,7 @@ describe EventPresenter do
         expect( presenter.present_location_region ).to eq 'City, Province, Country'
       end
       it "should be html safe" do
-        expect( presenter.present_location_region.html_safe? ).to be_true
+        expect( presenter.present_location_region.html_safe? ).to be_truthy
       end
     end
     context "with no region" do
@@ -588,7 +588,7 @@ describe EventPresenter do
         expect( presenter.present_location_region ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_region.html_safe? ).to be_true
+        expect( presenter.present_location_region.html_safe? ).to be_truthy
       end
     end
   end
@@ -603,7 +603,7 @@ describe EventPresenter do
         expect( presenter.present_location_city ).to match '>Test<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_city.html_safe? ).to be_true
+        expect( presenter.present_location_city.html_safe? ).to be_truthy
       end
     end
     context "with no city" do
@@ -611,7 +611,7 @@ describe EventPresenter do
         expect( presenter.present_location_city ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_city.html_safe? ).to be_true
+        expect( presenter.present_location_city.html_safe? ).to be_truthy
       end
     end
   end
@@ -626,7 +626,7 @@ describe EventPresenter do
         expect( presenter.present_location_province ).to match '>Test<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_province.html_safe? ).to be_true
+        expect( presenter.present_location_province.html_safe? ).to be_truthy
       end
     end
     context "with no province" do
@@ -634,7 +634,7 @@ describe EventPresenter do
         expect( presenter.present_location_province ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_province.html_safe? ).to be_true
+        expect( presenter.present_location_province.html_safe? ).to be_truthy
       end
     end
   end
@@ -649,7 +649,7 @@ describe EventPresenter do
         expect( presenter.present_location_country ).to match '>Test<'
       end
       it "should be html safe" do
-        expect( presenter.present_location_country.html_safe? ).to be_true
+        expect( presenter.present_location_country.html_safe? ).to be_truthy
       end
     end
     context "with no country" do
@@ -657,7 +657,7 @@ describe EventPresenter do
         expect( presenter.present_location_country ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_location_country.html_safe? ).to be_true
+        expect( presenter.present_location_country.html_safe? ).to be_truthy
       end
     end
   end
@@ -676,7 +676,7 @@ describe EventPresenter do
         presenter.present_description
       end
       it "should be html safe" do
-        expect( presenter.present_description.html_safe? ).to be_true
+        expect( presenter.present_description.html_safe? ).to be_truthy
       end
     end
     context "with no description" do
@@ -684,7 +684,7 @@ describe EventPresenter do
         expect( presenter.present_description ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_description.html_safe? ).to be_true
+        expect( presenter.present_description.html_safe? ).to be_truthy
       end
     end
   end
@@ -705,7 +705,7 @@ describe EventPresenter do
         expect( presenter.present_organizer ).to match /\.[\r\n]*\z/
       end
       it "should be html safe" do
-        expect( presenter.present_organizer.html_safe? ).to be_true
+        expect( presenter.present_organizer.html_safe? ).to be_truthy
       end
     end
     context "without an organizer url" do
@@ -723,7 +723,7 @@ describe EventPresenter do
         expect( presenter.present_organizer ).to match /\.[\r\n]*\z/
       end
       it "should be html safe" do
-        expect( presenter.present_organizer.html_safe? ).to be_true
+        expect( presenter.present_organizer.html_safe? ).to be_truthy
       end
     end
     context "with no organizer url" do
@@ -731,7 +731,7 @@ describe EventPresenter do
         expect( presenter.present_organizer ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_organizer.html_safe? ).to be_true
+        expect( presenter.present_organizer.html_safe? ).to be_truthy
       end
     end
   end
@@ -750,7 +750,7 @@ describe EventPresenter do
         presenter.stub(:present_edit_action).and_return(':edit:'.html_safe)
         presenter.stub(:present_approve_action).and_return(':approve:'.html_safe)
         presenter.stub(:present_delete_action).and_return(':delete:'.html_safe)
-        expect( presenter.present_action_menu.html_safe? ).to be_true
+        expect( presenter.present_action_menu.html_safe? ).to be_truthy
       end
     end
     context "with no actions available" do
@@ -758,7 +758,7 @@ describe EventPresenter do
         expect( presenter.present_action_menu ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_action_menu.html_safe? ).to be_true
+        expect( presenter.present_action_menu.html_safe? ).to be_truthy
       end
     end
   end
@@ -772,7 +772,7 @@ describe EventPresenter do
       end
       it "should be html safe" do
         event.stub(:has_authority_for_user_to?).and_return(true)
-        expect( presenter.present_edit_action.html_safe? ).to be_true
+        expect( presenter.present_edit_action.html_safe? ).to be_truthy
       end
     end
     context "with a user without edit authority for the item" do
@@ -783,7 +783,7 @@ describe EventPresenter do
       end
       it "should be html safe" do
         event.stub(:has_authority_for_user_to?).and_return(false)
-        expect( presenter.present_edit_action.html_safe? ).to be_true
+        expect( presenter.present_edit_action.html_safe? ).to be_truthy
       end
     end
     context "without a user" do
@@ -791,7 +791,7 @@ describe EventPresenter do
         expect( presenter.present_edit_action ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_edit_action.html_safe? ).to be_true
+        expect( presenter.present_edit_action.html_safe? ).to be_truthy
       end
     end
   end
@@ -805,7 +805,7 @@ describe EventPresenter do
       end
       it "should be html safe" do
         event.stub(:has_authority_for_user_to?).and_return(true)
-        expect( presenter.present_approve_action.html_safe? ).to be_true
+        expect( presenter.present_approve_action.html_safe? ).to be_truthy
       end
     end
     context "with an approved event" do
@@ -816,7 +816,7 @@ describe EventPresenter do
       end
       it "should be html safe" do
         event.is_approved = true
-        expect( presenter.present_approve_action.html_safe? ).to be_true
+        expect( presenter.present_approve_action.html_safe? ).to be_truthy
       end
     end
     context "with a user without approve authority for the item" do
@@ -827,7 +827,7 @@ describe EventPresenter do
       end
       it "should be html safe" do
         event.stub(:has_authority_for_user_to?).and_return(false)
-        expect( presenter.present_approve_action.html_safe? ).to be_true
+        expect( presenter.present_approve_action.html_safe? ).to be_truthy
       end
     end
     context "without a user" do
@@ -835,7 +835,7 @@ describe EventPresenter do
         expect( presenter.present_approve_action ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_approve_action.html_safe? ).to be_true
+        expect( presenter.present_approve_action.html_safe? ).to be_truthy
       end
     end
   end
@@ -851,7 +851,7 @@ describe EventPresenter do
       it "should be html safe" do
         event.stub(:has_authority_for_user_to?).and_return(true)
         event.stub(:id).and_return(123)
-        expect( presenter.present_delete_action.html_safe? ).to be_true
+        expect( presenter.present_delete_action.html_safe? ).to be_truthy
       end
     end
     context "with a user without delete authority for the item" do
@@ -862,7 +862,7 @@ describe EventPresenter do
       end
       it "should be html safe" do
         event.stub(:has_authority_for_user_to?).and_return(false)
-        expect( presenter.present_delete_action.html_safe? ).to be_true
+        expect( presenter.present_delete_action.html_safe? ).to be_truthy
       end
     end
     context "without a user" do
@@ -870,7 +870,7 @@ describe EventPresenter do
         expect( presenter.present_delete_action ).to eq ''
       end
       it "should be html safe" do
-        expect( presenter.present_delete_action.html_safe? ).to be_true
+        expect( presenter.present_delete_action.html_safe? ).to be_truthy
       end
     end
   end

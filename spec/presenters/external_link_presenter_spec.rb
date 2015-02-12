@@ -30,7 +30,7 @@ describe ExternalLinkPresenter do
       expect( presenter.present_link_in ).to match /\A<span /
     end
     it 'should be html safe' do
-      expect( presenter.present_link_in.html_safe? ).to be_true
+      expect( presenter.present_link_in.html_safe? ).to be_truthy
     end
     context 'with no site' do
       it 'should default to “website” as the tag class' do
@@ -51,7 +51,7 @@ describe ExternalLinkPresenter do
       end
       it 'should be html safe' do
         link.site = 'google'
-        expect( presenter.present_link_in.html_safe? ).to be_true
+        expect( presenter.present_link_in.html_safe? ).to be_truthy
       end
     end
     context 'with a tag type' do
@@ -80,7 +80,7 @@ describe ExternalLinkPresenter do
         expect( presenter.present_label ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_label.html_safe? ).to be_true
+        expect( presenter.present_label.html_safe? ).to be_truthy
       end
     end
     context 'with an unrecognized site' do
@@ -96,7 +96,7 @@ describe ExternalLinkPresenter do
       end
       it 'should be html safe' do
         link.site = 'flickr'
-        expect( presenter.present_label.html_safe? ).to be_true
+        expect( presenter.present_label.html_safe? ).to be_truthy
       end
     end
   end

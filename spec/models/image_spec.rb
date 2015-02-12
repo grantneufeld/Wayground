@@ -37,19 +37,19 @@ describe Image, type: :model do
 
   describe "validations" do
     it "should validate with all blank values" do
-      expect( Image.new().valid? ).to be_true
+      expect( Image.new().valid? ).to be_truthy
     end
     it "should validate with a valid attribution url" do
-      expect( Image.new(attribution_url: 'http://test.tld/').valid? ).to be_true
+      expect( Image.new(attribution_url: 'http://test.tld/').valid? ).to be_truthy
     end
     it "should not validate with an invalid attribution url" do
-      expect( Image.new(attribution_url: 'not an url').valid? ).to be_false
+      expect( Image.new(attribution_url: 'not an url').valid? ).to be_falsey
     end
     it "should validate with a valid license url" do
-      expect( Image.new(license_url: 'http://license.tld/').valid? ).to be_true
+      expect( Image.new(license_url: 'http://license.tld/').valid? ).to be_truthy
     end
     it "should not validate with an invalid license url" do
-      expect( Image.new(license_url: 'not an url').valid? ).to be_false
+      expect( Image.new(license_url: 'not an url').valid? ).to be_falsey
     end
   end
 

@@ -33,39 +33,39 @@ describe Project, type: :model do
     end
     it "should allow is_visible to be set" do
       project = Project.new(:is_visible => true)
-      project.is_visible?.should be_true
+      project.is_visible?.should be_truthy
     end
     it "should allow is_public_content to be set" do
       project = Project.new(:is_public_content => true)
-      project.is_public_content?.should be_true
+      project.is_public_content?.should be_truthy
     end
     it "should allow is_visible_member_list to be set" do
       project = Project.new(:is_visible_member_list => true)
-      project.is_visible_member_list?.should be_true
+      project.is_visible_member_list?.should be_truthy
     end
     it "should allow is_joinable to be set" do
       project = Project.new(:is_joinable => true)
-      project.is_joinable?.should be_true
+      project.is_joinable?.should be_truthy
     end
     it "should allow is_members_can_invite to be set" do
       project = Project.new(:is_members_can_invite => true)
-      project.is_members_can_invite?.should be_true
+      project.is_members_can_invite?.should be_truthy
     end
     it "should allow is_not_unsubscribable to be set" do
       project = Project.new(:is_not_unsubscribable => true)
-      project.is_not_unsubscribable?.should be_true
+      project.is_not_unsubscribable?.should be_truthy
     end
     it "should allow is_moderated to be set" do
       project = Project.new(:is_moderated => true)
-      project.is_moderated?.should be_true
+      project.is_moderated?.should be_truthy
     end
     it "should allow is_only_admin_posts to be set" do
       project = Project.new(:is_only_admin_posts => true)
-      project.is_only_admin_posts?.should be_true
+      project.is_only_admin_posts?.should be_truthy
     end
     it "should allow is_no_comments to be set" do
       project = Project.new(:is_no_comments => true)
-      project.is_no_comments?.should be_true
+      project.is_no_comments?.should be_truthy
     end
     it "should allow name to be set" do
       project = Project.new(:name => 'Can Set Name')
@@ -86,14 +86,14 @@ describe Project, type: :model do
       it "should fail if no creator" do
         project = Project.new(minimum_valid_params)
         project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
     end
     describe "of owner" do
       it "should fail if no owner" do
         project = Project.new(minimum_valid_params)
         project.creator = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
     end
     describe "of name" do
@@ -101,7 +101,7 @@ describe Project, type: :model do
         minimum_valid_params.delete(:name)
         project = Project.new(minimum_valid_params)
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
     end
     describe "of filename" do
@@ -109,54 +109,54 @@ describe Project, type: :model do
         minimum_valid_params.delete(:filename)
         project = Project.new(minimum_valid_params)
         project.creator = project.owner = @user_admin
-        project.valid?.should be_true
+        project.valid?.should be_truthy
       end
       it "should not allow slashes in the filename" do
         project = Project.new(minimum_valid_params.merge(:filename => '/invalidfilename'))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should not allow periods in the filename" do
         project = Project.new(minimum_valid_params.merge(:filename => 'file.name'))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should not allow high-byte characters in the filename" do
         project = Project.new(minimum_valid_params.merge(:filename => 'ƒilename'))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should not allow ampersands in the filename" do
         project = Project.new(minimum_valid_params.merge(:filename => 'file&name'))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should not allow spaces in the filename" do
         project = Project.new(minimum_valid_params.merge(:filename => 'file name'))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should not allow the filename to exceed 127 characters" do
         project = Project.new(minimum_valid_params.merge(:filename => 'a' * 128))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should allow the filename to reach 127 characters" do
         project = Project.new(minimum_valid_params.merge(:filename => 'a' * 127))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_true
+        project.valid?.should be_truthy
       end
       it "should not allow duplicate filenames" do
         filename = 'no_duplicate'
         FactoryGirl.create(:project, :filename => filename)
         project = Project.new(minimum_valid_params.merge(:filename => filename))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_false
+        project.valid?.should be_falsey
       end
       it "should allow letters, numbers, dashes, and underscores in the filename" do
         project = Project.new(minimum_valid_params.merge(filename: 'abcdefghijklmnopqrstuvwxyz_0123456789-'))
         project.creator = project.owner = @user_admin
-        project.valid?.should be_true
+        project.valid?.should be_truthy
       end
     end
   end

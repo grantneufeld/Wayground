@@ -20,7 +20,7 @@ describe HtmlPresenter do
       expect( presenter.html_tag_with_newline(:end) ).to match /\n\z/
     end
     it "should be html safe" do
-      expect( presenter.html_tag_with_newline(:test).html_safe? ).to be_true
+      expect( presenter.html_tag_with_newline(:test).html_safe? ).to be_truthy
     end
   end
 
@@ -95,7 +95,7 @@ describe HtmlPresenter do
         expect( presenter.html_escape(string) ).to eq string
       end
       it "should be html safe" do
-        expect( presenter.html_escape(string).html_safe? ).to be_true
+        expect( presenter.html_escape(string).html_safe? ).to be_truthy
       end
     end
     context "with a string with a bunch of html characters" do
@@ -104,7 +104,7 @@ describe HtmlPresenter do
         expect( presenter.html_escape(string) ).to eq "&amp;&lt;&gt;&quot;&#x27;"
       end
       it "should be html safe" do
-        expect( presenter.html_escape(string).html_safe? ).to be_true
+        expect( presenter.html_escape(string).html_safe? ).to be_truthy
       end
     end
   end
@@ -114,7 +114,7 @@ describe HtmlPresenter do
       expect( presenter.html_blank ).to eq ''
     end
     it "should be html safe" do
-      expect( presenter.html_blank.html_safe? ).to be_true
+      expect( presenter.html_blank.html_safe? ).to be_truthy
     end
   end
 
@@ -123,7 +123,7 @@ describe HtmlPresenter do
       expect( presenter.newline ).to eq "\n"
     end
     it "should be html safe" do
-      expect( presenter.newline.html_safe? ).to be_true
+      expect( presenter.newline.html_safe? ).to be_truthy
     end
   end
 

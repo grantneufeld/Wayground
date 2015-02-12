@@ -11,10 +11,10 @@ describe Setting, type: :model do
   describe "validation" do
     describe "of key" do
       it "should require key to be set" do
-        Setting.new(:key => 'set').valid?.should be_true
+        Setting.new(:key => 'set').valid?.should be_truthy
       end
       it "should fail if key is not set" do
-        Setting.new.valid?.should be_false
+        Setting.new.valid?.should be_falsey
       end
     end
   end

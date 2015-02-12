@@ -12,61 +12,61 @@ describe Document, type: :model do
         document = Document.new(:custom_filename => '/')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_true
+        document.valid?.should be_truthy
       end
       it "should not allow slashes in the filename, except for the root path" do
         document = Document.new(:custom_filename => '/filename')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow leading periods in the filename" do
         document = Document.new(:custom_filename => '.filename')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow trailing periods in the filename" do
         document = Document.new(:custom_filename => 'filename.')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow series of periods in the filename" do
         document = Document.new(:custom_filename => 'file..name')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow high-byte characters in the filename" do
         document = Document.new(:custom_filename => 'ƒilename')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow ampersands in the filename" do
         document = Document.new(:custom_filename => 'file&name')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow spaces in the filename" do
         document = Document.new(:custom_filename => 'file name')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow the filename to exceed 127 characters" do
         document = Document.new(:custom_filename => 'a' * 128)
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should allow the filename to reach 127 characters" do
         document = Document.new(:custom_filename => 'a' * 127)
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_true
+        document.valid?.should be_truthy
       end
       it "should allow letters, numbers, dashes, underscores and a file extension in the filename" do
         document = Document.new(
@@ -74,7 +74,7 @@ describe Document, type: :model do
         )
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_true
+        document.valid?.should be_truthy
       end
     end
     describe "of content_type" do
@@ -82,26 +82,26 @@ describe Document, type: :model do
         document = Document.new(:custom_filename => 'a')
         document.content_type = ''
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should not allow an invalid content_type" do
         document = Document.new(:custom_filename => 'a')
         document.content_type = 'invalid'
         document.data = ''
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
     end
     describe "of data" do
       it "should require data to be set" do
         document = Document.new(:custom_filename => 'a')
         document.content_type = 'text/plain'
-        document.valid?.should be_false
+        document.valid?.should be_falsey
       end
       it "should allow data to be empty" do
         document = Document.new(:custom_filename => 'a')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_true
+        document.valid?.should be_truthy
       end
     end
   end
@@ -340,14 +340,14 @@ describe Document, type: :model do
       document.updated_at = @update
       document.is_authority_controlled = true
       document.assign_headers(response)
-      response.cache_control[:public].should be_false
+      response.cache_control[:public].should be_falsey
     end
     it "should set the Cache-Control for public access when document is not authority controlled" do
       response = ActionDispatch::Response.new
       document = Document.new
       document.updated_at = @update
       document.assign_headers(response)
-      response.cache_control[:public].should be_true
+      response.cache_control[:public].should be_truthy
     end
     it "should set the Content-Type" do
       response = ActionDispatch::Response.new

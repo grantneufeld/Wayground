@@ -28,52 +28,52 @@ describe User, type: :model do
       it "should fail if there is no password" do
         u = User.new
         u.email = 'test@wayground.ca'
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if the password is less than 8 characters long" do
         u = User.new
         u.email = 'test@wayground.ca'
         u.password_confirmation = u.password = '1234567'
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if the password is more than 63 characters long" do
         u = User.new
         u.email = 'test@wayground.ca'
         u.password_confirmation = u.password = 'a' * 64
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if there is no password confirmation" do
         u = User.new
         u.email = 'test@wayground.ca'
         u.password = 'password'
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if the password confirmation is blank" do
         u = User.new
         u.email = 'test@wayground.ca'
         u.password = 'password'
         u.password_confirmation = ''
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if the password confirmation does not match" do
         u = User.new
         u.email = 'test@wayground.ca'
         u.password = 'password'
         u.password_confirmation = 'missmatch'
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
     end
     describe 'of email' do
       it "should fail if there is no email address" do
         u = User.new
         u.password_confirmation = u.password = 'password'
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if the email address is not a proper email address" do
         u = User.new
         u.email = 'invalid@bad-email'
         u.password_confirmation = u.password = 'password'
-        u.valid?.should be_false
+        u.valid?.should be_falsey
       end
       it "should fail if there is already a user registered with the same email address" do
         u = User.new
@@ -83,7 +83,7 @@ describe User, type: :model do
         u2 = User.new
         u2.email = 'test+duplicate@wayground.ca'
         u2.password_confirmation = u2.password = 'another1'
-        u2.valid?.should be_false
+        u2.valid?.should be_falsey
       end
       it "should fail if there is already a user registered with the same email address but different case" do
         u = User.new
@@ -93,13 +93,13 @@ describe User, type: :model do
         u2 = User.new
         u2.email = 'TEST+DUPLICATE@WAYGROUND.CA'
         u2.password_confirmation = u2.password = 'another1'
-        u2.valid?.should be_false
+        u2.valid?.should be_falsey
       end
       it "should fail if invalid timezone specified" do
         User.new(email: 'test+validtimezone@wayground.ca',
           password: 'password', password_confirmation: 'password',
           timezone: 'invalid timezone'
-        ).valid?.should be_false
+        ).valid?.should be_falsey
       end
       it "should add a user record with valid parameters" do
         u = User.new
@@ -113,12 +113,12 @@ describe User, type: :model do
       it "should validate when there is an authentication and no email/pass" do
         authentication = FactoryGirl.build(:authentication)
         user = authentication.user
-        user.valid?.should be_true
+        user.valid?.should be_truthy
       end
     end
     it "should fail to validate when no authentication and no email/pass" do
       user = User.new
-      user.valid?.should be_false
+      user.valid?.should be_falsey
     end
   end
 
@@ -159,11 +159,11 @@ describe User, type: :model do
     it "should save an encrypted version of a new user’s password" do
       user = User.new
       user.password = 'encrypt this password'
-      expect( user.password_hash.present? ).to be_true
+      expect( user.password_hash.present? ).to be_truthy
     end
     it "should be used in attribute mass assignment" do
       user = User.new(password: 'encrypt this password')
-      expect( user.password_hash.present? ).to be_true
+      expect( user.password_hash.present? ).to be_truthy
     end
   end
 
@@ -178,20 +178,20 @@ describe User, type: :model do
       @user.authorizations.destroy_all
     end
     it "should generate a confirmation token when creating a new user" do
-      expect( @user.confirmation_token.blank? ).to be_false
+      expect( @user.confirmation_token.blank? ).to be_falsey
     end
     it "should fail to confirm if the code parameter does not match the saved token" do
-      @user.confirm_code!('invalid token').should be_false
+      @user.confirm_code!('invalid token').should be_falsey
     end
     it "should fail to confirm if the user’s email has already been confirmed" do
       @user.email_confirmed = true
-      @user.confirm_code!(@user.confirmation_token).should be_false
+      @user.confirm_code!(@user.confirmation_token).should be_falsey
       @user.email_confirmed = false
     end
     it "should successfully flag the user’s email as confirmed" do
       save_token = @user.confirmation_token
       @user.confirm_code!(@user.confirmation_token)
-      @user.email_confirmed.should be_true
+      @user.email_confirmed.should be_truthy
       @user.confirmation_token = save_token #restore
     end
     it "should clear the confirmation token when the user’s email is confirmed" do
@@ -209,16 +209,16 @@ describe User, type: :model do
     it "should be true for a user with global is_owner authority" do
       @user.reload
       @user.make_admin!
-      @user.admin?.should be_true
+      @user.admin?.should be_truthy
     end
     it "should not be true for a user with global, but not is_owner, authority" do
       Authority.where(user_id: @user.id).delete_all
       @user.set_authority_on_area('global', :can_view)
-      @user.admin?.should_not be_true
+      @user.admin?.should_not be_truthy
     end
     it "should not be true for a regular user" do
       Authority.where(user_id: @user.id).delete_all
-      @user.admin?.should_not be_true
+      @user.admin?.should_not be_truthy
     end
   end
 
@@ -291,7 +291,7 @@ describe User, type: :model do
     it "should create an authority" do
       user = FactoryGirl.create(:user)
       user.set_authority_on_area('global', :can_update)
-      user.has_authority_for_area('global', :can_update).should be_true
+      user.has_authority_for_area('global', :can_update).should be_truthy
     end
     it "should ammend an existing authority" do
       user = FactoryGirl.create(:user)
@@ -300,8 +300,8 @@ describe User, type: :model do
       user.save!
       user.set_authority_on_area('global', :can_update)
       authority = user.authorizations.for_area('global').first
-      authority.can_view?.should be_true
-      authority.can_update?.should be_true
+      authority.can_view?.should be_truthy
+      authority.can_update?.should be_truthy
     end
   end
 
@@ -309,15 +309,15 @@ describe User, type: :model do
     it "should create an authority" do
       Authority.where(user_id: @user.id).delete_all
       @user.set_authority_on_item(@item, :can_update)
-      @item.has_authority_for_user_to?(@user, :can_update).should be_true
+      @item.has_authority_for_user_to?(@user, :can_update).should be_truthy
     end
     it "should ammend an existing authority" do
       authority = FactoryGirl.create(:authority, user: @user, item: @item, can_view: true)
       @user.reload
       @user.set_authority_on_item(@item, :can_update)
       authority = @user.authorizations.for_item(@item).first
-      authority.can_view?.should be_true
-      authority.can_update?.should be_true
+      authority.can_view?.should be_truthy
+      authority.can_update?.should be_truthy
     end
   end
 

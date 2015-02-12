@@ -5,54 +5,54 @@ describe Path, type: :model do
     describe "of sitepath" do
       it "should reject an empty sitepath" do
         path = Path.new(:sitepath => '', :redirect => '/')
-        path.valid?.should be_false
+        path.valid?.should be_falsey
       end
       it "should reject multiple periods" do
         path = Path.new(:sitepath => '/file.name.etc', :redirect => '/')
-        path.valid?.should be_false
+        path.valid?.should be_falsey
       end
       it "should reject spaces" do
         path = Path.new(:sitepath => '/file name', :redirect => '/')
-        path.valid?.should be_false
+        path.valid?.should be_falsey
       end
       it "should accept a single slash" do
         path = Path.new(:sitepath => '/', :redirect => '/home')
-        path.valid?.should be_true
+        path.valid?.should be_truthy
       end
       it "should accept letters, numbers, dashes, percentage signs, underscores and slashes" do
         path = Path.new(:sitepath => '/AZaz/09-%_', :redirect => '/')
-        path.valid?.should be_true
+        path.valid?.should be_truthy
       end
       it "should accept a file extension" do
         path = Path.new(:sitepath => '/file.extension', :redirect => '/')
-        path.valid?.should be_true
+        path.valid?.should be_truthy
       end
       it "should reject a duplicate sitepath" do
         FactoryGirl.create(:path, :sitepath => '/duplciate', :redirect => '/')
         path = Path.new(:sitepath => '/duplciate', :redirect => '/dupe')
-        path.valid?.should be_false
+        path.valid?.should be_falsey
       end
     end
     describe "of redirect" do
       it "should be required if Path has no item" do
         path = Path.new(:sitepath => '/', :redirect => '')
-        path.valid?.should be_false
+        path.valid?.should be_falsey
       end
       it "should allow an http url" do
         path = Path.new(:sitepath => '/', :redirect => 'http://host.tld/')
-        path.valid?.should be_true
+        path.valid?.should be_truthy
       end
       it "should allow an https url" do
         path = Path.new(:sitepath => '/', :redirect => 'https://host.tld/')
-        path.valid?.should be_true
+        path.valid?.should be_truthy
       end
       it "should reject other urls" do
         path = Path.new(:sitepath => '/', :redirect => 'ftp://host.tld/')
-        path.valid?.should be_false
+        path.valid?.should be_falsey
       end
       it "should allow paths relative to root" do
         path = Path.new(:sitepath => '/', :redirect => '/redirect')
-        path.valid?.should be_true
+        path.valid?.should be_truthy
       end
     end
   end

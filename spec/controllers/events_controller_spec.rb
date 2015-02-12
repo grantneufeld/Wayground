@@ -188,7 +188,7 @@ describe EventsController, type: :controller do
         set_logged_in_admin
         post :create, :event => valid_attributes
         request.flash[:notice].should eq 'The event has been saved.'
-        assigns(:event).is_approved.should be_true
+        assigns(:event).is_approved.should be_truthy
       end
     end
     describe "as non-admin user" do
@@ -196,7 +196,7 @@ describe EventsController, type: :controller do
         set_logged_in_user
         post :create, :event => valid_attributes
         request.flash[:notice].should eq 'The event has been submitted.'
-        assigns(:event).is_approved.should be_false
+        assigns(:event).is_approved.should be_falsey
       end
     end
   end
@@ -347,7 +347,7 @@ describe EventsController, type: :controller do
       set_logged_in_admin
       post :set_approved, :id => event.id
       event.reload
-      event.is_approved?.should be_true
+      event.is_approved?.should be_truthy
     end
 
     it "redirects to the event" do

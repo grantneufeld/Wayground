@@ -19,7 +19,7 @@ describe Tag, type: :model do
       expect( Tag.new(title: title).title ).to eq title
     end
     it "should allow is_meta" do
-      expect( Tag.new(is_meta: true).is_meta ).to be_true
+      expect( Tag.new(is_meta: true).is_meta ).to be_truthy
     end
     it "should not allow item" do
       item = Event.new
@@ -42,43 +42,43 @@ describe Tag, type: :model do
 
   describe "validations" do
     it "should validate with the minimum required values" do
-      expect( Tag.new(tag: 'test').valid? ).to be_true
+      expect( Tag.new(tag: 'test').valid? ).to be_truthy
     end
     it "should validate given an item" do
-      expect( @event.tags.build(tag: 'test').valid? ).to be_true
+      expect( @event.tags.build(tag: 'test').valid? ).to be_truthy
     end
     it "should fail without a tag" do
-      expect( Tag.new.valid? ).to be_false
+      expect( Tag.new.valid? ).to be_falsey
     end
     it "should fail with a tag with uppercase characters" do
-      expect( Tag.new(tag: 'Test').valid? ).to be_false
+      expect( Tag.new(tag: 'Test').valid? ).to be_falsey
     end
     it "should fail with a tag with uppercase characters" do
-      expect( Tag.new(tag: 'Test').valid? ).to be_false
+      expect( Tag.new(tag: 'Test').valid? ).to be_falsey
     end
     it "should fail with a tag with accented characters" do
-      expect( Tag.new(tag: 'tést').valid? ).to be_false
+      expect( Tag.new(tag: 'tést').valid? ).to be_falsey
     end
     it "should fail with a tag with white-space" do
-      expect( Tag.new(tag: 'te st').valid? ).to be_false
+      expect( Tag.new(tag: 'te st').valid? ).to be_falsey
     end
     it "should fail with a tag with punctuation" do
-      expect( Tag.new(tag: 'test.').valid? ).to be_false
+      expect( Tag.new(tag: 'test.').valid? ).to be_falsey
     end
     it "should pass with a blank title" do
       tag = Tag.new(title: '')
       tag.tag = 'test'
-      expect( tag.valid? ).to be_true
+      expect( tag.valid? ).to be_truthy
     end
     it "should pass if title matches tag" do
       tag = Tag.new(title: 'Tést.')
       tag.tag = 'test'
-      expect( tag.valid? ).to be_true
+      expect( tag.valid? ).to be_truthy
     end
     it "should fail if title doesn’t match the tag" do
       tag = Tag.new(title: 'no match')
       tag.tag = 'test'
-      expect( tag.valid? ).to be_false
+      expect( tag.valid? ).to be_falsey
     end
   end
 

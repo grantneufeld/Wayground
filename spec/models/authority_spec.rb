@@ -28,18 +28,18 @@ describe Authority, type: :model do
     it "should create a new instance given valid attributes" do
       a = Authority.new(@valid_attributes)
       a.user = @valid_user
-      a.save.should be_true
+      a.save.should be_truthy
     end
     it "should require a user" do
       a = Authority.new(@valid_attributes)
-      a.valid?.should be_false
+      a.valid?.should be_falsey
     end
     it "should require either an item or an area" do
       invalid_attrs = @valid_attributes.dup
       invalid_attrs[:area] = nil
       a = Authority.new(invalid_attrs)
       a.user = @valid_user
-      a.valid?.should be_false
+      a.valid?.should be_falsey
     end
   end
 
@@ -176,7 +176,7 @@ describe Authority, type: :model do
           authority2.can_create || authority2.can_invite ||
           authority2.can_permit || authority2.can_approve
         )
-      ).should be_true
+      ).should be_truthy
     end
 
     it "should save the changes to the destination authority" do
@@ -185,7 +185,7 @@ describe Authority, type: :model do
         item: FactoryGirl.create(:event), can_view: true
       )
       authority1.merge_into!(authority2)
-      authority2.changed?.should be_false # no unsaved changes
+      authority2.changed?.should be_falsey # no unsaved changes
     end
 
     it "should destroy the source authority" do

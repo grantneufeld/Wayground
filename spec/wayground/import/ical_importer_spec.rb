@@ -203,10 +203,10 @@ describe Wayground::Import::IcalImporter do
     end
     context "with a user to use for approval" do
       it "should flag created events as approved if the user can approve" do
-        proc.create_event(ievent, approve_by: @user_admin).is_approved?.should be_true
+        proc.create_event(ievent, approve_by: @user_admin).is_approved?.should be_truthy
       end
       it "should not flag created events as approved if the user cannot approve" do
-        proc.create_event(ievent, approve_by: @user_normal).is_approved?.should be_false
+        proc.create_event(ievent, approve_by: @user_normal).is_approved?.should be_falsey
       end
     end
     context "with an URL in the ievent" do
