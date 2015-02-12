@@ -132,17 +132,17 @@ describe Wayground::Import::IcalImporter do
         it "should add the ical event and sourced item to the skipped list" do
           # prepare mocks and stubs
           item = double('item')
-          item.stub(:update_from_icalendar).and_return(false)
+          allow(item).to receive(:update_from_icalendar).and_return(false)
           sourced_item = double('sourced item')
-          sourced_item.stub(has_local_modifications: true)
-          sourced_item.stub(item: item)
+          allow(sourced_item).to receive(:has_local_modifications).and_return(true)
+          allow(sourced_item).to receive(:item).and_return(item)
           sourced_items_where = double('sourced items where')
-          sourced_items_where.stub(:first).and_return(sourced_item)
+          allow(sourced_items_where).to receive(:first).and_return(sourced_item)
           sourced_items = double('sourced items')
-          sourced_items.stub(:where).with(source_identifier: ievent['UID'][:value]).
+          allow(sourced_items).to receive(:where).with(source_identifier: ievent['UID'][:value]).
             and_return(sourced_items_where)
           source = double('source')
-          source.stub(sourced_items: sourced_items)
+          allow(source).to receive(:sourced_items).and_return(sourced_items)
           # prepare processor
           proc = Wayground::Import::IcalImporter.new
           proc.source = source
@@ -212,12 +212,12 @@ describe Wayground::Import::IcalImporter do
     context "with an URL in the ievent" do
       it "should include the url as an external link" do
         fields = double('field mapping')
-        proc.stub(:icalendar_field_mapping).with(ievent).and_return(fields)
-        fields.should_receive(:merge).with(
+        allow(proc).to receive(:icalendar_field_mapping).with(ievent).and_return(fields)
+        expect(fields).to receive(:merge).with(
           {external_links_attributes: [{url: 'http://spec.tld/spec/url'}]}
         ).and_return({})
         event = FactoryGirl.build(:event)
-        Event.stub(:new).and_return(event)
+        allow(Event).to receive(:new).and_return(event)
         proc.create_event(ievent)
       end
     end

@@ -8,7 +8,7 @@ describe 'images/delete.html.erb', type: :view do
   end
 
   it "should render the deletion form" do
-    image.stub(:id).and_return(123)
+    allow(image).to receive(:id).and_return(123)
     render
     assert_select 'form', action: '/images/123', method: 'delete' do
       assert_select 'input', type: 'submit', value: 'Delete Image'

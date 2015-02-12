@@ -539,18 +539,18 @@ describe Event, type: :model do
     end
     it "should add a Version" do
       @versioned_event.editor = @user_admin
-      Version.any_instance.stub(:diff_with).and_return(title: 'Different')
+      allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect { @versioned_event.add_version }.to change{ @versioned_event.versions.count }.by(1)
     end
     it "should not add a Version when there have been no changes" do
       @versioned_event.editor = @user_admin
       @versioned_event.edit_comment = 'saving without changes'
-      Version.any_instance.stub(:diff_with).and_return({})
+      allow_any_instance_of(Version).to receive(:diff_with).and_return({})
       expect { @versioned_event.add_version }.to change{ @versioned_event.versions.count }.by(0)
     end
     it "should fail if editor has not been set" do
       @versioned_event.editor = nil
-      Version.any_instance.stub(:diff_with).and_return(title: 'Different')
+      allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect { @versioned_event.add_version }.to raise_error(ActiveRecord::RecordInvalid)
     end
     it "should be called after an event is created" do
@@ -559,7 +559,7 @@ describe Event, type: :model do
     end
     it "should be called after an event is updated" do
       event = FactoryGirl.create(:event, editor: @user_admin, edit_comment: 'add_version after update')
-      Version.any_instance.stub(:diff_with).and_return(title: 'Different')
+      allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect {
         event.update(title: 'updated version')
       }.to change{ event.versions.count }.by(1)
@@ -845,7 +845,7 @@ describe Event, type: :model do
     end
     context 'with no events' do
       before(:each) do
-        Event.stub(:first).and_return(nil)
+        allow(Event).to receive(:first).and_return(nil)
       end
       it 'should return nil' do
         expect(Event.earliest_date).to be_nil
@@ -863,7 +863,7 @@ describe Event, type: :model do
     end
     context 'with no events' do
       before(:each) do
-        Event.stub(:last).and_return(nil)
+        allow(Event).to receive(:last).and_return(nil)
       end
       it 'should return nil' do
         expect(Event.last_date).to be_nil

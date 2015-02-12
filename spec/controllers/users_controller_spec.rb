@@ -11,7 +11,7 @@ describe UsersController, type: :controller do
   end
 
   def set_logged_in(stubs={})
-    controller.stub(:current_user).and_return(mock_user(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_user(stubs))
   end
 
   describe "GET 'profile'" do
@@ -109,7 +109,7 @@ describe UsersController, type: :controller do
     end
     it "should fail if the database is not working, or some other exception occurs" do
       set_logged_in({:email_confirmed => false}) #, :confirm_code! => true})
-      mock_user.stub(:confirm_code!).and_raise(:fail)
+      allow(mock_user).to receive(:confirm_code!).and_raise(:fail)
       get 'confirm', :confirmation_code => 'abc123'
       flash[:alert].should match /There was a problem/i
       response.status.should eq 500

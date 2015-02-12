@@ -13,7 +13,7 @@ describe 'pages/show.html.erb', type: :view do
   end
 
   it "renders attributes in <p>" do
-    view.stub(:current_user) { nil }
+    allow(view).to receive(:current_user) { nil }
     render
     rendered.should match(/myfilename/)
     rendered.should match(/My Title/)

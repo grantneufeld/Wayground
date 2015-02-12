@@ -26,7 +26,7 @@ describe 'images/edit.html.erb', type: :view do
   end
 
   it "renders edit image form" do
-    image.stub(:id).and_return(123)
+    allow(image).to receive(:id).and_return(123)
     render
     assert_select 'form', action: '/images/123', method: 'patch' do
       assert_select 'input#image_title', name: 'image[title]', value: 'Stub Title'

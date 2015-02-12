@@ -119,9 +119,9 @@ describe ExternalLink, type: :model do
   describe "#set_default_position" do
     it "should set position to 1 if no other ExternalLinks are on the item" do
       external_links = double('external links on item')
-      external_links.stub(order: external_links)
-      external_links.stub(first: nil)
-      @item.stub(external_links: external_links)
+      allow(external_links).to receive(:order).and_return(external_links)
+      allow(external_links).to receive(:first).and_return(nil)
+      allow(@item).to receive(:external_links).and_return(external_links)
       elink = ExternalLink.new
       elink.item = @item
       elink.set_default_position
@@ -129,11 +129,11 @@ describe ExternalLink, type: :model do
     end
     it "should set position to come after all other ExternalLinks on the item" do
       mock_link = double('external link')
-      mock_link.stub(position: 72)
+      allow(mock_link).to receive(:position).and_return(72)
       external_links = double('external links on item')
-      external_links.stub(order: external_links)
-      external_links.stub(first: mock_link)
-      @item.stub(external_links: external_links)
+      allow(external_links).to receive(:order).and_return(external_links)
+      allow(external_links).to receive(:first).and_return(mock_link)
+      allow(@item).to receive(:external_links).and_return(external_links)
       elink = ExternalLink.new
       elink.item = @item
       elink.set_default_position

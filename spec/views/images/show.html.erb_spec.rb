@@ -32,7 +32,7 @@ describe 'images/show.html.erb', type: :view do
   context "with no title" do
     let(:image_attrs) { $image_attrs = {} }
     it "renders the id in place of the title" do
-      image.stub(:id).and_return(123)
+      allow(image).to receive(:id).and_return(123)
       render
       expect( rendered ).to match /<h1(?:| [^>]*)>.*123.*<\/h1>/
     end

@@ -226,12 +226,12 @@ describe User, type: :model do
     it "should create one authority for first user" do
       Authority.where(user_id: @user.id).delete_all
       @user.reload
-      User.stub(:count).and_return(1)
+      allow(User).to receive(:count).and_return(1)
       expect { @user.first_user_is_admin }.to change(Authority, :count).by(1)
     end
     it "should do nothing if more than one user" do
       Authority.where(user_id: @user.id).delete_all
-      User.stub(:count).and_return(2)
+      allow(User).to receive(:count).and_return(2)
       expect { @user.first_user_is_admin }.to_not change(Authority, :count)
     end
   end

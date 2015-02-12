@@ -25,7 +25,7 @@ describe 'images/index.html.erb', type: :view do
   end
 
   it "should present a gallery of the images" do
-    @image.stub(:id).and_return(123)
+    allow(@image).to receive(:id).and_return(123)
     render
     assert_select 'div', class: 'gallery' do
       assert_select 'p', class: 'image', count: 2 do

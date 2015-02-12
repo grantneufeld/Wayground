@@ -108,7 +108,7 @@ describe ProjectsController, type: :controller do
     context "with invalid params" do
       it "assigns a newly created but unsaved project as @project" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, {:project => {}}, valid_session
         assigns(:project).should be_a_new(Project)
@@ -116,7 +116,7 @@ describe ProjectsController, type: :controller do
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, {:project => {}}, valid_session
         response.should render_template("new")
@@ -146,7 +146,7 @@ describe ProjectsController, type: :controller do
         # specifies that the Project created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        Project.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Project).to receive(:update).with('these' => 'params')
         set_logged_in_admin
         patch :update, { id: project.to_param, project: { 'these' => 'params' } }, valid_session
       end
@@ -169,7 +169,7 @@ describe ProjectsController, type: :controller do
     context "with invalid params" do
       it "assigns the project as @project" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, { id: @admin_project.to_param, project: {} }
         expect( assigns(:project) ).to eq @admin_project
@@ -177,7 +177,7 @@ describe ProjectsController, type: :controller do
 
       it "re-renders the 'edit' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, { id: @admin_project.to_param, project: {} }
         response.should render_template("edit")

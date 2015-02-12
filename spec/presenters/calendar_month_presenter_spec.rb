@@ -82,11 +82,11 @@ describe CalendarMonthPresenter do
   describe "#present_weeks" do
     let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, year: 2013, month: 3, events: []) }
     it "should call through to present_week 6 times" do
-      presenter.should_receive(:present_week).exactly(6).times.and_return('present_week'.html_safe)
+      expect(presenter).to receive(:present_week).exactly(6).times.and_return('present_week'.html_safe)
       expect( presenter.present_weeks ).to match /(?:present_week){6}/
     end
     it "should return an html safe string" do
-      presenter.stub(:present_week).and_return('present_week'.html_safe)
+      allow(presenter).to receive(:present_week).and_return('present_week'.html_safe)
       expect( presenter.present_weeks.html_safe? ).to be_truthy
     end
   end
@@ -97,15 +97,15 @@ describe CalendarMonthPresenter do
       @week = ((Date.parse('2013-02-24'))..(Date.parse('2013-03-02'))).to_a
     end
     it "should wrap the result in a tr element" do
-      presenter.stub(:present_day).and_return('present_day'.html_safe)
+      allow(presenter).to receive(:present_day).and_return('present_day'.html_safe)
       expect( presenter.present_week(@week) ).to match /\A<tr>.*<\/tr>[\r\n]*\z/
     end
     it "should call through to present_day 7 times" do
-      presenter.should_receive(:present_day).exactly(7).times.and_return('present_day'.html_safe)
+      expect(presenter).to receive(:present_day).exactly(7).times.and_return('present_day'.html_safe)
       expect( presenter.present_week(@week) ).to match /(?:present_day){7}/
     end
     it "should return an html safe string" do
-      presenter.stub(:present_day).and_return('present_day'.html_safe)
+      allow(presenter).to receive(:present_day).and_return('present_day'.html_safe)
       expect( presenter.present_week(@week).html_safe? ).to be_truthy
     end
   end
@@ -117,19 +117,19 @@ describe CalendarMonthPresenter do
         @day = Date.parse '2006-08-14'
       end
       it "should wrap the result in a td element" do
-        presenter.stub(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
+        allow(presenter).to receive(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
         result = presenter.present_day(@day)
         expect( result ).to match /\A<td(?:| [^>]*)>/
         expect( result ).to match /<\/td>[\r\n]*\z/
       end
       it "should call through to present_day_elements" do
-        presenter.should_receive(:present_day_elements).with(@day).
+        expect(presenter).to receive(:present_day_elements).with(@day).
           and_return('present_day_elements'.html_safe)
         result = presenter.present_day(@day)
         expect( result ).to match /present_day_elements/
       end
       it "should return an html safe string" do
-        presenter.stub(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
+        allow(presenter).to receive(:present_day_elements).with(@day).and_return('present_day_elements'.html_safe)
         result = presenter.present_day(@day)
         expect( result.html_safe? ).to be_truthy
       end
@@ -137,7 +137,7 @@ describe CalendarMonthPresenter do
     context "outside the presenter’s month" do
       it "should set the class of the td element to outside_month" do
         day = Date.parse '2006-09-01'
-        presenter.stub(:present_day_elements).with(day).and_return('present_day_elements'.html_safe)
+        allow(presenter).to receive(:present_day_elements).with(day).and_return('present_day_elements'.html_safe)
         result = presenter.present_day(day)
         expect( result ).to match /\A<td (?:|[^>]* )class="(?:|[^"]* )outside_month(?:| [^"]*)"/
       end
@@ -147,8 +147,8 @@ describe CalendarMonthPresenter do
   describe "#present_day_elements" do
     it "should call through to present_day_num and present_day_content" do
       presenter = CalendarMonthPresenter.new(view: view, events: [])
-      presenter.stub(:present_day_num).with(:day).and_return('present_day_num')
-      presenter.stub(:present_day_content).with(:day).and_return('present_day_content')
+      allow(presenter).to receive(:present_day_num).with(:day).and_return('present_day_num')
+      allow(presenter).to receive(:present_day_content).with(:day).and_return('present_day_content')
       expect( presenter.present_day_elements(:day) ).to eq 'present_day_numpresent_day_content'
     end
   end
@@ -165,8 +165,8 @@ describe CalendarMonthPresenter do
       let(:events) { [] }
       context 'with an event on the day' do
         before(:each) do
-          Event.stub(:earliest_date).and_return(@day)
-          Event.stub(:last_date).and_return(@day)
+          allow(Event).to receive(:earliest_date).and_return(@day)
+          allow(Event).to receive(:last_date).and_return(@day)
         end
         let(:events) { [Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))] }
         it 'should not include the empty class in the anchor' do
@@ -175,8 +175,8 @@ describe CalendarMonthPresenter do
       end
       context 'with no events on the day' do
         before(:each) do
-          Event.stub(:earliest_date).and_return(@day)
-          Event.stub(:last_date).and_return(@day)
+          allow(Event).to receive(:earliest_date).and_return(@day)
+          allow(Event).to receive(:last_date).and_return(@day)
         end
         it 'should include the empty class in the anchor' do
           expect(result).to match(/ class="(?:|[^"]* )empty(?:| [^"]*)"/)
@@ -184,9 +184,9 @@ describe CalendarMonthPresenter do
       end
       context 'with the only event on the day' do
         before(:each) do
-          Event.stub(:earliest_date).and_return(@day)
-          Event.stub(:last_date).and_return(@day)
-          Event.stub(:count).and_return(1)
+          allow(Event).to receive(:earliest_date).and_return(@day)
+          allow(Event).to receive(:last_date).and_return(@day)
+          allow(Event).to receive(:count).and_return(1)
         end
         let(:events) { [Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))] }
         it 'should return an anchor element' do
@@ -204,8 +204,8 @@ describe CalendarMonthPresenter do
       end
       context 'with the day before the earliest event' do
         before(:each) do
-          Event.stub(:earliest_date).and_return(Date.parse('2007-09-28'))
-          Event.stub(:last_date).and_return(Date.parse('2008-09-10'))
+          allow(Event).to receive(:earliest_date).and_return(Date.parse('2007-09-28'))
+          allow(Event).to receive(:last_date).and_return(Date.parse('2008-09-10'))
         end
         it 'should return the unanchored date' do
           expect(result).to match /\A<span [^>]+>27<\/span>\z/
@@ -219,8 +219,8 @@ describe CalendarMonthPresenter do
       end
       context 'with the day after the last event' do
         before(:each) do
-          Event.stub(:earliest_date).and_return(Date.parse('2007-01-01'))
-          Event.stub(:last_date).and_return(Date.parse('2007-09-26'))
+          allow(Event).to receive(:earliest_date).and_return(Date.parse('2007-01-01'))
+          allow(Event).to receive(:last_date).and_return(Date.parse('2007-09-26'))
         end
         it 'should return the unanchored date' do
           expect(result).to match /\A<span [^>]+>27<\/span>\z/
@@ -234,7 +234,7 @@ describe CalendarMonthPresenter do
       end
       context 'with no events' do
         before(:each) do
-          Event.stub(:count).and_return(0)
+          allow(Event).to receive(:count).and_return(0)
         end
         it 'should return the unanchored date' do
           expect(result).to match /\A<span [^>]+>27<\/span>\z/
@@ -382,11 +382,11 @@ describe CalendarMonthPresenter do
       end
       let(:presenter) { $presenter = CalendarMonthPresenter.new(events: [event]) }
       it "should wrap the list in a div" do
-        presenter.stub(:present_day_events_list).with([event]).and_return('events')
+        allow(presenter).to receive(:present_day_events_list).with([event]).and_return('events')
         expect( presenter.present_day_events(event_list) ).to eq '<div class="date_content">events</div>'
       end
       it "should return an html safe string" do
-        presenter.stub(:present_day_events_list).with([event]).and_return('events')
+        allow(presenter).to receive(:present_day_events_list).with([event]).and_return('events')
         expect( presenter.present_day_events(event_list).html_safe? ).to be_truthy
       end
     end
@@ -411,7 +411,7 @@ describe CalendarMonthPresenter do
     end
     it "should return the list wrapped in an unordered list element" do
       presenter = CalendarMonthPresenter.new(view: view, events: [])
-      presenter.stub(:present_event_in_list).and_return('-'.html_safe)
+      allow(presenter).to receive(:present_event_in_list).and_return('-'.html_safe)
       result = presenter.present_day_events_list([Event.new])
       expect( result ).to match /\A<ul>/
       expect( result ).to match /<\/ul>[\r\n]*\z/

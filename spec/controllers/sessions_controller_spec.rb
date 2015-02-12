@@ -11,7 +11,7 @@ describe SessionsController, type: :controller do
     mock_user = User.new(name: 'mock user')
     mock_token = UserToken.new(token: 'mock-token')
     mock_token.user = mock_user
-    UserToken.stub(:from_cookie_token).with('test/123').and_return(mock_token)
+    allow(UserToken).to receive(:from_cookie_token).with('test/123').and_return(mock_token)
     request.cookies['remember_token'] = 'test/123'
   end
 
@@ -108,7 +108,7 @@ describe SessionsController, type: :controller do
         @user_token = @user.tokens.create(token: 'valid user to sign out token')
       end
       before(:each) do
-        User.stub(:find).with(@user.id).and_return(@user)
+        allow(User).to receive(:find).with(@user.id).and_return(@user)
       end
       it "should clear the remember_token cookie" do
         request.cookies['remember_token'] = "#{@user_token.token}/#{@user.id}"

@@ -17,12 +17,12 @@ describe ApplicationController, type: :controller do
       user = User.new
       user_token = UserToken.new
       user_token.user = user
-      UserToken.stub(:from_cookie_token).with('test/123').and_return(user_token)
+      allow(UserToken).to receive(:from_cookie_token).with('test/123').and_return(user_token)
       request.cookies['remember_token'] = 'test/123'
       expect( controller.send(:current_user) ).to be user
     end
     it "should clear the remember token cookie if user not found" do
-      User.stub(:find).with(987).and_raise(ActiveRecord::RecordNotFound)
+      allow(User).to receive(:find).with(987).and_raise(ActiveRecord::RecordNotFound)
       request.cookies['remember_token'] = 'test/987'
       controller.send(:current_user).should be_nil
     end

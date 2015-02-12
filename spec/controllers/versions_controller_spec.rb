@@ -24,7 +24,7 @@ describe VersionsController, type: :controller do
       version = page.versions.first
       user = version.user
       FactoryGirl.create(:owner_authority, item: page, user: user)
-      controller.stub(:current_user).and_return(user)
+      allow(controller).to receive(:current_user).and_return(user)
       get :index, page_id: page.id
       expect( assigns(:versions).to_a ).to eq(page.versions.to_a)
     end

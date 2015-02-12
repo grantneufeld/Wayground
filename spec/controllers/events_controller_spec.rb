@@ -12,10 +12,10 @@ describe EventsController, type: :controller do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   def mock_event(stubs={})
@@ -169,7 +169,7 @@ describe EventsController, type: :controller do
       it "assigns a newly created but unsaved event as @event" do
         set_logged_in_user
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         post :create, :event => {}
         assigns(:event).should be_a_new(Event)
       end
@@ -177,7 +177,7 @@ describe EventsController, type: :controller do
       it "re-renders the 'new' template" do
         set_logged_in_user
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         post :create, :event => {}
         response.should render_template("new")
       end
@@ -233,7 +233,7 @@ describe EventsController, type: :controller do
         # specifies that the Event created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        Event.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Event).to receive(:update).with('these' => 'params')
         patch :update, id: event.id, event: { 'these' => 'params' }
       end
 
@@ -257,7 +257,7 @@ describe EventsController, type: :controller do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         patch :update, id: event.id, event: {}
         assigns(:event).should eq(event)
       end
@@ -266,7 +266,7 @@ describe EventsController, type: :controller do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         patch :update, id: event.id, event: {}
         response.should render_template("edit")
       end
@@ -283,7 +283,7 @@ describe EventsController, type: :controller do
 
     it "shows a form for confirming deletion of an event" do
       set_logged_in_admin
-      Event.stub(:find).with("37") { mock_event }
+      allow(Event).to receive(:find).with("37") { mock_event }
       get :delete, :id => "37"
       assigns(:event).should be(mock_event)
     end
@@ -358,7 +358,7 @@ describe EventsController, type: :controller do
 
     it "posts an alert flash if fails to approve" do
       set_logged_in_admin
-      Event.any_instance.stub(:approve_by).and_return(false)
+      allow_any_instance_of(Event).to receive(:approve_by).and_return(false)
       post :set_approved, :id => event.id
       request.flash[:alert].should match /[Ff]ailed/
     end

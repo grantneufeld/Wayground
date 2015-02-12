@@ -26,13 +26,13 @@ describe 'layouts/application.html.erb', type: :view do
   describe "page_metadata.title" do
     it "should be used for the title element if present" do
       @page_metadata = Wayground::PageMetadata.new(title: 'Test Title')
-      view.stub(:page_metadata).and_return(@page_metadata)
+      allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<title>Test Title \[#{Wayground::Application::NAME}\]<\/title>/)
     end
     it "should default to the site title if blank" do
       @page_metadata = Wayground::PageMetadata.new(title: nil)
-      view.stub(:page_metadata).and_return(@page_metadata)
+      allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<title>#{Wayground::Application::NAME}<\/title>/)
     end
@@ -42,13 +42,13 @@ describe 'layouts/application.html.erb', type: :view do
   describe "page_metadata.nocache" do
     it "should include the robots-noindex meta tag if true" do
       @page_metadata = Wayground::PageMetadata.new(nocache: true)
-      view.stub(:page_metadata).and_return(@page_metadata)
+      allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<meta name="robots" content="noindex"/)
     end
     it "should not include the robots-noindex meta tag if false" do
       @page_metadata = Wayground::PageMetadata.new(nocache: false)
-      view.stub(:page_metadata).and_return(@page_metadata)
+      allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
       rendered.should_not match(/<meta name="robots" content="noindex"/)
     end
@@ -58,13 +58,13 @@ describe 'layouts/application.html.erb', type: :view do
   describe "page_metadata.description" do
     it "should set the description meta tag if true" do
       @page_metadata = Wayground::PageMetadata.new(description: "Test Description")
-      view.stub(:page_metadata).and_return(@page_metadata)
+      allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
       rendered.should match(/<meta name="description" content="Test Description"/)
     end
     it "should not include the description meta tag if not set" do
       @page_metadata = Wayground::PageMetadata.new(description: nil)
-      view.stub(:page_metadata).and_return(@page_metadata)
+      allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
       expect( rendered ).to_not match(/<meta[^>]+name="description"/)
     end
@@ -139,7 +139,7 @@ describe 'layouts/application.html.erb', type: :view do
 
   describe "with signed-in user" do
     before do
-      controller.stub(:current_user).and_return(mock_model(User, :name => "Test Tester"))
+      allow(controller).to receive(:current_user).and_return(mock_model(User, :name => "Test Tester"))
     end
 
     describe "via password" do

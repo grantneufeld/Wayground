@@ -199,7 +199,7 @@ describe Authority, type: :model do
 
     it "should not destroy the source authority if saving the destination fails" do
       authority2 = FactoryGirl.create(:authority, user: user, item: item)
-      Authority.any_instance.should_receive(:save).and_return(false)
+      expect_any_instance_of(Authority).to receive(:save).and_return(false)
       authority1.merge_into!(authority2)
       Authority.find(authority1.id).should eq authority1
     end

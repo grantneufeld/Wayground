@@ -26,10 +26,10 @@ describe SettingsController, type: :controller do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   describe "GET initialize_defaults" do
@@ -110,7 +110,7 @@ describe SettingsController, type: :controller do
       it "assigns a newly created but unsaved setting as @setting" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Setting.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Setting).to receive(:save).and_return(false)
         post :create, {:setting => {}}, valid_session
         assigns(:setting).should be_a_new(Setting)
       end
@@ -118,7 +118,7 @@ describe SettingsController, type: :controller do
       it "re-renders the 'new' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Setting.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Setting).to receive(:save).and_return(false)
         post :create, {:setting => {}}, valid_session
         response.should render_template("new")
       end
@@ -143,7 +143,7 @@ describe SettingsController, type: :controller do
         # specifies that the Setting created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        Setting.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Setting).to receive(:update).with('these' => 'params')
         patch :update, { id: setting.to_param, setting: { 'these' => 'params' } }, valid_session
       end
 
@@ -164,7 +164,7 @@ describe SettingsController, type: :controller do
       it "assigns the setting as @setting" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Setting.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Setting).to receive(:save).and_return(false)
         patch :update, { id: setting.to_param, setting: {} }, valid_session
         assigns(:setting).should eq(setting)
       end
@@ -172,7 +172,7 @@ describe SettingsController, type: :controller do
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Setting.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Setting).to receive(:save).and_return(false)
         patch :update, { id: setting.to_param, setting: {} }, valid_session
         response.should render_template("edit")
       end

@@ -12,10 +12,10 @@ describe PathsController, type: :controller do
   end
 
   def set_logged_in_admin(stubs={})
-    controller.stub(:current_user).and_return(mock_admin(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
   end
   def set_logged_in_user(stubs={})
-    controller.stub(:current_user).and_return(mock_user(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_user(stubs))
   end
   def mock_admin(stubs={})
     @mock_admin ||= mock_model(
@@ -95,7 +95,7 @@ describe PathsController, type: :controller do
   describe "GET index" do
     it "assigns all paths as @paths" do
       set_logged_in_admin
-      controller.stub(:paginate).and_return([mock_path])
+      allow(controller).to receive(:paginate).and_return([mock_path])
       get :index
       assigns(:paths).should eq([mock_path])
     end
@@ -104,7 +104,7 @@ describe PathsController, type: :controller do
   describe "GET show" do
     it "assigns the requested path as @path" do
       set_logged_in_admin
-      Path.stub(:find).with("37") { mock_path }
+      allow(Path).to receive(:find).with("37") { mock_path }
       get :show, :id => "37"
       assigns(:path).should be(mock_path)
     end
@@ -118,7 +118,7 @@ describe PathsController, type: :controller do
 
     it "assigns a new path as @path" do
       set_logged_in_admin
-      Path.stub(:new) { mock_path }
+      allow(Path).to receive(:new) { mock_path }
       get :new
       assigns(:path).should be(mock_path)
     end
@@ -133,14 +133,14 @@ describe PathsController, type: :controller do
     describe "with valid params" do
       it "assigns a newly created path as @path" do
         set_logged_in_admin
-        Path.stub(:new).with({'these' => 'params'}) { mock_path(:save => true) }
+        allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => true) }
         post :create, :path => {'these' => 'params'}
         assigns(:path).should be(mock_path)
       end
 
       it "redirects to the created path" do
         set_logged_in_admin
-        Path.stub(:new) { mock_path(:save => true) }
+        allow(Path).to receive(:new) { mock_path(:save => true) }
         post :create, :path => {}
         response.should redirect_to(path_url(mock_path))
       end
@@ -149,14 +149,14 @@ describe PathsController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved path as @path" do
         set_logged_in_admin
-        Path.stub(:new).with({'these' => 'params'}) { mock_path(:save => false) }
+        allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => false) }
         post :create, :path => {'these' => 'params'}
         assigns(:path).should be(mock_path)
       end
 
       it "re-renders the 'new' template" do
         set_logged_in_admin
-        Path.stub(:new) { mock_path(:save => false) }
+        allow(Path).to receive(:new) { mock_path(:save => false) }
         post :create, :path => {}
         response.should render_template("new")
       end
@@ -172,7 +172,7 @@ describe PathsController, type: :controller do
 
     it "assigns the requested path as @path" do
       set_logged_in_admin
-      Path.stub(:find).with("37") { mock_path }
+      allow(Path).to receive(:find).with("37") { mock_path }
       get :edit, :id => "37"
       assigns(:path).should be(mock_path)
     end
@@ -188,21 +188,21 @@ describe PathsController, type: :controller do
     describe "with valid params" do
       it "updates the requested path" do
         set_logged_in_admin
-        Path.stub(:find).with("37") { mock_path }
-        mock_path.should_receive(:update).with('these' => 'params')
+        allow(Path).to receive(:find).with("37") { mock_path }
+        expect(mock_path).to receive(:update).with('these' => 'params')
         patch :update, id: '37', path: { 'these' => 'params' }
       end
 
       it "assigns the requested path as @path" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(update: true) }
+        allow(Path).to receive(:find) { mock_path(update: true) }
         patch :update, id: '1'
         assigns(:path).should be(mock_path)
       end
 
       it "redirects to the path" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(update: true) }
+        allow(Path).to receive(:find) { mock_path(update: true) }
         patch :update, id: '1'
         response.should redirect_to(path_url(mock_path))
       end
@@ -211,14 +211,14 @@ describe PathsController, type: :controller do
     describe "with invalid params" do
       it "assigns the path as @path" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(update: false) }
+        allow(Path).to receive(:find) { mock_path(update: false) }
         patch :update, id: '1'
         assigns(:path).should be(mock_path)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        Path.stub(:find) { mock_path(update: false) }
+        allow(Path).to receive(:find) { mock_path(update: false) }
         patch :update, id: '1'
         response.should render_template("edit")
       end
@@ -233,7 +233,7 @@ describe PathsController, type: :controller do
     end
     it "shows a form for confirming deletion of a path" do
       set_logged_in_admin
-      Path.stub(:find).with("37") { mock_path }
+      allow(Path).to receive(:find).with("37") { mock_path }
       get :delete, :id => "37"
       assigns(:path).should be(mock_path)
     end
@@ -248,14 +248,14 @@ describe PathsController, type: :controller do
 
     it "destroys the requested path" do
       set_logged_in_admin
-      Path.stub(:find).with("37") { mock_path }
-      mock_path.should_receive(:destroy)
+      allow(Path).to receive(:find).with("37") { mock_path }
+      expect(mock_path).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the paths list" do
       set_logged_in_admin
-      Path.stub(:find) { mock_path }
+      allow(Path).to receive(:find) { mock_path }
       delete :destroy, :id => "1"
       response.should redirect_to(paths_url)
     end

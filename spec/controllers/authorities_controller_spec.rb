@@ -24,10 +24,10 @@ describe AuthoritiesController, type: :controller do
   end
 
   def set_logged_in_admin(stubs={})
-    controller.stub(:current_user).and_return(mock_admin(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
   end
   def set_logged_in_user(stubs={})
-    controller.stub(:current_user).and_return(mock_user(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_user(stubs))
   end
 
   def mock_authority(stubs={})
@@ -53,7 +53,7 @@ describe AuthoritiesController, type: :controller do
     end
     it "assigns all authorities as @authorities" do
       set_logged_in_admin
-      controller.stub(:paginate).and_return([mock_admin_authority])
+      allow(controller).to receive(:paginate).and_return([mock_admin_authority])
       get :index
       assigns(:authorities).should eq([mock_admin_authority])
     end
@@ -67,7 +67,7 @@ describe AuthoritiesController, type: :controller do
     end
     it "assigns the requested authority as @authority" do
       set_logged_in_admin
-      Authority.stub(:find).with("37") { mock_admin_authority }
+      allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       get :show, :id => "37"
       assigns(:authority).should be(mock_admin_authority)
     end
@@ -86,7 +86,7 @@ describe AuthoritiesController, type: :controller do
     end
     it "assigns a new authority as @authority" do
       set_logged_in_admin
-      Authority.stub(:new) { mock_admin_authority }
+      allow(Authority).to receive(:new) { mock_admin_authority }
       get :new
       assigns(:authority).should be(mock_admin_authority)
     end
@@ -102,14 +102,14 @@ describe AuthoritiesController, type: :controller do
     describe "with valid params" do
       it "assigns a newly created authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:new).with({'these' => 'params'}) { mock_authority(:save => true, :user => mock_user) }
+        allow(Authority).to receive(:new).with({'these' => 'params'}) { mock_authority(:save => true, :user => mock_user) }
         post :create, :authority => {'these' => 'params'}
         assigns(:authority).should be(mock_authority)
         assigns(:user).should_not be_nil
       end
       it "redirects to the created authority" do
         set_logged_in_admin
-        Authority.stub(:new) { mock_authority(:save => true) }
+        allow(Authority).to receive(:new) { mock_authority(:save => true) }
         post :create, :authority => {}
         response.should redirect_to(authority_url(mock_authority))
       end
@@ -118,13 +118,13 @@ describe AuthoritiesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:new).with({'these' => 'params'}) { mock_authority(:save => false) }
+        allow(Authority).to receive(:new).with({'these' => 'params'}) { mock_authority(:save => false) }
         post :create, :authority => {'these' => 'params'}
         assigns(:authority).should be(mock_authority)
       end
       it "re-renders the 'new' template" do
         set_logged_in_admin
-        Authority.stub(:new) { mock_authority(:save => false) }
+        allow(Authority).to receive(:new) { mock_authority(:save => false) }
         post :create, :authority => {}
         response.should render_template("new")
       end
@@ -139,7 +139,7 @@ describe AuthoritiesController, type: :controller do
     end
     it "assigns the requested authority as @authority" do
       set_logged_in_admin
-      Authority.stub(:find).with("37") { mock_admin_authority }
+      allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       get :edit, :id => "37"
       assigns(:authority).should be(mock_admin_authority)
     end
@@ -155,19 +155,19 @@ describe AuthoritiesController, type: :controller do
     describe "with valid params" do
       it "updates the requested authority" do
         set_logged_in_admin
-        Authority.stub(:find).with("37") { mock_admin_authority }
-        mock_admin_authority.should_receive(:update).with('these' => 'params')
+        allow(Authority).to receive(:find).with("37") { mock_admin_authority }
+        expect(mock_admin_authority).to receive(:update).with('these' => 'params')
         patch :update, id: '37', authority: { 'these' => 'params' }
       end
       it "assigns the requested authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:find) { reset_mock_admin_authority(update: true) }
+        allow(Authority).to receive(:find) { reset_mock_admin_authority(update: true) }
         patch :update, id: '1'
         assigns(:authority).should be(mock_admin_authority)
       end
       it "redirects to the authority" do
         set_logged_in_admin
-        Authority.stub(:find) { reset_mock_admin_authority(update: true) }
+        allow(Authority).to receive(:find) { reset_mock_admin_authority(update: true) }
         patch :update, id: '1'
         response.should redirect_to(authority_url(mock_admin_authority))
       end
@@ -176,13 +176,13 @@ describe AuthoritiesController, type: :controller do
     describe "with invalid params" do
       it "assigns the authority as @authority" do
         set_logged_in_admin
-        Authority.stub(:find) { mock_admin_authority(update: false) }
+        allow(Authority).to receive(:find) { mock_admin_authority(update: false) }
         patch :update, id: '1'
         assigns(:authority).should be(mock_admin_authority)
       end
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        Authority.stub(:find) { mock_authority(update: false) }
+        allow(Authority).to receive(:find) { mock_authority(update: false) }
         patch :update, id: '1'
         response.should render_template("edit")
       end
@@ -197,7 +197,7 @@ describe AuthoritiesController, type: :controller do
     end
     it "shows a form for confirming deletion of an authority" do
       set_logged_in_admin
-      Authority.stub(:find).with("37") { mock_admin_authority }
+      allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       get :delete, :id => "37"
       assigns(:authority).should be(mock_admin_authority)
     end
@@ -211,13 +211,13 @@ describe AuthoritiesController, type: :controller do
     end
     it "destroys the requested authority" do
       set_logged_in_admin
-      Authority.stub(:find).with("37") { mock_admin_authority }
-      mock_admin_authority.should_receive(:destroy)
+      allow(Authority).to receive(:find).with("37") { mock_admin_authority }
+      expect(mock_admin_authority).to receive(:destroy)
       delete :destroy, :id => "37"
     end
     it "redirects to the authorities list" do
       set_logged_in_admin
-      Authority.stub(:find) { mock_admin_authority }
+      allow(Authority).to receive(:find) { mock_admin_authority }
       delete :destroy, :id => "1"
       response.should redirect_to(authorities_url)
     end

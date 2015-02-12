@@ -50,9 +50,9 @@ describe UserToken, type: :model do
       query_result = double('where on id token')
       query_sub_result = double('where on expiry')
       include_result = double('include user')
-      include_result.stub(:first!).and_return(user_token)
-      query_result.stub(:includes).with(:user).and_return(include_result)
-      UserToken.stub(:where).with(user_id: 123, token: 'single-token').and_return(query_result)
+      allow(include_result).to receive(:first!).and_return(user_token)
+      allow(query_result).to receive(:includes).with(:user).and_return(include_result)
+      allow(UserToken).to receive(:where).with(user_id: 123, token: 'single-token').and_return(query_result)
       expect( UserToken.from_cookie_token('single-token/123') ).to eq user_token
     end
     it "should return a null token when no matching token found" do
@@ -63,9 +63,9 @@ describe UserToken, type: :model do
       query_result = double('where on id token')
       query_sub_result = double('where on expiry')
       include_result = double('include user')
-      include_result.stub(:first!).and_return(user_token)
-      query_result.stub(:includes).with(:user).and_return(include_result)
-      UserToken.stub(:where).with(user_id: 345, token: 'expired-token').and_return(query_result)
+      allow(include_result).to receive(:first!).and_return(user_token)
+      allow(query_result).to receive(:includes).with(:user).and_return(include_result)
+      allow(UserToken).to receive(:where).with(user_id: 345, token: 'expired-token').and_return(query_result)
       expect( UserToken.from_cookie_token('expired-token/345').user_id ).to be_nil
     end
   end

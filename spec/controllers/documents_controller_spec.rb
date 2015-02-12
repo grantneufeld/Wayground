@@ -14,7 +14,7 @@ describe DocumentsController, type: :controller do
   end
 
   def set_logged_in_admin(stubs={})
-    controller.stub(:current_user).and_return(mock_admin(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
   end
   def mock_admin(stubs={})
     @mock_admin ||= mock_model(
@@ -159,7 +159,7 @@ describe DocumentsController, type: :controller do
       context "with invalid params" do
         before(:each) do
           # Trigger the behavior that occurs when invalid params are submitted
-          Document.any_instance.stub(:save).and_return(false)
+          allow_any_instance_of(Document).to receive(:save).and_return(false)
           post :create, :document => {}
         end
 
@@ -205,7 +205,7 @@ describe DocumentsController, type: :controller do
           # Assuming there are no other documents in the database, this
           # specifies that the document receives the :update message
           # with whatever params are submitted in the request.
-          Document.any_instance.should_receive(:update).with('these' => 'params')
+          expect_any_instance_of(Document).to receive(:update).with('these' => 'params')
           patch :update, id: @document.id, document: { 'these' => 'params' }
         end
 
@@ -227,7 +227,7 @@ describe DocumentsController, type: :controller do
       context "with invalid params" do
         before(:each) do
           # Trigger the behavior that occurs when invalid params are submitted
-          Document.any_instance.stub(:save).and_return(false)
+          allow_any_instance_of(Document).to receive(:save).and_return(false)
           patch :update, id: @document.id.to_s, document: {}
         end
 
@@ -250,7 +250,7 @@ describe DocumentsController, type: :controller do
 
     it "shows a form for confirming deletion of a document" do
       set_logged_in_admin
-      Document.stub(:find).with("37") { mock_document }
+      allow(Document).to receive(:find).with("37") { mock_document }
       get :delete, :id => "37"
       assigns(:document).should be(mock_document)
     end

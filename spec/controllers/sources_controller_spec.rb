@@ -18,10 +18,10 @@ describe SourcesController, type: :controller do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   def mock_source(stubs={})
@@ -108,7 +108,7 @@ describe SourcesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved source as @source" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Source.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, source: {}
         assigns(:source).should be_a_new(Source)
@@ -116,7 +116,7 @@ describe SourcesController, type: :controller do
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Source.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, source: {}
         response.should render_template("new")
@@ -155,7 +155,7 @@ describe SourcesController, type: :controller do
         # specifies that the Source created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        Source.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Source).to receive(:update).with('these' => 'params')
         set_logged_in_admin
         patch :update, id: source.id, source: { 'these' => 'params' }
       end
@@ -179,7 +179,7 @@ describe SourcesController, type: :controller do
       it "assigns the source as @source" do
         source = FactoryGirl.create(:source)
         # Trigger the behavior that occurs when invalid params are submitted
-        Source.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, id: source.id, source: {}
         assigns(:source).should eq(source)
@@ -188,7 +188,7 @@ describe SourcesController, type: :controller do
       it "re-renders the 'edit' template" do
         source = FactoryGirl.create(:source)
         # Trigger the behavior that occurs when invalid params are submitted
-        Source.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, id: source.id, source: {}
         response.should render_template("edit")
@@ -205,7 +205,7 @@ describe SourcesController, type: :controller do
     end
 
     it "shows a form for confirming deletion of an source" do
-      Source.stub(:find).with("37") { mock_source }
+      allow(Source).to receive(:find).with("37") { mock_source }
       set_logged_in_admin
       get :delete, id: "37"
       assigns(:source).should be(mock_source)
@@ -272,7 +272,7 @@ describe SourcesController, type: :controller do
         # Assuming there are no other sources in the database, this
         # specifies that the Source created on the previous line
         # receives the :process message with the admin User as an arg.
-        Source.any_instance.should_receive(:run_processor).
+        expect_any_instance_of(Source).to receive(:run_processor).
           with(@user_admin, false).and_return(Wayground::Import::IcalImporter.new)
         set_logged_in_admin
         post :runprocessor, id: source.id

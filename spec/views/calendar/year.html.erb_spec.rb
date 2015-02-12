@@ -14,7 +14,7 @@ describe 'calendar/year.html.erb', type: :view do
     )
   end
   before(:each) do
-    view.stub(:add_submenu_item)
+    allow(view).to receive(:add_submenu_item)
   end
   context "with no user" do
     before(:all) do
@@ -22,21 +22,21 @@ describe 'calendar/year.html.erb', type: :view do
     end
     context 'with earlier and later events' do
       it 'should render a link to the previous year' do
-        Event.stub(:earliest_date).and_return(Date.parse('2000-01-01'))
+        allow(Event).to receive(:earliest_date).and_return(Date.parse('2000-01-01'))
         render
         expect(rendered).to match /<a [^>]*href="\/calendar\/2012"[^>]*>/
       end
       it 'should render a link to the next year' do
-        Event.stub(:last_date).and_return(Date.parse('2100-01-01'))
+        allow(Event).to receive(:last_date).and_return(Date.parse('2100-01-01'))
         render
         expect(rendered).to match /<a [^>]*href="\/calendar\/2014"[^>]*>/
       end
     end
     context 'with no events' do
       before(:each) do
-        Event.stub(:earliest_date).and_return(nil)
-        Event.stub(:last_date).and_return(nil)
-        Event.stub(:count).and_return(0)
+        allow(Event).to receive(:earliest_date).and_return(nil)
+        allow(Event).to receive(:last_date).and_return(nil)
+        allow(Event).to receive(:count).and_return(0)
       end
       it 'should not render a link to the previous year' do
         render
@@ -66,7 +66,7 @@ describe 'calendar/year.html.erb', type: :view do
       assign(:user, @admin)
     end
     it 'should add the new event link to the submenu' do
-      view.should_receive(:add_submenu_item).with(
+      expect(view).to receive(:add_submenu_item).with(
         title: 'New Event', path: '/events/new', attrs: { class: 'new' }
       )
       render

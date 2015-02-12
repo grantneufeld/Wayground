@@ -12,10 +12,10 @@ describe PagesController, type: :controller do
   end
 
   def set_logged_in_admin(stubs={})
-    controller.stub(:current_user).and_return(mock_admin(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
   end
   def set_logged_in_user(stubs={})
-    controller.stub(:current_user).and_return(mock_user(stubs))
+    allow(controller).to receive(:current_user).and_return(mock_user(stubs))
   end
   def mock_admin(stubs={})
     @mock_admin ||= mock_model(
@@ -50,7 +50,7 @@ describe PagesController, type: :controller do
 
   describe "GET index" do
     it "assigns all pages as @pages" do
-      controller.stub(:paginate).with(Page).and_return([mock_page])
+      allow(controller).to receive(:paginate).with(Page).and_return([mock_page])
       get :index
       assigns(:pages).should eq([mock_page])
     end
@@ -59,7 +59,7 @@ describe PagesController, type: :controller do
   describe "GET show" do
     it "assigns the requested page as @page" do
       set_logged_in_admin
-      Page.stub(:find).with("37") { mock_page }
+      allow(Page).to receive(:find).with("37") { mock_page }
       get :show, :id => "37"
       assigns(:page).should be(mock_page)
     end
@@ -73,7 +73,7 @@ describe PagesController, type: :controller do
 
     it "assigns a new page as @page" do
       set_logged_in_admin
-      Page.stub(:new) { mock_page }
+      allow(Page).to receive(:new) { mock_page }
       get :new
       assigns(:page).should be(mock_page)
     end
@@ -95,7 +95,7 @@ describe PagesController, type: :controller do
     describe "with valid params" do
       it "assigns a newly created page as @page" do
         set_logged_in_admin
-        Page.stub(:new).with({'these' => 'params'}) { mock_page(:save => true) }
+        allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => true) }
         post :create, :page => {'these' => 'params'}
         assigns(:page).should be(mock_page)
       end
@@ -113,7 +113,7 @@ describe PagesController, type: :controller do
 
       it "redirects to the created page" do
         set_logged_in_admin
-        Page.stub(:new) { mock_page(:save => true) }
+        allow(Page).to receive(:new) { mock_page(:save => true) }
         post :create, :page => {}
         response.should redirect_to(page_url(mock_page))
       end
@@ -122,14 +122,14 @@ describe PagesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved page as @page" do
         set_logged_in_admin
-        Page.stub(:new).with({'these' => 'params'}) { mock_page(:save => false) }
+        allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => false) }
         post :create, :page => {'these' => 'params'}
         assigns(:page).should be(mock_page)
       end
 
       it "re-renders the 'new' template" do
         set_logged_in_admin
-        Page.stub(:new) { mock_page(:save => false) }
+        allow(Page).to receive(:new) { mock_page(:save => false) }
         post :create, :page => {}
         response.should render_template("new")
       end
@@ -145,7 +145,7 @@ describe PagesController, type: :controller do
 
     it "assigns the requested page as @page" do
       set_logged_in_admin
-      Page.stub(:find).with("37") { mock_page }
+      allow(Page).to receive(:find).with("37") { mock_page }
       get :edit, :id => "37"
       assigns(:page).should be(mock_page)
     end
@@ -161,21 +161,21 @@ describe PagesController, type: :controller do
     describe "with valid params" do
       it "updates the requested page" do
         set_logged_in_admin
-        Page.stub(:find).with("37") { mock_page }
-        mock_page.should_receive(:update).with('these' => 'params')
+        allow(Page).to receive(:find).with("37") { mock_page }
+        expect(mock_page).to receive(:update).with('these' => 'params')
         patch :update, id: '37', page: { 'these' => 'params' }
       end
 
       it "assigns the requested page as @page" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(update: true) }
+        allow(Page).to receive(:find) { mock_page(update: true) }
         patch :update, id: '1'
         assigns(:page).should be(mock_page)
       end
 
       it "redirects to the page" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(update: true) }
+        allow(Page).to receive(:find) { mock_page(update: true) }
         patch :update, id: '1'
         response.should redirect_to(page_url(mock_page))
       end
@@ -184,14 +184,14 @@ describe PagesController, type: :controller do
     describe "with invalid params" do
       it "assigns the page as @page" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(update: false) }
+        allow(Page).to receive(:find) { mock_page(update: false) }
         patch :update, id: '1'
         assigns(:page).should be(mock_page)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
-        Page.stub(:find) { mock_page(update: false) }
+        allow(Page).to receive(:find) { mock_page(update: false) }
         patch :update, id: '1'
         response.should render_template("edit")
       end
@@ -207,7 +207,7 @@ describe PagesController, type: :controller do
 
     it "shows a form for confirming deletion of a page" do
       set_logged_in_admin
-      Page.stub(:find).with("37") { mock_page }
+      allow(Page).to receive(:find).with("37") { mock_page }
       get :delete, :id => "37"
       assigns(:page).should be(mock_page)
     end
@@ -222,14 +222,14 @@ describe PagesController, type: :controller do
 
     it "destroys the requested page" do
       set_logged_in_admin
-      Page.stub(:find).with("37") { mock_page }
-      mock_page.should_receive(:destroy)
+      allow(Page).to receive(:find).with("37") { mock_page }
+      expect(mock_page).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the pages list" do
       set_logged_in_admin
-      Page.stub(:find) { mock_page }
+      allow(Page).to receive(:find) { mock_page }
       delete :destroy, :id => "1"
       response.should redirect_to(pages_url)
     end
