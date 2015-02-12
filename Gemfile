@@ -35,7 +35,7 @@ end
 gem 'bcrypt-ruby', '~> 3.0.0'
 
 # Use debugger
-gem 'debugger', group: [:development, :test]
+gem 'byebug', group: [:development, :test]
 
 # deprecated compatibility
 gem 'protected_attributes', '>= 1.0.5'
@@ -75,7 +75,6 @@ group :test do
   gem 'simplecov', '>= 0.7.1', require: false
   gem 'simplecov-html', '>= 0.7.1', require: false
   # continuous testing:
-  gem 'ZenTest', '>= 4.8.3', require: false
   gem 'autotest-fsevent', '>= 0.2.8', require: false
   gem 'autotest-growl', '>= 0.2.9', require: false
   gem 'autotest-rails', '>= 4.1.2', require: false
