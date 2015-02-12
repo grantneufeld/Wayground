@@ -28,13 +28,13 @@ describe 'layouts/application.html.erb', type: :view do
       @page_metadata = Wayground::PageMetadata.new(title: 'Test Title')
       allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should match(/<title>Test Title \[#{Wayground::Application::NAME}\]<\/title>/)
+      expect(rendered).to match(/<title>Test Title \[#{Wayground::Application::NAME}\]<\/title>/)
     end
     it "should default to the site title if blank" do
       @page_metadata = Wayground::PageMetadata.new(title: nil)
       allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should match(/<title>#{Wayground::Application::NAME}<\/title>/)
+      expect(rendered).to match(/<title>#{Wayground::Application::NAME}<\/title>/)
     end
   end
 
@@ -44,13 +44,13 @@ describe 'layouts/application.html.erb', type: :view do
       @page_metadata = Wayground::PageMetadata.new(nocache: true)
       allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should match(/<meta name="robots" content="noindex"/)
+      expect(rendered).to match(/<meta name="robots" content="noindex"/)
     end
     it "should not include the robots-noindex meta tag if false" do
       @page_metadata = Wayground::PageMetadata.new(nocache: false)
       allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should_not match(/<meta name="robots" content="noindex"/)
+      expect(rendered).not_to match(/<meta name="robots" content="noindex"/)
     end
   end
 
@@ -60,7 +60,7 @@ describe 'layouts/application.html.erb', type: :view do
       @page_metadata = Wayground::PageMetadata.new(description: "Test Description")
       allow(view).to receive(:page_metadata).and_return(@page_metadata)
       render
-      rendered.should match(/<meta name="description" content="Test Description"/)
+      expect(rendered).to match(/<meta name="description" content="Test Description"/)
     end
     it "should not include the description meta tag if not set" do
       @page_metadata = Wayground::PageMetadata.new(description: nil)
@@ -75,12 +75,12 @@ describe 'layouts/application.html.erb', type: :view do
     it "should set the class to current for the specified section in the navmenu if true" do
       assign(:site_section, :calendar)
       render
-      rendered.should match(/<li class="current"><a[^>]* href="\/calendar"[^>]*>Calendar<\/a><\/li>/)
+      expect(rendered).to match(/<li class="current"><a[^>]* href="\/calendar"[^>]*>Calendar<\/a><\/li>/)
     end
     it "should not set a current section in the navmenu if not set" do
       @site_section = nil
       render
-      rendered.should_not match(/class="current"/)
+      expect(rendered).not_to match(/class="current"/)
     end
   end
 
@@ -100,7 +100,7 @@ describe 'layouts/application.html.erb', type: :view do
     it "should not have breadcrumbs if not set" do
       @site_breadcrumbs = nil
       render
-      rendered.should_not match(/<ul id="breadcrumb">/)
+      expect(rendered).not_to match(/<ul id="breadcrumb">/)
     end
   end
 
@@ -111,7 +111,7 @@ describe 'layouts/application.html.erb', type: :view do
   it "content_for(:head) should go at the end of the head element" do
     view.content_for(:head) { 'Test Head' }
     render
-    rendered.should match(/Test Head[ \t\r\n]*<\/head>/)
+    expect(rendered).to match(/Test Head[ \t\r\n]*<\/head>/)
   end
 
   # :actions - links (of class="action") to go in the action bar for the page (at the top of the footer).
@@ -119,11 +119,11 @@ describe 'layouts/application.html.erb', type: :view do
     it "should show the actions block" do
       view.content_for(:actions) { "Test Actions" }
       render
-      rendered.should match(/<p class="actions">[ \t\r\n]*Test Actions[ \t\r\n]*<\/p>/)
+      expect(rendered).to match(/<p class="actions">[ \t\r\n]*Test Actions[ \t\r\n]*<\/p>/)
     end
     it "should not show the actions block if not empty" do
       render
-      rendered.should_not match(/<p class="actions">/)
+      expect(rendered).not_to match(/<p class="actions">/)
     end
   end
 
@@ -131,7 +131,7 @@ describe 'layouts/application.html.erb', type: :view do
   it "content_for(:footer) should go at the top of the footer" do
     view.content_for(:footer) { 'Test Footer' }
     render
-    rendered.should match(/<footer( [^>]*)?>[ \t\r\n]*Test Footer/)
+    expect(rendered).to match(/<footer( [^>]*)?>[ \t\r\n]*Test Footer/)
   end
 
 
@@ -147,16 +147,16 @@ describe 'layouts/application.html.erb', type: :view do
         render
       end
       it "should flag the usermenu as signed-in" do
-        rendered.should match('<div id="usermenu" class="signed-in"')
+        expect(rendered).to match('<div id="usermenu" class="signed-in"')
       end
       it "should show the name of the signed-in user" do
-        rendered.should match('<p id="username">Test Tester')
+        expect(rendered).to match('<p id="username">Test Tester')
       end
       it "should link to the user’s account" do
-        rendered.should match('<a href="/account">Your Account</a>')
+        expect(rendered).to match('<a href="/account">Your Account</a>')
       end
       it "should have a Sign Out link" do
-        rendered.should match('<a href="/signout">Sign Out</a>')
+        expect(rendered).to match('<a href="/signout">Sign Out</a>')
       end
     end
 
@@ -179,13 +179,13 @@ describe 'layouts/application.html.erb', type: :view do
   describe "signed-out user" do
     before { render }
     it "should flag the usermenu as signed-out" do
-      rendered.should match('<div id="usermenu" class="signed-out"')
+      expect(rendered).to match('<div id="usermenu" class="signed-out"')
     end
     it "should have a registration link" do
-      rendered.should match(/<a href="\/signup">Register[^<]*<\/a>/)
+      expect(rendered).to match(/<a href="\/signup">Register[^<]*<\/a>/)
     end
     it "should have a sign-in link" do
-      rendered.should match(/<a href="\/signin">Sign In<\/a>/)
+      expect(rendered).to match(/<a href="\/signin">Sign In<\/a>/)
     end
   end
 

@@ -54,7 +54,7 @@ describe Wayground::Import::IcalImporter do
   describe "#process" do
     it "should generate events" do
       events = proc.process.new_events
-      [events[0].title, events[1].title].should eq ['First Sample', 'Second Sample']
+      expect([events[0].title, events[1].title]).to eq ['First Sample', 'Second Sample']
     end
   end
 
@@ -62,7 +62,7 @@ describe Wayground::Import::IcalImporter do
     it "should generate events" do
       proc.io = File.open("#{Rails.root}/spec/fixtures/files/sample.ics")
       events = proc.process_data.new_events
-      [events[0].title, events[1].title].should eq ['First Sample', 'Second Sample']
+      expect([events[0].title, events[1].title]).to eq ['First Sample', 'Second Sample']
     end
   end
 
@@ -84,15 +84,15 @@ describe Wayground::Import::IcalImporter do
         },
       ]}
       events = proc.process_icalendar(ical).new_events
-      [events[0].title, events[1].title].should eq ['First Event', 'Second Event']
+      expect([events[0].title, events[1].title]).to eq ['First Event', 'Second Event']
     end
     context "with an empty icalendar" do
       let(:ical) { $ical = {} }
       it "should not generate any events" do
-        proc.process_icalendar(ical).new_events.should eq []
+        expect(proc.process_icalendar(ical).new_events).to eq []
       end
       it "should not update any events" do
-        proc.process_icalendar(ical).updated_events.should eq []
+        expect(proc.process_icalendar(ical).updated_events).to eq []
       end
     end
   end
@@ -126,7 +126,7 @@ describe Wayground::Import::IcalImporter do
         sourced_item.save!
         proc.process_event(modified_ievent)
         event.reload
-        event.title.should eq 'Changed Summary'
+        expect(event.title).to eq 'Changed Summary'
       end
       context "that is flagged as locally modified" do
         it "should add the ical event and sourced item to the skipped list" do
@@ -148,7 +148,7 @@ describe Wayground::Import::IcalImporter do
           proc.source = source
           # call the method being tested
           proc.process_event(modified_ievent)
-          proc.skipped_ievents.should eq [{ievent: modified_ievent, sourced_item: sourced_item}]
+          expect(proc.skipped_ievents).to eq [{ievent: modified_ievent, sourced_item: sourced_item}]
         end
       end
       context "without a uid on the icalendar event" do
@@ -164,7 +164,7 @@ describe Wayground::Import::IcalImporter do
           }.to change(Event, :count).by(1)
           # event should be unchanged
           event.reload
-          event.title.should eq 'Spec Event'
+          expect(event.title).to eq 'Spec Event'
         end
       end
     end
@@ -182,9 +182,10 @@ describe Wayground::Import::IcalImporter do
         source.last_updated_at = updated_at
         proc.process_event(ievent)
         sourced_item = proc.new_events[0].sourced_items.first
-        [
+        item_attributes = [
           sourced_item.source, sourced_item.source_identifier, sourced_item.last_sourced_at
-        ].should eq [source, '123@spec', updated_at]
+        ]
+        expect(item_attributes).to eq [source, '123@spec', updated_at]
       end
     end
 
@@ -194,19 +195,19 @@ describe Wayground::Import::IcalImporter do
     let(:ievent) { $ievent = new_ievent }
 
     it "should create a new event" do
-      proc.create_event(ievent).class.should eq Event
+      expect(proc.create_event(ievent).class).to eq Event
     end
     context "with a given user" do
       it "should set the version editor to the user" do
-        proc.create_event(ievent, editor: @user_normal).versions.first.user.should eq user
+        expect(proc.create_event(ievent, editor: @user_normal).versions.first.user).to eq user
       end
     end
     context "with a user to use for approval" do
       it "should flag created events as approved if the user can approve" do
-        proc.create_event(ievent, approve_by: @user_admin).is_approved?.should be_truthy
+        expect(proc.create_event(ievent, approve_by: @user_admin).is_approved?).to be_truthy
       end
       it "should not flag created events as approved if the user cannot approve" do
-        proc.create_event(ievent, approve_by: @user_normal).is_approved?.should be_falsey
+        expect(proc.create_event(ievent, approve_by: @user_normal).is_approved?).to be_falsey
       end
     end
     context "with an URL in the ievent" do
@@ -225,37 +226,41 @@ describe Wayground::Import::IcalImporter do
 
   describe "#icalendar_field_mapping" do
     it "should use SUMMARY as the title" do
-      proc.icalendar_field_mapping(new_ievent)[:title].should eq 'Spec Event'
+      expect(proc.icalendar_field_mapping(new_ievent)[:title]).to eq 'Spec Event'
     end
     it "should use DESCRIPTION as the description" do
-      proc.icalendar_field_mapping(new_ievent)[:description].should eq 'Spec description.'
+      expect(proc.icalendar_field_mapping(new_ievent)[:description]).to eq 'Spec description.'
     end
     it "should strip the URL from the end of the description" do
       url = 'http://test.tld/'
-      proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {value: "with url\n\t#{url}\n"}, 'URL' => {value: url})
-      )[:description].should eq 'with url'
+      ievent = new_ievent('DESCRIPTION' => { value: "with url\n\t#{url}\n" }, 'URL' => { value: url })
+      mapped_description = proc.icalendar_field_mapping(ievent)[:description]
+      expect(mapped_description).to eq 'with url'
     end
     it "should strip 'Details:' if it preceeds the URL at the end of the description" do
       url = 'http://test.tld/'
-      proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {value: "description\nDetails: #{url}\n"}, 'URL' => {value: url})
-      )[:description].should eq 'description'
+      ievent = new_ievent(
+        'DESCRIPTION' => { value: "description\nDetails: #{url}\n" }, 'URL' => { value: url }
+      )
+      mapped_description = proc.icalendar_field_mapping(ievent)[:description]
+      expect(mapped_description).to eq 'description'
     end
     it "should split the description after the first paragraph after 100 chars if too long" do
-      event = proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {value: ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) })
+      ievent = new_ievent(
+        'DESCRIPTION' => { value: ('A' * 99) + "\n" + ('B' * 100) + "\nEtc." + ('C' * 350) }
       )
-      [event[:description], event[:content]].should eq [
+      event = proc.icalendar_field_mapping(ievent)
+      expect([event[:description], event[:content]]).to eq [
         ('A' * 99) + "\n" + ('B' * 100),
         'Etc.' + ('C' * 350)
       ]
     end
     it "should split the description on the last sentence break in a too long paragraph" do
-      event = proc.icalendar_field_mapping(
-        new_ievent('DESCRIPTION' => {value: ('A' * 200) + '. ' + ('B' * 200) + '! ' + ('C' * 200) + '?' })
+      ievent = new_ievent(
+        'DESCRIPTION' => { value: ('A' * 200) + '. ' + ('B' * 200) + '! ' + ('C' * 200) + '?' }
       )
-      [event[:description], event[:content]].should eq [
+      event = proc.icalendar_field_mapping(ievent)
+      expect([event[:description], event[:content]]).to eq [
         ('A' * 200) + '. ' + ('B' * 200) + '!',
         ('C' * 200) + '?'
       ]
@@ -264,7 +269,7 @@ describe Wayground::Import::IcalImporter do
       event = proc.icalendar_field_mapping(
         new_ievent('DESCRIPTION' => {value: ('A' * 200) + ' ' + ('B' * 200) + ' ' + ('C' * 200) + ' ' })
       )
-      [event[:description], event[:content]].should eq [
+      expect([event[:description], event[:content]]).to eq [
         ('A' * 200) + ' ' + ('B' * 200),
         ('C' * 200)
       ]
@@ -273,25 +278,23 @@ describe Wayground::Import::IcalImporter do
       event = proc.icalendar_field_mapping(
         new_ievent('DESCRIPTION' => {value: ('A' * 100) + 'B' + ('C' * 411)})
       )
-      [event[:description], event[:content]].should eq ['A' * 100, 'B' + ('C' * 411)]
+      expect([event[:description], event[:content]]).to eq ['A' * 100, 'B' + ('C' * 411)]
     end
     it "should use LOCATION as the location" do
-      proc.icalendar_field_mapping(new_ievent)[:location].should eq 'Spec Town, 123 Spec Street'
+      expect(proc.icalendar_field_mapping(new_ievent)[:location]).to eq 'Spec Town, 123 Spec Street'
     end
     it "should use ORGANIZER as the organizer" do
-      proc.icalendar_field_mapping(new_ievent)[:organizer].should eq 'Spec Organization'
+      expect(proc.icalendar_field_mapping(new_ievent)[:organizer]).to eq 'Spec Organization'
     end
     it "should use DTSTART as the start_at date & time" do
       date = '2001-02-03 04:05:06 MST'.to_datetime
-      proc.icalendar_field_mapping(
-        new_ievent('DTSTART' => {value: date})
-      )[:start_at].should eq date
+      mapped_date = proc.icalendar_field_mapping(new_ievent('DTSTART' => { value: date }))[:start_at]
+      expect(mapped_date).to eq date
     end
     it "should use DTEND as the end_at date & time" do
       date = '2001-02-03 04:05:06 MST'.to_datetime
-      proc.icalendar_field_mapping(
-        new_ievent('DTEND' => {value: date})
-      )[:end_at].should eq date
+      mapped_date = proc.icalendar_field_mapping(new_ievent('DTEND' => { value: date }))[:end_at]
+      expect(mapped_date).to eq date
     end
   end
 

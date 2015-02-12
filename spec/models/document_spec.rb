@@ -12,61 +12,61 @@ describe Document, type: :model do
         document = Document.new(:custom_filename => '/')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_truthy
+        expect(document.valid?).to be_truthy
       end
       it "should not allow slashes in the filename, except for the root path" do
         document = Document.new(:custom_filename => '/filename')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow leading periods in the filename" do
         document = Document.new(:custom_filename => '.filename')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow trailing periods in the filename" do
         document = Document.new(:custom_filename => 'filename.')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow series of periods in the filename" do
         document = Document.new(:custom_filename => 'file..name')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow high-byte characters in the filename" do
         document = Document.new(:custom_filename => 'ƒilename')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow ampersands in the filename" do
         document = Document.new(:custom_filename => 'file&name')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow spaces in the filename" do
         document = Document.new(:custom_filename => 'file name')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow the filename to exceed 127 characters" do
         document = Document.new(:custom_filename => 'a' * 128)
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should allow the filename to reach 127 characters" do
         document = Document.new(:custom_filename => 'a' * 127)
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_truthy
+        expect(document.valid?).to be_truthy
       end
       it "should allow letters, numbers, dashes, underscores and a file extension in the filename" do
         document = Document.new(
@@ -74,7 +74,7 @@ describe Document, type: :model do
         )
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_truthy
+        expect(document.valid?).to be_truthy
       end
     end
     describe "of content_type" do
@@ -82,26 +82,26 @@ describe Document, type: :model do
         document = Document.new(:custom_filename => 'a')
         document.content_type = ''
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should not allow an invalid content_type" do
         document = Document.new(:custom_filename => 'a')
         document.content_type = 'invalid'
         document.data = ''
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
     end
     describe "of data" do
       it "should require data to be set" do
         document = Document.new(:custom_filename => 'a')
         document.content_type = 'text/plain'
-        document.valid?.should be_falsey
+        expect(document.valid?).to be_falsey
       end
       it "should allow data to be empty" do
         document = Document.new(:custom_filename => 'a')
         document.content_type = 'text/plain'
         document.data = ''
-        document.valid?.should be_truthy
+        expect(document.valid?).to be_truthy
       end
     end
   end
@@ -121,18 +121,18 @@ describe Document, type: :model do
       @user_doc = FactoryGirl.create(:document, filename: 'user', is_authority_controlled: true, user: @user)
     end
     it "should find everything for admins" do
-      Document.for_user(@admin).order(:filename).should eq [
+      expect(Document.for_user(@admin).order(:filename)).to eq [
         @admin_doc, @controlled_doc, @public_doc, @user_doc
       ]
     end
     it "should exclude documents the user doesn’t have authority to view" do
-      Document.for_user(@user).order(:filename).should eq [@controlled_doc, @public_doc, @user_doc]
+      expect(Document.for_user(@user).order(:filename)).to eq [@controlled_doc, @public_doc, @user_doc]
     end
     it "should exclude all authority controlled documents for anonymous users" do
-      Document.for_user(nil).order(:filename).should eq [@public_doc]
+      expect(Document.for_user(nil).order(:filename)).to eq [@public_doc]
     end
     it "should return a subset of all possible results when limit set" do
-      Document.for_user(@admin).order(:filename).limit(2).offset(1).should eq [@controlled_doc,@public_doc]
+      expect(Document.for_user(@admin).order(:filename).limit(2).offset(1)).to eq [@controlled_doc,@public_doc]
     end
   end
 
@@ -141,12 +141,12 @@ describe Document, type: :model do
       document = Document.new()
       document.data = 'a' * 10
       document.determine_size
-      document.size.should eq 10
+      expect(document.size).to eq 10
     end
     it "should set the size to zero if no data" do
       document = Document.new()
       document.determine_size
-      document.size.should eq 0
+      expect(document.size).to eq 0
     end
   end
 
@@ -158,7 +158,7 @@ describe Document, type: :model do
       document.data = ''
       document.container_path = container
       document.save!
-      document.path.should_not be_nil
+      expect(document.path).not_to be_nil
     end
   end
 
@@ -174,7 +174,7 @@ describe Document, type: :model do
       document.save!
       document.container_path = nil
       document.update_path
-      document.path.should be_nil
+      expect(document.path).to be_nil
     end
     it "should make no change to the path if the Document’s filename and container did not change" do
       document = Document.new(:custom_filename => 'original')
@@ -183,7 +183,7 @@ describe Document, type: :model do
       document.container_path = @container
       document.save!
       document.update!(description: 'Not changing the filename.')
-      document.sitepath.should eq '/container/original'
+      expect(document.sitepath).to eq '/container/original'
     end
     it "should update the path if the Document’s filename changed" do
       document = Document.new(:custom_filename => 'original')
@@ -192,13 +192,13 @@ describe Document, type: :model do
       document.container_path = @container
       document.save!
       document.update!(custom_filename: 'changed')
-      document.sitepath.should eq '/container/changed'
+      expect(document.sitepath).to eq '/container/changed'
     end
     it "should add a path if a container_path is added" do
       document = FactoryGirl.create(:document, :filename => 'original')
       document.container_path = @container
       document.update_path
-      document.sitepath.should eq '/container/original'
+      expect(document.sitepath).to eq '/container/original'
     end
   end
 
@@ -206,21 +206,21 @@ describe Document, type: :model do
     it "should return nil if no container" do
       document = Document.new(:custom_filename => 'document')
       document.content_type = 'text/plain'
-      document.calculate_sitepath.should be_nil
+      expect(document.calculate_sitepath).to be_nil
     end
     it "should have be the container’s sitepath plus a slash and the filename" do
       container = FactoryGirl.create(:page, :filename => 'contain').path
       document = Document.new(:custom_filename => 'document.txt')
       document.content_type = 'text/plain'
       document.container_path = container
-      document.calculate_sitepath.should eq '/contain/document.txt'
+      expect(document.calculate_sitepath).to eq '/contain/document.txt'
     end
   end
 
   describe "#sitepath" do
     it "should return nil when the Document does not have a container_path" do
       document = FactoryGirl.create(:document)
-      document.sitepath.should be_nil
+      expect(document.sitepath).to be_nil
     end
     it "should be the path’s sitepath" do
       document = Document.new(:custom_filename => 'testdoc')
@@ -228,7 +228,7 @@ describe Document, type: :model do
       document.data = ''
       document.container_path = FactoryGirl.create(:page, :filename => 'container').path
       document.save!
-      document.sitepath.should eq '/container/testdoc'
+      expect(document.sitepath).to eq '/container/testdoc'
     end
   end
 
@@ -254,25 +254,25 @@ describe Document, type: :model do
       doc = Document.new
       doc.filename = '    test    with lots  of    spaces '
       doc.cleanup_filename
-      doc.filename.should eq '_test_with_lots_of_spaces_'
+      expect(doc.filename).to eq '_test_with_lots_of_spaces_'
     end
     it "should convert em and en dashes to simple dashes" do
       doc = Document.new
       doc.filename = '–en—em-plain'
       doc.cleanup_filename
-      doc.filename.should eq '-en-em-plain'
+      expect(doc.filename).to eq '-en-em-plain'
     end
     it "should convert accented characters" do
       doc = Document.new
       doc.filename = "ªáÁàÀâÂåÅäÄãÃèéëêÈÉËÊìíïîÌÍÏÎòóöôõÒÓÖÔÕøØºùúüûÙÚÛµæÆœŒç¢ƒﬁﬂñÑ"
       doc.cleanup_filename
-      doc.filename.should eq 'aaaaaaaaaaaaaeeeeeeeeiiiiiiiiooooooooooooouuuuuuuuaeaeoeoeccffiflnn'
+      expect(doc.filename).to eq 'aaaaaaaaaaaaaeeeeeeeeiiiiiiiiooooooooooooouuuuuuuuaeaeoeoeccffiflnn'
     end
     it "should strip forbidden characters" do
       doc = Document.new
       doc.filename = "`=¡™£∞§¶•≠`⁄€‹›‡·‚±∑´®†¥¨ˆπ“‘«„´‰ˇ¨ˆ∏”’»ß∂©˙∆˚¬…˝Ω≈√∫˜≤≥÷¸˛Ç◊ı˜¯˘¿"
       doc.cleanup_filename
-      doc.filename.should eq ''
+      expect(doc.filename).to eq ''
     end
   end
 
@@ -285,7 +285,7 @@ describe Document, type: :model do
 
   describe "#custom_filename" do
     it "should always return nil" do
-      Document.new.custom_filename.should be_nil
+      expect(Document.new.custom_filename).to be_nil
     end
   end
 
@@ -293,24 +293,24 @@ describe Document, type: :model do
     it "should return the document’s Datastore.data" do
       doc = Document.new
       doc.datastore = Datastore.new(:data => 'abc')
-      doc.data.should eq('abc')
+      expect(doc.data).to eq('abc')
     end
     it "should return nil if the document does not have a Datastore yet" do
-      Document.new.data.should be_nil
+      expect(Document.new.data).to be_nil
     end
   end
   context "#data=" do
     it "should create a Datastore for the document if none yet" do
       doc = Document.new
       doc.data = 'abc'
-      doc.datastore.data.should eq('abc')
+      expect(doc.datastore.data).to eq('abc')
     end
     it "should update the document’s Datastore" do
       doc = Document.new
       datastore = Datastore.new(:data => 'abc')
       doc.datastore = datastore
       doc.data = 'def'
-      datastore.data.should eq 'def'
+      expect(datastore.data).to eq 'def'
     end
   end
 
@@ -325,14 +325,14 @@ describe Document, type: :model do
       document.created_at = @create
       document.updated_at = @update
       document.assign_headers(response)
-      response['Last-Modified'].should eq @update.to_s(:http_header)
+      expect(response['Last-Modified']).to eq @update.to_s(:http_header)
     end
     it "should set the Last-Modified if updated_at not set" do
       response = ActionDispatch::Response.new
       document = Document.new
       document.created_at = @create
       document.assign_headers(response)
-      response['Last-Modified'].should eq @create.to_s(:http_header)
+      expect(response['Last-Modified']).to eq @create.to_s(:http_header)
     end
     it "should set the Cache-Control for privacy when document is authority controlled" do
       response = ActionDispatch::Response.new
@@ -340,14 +340,14 @@ describe Document, type: :model do
       document.updated_at = @update
       document.is_authority_controlled = true
       document.assign_headers(response)
-      response.cache_control[:public].should be_falsey
+      expect(response.cache_control[:public]).to be_falsey
     end
     it "should set the Cache-Control for public access when document is not authority controlled" do
       response = ActionDispatch::Response.new
       document = Document.new
       document.updated_at = @update
       document.assign_headers(response)
-      response.cache_control[:public].should be_truthy
+      expect(response.cache_control[:public]).to be_truthy
     end
     it "should set the Content-Type" do
       response = ActionDispatch::Response.new
@@ -355,7 +355,7 @@ describe Document, type: :model do
       document.updated_at = @update
       document.content_type = 'text/plain'
       document.assign_headers(response)
-      response['Content-Type'].should eq 'text/plain'
+      expect(response['Content-Type']).to eq 'text/plain'
     end
   end
 

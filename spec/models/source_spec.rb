@@ -42,28 +42,28 @@ describe Source, type: :model do
     end
     it "should allow refresh_after_at to be set" do
       source = Source.new(refresh_after_at: '2012-06-07 08:09:10')
-      source.refresh_after_at?.should be_truthy
+      expect(source.refresh_after_at?).to be_truthy
     end
     it "should allow processor to be set" do
-      Source.new(processor: 'Test').processor.should eq 'Test'
+      expect(Source.new(processor: 'Test').processor).to eq 'Test'
     end
     it "should allow url to be set" do
-      Source.new(url: 'Test').url.should eq 'Test'
+      expect(Source.new(url: 'Test').url).to eq 'Test'
     end
     it "should allow method to be set" do
-      Source.new(method: 'Test').method.should eq 'Test'
+      expect(Source.new(method: 'Test').method).to eq 'Test'
     end
     it "should allow post_args to be set" do
-      Source.new(post_args: 'Test').post_args.should eq 'Test'
+      expect(Source.new(post_args: 'Test').post_args).to eq 'Test'
     end
     it "should allow title to be set" do
-      Source.new(title: 'Test').title.should eq 'Test'
+      expect(Source.new(title: 'Test').title).to eq 'Test'
     end
     it "should allow description to be set" do
-      Source.new(description: 'Test').description.should eq 'Test'
+      expect(Source.new(description: 'Test').description).to eq 'Test'
     end
     it "should allow options to be set" do
-      Source.new(options: 'Test').options.should eq 'Test'
+      expect(Source.new(options: 'Test').options).to eq 'Test'
     end
   end
 
@@ -72,76 +72,76 @@ describe Source, type: :model do
       $minimum_valid_params = { processor: 'iCalendar', url: 'http://test.tld/test.ics' }
     }
     it "should pass with minimum valid parameters" do
-      Source.new(minimum_valid_params).valid?.should be_truthy
+      expect(Source.new(minimum_valid_params).valid?).to be_truthy
     end
     describe "of processor" do
       it "should fail if not set" do
         minimum_valid_params.delete :processor
-        Source.new(minimum_valid_params).valid?.should be_falsey
+        expect(Source.new(minimum_valid_params).valid?).to be_falsey
       end
       it "should fail if set to an invalid value" do
-        Source.new(minimum_valid_params.merge(processor: 'invalid')).valid?.should be_falsey
+        expect(Source.new(minimum_valid_params.merge(processor: 'invalid')).valid?).to be_falsey
       end
       it "should pass if set to iCalendar" do
         source = Source.new(minimum_valid_params.merge( processor: 'iCalendar' ))
-        source.valid?.should be_truthy
+        expect(source.valid?).to be_truthy
       end
     end
     describe "of url" do
       it "should fail if not set" do
         minimum_valid_params.delete :url
-        Source.new(minimum_valid_params).valid?.should be_falsey
+        expect(Source.new(minimum_valid_params).valid?).to be_falsey
       end
       it "should fail if not a valid url format" do
-        Source.new(minimum_valid_params.merge(url: 'invalid url')).valid?.should be_falsey
+        expect(Source.new(minimum_valid_params.merge(url: 'invalid url')).valid?).to be_falsey
       end
     end
     describe "of method" do
       it "should default to get" do
         source = Source.new(minimum_valid_params)
-        source.method.should eq 'get'
+        expect(source.method).to eq 'get'
       end
       it "should fail if invalid" do
         source = Source.new(minimum_valid_params.merge( method: 'invalid' ))
-        source.valid?.should be_falsey
+        expect(source.valid?).to be_falsey
       end
       it "should pass if set to get" do
         source = Source.new(minimum_valid_params.merge( method: 'get' ))
-        source.valid?.should be_truthy
+        expect(source.valid?).to be_truthy
       end
       it "should pass if set to post" do
         source = Source.new(minimum_valid_params.merge( method: 'post' ))
-        source.valid?.should be_truthy
+        expect(source.valid?).to be_truthy
       end
     end
     describe "of last_updated_at" do
       it "should fail if greater than the current time" do
         source = Source.new(minimum_valid_params)
         source.last_updated_at = 1.minute.from_now
-        source.valid?.should be_falsey
+        expect(source.valid?).to be_falsey
       end
       it "should pass if equal to the current time" do
         source = Source.new(minimum_valid_params)
         source.last_updated_at = Time.now
-        source.valid?.should be_truthy
+        expect(source.valid?).to be_truthy
       end
     end
   end
 
   describe "#name" do
     it "should return the title, if set" do
-      Source.new(title: 'The Title').name.should eq 'The Title'
+      expect(Source.new(title: 'The Title').name).to eq 'The Title'
     end
     it "should return a Source & ID string if title is missing" do
       source = Source.new
       source.id = 123
-      source.name.should eq 'Source 123'
+      expect(source.name).to eq 'Source 123'
     end
   end
 
   describe "#run_processor" do
     it "should do nothing when not a recognized processor" do
-      Source.new.run_processor.should be_nil
+      expect(Source.new.run_processor).to be_nil
     end
     context "with the iCalendar processor" do
       let(:source) do
@@ -155,7 +155,7 @@ describe Source, type: :model do
       it "should update the last_updated_at stamp" do
         source.last_updated_at = nil
         source.run_processor(@user_normal)
-        source.last_updated_at.should be
+        expect(source.last_updated_at).to be
       end
     end
     context "with the old, legacy, IcalProcessor value" do

@@ -36,18 +36,18 @@ describe SettingsController, type: :controller do
     it "requires the user to have authority" do
       set_logged_in_user
       get :initialize_defaults
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
     it "initializes the default settings" do
       Setting.destroy_all
       set_logged_in_admin
       get :initialize_defaults
-      Setting[:global_start_date].should eq(Time.now.to_date.to_s)
+      expect(Setting[:global_start_date]).to eq(Time.now.to_date.to_s)
     end
     it "redirects to the settings index" do
       set_logged_in_admin
       get :initialize_defaults
-      response.should redirect_to(settings_url)
+      expect(response).to redirect_to(settings_url)
     end
   end
 
@@ -56,13 +56,13 @@ describe SettingsController, type: :controller do
       set_logged_in_user
       setting = Setting.create! valid_attributes
       get :index
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
     it "assigns all settings as @settings" do
       set_logged_in_admin
       setting = Setting.create! valid_attributes
       get :index
-      assigns(:settings).should eq([setting])
+      expect(assigns(:settings)).to eq([setting])
     end
   end
 
@@ -71,7 +71,7 @@ describe SettingsController, type: :controller do
     it "assigns the requested setting as @setting" do
       set_logged_in_admin
       get :show, {:id => setting.to_param}, valid_session
-      assigns(:setting).should eq(setting)
+      expect(assigns(:setting)).to eq(setting)
     end
   end
 
@@ -79,7 +79,7 @@ describe SettingsController, type: :controller do
     it "assigns a new setting as @setting" do
       set_logged_in_admin
       get :new, {}, valid_session
-      assigns(:setting).should be_a_new(Setting)
+      expect(assigns(:setting)).to be_a_new(Setting)
     end
   end
 
@@ -95,14 +95,14 @@ describe SettingsController, type: :controller do
       it "assigns a newly created setting as @setting" do
         set_logged_in_admin
         post :create, {:setting => valid_attributes}, valid_session
-        assigns(:setting).should be_a(Setting)
-        assigns(:setting).should be_persisted
+        expect(assigns(:setting)).to be_a(Setting)
+        expect(assigns(:setting)).to be_persisted
       end
 
       it "redirects to the created setting" do
         set_logged_in_admin
         post :create, {:setting => valid_attributes}, valid_session
-        response.should redirect_to(Setting.last)
+        expect(response).to redirect_to(Setting.last)
       end
     end
 
@@ -112,7 +112,7 @@ describe SettingsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
         post :create, {:setting => {}}, valid_session
-        assigns(:setting).should be_a_new(Setting)
+        expect(assigns(:setting)).to be_a_new(Setting)
       end
 
       it "re-renders the 'new' template" do
@@ -120,7 +120,7 @@ describe SettingsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
         post :create, {:setting => {}}, valid_session
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -130,7 +130,7 @@ describe SettingsController, type: :controller do
     it "assigns the requested setting as @setting" do
       set_logged_in_admin
       get :edit, {:id => setting.to_param}, valid_session
-      assigns(:setting).should eq(setting)
+      expect(assigns(:setting)).to eq(setting)
     end
   end
 
@@ -150,13 +150,13 @@ describe SettingsController, type: :controller do
       it "assigns the requested setting as @setting" do
         set_logged_in_admin
         patch :update, { id: setting.to_param, setting: valid_attributes }, valid_session
-        assigns(:setting).should eq(setting)
+        expect(assigns(:setting)).to eq(setting)
       end
 
       it "redirects to the setting" do
         set_logged_in_admin
         patch :update, { id: setting.to_param, setting: valid_attributes }, valid_session
-        response.should redirect_to(setting)
+        expect(response).to redirect_to(setting)
       end
     end
 
@@ -166,7 +166,7 @@ describe SettingsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
         patch :update, { id: setting.to_param, setting: {} }, valid_session
-        assigns(:setting).should eq(setting)
+        expect(assigns(:setting)).to eq(setting)
       end
 
       it "re-renders the 'edit' template" do
@@ -174,7 +174,7 @@ describe SettingsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
         patch :update, { id: setting.to_param, setting: {} }, valid_session
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -184,7 +184,7 @@ describe SettingsController, type: :controller do
     it "assigns the requested setting as @setting" do
       set_logged_in_admin
       get :delete, {:id => setting.to_param}, valid_session
-      assigns(:setting).should eq(setting)
+      expect(assigns(:setting)).to eq(setting)
     end
   end
 
@@ -201,7 +201,7 @@ describe SettingsController, type: :controller do
     it "redirects to the settings list" do
       set_logged_in_admin
       delete :destroy, {:id => setting.to_param}, valid_session
-      response.should redirect_to(settings_url)
+      expect(response).to redirect_to(settings_url)
     end
   end
 

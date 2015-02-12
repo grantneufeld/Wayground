@@ -31,17 +31,17 @@ describe 'events/show.html.erb', type: :view do
 
   it "renders the expected text" do
     render
-    rendered.should match(/Title/)
-    rendered.should match(/Description/)
-    rendered.should match(/Content/)
-    rendered.should match(/Organizer/)
-    rendered.should match(/href="Organizer Url"/)
-    rendered.should match(/Location/)
-    rendered.should match(/Address/)
-    rendered.should match(/City/)
-    rendered.should match(/Province/)
-    rendered.should match(/Country/)
-    rendered.should match('href="http://location.url.tld/"')
+    expect(rendered).to match(/Title/)
+    expect(rendered).to match(/Description/)
+    expect(rendered).to match(/Content/)
+    expect(rendered).to match(/Organizer/)
+    expect(rendered).to match(/href="Organizer Url"/)
+    expect(rendered).to match(/Location/)
+    expect(rendered).to match(/Address/)
+    expect(rendered).to match(/City/)
+    expect(rendered).to match(/Province/)
+    expect(rendered).to match(/Country/)
+    expect(rendered).to match('href="http://location.url.tld/"')
   end
 
   it "renders the Cancelled notice" do

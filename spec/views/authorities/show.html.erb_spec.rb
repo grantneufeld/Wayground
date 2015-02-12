@@ -19,16 +19,16 @@ describe 'authorities/show.html.erb', type: :view do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(//)
-    rendered.should match(//)
-    rendered.should match(/Area/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
+    expect(rendered).to match(//)
+    expect(rendered).to match(//)
+    expect(rendered).to match(/Area/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
   end
 end

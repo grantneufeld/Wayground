@@ -49,13 +49,13 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_view authority" do
       set_logged_in_user
       get :index
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "assigns all authorities as @authorities" do
       set_logged_in_admin
       allow(controller).to receive(:paginate).and_return([mock_admin_authority])
       get :index
-      assigns(:authorities).should eq([mock_admin_authority])
+      expect(assigns(:authorities)).to eq([mock_admin_authority])
     end
   end
 
@@ -63,18 +63,18 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_view authority" do
       set_logged_in_user
       get :show, :id => "37"
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "assigns the requested authority as @authority" do
       set_logged_in_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       get :show, :id => "37"
-      assigns(:authority).should be(mock_admin_authority)
+      expect(assigns(:authority)).to be(mock_admin_authority)
     end
     it "give a 404 Missing error when a non-existent authority is requested" do
       set_logged_in_admin
       get :show, :id => "12345"
-      response.status.should eq 404 # "404 Missing"
+      expect(response.status).to eq 404 # "404 Missing"
     end
   end
 
@@ -82,13 +82,13 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_create authority" do
       set_logged_in_user
       get :new
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "assigns a new authority as @authority" do
       set_logged_in_admin
       allow(Authority).to receive(:new) { mock_admin_authority }
       get :new
-      assigns(:authority).should be(mock_admin_authority)
+      expect(assigns(:authority)).to be(mock_admin_authority)
     end
   end
 
@@ -96,7 +96,7 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_create authority" do
       set_logged_in_user
       post :create, :authority => {'these' => 'params'}
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
 
     describe "with valid params" do
@@ -104,14 +104,14 @@ describe AuthoritiesController, type: :controller do
         set_logged_in_admin
         allow(Authority).to receive(:new).with({'these' => 'params'}) { mock_authority(:save => true, :user => mock_user) }
         post :create, :authority => {'these' => 'params'}
-        assigns(:authority).should be(mock_authority)
-        assigns(:user).should_not be_nil
+        expect(assigns(:authority)).to be(mock_authority)
+        expect(assigns(:user)).not_to be_nil
       end
       it "redirects to the created authority" do
         set_logged_in_admin
         allow(Authority).to receive(:new) { mock_authority(:save => true) }
         post :create, :authority => {}
-        response.should redirect_to(authority_url(mock_authority))
+        expect(response).to redirect_to(authority_url(mock_authority))
       end
     end
 
@@ -120,13 +120,13 @@ describe AuthoritiesController, type: :controller do
         set_logged_in_admin
         allow(Authority).to receive(:new).with({'these' => 'params'}) { mock_authority(:save => false) }
         post :create, :authority => {'these' => 'params'}
-        assigns(:authority).should be(mock_authority)
+        expect(assigns(:authority)).to be(mock_authority)
       end
       it "re-renders the 'new' template" do
         set_logged_in_admin
         allow(Authority).to receive(:new) { mock_authority(:save => false) }
         post :create, :authority => {}
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -135,13 +135,13 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_update authority" do
       set_logged_in_user
       get :edit, :id => "37"
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "assigns the requested authority as @authority" do
       set_logged_in_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       get :edit, :id => "37"
-      assigns(:authority).should be(mock_admin_authority)
+      expect(assigns(:authority)).to be(mock_admin_authority)
     end
   end
 
@@ -149,7 +149,7 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_update authority" do
       set_logged_in_user
       patch :update, id: '37', authority: { 'these' => 'params' }
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
 
     describe "with valid params" do
@@ -163,13 +163,13 @@ describe AuthoritiesController, type: :controller do
         set_logged_in_admin
         allow(Authority).to receive(:find) { reset_mock_admin_authority(update: true) }
         patch :update, id: '1'
-        assigns(:authority).should be(mock_admin_authority)
+        expect(assigns(:authority)).to be(mock_admin_authority)
       end
       it "redirects to the authority" do
         set_logged_in_admin
         allow(Authority).to receive(:find) { reset_mock_admin_authority(update: true) }
         patch :update, id: '1'
-        response.should redirect_to(authority_url(mock_admin_authority))
+        expect(response).to redirect_to(authority_url(mock_admin_authority))
       end
     end
 
@@ -178,13 +178,13 @@ describe AuthoritiesController, type: :controller do
         set_logged_in_admin
         allow(Authority).to receive(:find) { mock_admin_authority(update: false) }
         patch :update, id: '1'
-        assigns(:authority).should be(mock_admin_authority)
+        expect(assigns(:authority)).to be(mock_admin_authority)
       end
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         allow(Authority).to receive(:find) { mock_authority(update: false) }
         patch :update, id: '1'
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -193,13 +193,13 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_delete authority" do
       set_logged_in_user
       get :delete, :id => "37"
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "shows a form for confirming deletion of an authority" do
       set_logged_in_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       get :delete, :id => "37"
-      assigns(:authority).should be(mock_admin_authority)
+      expect(assigns(:authority)).to be(mock_admin_authority)
     end
   end
 
@@ -207,7 +207,7 @@ describe AuthoritiesController, type: :controller do
     it "blocks users without the :can_delete authority" do
       set_logged_in_user
       delete :destroy, :id => "37"
-      response.status.should eq 403 # "403 Forbidden"
+      expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "destroys the requested authority" do
       set_logged_in_admin
@@ -219,7 +219,7 @@ describe AuthoritiesController, type: :controller do
       set_logged_in_admin
       allow(Authority).to receive(:find) { mock_admin_authority }
       delete :destroy, :id => "1"
-      response.should redirect_to(authorities_url)
+      expect(response).to redirect_to(authorities_url)
     end
   end
 end

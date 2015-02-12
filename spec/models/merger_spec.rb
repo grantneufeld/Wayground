@@ -5,7 +5,7 @@ describe Merger::Base do
   describe "initialization" do
     it "should accept a source" do
       source = double('source')
-      Merger::Base.new(source).source.should eq source
+      expect(Merger::Base.new(source).source).to eq source
     end
   end
 
@@ -20,7 +20,7 @@ describe Merger::Base do
       expect(merger).to receive(:merge_external_links_into).with(dest)
       expect(merger).to receive(:merge_sourced_items_into).with(dest)
       expect(merger).to receive(:merge_versions_into).with(dest)
-      merger.merge_into!(dest).should eq :conflicts
+      expect(merger.merge_into!(dest)).to eq :conflicts
     end
   end
 
@@ -33,7 +33,7 @@ describe Merger::Base do
     it "should return a hash" do
       dest = double('destination')
       allow(dest).to receive(:save!)
-      Merger::Base.new(nil).merge_fields_into(dest).should eq({})
+      expect(Merger::Base.new(nil).merge_fields_into(dest)).to eq({})
     end
   end
 
@@ -327,7 +327,7 @@ describe Merger::EventMerger do
       allow(dest).to receive(:location_url?).and_return(true)
       # Do the merger operation
       merger = Merger::EventMerger.new(source)
-      merger.merge_fields_into(dest).should eq(
+      expect(merger.merge_fields_into(dest)).to eq(
         start_at: :start_at, end_at: :end_at, timezone: :timezone,
         title: :title, description: :description, content: :content,
         organizer: :organizer, organizer_url: :organizer_url, location: :location,
@@ -397,7 +397,7 @@ describe Merger::EventMerger do
       allow(dest).to receive(:location_url).and_return(:location_url)
       # Do the merger operation
       merger = Merger::EventMerger.new(source)
-      merger.merge_fields_into(dest).should eq({})
+      expect(merger.merge_fields_into(dest)).to eq({})
     end
 
     it "should leave the flag fields false if both source and destination are false" do

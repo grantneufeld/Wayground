@@ -52,7 +52,7 @@ describe PagesController, type: :controller do
     it "assigns all pages as @pages" do
       allow(controller).to receive(:paginate).with(Page).and_return([mock_page])
       get :index
-      assigns(:pages).should eq([mock_page])
+      expect(assigns(:pages)).to eq([mock_page])
     end
   end
 
@@ -61,35 +61,35 @@ describe PagesController, type: :controller do
       set_logged_in_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       get :show, :id => "37"
-      assigns(:page).should be(mock_page)
+      expect(assigns(:page)).to be(mock_page)
     end
   end
 
   describe "GET new" do
     it "requires the user to have authority" do
       get :new
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns a new page as @page" do
       set_logged_in_admin
       allow(Page).to receive(:new) { mock_page }
       get :new
-      assigns(:page).should be(mock_page)
+      expect(assigns(:page)).to be(mock_page)
     end
 
     it "assigns the parent page if given" do
       set_logged_in_admin
       parent_page = FactoryGirl.create(:page)
       get :new, :parent => parent_page.id.to_s
-      assigns(:page).parent.should eq parent_page
+      expect(assigns(:page).parent).to eq parent_page
     end
   end
 
   describe "POST create" do
     it "requires the user to have authority" do
       post :create
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -97,7 +97,7 @@ describe PagesController, type: :controller do
         set_logged_in_admin
         allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => true) }
         post :create, :page => {'these' => 'params'}
-        assigns(:page).should be(mock_page)
+        expect(assigns(:page)).to be(mock_page)
       end
 
       it "assigns the parent page if given" do
@@ -108,14 +108,14 @@ describe PagesController, type: :controller do
           parent: parent_page.id.to_s,
           page: { filename: 'spec_create_with_parent', title: 'test' }
         )
-        assigns(:page).parent.should eq parent_page
+        expect(assigns(:page).parent).to eq parent_page
       end
 
       it "redirects to the created page" do
         set_logged_in_admin
         allow(Page).to receive(:new) { mock_page(:save => true) }
         post :create, :page => {}
-        response.should redirect_to(page_url(mock_page))
+        expect(response).to redirect_to(page_url(mock_page))
       end
     end
 
@@ -124,14 +124,14 @@ describe PagesController, type: :controller do
         set_logged_in_admin
         allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => false) }
         post :create, :page => {'these' => 'params'}
-        assigns(:page).should be(mock_page)
+        expect(assigns(:page)).to be(mock_page)
       end
 
       it "re-renders the 'new' template" do
         set_logged_in_admin
         allow(Page).to receive(:new) { mock_page(:save => false) }
         post :create, :page => {}
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -140,14 +140,14 @@ describe PagesController, type: :controller do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
       get :edit, :id => test_page.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns the requested page as @page" do
       set_logged_in_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       get :edit, :id => "37"
-      assigns(:page).should be(mock_page)
+      expect(assigns(:page)).to be(mock_page)
     end
   end
 
@@ -155,7 +155,7 @@ describe PagesController, type: :controller do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
       patch :update, id: test_page.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -170,14 +170,14 @@ describe PagesController, type: :controller do
         set_logged_in_admin
         allow(Page).to receive(:find) { mock_page(update: true) }
         patch :update, id: '1'
-        assigns(:page).should be(mock_page)
+        expect(assigns(:page)).to be(mock_page)
       end
 
       it "redirects to the page" do
         set_logged_in_admin
         allow(Page).to receive(:find) { mock_page(update: true) }
         patch :update, id: '1'
-        response.should redirect_to(page_url(mock_page))
+        expect(response).to redirect_to(page_url(mock_page))
       end
     end
 
@@ -186,14 +186,14 @@ describe PagesController, type: :controller do
         set_logged_in_admin
         allow(Page).to receive(:find) { mock_page(update: false) }
         patch :update, id: '1'
-        assigns(:page).should be(mock_page)
+        expect(assigns(:page)).to be(mock_page)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         allow(Page).to receive(:find) { mock_page(update: false) }
         patch :update, id: '1'
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -202,14 +202,14 @@ describe PagesController, type: :controller do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
       get :delete, :id => test_page.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "shows a form for confirming deletion of a page" do
       set_logged_in_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       get :delete, :id => "37"
-      assigns(:page).should be(mock_page)
+      expect(assigns(:page)).to be(mock_page)
     end
   end
 
@@ -217,7 +217,7 @@ describe PagesController, type: :controller do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
       delete :destroy, :id => test_page.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "destroys the requested page" do
@@ -231,7 +231,7 @@ describe PagesController, type: :controller do
       set_logged_in_admin
       allow(Page).to receive(:find) { mock_page }
       delete :destroy, :id => "1"
-      response.should redirect_to(pages_url)
+      expect(response).to redirect_to(pages_url)
     end
   end
 

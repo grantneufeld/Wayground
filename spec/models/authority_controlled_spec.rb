@@ -28,32 +28,32 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
 
   describe ".authority_area" do
     it "should default to the class name for ActiveRecord models that are not set as authority_controlled" do
-      NO_AUTHORITY_CLASS.authority_area.should eq NO_AUTHORITY_CLASS.name
+      expect(NO_AUTHORITY_CLASS.authority_area).to eq NO_AUTHORITY_CLASS.name
     end
   end
   describe "#is_authority_restricted?" do
     it "should be false for ActiveRecord models that are not set as authority_controlled" do
-      NO_AUTHORITY_CLASS.new.is_authority_restricted?.should be_falsey
+      expect(NO_AUTHORITY_CLASS.new.is_authority_restricted?).to be_falsey
     end
   end
   describe "#has_authority_for_user_to?" do
     it "should allow viewing for models that are not set as authority_controlled" do
-      NO_AUTHORITY_CLASS.new.has_authority_for_user_to?.should be_truthy
+      expect(NO_AUTHORITY_CLASS.new.has_authority_for_user_to?).to be_truthy
     end
     it 'should not allow unauthorized users to change models that are not set as authority_controlled' do
-      NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_update).should be_falsey
+      expect(NO_AUTHORITY_CLASS.new.has_authority_for_user_to?(nil, :can_update)).to be_falsey
     end
     it "should refer to authority_area authorities for change actions when not set as authority_controlled" do
       item = FactoryGirl.create(:authority, area: 'test')
       user = FactoryGirl.create(:user)
       a = FactoryGirl.create(:authority, user: user, area: 'Authority', can_update: true)
-      item.has_authority_for_user_to?(user, :can_update).should be_truthy
+      expect(item.has_authority_for_user_to?(user, :can_update)).to be_truthy
     end
     it "should fall back to global authorities for change actions when not set as authority_controlled" do
       item = FactoryGirl.create(:authority, area: 'test')
       user = FactoryGirl.create(:user)
       a = FactoryGirl.create(:authority, user: user, area: 'global', can_update: true)
-      item.has_authority_for_user_to?(user, :can_update).should be_truthy
+      expect(item.has_authority_for_user_to?(user, :can_update)).to be_truthy
     end
   end
   describe ".allowed_for_user" do
@@ -61,7 +61,7 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
       it "should return all items for models that are not authority_controlled" do
         # create a couple of authentications so the search will have something to find
         FactoryGirl.create_list(:authentication, 2)
-        NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 2
+        expect(NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size).to eq 2
       end
       it "should return non-flagged items for models that are selectively authority_controlled" do
         # create a couple of pages so the search will have something to find
@@ -69,22 +69,22 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
         Path.delete_all
         FactoryGirl.create(:page)
         FactoryGirl.create(:page, is_authority_controlled: true)
-        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 1
+        expect(SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size).to eq 1
       end
       it "should return no items for models that are all private authority_controlled" do
         # create a couple of users so the search will have something to find
         FactoryGirl.create_list(:user, 2)
-        PRIVATE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size.should eq 0
+        expect(PRIVATE_AUTHORITY_CLASS.allowed_for_user(nil, :can_view).size).to eq 0
       end
     end
     describe "nil user, non-view action" do
       it "should return no items for models that are not authority_controlled" do
         FactoryGirl.create(:authentication)
-        NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size.should eq 0
+        expect(NO_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size).to eq 0
       end
       it "should return no items for models that are authority_controlled" do
         FactoryGirl.create(:page)
-        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size.should eq 0
+        expect(SELECTIVE_AUTHORITY_CLASS.allowed_for_user(nil, :can_update).size).to eq 0
       end
     end
     describe "authorized user" do
@@ -94,12 +94,12 @@ describe "authority_controlled extensions to ActiveRecord::Base" do
         FactoryGirl.create(:page, is_authority_controlled: true)
         page = FactoryGirl.create(:page, is_authority_controlled: true)
         user = FactoryGirl.create(:authority, item: page, can_update: true).user
-        SELECTIVE_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
+        expect(SELECTIVE_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size).to eq 1
       end
       it "should return all items user has authority for for non-authority-controlled models" do
         auth = FactoryGirl.create(:authentication)
         user = FactoryGirl.create(:authority, item: auth, can_update: true).user
-        NO_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size.should eq 1
+        expect(NO_AUTHORITY_CLASS.allowed_for_user(user, :can_update).size).to eq 1
       end
     end
   end
@@ -108,13 +108,13 @@ end
 describe "acts_as_authority_controlled" do
   describe "item_authority_flag_field" do
     it "should, when field is set to false, require authority for all records to be viewed" do
-      PRIVATE_AUTHORITY_CLASS.new.is_authority_restricted?.should be_truthy
+      expect(PRIVATE_AUTHORITY_CLASS.new.is_authority_restricted?).to be_truthy
     end
     it "should, when using the default, restrict viewing records when the flag is set" do
-      SELECTIVE_AUTHORITY_CLASS.new(is_authority_controlled: true).is_authority_restricted?.should be_truthy
+      expect(SELECTIVE_AUTHORITY_CLASS.new(is_authority_controlled: true).is_authority_restricted?).to be_truthy
     end
     it "should, when using the default, allow viewing records when the flag is not set" do
-      SELECTIVE_AUTHORITY_CLASS.new.is_authority_restricted?.should be_falsey
+      expect(SELECTIVE_AUTHORITY_CLASS.new.is_authority_restricted?).to be_falsey
     end
     it "should, when set to a custom field, use the custom field for the flag" do
       #pending
@@ -132,7 +132,7 @@ describe "acts_as_authority_controlled" do
     class TestAuthorityControlledCustomArea < ActiveRecord::Base
       acts_as_authority_controlled authority_area: 'Custom Area', item_authority_flag_field: :always_private
     end
-    TestAuthorityControlledCustomArea.authority_area.should eq 'Custom Area'
+    expect(TestAuthorityControlledCustomArea.authority_area).to eq 'Custom Area'
   end
 end
 
@@ -141,24 +141,24 @@ describe "authority_controlled class" do
   end
   describe "#is_authority_restricted?" do
     it "should be true for ActiveRecord models that are set as authority_controlled and always private" do
-      PRIVATE_AUTHORITY_CLASS.new.is_authority_restricted?.should be_truthy
+      expect(PRIVATE_AUTHORITY_CLASS.new.is_authority_restricted?).to be_truthy
     end
     it "should default to false for models that are set as authority_controlled but item is not flagged" do
-      SELECTIVE_AUTHORITY_CLASS.new.is_authority_restricted?.should be_falsey
+      expect(SELECTIVE_AUTHORITY_CLASS.new.is_authority_restricted?).to be_falsey
     end
     it "should be true for models that are set as authority_controlled and item is flagged" do
       item = SELECTIVE_AUTHORITY_CLASS.new
       item.is_authority_controlled = true
-      item.is_authority_restricted?.should be_truthy
+      expect(item.is_authority_restricted?).to be_truthy
     end
   end
   describe "#set_authority_for!" do
     it "should assign access to a user for an item" do
       item = FactoryGirl.create(:user)
       new_accessor = FactoryGirl.create(:user)
-      item.has_authority_for_user_to?(new_accessor, :can_view).should be_falsey
+      expect(item.has_authority_for_user_to?(new_accessor, :can_view)).to be_falsey
       item.set_authority_for!(new_accessor, :can_view)
-      item.has_authority_for_user_to?(new_accessor, :can_view).should be_truthy
+      expect(item.has_authority_for_user_to?(new_accessor, :can_view)).to be_truthy
     end
     it "should extend an existing authority" do
       item = FactoryGirl.create(:user)
@@ -166,20 +166,20 @@ describe "authority_controlled class" do
       FactoryGirl.create(:authority, user: user, item: item, can_update: true)
       item.set_authority_for!(user, :can_delete)
       authority = item.has_authority_for_user_to?(user, :can_delete)
-      (authority.can_update && authority.can_delete).should be_truthy
+      expect((authority.can_update && authority.can_delete)).to be_truthy
     end
   end
   describe ".authority_area" do
     it "should be the class name by default" do
-      PRIVATE_AUTHORITY_CLASS.authority_area.should eq PRIVATE_AUTHORITY_CLASS.name
+      expect(PRIVATE_AUTHORITY_CLASS.authority_area).to eq PRIVATE_AUTHORITY_CLASS.name
     end
     it "should be the parent item’s authority_area on an inherited authority controlled class" do
-      Path.authority_area.should eq Page.authority_area
+      expect(Path.authority_area).to eq Page.authority_area
     end
   end
   describe "#authority_area" do
     it "should match the class method" do
-      PRIVATE_AUTHORITY_CLASS.new.authority_area.should eq PRIVATE_AUTHORITY_CLASS.name
+      expect(PRIVATE_AUTHORITY_CLASS.new.authority_area).to eq PRIVATE_AUTHORITY_CLASS.name
     end
   end
   describe ".allowed_for_user" do
@@ -207,17 +207,17 @@ describe "authority_controlled class" do
       FactoryGirl.create(:authority, user: @viewer, item: @item, can_view: true)
     end
     it "should have authority for the owner" do
-      @item.has_authority_for_user_to?(@owner, :can_update).should be_truthy
+      expect(@item.has_authority_for_user_to?(@owner, :can_update)).to be_truthy
     end
     it "should have authority for a viewer" do
-      @item.has_authority_for_user_to?(@viewer).should be_truthy
+      expect(@item.has_authority_for_user_to?(@viewer)).to be_truthy
     end
     it "should not allow a viewer to update" do
-      @item.has_authority_for_user_to?(@viewer, :can_update).should be_falsey
+      expect(@item.has_authority_for_user_to?(@viewer, :can_update)).to be_falsey
     end
     it "should not allow an unauthorized user" do
       unauthorized = FactoryGirl.create(:user)
-      @item.has_authority_for_user_to?(unauthorized).should be_falsey
+      expect(@item.has_authority_for_user_to?(unauthorized)).to be_falsey
     end
   end
 end
@@ -244,8 +244,8 @@ describe "inherited authority model" do
       user = FactoryGirl.create(:user)
       user.set_authority_on_area(INHERITED_AUTHORITY_CLASS.authority_area, :can_update)
       item = INHERITED_AUTHORITY_CLASS.create!(sitepath: '/spec/authority/inherited/no_item', redirect: '/')
-      item.has_authority_for_user_to?(user, :can_update).should be_truthy
-      item.has_authority_for_user_to?(user, :can_delete).should be_falsey
+      expect(item.has_authority_for_user_to?(user, :can_update)).to be_truthy
+      expect(item.has_authority_for_user_to?(user, :can_delete)).to be_falsey
     end
   end
 end

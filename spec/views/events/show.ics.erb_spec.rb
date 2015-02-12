@@ -43,30 +43,30 @@ describe 'events/show.ics.erb', type: :view do
 
   it "renders the expected text" do
     render template: 'events/show.ics.erb'
-    rendered.should match(/\ABEGIN:VEVENT\r/)
-    rendered.should match(/^UID:123.event@wayground.ca\r/)
-    rendered.should match(/^CREATED:20010203T110506Z\r/)
-    rendered.should match(/^DTSTAMP:20010203T040506Z\r/)
-    rendered.should match(/^DTSTART;TZID=America\/Denver:20110203T040506\r/)
-    rendered.should match(/^DTEND;TZID=America\/Denver:20110708T091011\r/)
-    rendered.should match(
+    expect(rendered).to match(/\ABEGIN:VEVENT\r/)
+    expect(rendered).to match(/^UID:123.event@wayground.ca\r/)
+    expect(rendered).to match(/^CREATED:20010203T110506Z\r/)
+    expect(rendered).to match(/^DTSTAMP:20010203T040506Z\r/)
+    expect(rendered).to match(/^DTSTART;TZID=America\/Denver:20110203T040506\r/)
+    expect(rendered).to match(/^DTEND;TZID=America\/Denver:20110708T091011\r/)
+    expect(rendered).to match(
       /^SUMMARY:A Title That Extends Beyond Seventy-Five Characters So We Can Test (\r\n?|\n) Line Folding\r/
     )
-    rendered.should match(
+    expect(rendered).to match(
       /^DESCRIPTION:A\ description\ that\ goes\ on\\,\ and\ on\\,
       \ so\ it\ can\ exceed\ two\ line\r\n
       \ s\ of\ seventy-five\ characters\.
       \ This\ should\ serve\ as\ a\ good\ test\ of\ the\ line\r\n
       \ \ folding\.\ At\ least\\,\ that’s\ what\ I\ hope\.\r/x
     )
-    rendered.should match(/^CLASS:PUBLIC\r/)
-    rendered.should match(/^URL:http:\/\/[a-z0-9\.]+\/events\/123\r/)
-    rendered.should match(/^LOCATION:Location \(Address\)\r/)
-    rendered.should match(/^STATUS:CONFIRMED\r/)
-    rendered.should match(/^ORGANIZER;CN=Organizer:http:\/\/organizer\.tld\/\r/)
-    #rendered.should match(/^ATTACH:http:\/\/1st\.external\.link\/\r/)
-    #rendered.should match(/^ATTACH:http:\/\/2nd\.external\.link\/\r/)
-    rendered.should match(/^SEQUENCE:1\r/)
-    rendered.should match(/^END:VEVENT[\r\n]*\z/)
+    expect(rendered).to match(/^CLASS:PUBLIC\r/)
+    expect(rendered).to match(/^URL:http:\/\/[a-z0-9\.]+\/events\/123\r/)
+    expect(rendered).to match(/^LOCATION:Location \(Address\)\r/)
+    expect(rendered).to match(/^STATUS:CONFIRMED\r/)
+    expect(rendered).to match(/^ORGANIZER;CN=Organizer:http:\/\/organizer\.tld\/\r/)
+    #expect(rendered).to match(/^ATTACH:http:\/\/1st\.external\.link\/\r/)
+    #expect(rendered).to match(/^ATTACH:http:\/\/2nd\.external\.link\/\r/)
+    expect(rendered).to match(/^SEQUENCE:1\r/)
+    expect(rendered).to match(/^END:VEVENT[\r\n]*\z/)
   end
 end

@@ -14,11 +14,11 @@ describe 'documents/show.html.erb', type: :view do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(/The User/)
-    rendered.should match(/filename\.txt/)
-    rendered.should match(/9/)
-    rendered.should match(/text\/plain/)
-    rendered.should match(/The document description\./)
+    expect(rendered).to match(/The User/)
+    expect(rendered).to match(/filename\.txt/)
+    expect(rendered).to match(/9/)
+    expect(rendered).to match(/text\/plain/)
+    expect(rendered).to match(/The document description\./)
     # the document data is not shown
   end
 end

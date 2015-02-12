@@ -52,9 +52,9 @@ RSpec.configure do |config|
     # Disable the `expect` sytax...
     #c.syntax = :should
     # ...or disable the `should` syntax...
-    # c.syntax = :expect
+    c.syntax = :expect
     # ...or explicitly enable both
-    c.syntax = [:should, :expect]
+    #c.syntax = [:should, :expect]
   end
 
   # while upgrading to Rspec 3 via 2.99

@@ -52,15 +52,15 @@ describe SourcedItem, type: :model do
       }.to raise_error ActiveModel::MassAssignmentSecurity::Error
     end
     it "should allow source_identifier to be set" do
-      SourcedItem.new(:source_identifier => 'Test').source_identifier.should eq 'Test'
+      expect(SourcedItem.new(:source_identifier => 'Test').source_identifier).to eq 'Test'
     end
     it "should allow last_sourced_at to be set" do
       sourced_item = SourcedItem.new(:last_sourced_at => '2012-06-07 08:09:10')
-      sourced_item.last_sourced_at?.should be_truthy
+      expect(sourced_item.last_sourced_at?).to be_truthy
     end
     it "should allow has_local_modifications to be set" do
       sourced_item = SourcedItem.new(:has_local_modifications => true)
-      sourced_item.has_local_modifications.should be_truthy
+      expect(sourced_item.has_local_modifications).to be_truthy
     end
   end
 
@@ -68,19 +68,19 @@ describe SourcedItem, type: :model do
     it "should pass with minimum valid parameters" do
       si = source.sourced_items.new(minimum_valid_params)
       si.item = item
-      si.valid?.should be_truthy
+      expect(si.valid?).to be_truthy
     end
     describe "of source" do
       it "should fail if not set" do
         si = SourcedItem.new(minimum_valid_params)
         si.item = item
-        si.valid?.should be_falsey
+        expect(si.valid?).to be_falsey
       end
     end
     describe "of item" do
       it "should fail if not set" do
         si = source.sourced_items.new(minimum_valid_params)
-        si.valid?.should be_falsey
+        expect(si.valid?).to be_falsey
       end
     end
     describe "of last_sourced_at" do
@@ -89,14 +89,14 @@ describe SourcedItem, type: :model do
         si.item = item
         si.source.last_updated_at = Time.now
         si.last_sourced_at = 1.minute.from_now
-        si.valid?.should be_falsey
+        expect(si.valid?).to be_falsey
       end
       it "should pass if equal to the current time" do
         si = source.sourced_items.new(minimum_valid_params)
         si.item = item
         si.last_sourced_at = 0.minutes.ago
         si.source.last_updated_at = Time.now
-        si.valid?.should be_truthy
+        expect(si.valid?).to be_truthy
       end
     end
   end
@@ -105,13 +105,13 @@ describe SourcedItem, type: :model do
     it "should be called before validation of a new sourced item" do
       si = SourcedItem.new
       si.valid?
-      si.last_sourced_at?.should be_truthy
+      expect(si.last_sourced_at?).to be_truthy
     end
     it "should not change last_sourced_at if already set" do
       time = 1.day.ago
       si = SourcedItem.new(last_sourced_at: time)
       si.set_date
-      si.last_sourced_at.should eq time
+      expect(si.last_sourced_at).to eq time
     end
   end
 
@@ -119,12 +119,12 @@ describe SourcedItem, type: :model do
     it "should set has_local_modifications to true" do
       si = source.sourced_items.new(minimum_valid_params)
       si.modified_locally
-      si.has_local_modifications?.should be_truthy
+      expect(si.has_local_modifications?).to be_truthy
     end
     it "should not save the sourced item" do
       si = source.sourced_items.new(minimum_valid_params)
       si.modified_locally
-      si.changed?.should be_truthy
+      expect(si.changed?).to be_truthy
     end
   end
 
@@ -133,13 +133,13 @@ describe SourcedItem, type: :model do
       si = source.sourced_items.new(minimum_valid_params)
       si.item = item
       si.modified_locally!
-      si.has_local_modifications?.should be_truthy
+      expect(si.has_local_modifications?).to be_truthy
     end
     it "should save the sourced item" do
       si = source.sourced_items.new(minimum_valid_params)
       si.item = item
       si.modified_locally!
-      si.changed?.should be_falsey
+      expect(si.changed?).to be_falsey
     end
   end
 

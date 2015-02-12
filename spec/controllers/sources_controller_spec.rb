@@ -38,14 +38,14 @@ describe SourcesController, type: :controller do
   describe "GET index" do
     it "fails if not logged in" do
       get :index
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns all sources as @sources" do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       get :index
-      assigns(:sources).should eq([source])
+      expect(assigns(:sources)).to eq([source])
     end
   end
 
@@ -53,34 +53,34 @@ describe SourcesController, type: :controller do
     it "fails if not logged in" do
       source = FactoryGirl.create(:source)
       get :show, id: source.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns the requested source as @source" do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       get :show, id: source.id
-      assigns(:source).should eq(source)
+      expect(assigns(:source)).to eq(source)
     end
   end
 
   describe "GET new" do
     it "fails if not logged in" do
       get :new
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns a new source as @source" do
       set_logged_in_admin
       get :new
-      assigns(:source).should be_a_new(Source)
+      expect(assigns(:source)).to be_a_new(Source)
     end
   end
 
   describe "POST create" do
     it "fails if not logged in" do
       post :create, source: valid_attributes
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -94,14 +94,14 @@ describe SourcesController, type: :controller do
       it "assigns a newly created source as @source" do
         set_logged_in_admin
         post :create, source: valid_attributes
-        assigns(:source).should be_a(Source)
-        assigns(:source).should be_persisted
+        expect(assigns(:source)).to be_a(Source)
+        expect(assigns(:source)).to be_persisted
       end
 
       it "redirects to the created source" do
         set_logged_in_admin
         post :create, source: valid_attributes
-        response.should redirect_to(Source.last)
+        expect(response).to redirect_to(Source.last)
       end
     end
 
@@ -111,7 +111,7 @@ describe SourcesController, type: :controller do
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, source: {}
-        assigns(:source).should be_a_new(Source)
+        expect(assigns(:source)).to be_a_new(Source)
       end
 
       it "re-renders the 'new' template" do
@@ -119,7 +119,7 @@ describe SourcesController, type: :controller do
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, source: {}
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -129,14 +129,14 @@ describe SourcesController, type: :controller do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       get :edit, id: source.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns the requested source as @source" do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       get :edit, id: source.id
-      assigns(:source).should eq(source)
+      expect(assigns(:source)).to eq(source)
     end
   end
 
@@ -145,7 +145,7 @@ describe SourcesController, type: :controller do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       patch :update, id: source.id, source: { 'these' => 'params' }
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -164,14 +164,14 @@ describe SourcesController, type: :controller do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
         patch :update, id: source.id, source: valid_attributes
-        assigns(:source).should eq(source)
+        expect(assigns(:source)).to eq(source)
       end
 
       it "redirects to the source" do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
         patch :update, id: source.id, source: valid_attributes
-        response.should redirect_to(source)
+        expect(response).to redirect_to(source)
       end
     end
 
@@ -182,7 +182,7 @@ describe SourcesController, type: :controller do
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, id: source.id, source: {}
-        assigns(:source).should eq(source)
+        expect(assigns(:source)).to eq(source)
       end
 
       it "re-renders the 'edit' template" do
@@ -191,7 +191,7 @@ describe SourcesController, type: :controller do
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, id: source.id, source: {}
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -201,14 +201,14 @@ describe SourcesController, type: :controller do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       get :delete, id: source.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "shows a form for confirming deletion of an source" do
       allow(Source).to receive(:find).with("37") { mock_source }
       set_logged_in_admin
       get :delete, id: "37"
-      assigns(:source).should be(mock_source)
+      expect(assigns(:source)).to be(mock_source)
     end
   end
 
@@ -217,7 +217,7 @@ describe SourcesController, type: :controller do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       delete :destroy, id: source.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "destroys the requested source" do
@@ -232,7 +232,7 @@ describe SourcesController, type: :controller do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       delete :destroy, id: source.id
-      response.should redirect_to(sources_url)
+      expect(response).to redirect_to(sources_url)
     end
   end
 
@@ -242,13 +242,13 @@ describe SourcesController, type: :controller do
     it "requires the user to have authority" do
       set_logged_in_user
       get :processor, id: source.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns the requested source as @source" do
       set_logged_in_admin
       get :processor, id: source.id
-      assigns(:source).should eq(source)
+      expect(assigns(:source)).to eq(source)
     end
   end
 
@@ -262,7 +262,7 @@ describe SourcesController, type: :controller do
     it "requires the user to have authority" do
       set_logged_in_user
       post :runprocessor, id: source.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do

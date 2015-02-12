@@ -50,45 +50,45 @@ describe PathsController, type: :controller do
   describe "GET sitepath" do
     it "displays the default home page if the root url was called and there is no Path found" do
       get :sitepath, {:url => '/'}
-      response.should render_template('default_home')
+      expect(response).to render_template('default_home')
     end
     it "shows the 404 missing error if no Path was found and not the root url" do
       get :sitepath, {:url => '/no/such/path'}
-      response.status.should eq 404
-      response.should render_template('missing')
+      expect(response.status).to eq 404
+      expect(response).to render_template('missing')
     end
     it "redirects if the Path is a redirect" do
       path = FactoryGirl.create(:path, {:redirect => '/'})
       get :sitepath, {:url => path.sitepath}
-      response.should redirect_to('/')
+      expect(response).to redirect_to('/')
     end
     it "shows the Page if the Path’s item is a Page" do
       page = FactoryGirl.create(:page)
       path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
-      response.status.should eq 200
-      response.should render_template('page')
-      assigns(:page).should eq page
+      expect(response.status).to eq 200
+      expect(response).to render_template('page')
+      expect(assigns(:page)).to eq page
     end
     it "shows the 501 unimplemented error if the Path’s item is not supported" do
       set_logged_in_admin
       item = FactoryGirl.create(:user)
       path = FactoryGirl.create(:path, {:item => item})
       get :sitepath, {:url => path.sitepath}
-      response.status.should eq 501
+      expect(response.status).to eq 501
     end
     it "shows the 404 missing error if the Path’s item requires authority to view" do
       page = FactoryGirl.create(:page, {:is_authority_controlled => true})
       path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
-      response.status.should eq 404
+      expect(response.status).to eq 404
     end
     it "allows an authorized user to access an authority controlled item" do
       set_logged_in_admin
       page = FactoryGirl.create(:page, {:is_authority_controlled => true})
       path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
-      response.status.should eq 200
+      expect(response.status).to eq 200
     end
   end
 
@@ -97,7 +97,7 @@ describe PathsController, type: :controller do
       set_logged_in_admin
       allow(controller).to receive(:paginate).and_return([mock_path])
       get :index
-      assigns(:paths).should eq([mock_path])
+      expect(assigns(:paths)).to eq([mock_path])
     end
   end
 
@@ -106,28 +106,28 @@ describe PathsController, type: :controller do
       set_logged_in_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       get :show, :id => "37"
-      assigns(:path).should be(mock_path)
+      expect(assigns(:path)).to be(mock_path)
     end
   end
 
   describe "GET new" do
     it "requires the user to have authority" do
       get :new
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns a new path as @path" do
       set_logged_in_admin
       allow(Path).to receive(:new) { mock_path }
       get :new
-      assigns(:path).should be(mock_path)
+      expect(assigns(:path)).to be(mock_path)
     end
   end
 
   describe "POST create" do
     it "requires the user to have authority" do
       post :create
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -135,14 +135,14 @@ describe PathsController, type: :controller do
         set_logged_in_admin
         allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => true) }
         post :create, :path => {'these' => 'params'}
-        assigns(:path).should be(mock_path)
+        expect(assigns(:path)).to be(mock_path)
       end
 
       it "redirects to the created path" do
         set_logged_in_admin
         allow(Path).to receive(:new) { mock_path(:save => true) }
         post :create, :path => {}
-        response.should redirect_to(path_url(mock_path))
+        expect(response).to redirect_to(path_url(mock_path))
       end
     end
 
@@ -151,14 +151,14 @@ describe PathsController, type: :controller do
         set_logged_in_admin
         allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => false) }
         post :create, :path => {'these' => 'params'}
-        assigns(:path).should be(mock_path)
+        expect(assigns(:path)).to be(mock_path)
       end
 
       it "re-renders the 'new' template" do
         set_logged_in_admin
         allow(Path).to receive(:new) { mock_path(:save => false) }
         post :create, :path => {}
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -167,14 +167,14 @@ describe PathsController, type: :controller do
     it "requires the user to have authority" do
       path = FactoryGirl.create(:path, {:redirect => '/'})
       get :edit, :id => path.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns the requested path as @path" do
       set_logged_in_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       get :edit, :id => "37"
-      assigns(:path).should be(mock_path)
+      expect(assigns(:path)).to be(mock_path)
     end
   end
 
@@ -182,7 +182,7 @@ describe PathsController, type: :controller do
     it "requires the user to have authority" do
       path = FactoryGirl.create(:path, {:redirect => '/'})
       patch :update, id: path.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -197,14 +197,14 @@ describe PathsController, type: :controller do
         set_logged_in_admin
         allow(Path).to receive(:find) { mock_path(update: true) }
         patch :update, id: '1'
-        assigns(:path).should be(mock_path)
+        expect(assigns(:path)).to be(mock_path)
       end
 
       it "redirects to the path" do
         set_logged_in_admin
         allow(Path).to receive(:find) { mock_path(update: true) }
         patch :update, id: '1'
-        response.should redirect_to(path_url(mock_path))
+        expect(response).to redirect_to(path_url(mock_path))
       end
     end
 
@@ -213,14 +213,14 @@ describe PathsController, type: :controller do
         set_logged_in_admin
         allow(Path).to receive(:find) { mock_path(update: false) }
         patch :update, id: '1'
-        assigns(:path).should be(mock_path)
+        expect(assigns(:path)).to be(mock_path)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         allow(Path).to receive(:find) { mock_path(update: false) }
         patch :update, id: '1'
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -229,13 +229,13 @@ describe PathsController, type: :controller do
     it "requires the user to have authority" do
       path = FactoryGirl.create(:path, {:redirect => '/'})
       get :delete, :id => path.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
     it "shows a form for confirming deletion of a path" do
       set_logged_in_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       get :delete, :id => "37"
-      assigns(:path).should be(mock_path)
+      expect(assigns(:path)).to be(mock_path)
     end
   end
 
@@ -243,7 +243,7 @@ describe PathsController, type: :controller do
     it "requires the user to have authority" do
       path = FactoryGirl.create(:path, {:redirect => '/'})
       delete :destroy, :id => path.id.to_s
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "destroys the requested path" do
@@ -257,7 +257,7 @@ describe PathsController, type: :controller do
       set_logged_in_admin
       allow(Path).to receive(:find) { mock_path }
       delete :destroy, :id => "1"
-      response.should redirect_to(paths_url)
+      expect(response).to redirect_to(paths_url)
     end
   end
 

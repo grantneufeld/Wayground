@@ -12,8 +12,8 @@ describe 'layouts/_pagination_selector.html.erb', type: :view do
 
   it "renders a sequence of page links" do
     render
-    rendered.should match /First/
-    rendered.should match /5/
-    rendered.should match /Last/
+    expect(rendered).to match /First/
+    expect(rendered).to match /5/
+    expect(rendered).to match /Last/
   end
 end

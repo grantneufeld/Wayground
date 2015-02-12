@@ -72,13 +72,13 @@ describe ProjectsController, type: :controller do
   describe "GET new" do
     it "fails if not logged in" do
       get :new
-      response.status.should eq 401
+      expect(response.status).to eq 401
     end
 
     it "assigns a new project as @project" do
       set_logged_in_admin
       get :new
-      assigns(:project).should be_a_new(Project)
+      expect(assigns(:project)).to be_a_new(Project)
     end
   end
 
@@ -94,14 +94,14 @@ describe ProjectsController, type: :controller do
       it "assigns a newly created project as @project" do
         set_logged_in_admin
         post :create, {:project => valid_attributes}, valid_session
-        assigns(:project).should be_a(Project)
-        assigns(:project).should be_persisted
+        expect(assigns(:project)).to be_a(Project)
+        expect(assigns(:project)).to be_persisted
       end
 
       it "redirects to the created project" do
         set_logged_in_admin
         post :create, {:project => valid_attributes}, valid_session
-        response.should redirect_to(Project.last)
+        expect(response).to redirect_to(Project.last)
       end
     end
 
@@ -111,7 +111,7 @@ describe ProjectsController, type: :controller do
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, {:project => {}}, valid_session
-        assigns(:project).should be_a_new(Project)
+        expect(assigns(:project)).to be_a_new(Project)
       end
 
       it "re-renders the 'new' template" do
@@ -119,7 +119,7 @@ describe ProjectsController, type: :controller do
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, {:project => {}}, valid_session
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -155,14 +155,14 @@ describe ProjectsController, type: :controller do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
         patch :update, { id: project.to_param, project: valid_attributes }, valid_session
-        assigns(:project).should eq(project)
+        expect(assigns(:project)).to eq(project)
       end
 
       it "redirects to the project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
         patch :update, { id: project.to_param, project: valid_attributes }, valid_session
-        response.should redirect_to(project_name_url(project.filename))
+        expect(response).to redirect_to(project_name_url(project.filename))
       end
     end
 
@@ -180,7 +180,7 @@ describe ProjectsController, type: :controller do
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, { id: @admin_project.to_param, project: {} }
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -198,7 +198,7 @@ describe ProjectsController, type: :controller do
       project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       set_logged_in_admin
       delete :destroy, {:id => project.to_param}, valid_session
-      response.should redirect_to(projects_url)
+      expect(response).to redirect_to(projects_url)
     end
   end
 

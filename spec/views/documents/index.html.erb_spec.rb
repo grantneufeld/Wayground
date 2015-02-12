@@ -31,7 +31,7 @@ describe 'documents/index.html.erb', type: :view do
   it "renders a list of documents" do
     render
     # pagination
-    rendered.should match(/Showing 2 of 7 documents\./)
+    expect(rendered).to match(/Showing 2 of 7 documents\./)
     expect(rendered).to match(
       /Pages:\s*
       <a[^>]*>First<\/a>\s*

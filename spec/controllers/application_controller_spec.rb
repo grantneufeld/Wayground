@@ -11,7 +11,7 @@ describe ApplicationController, type: :controller do
     # use controller.send(:current_user) to access the protected method
     it "should return nil when user is not signed-in" do
       request.cookies['remember_token'] = nil
-      controller.send(:current_user).should be_nil
+      expect(controller.send(:current_user)).to be_nil
     end
     it "should return the user when signed-in" do
       user = User.new
@@ -24,7 +24,7 @@ describe ApplicationController, type: :controller do
     it "should clear the remember token cookie if user not found" do
       allow(User).to receive(:find).with(987).and_raise(ActiveRecord::RecordNotFound)
       request.cookies['remember_token'] = 'test/987'
-      controller.send(:current_user).should be_nil
+      expect(controller.send(:current_user)).to be_nil
     end
   end
 
@@ -81,11 +81,11 @@ describe ApplicationController, type: :controller do
       user = FactoryGirl.create(:document).user
       11.times { FactoryGirl.create(:document, :user => user) }
       controller.send(:paginate, Document)
-      assigns[:default_max].should eq 20
-      assigns[:max].should eq 10
-      assigns[:pagenum].should eq 2
-      assigns[:source_total].should eq 12
-      assigns[:selected_total].should eq 2
+      expect(assigns[:default_max]).to eq 20
+      expect(assigns[:max]).to eq 10
+      expect(assigns[:pagenum]).to eq 2
+      expect(assigns[:source_total]).to eq 12
+      expect(assigns[:selected_total]).to eq 2
     end
   end
 

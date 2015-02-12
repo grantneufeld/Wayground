@@ -11,8 +11,8 @@ describe 'paths/show.html.erb', type: :view do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(//)
-    rendered.should match(/MyText/)
-    rendered.should match(/MyText/)
+    expect(rendered).to match(//)
+    expect(rendered).to match(/MyText/)
+    expect(rendered).to match(/MyText/)
   end
 end

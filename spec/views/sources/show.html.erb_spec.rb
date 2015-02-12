@@ -15,12 +15,12 @@ describe 'sources/show.html.erb', type: :view do
 
   it 'renders the expected text' do
     render
-    rendered.should match(/The Processor/)
-    rendered.should match(/The URL/)
-    rendered.should match(/The Method/)
-    rendered.should match(/The Post Args/)
-    rendered.should match(/The Title/)
-    rendered.should match(/The Description/)
-    rendered.should match(/The Options/)
+    expect(rendered).to match(/The Processor/)
+    expect(rendered).to match(/The URL/)
+    expect(rendered).to match(/The Method/)
+    expect(rendered).to match(/The Post Args/)
+    expect(rendered).to match(/The Title/)
+    expect(rendered).to match(/The Description/)
+    expect(rendered).to match(/The Options/)
   end
 end

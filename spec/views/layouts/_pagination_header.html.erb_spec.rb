@@ -8,6 +8,6 @@ describe 'layouts/_pagination_header.html.erb', type: :view do
 
   it "renders a information about the pagination" do
     render :partial => 'pagination_header', :locals => {:item_plural => 'tests'}
-    rendered.should match /Showing 10 of 42 tests\./
+    expect(rendered).to match /Showing 10 of 42 tests\./
   end
 end

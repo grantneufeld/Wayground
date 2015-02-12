@@ -15,9 +15,9 @@ describe 'pages/show.html.erb', type: :view do
   it "renders attributes in <p>" do
     allow(view).to receive(:current_user) { nil }
     render
-    rendered.should match(/myfilename/)
-    rendered.should match(/My Title/)
-    rendered.should match(/My description/)
-    rendered.should match(/My content\./)
+    expect(rendered).to match(/myfilename/)
+    expect(rendered).to match(/My Title/)
+    expect(rendered).to match(/My description/)
+    expect(rendered).to match(/My content\./)
   end
 end

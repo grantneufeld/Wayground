@@ -20,11 +20,11 @@ describe SessionsController, type: :controller do
     it "should redirect to the account page if already signed in" do
       login_mock_user
       get 'new'
-      response.location.should match /^[a-z]+:\/*[^\/]+\/account$/
+      expect(response.location).to match /^[a-z]+:\/*[^\/]+\/account$/
     end
     it "should show the sign in form" do
       get 'new'
-      response.should render_template('sessions/new')
+      expect(response).to render_template('sessions/new')
     end
   end
 
@@ -32,15 +32,15 @@ describe SessionsController, type: :controller do
     it "should redirect to the account page if already signed in" do
       login_mock_user
       post 'create', {:email => 'invalid', :password => 'invalid'}
-      response.location.should match account_url #/^[a-z]+:\/*[^\/]+\/account$/
+      expect(response.location).to match account_url #/^[a-z]+:\/*[^\/]+\/account$/
     end
     it "should not sign in the user if invalid form values submitted" do
       post 'create', {:email => 'invalid', :password => 'invalid'}
-      cookies['remember_token'].should be_nil
+      expect(cookies['remember_token']).to be_nil
     end
     it "should show the sign in form again if invalid form values submitted" do
       post 'create', {:email => 'invalid', :password => 'invalid'}
-      response.should render_template('sessions/new')
+      expect(response).to render_template('sessions/new')
     end
     context "with a valid user sign in" do
       before(:all) do
@@ -53,24 +53,24 @@ describe SessionsController, type: :controller do
       end
       it "should sign in the user" do
         post 'create', {email: @email, password: 'password'}
-        cookies['remember_token'].should match /.+\/#{@user.id}/
+        expect(cookies['remember_token']).to match /.+\/#{@user.id}/
       end
       it "should take the user to the root page" do
         post 'create', {email: @email, password: 'password'}
-        response.location.should eq root_url
+        expect(response.location).to eq root_url
       end
       it "should notify the user that they are signed in" do
         post 'create', {email: @email, password: 'password'}
-        flash[:notice].should match /You are now signed in/
+        expect(flash[:notice]).to match /You are now signed in/
       end
       it "should set the remember_token cookie for the session" do
         post 'create', {email: @email, password: 'password'}
-        cookies['remember_token'].should eq "#{@user_token.token}/#{@user.id}"
+        expect(cookies['remember_token']).to eq "#{@user_token.token}/#{@user.id}"
       end
       it "should set the remember_token permanent cookie when the user selects remember me" do
         post 'create', {email: @email, password: 'password', remember_me: '1'}
         # FIXME: actually check whether the remember_token cookie is flagged as permanent
-        cookies['remember_token'].should eq "#{@user_token.token}/#{@user.id}"
+        expect(cookies['remember_token']).to eq "#{@user_token.token}/#{@user.id}"
       end
     end
   end
@@ -78,16 +78,16 @@ describe SessionsController, type: :controller do
   describe "GET 'delete'" do
     it "should redirect to the sign in page if not signed in" do
       get 'delete'
-      response.location.should match /^[a-z]+:\/*[^\/]+\/signin$/
+      expect(response.location).to match /^[a-z]+:\/*[^\/]+\/signin$/
     end
     it "should notify the user if not signed in" do
       get 'delete'
-      flash[:notice].should match /You are not signed in/
+      expect(flash[:notice]).to match /You are not signed in/
     end
     it "should show the sign out form" do
       login_mock_user
       get 'delete'
-      response.should render_template('sessions/delete')
+      expect(response).to render_template('sessions/delete')
     end
   end
 
@@ -95,11 +95,11 @@ describe SessionsController, type: :controller do
     context "without a signed in user" do
       it "should redirect to the sign in page" do
         delete 'destroy'
-        response.location.should match /^[a-z]+:\/*[^\/]+\/signin$/
+        expect(response.location).to match /^[a-z]+:\/*[^\/]+\/signin$/
       end
       it "should flash an alert" do
         delete 'destroy'
-        flash[:notice].should match /You are not signed in/
+        expect(flash[:notice]).to match /You are not signed in/
       end
     end
     context "with a valid user to sign out" do
@@ -113,17 +113,17 @@ describe SessionsController, type: :controller do
       it "should clear the remember_token cookie" do
         request.cookies['remember_token'] = "#{@user_token.token}/#{@user.id}"
         delete 'destroy'
-        cookies['remember_token'].should be_nil
+        expect(cookies['remember_token']).to be_nil
       end
       it "should direct the user to the sign in page" do
         request.cookies['remember_token'] = "#{@user_token.token}/#{@user.id}"
         delete 'destroy'
-        response.location.should eq root_url #match /^[a-z]+:\/*[^\/]+\/signin$/
+        expect(response.location).to eq root_url #match /^[a-z]+:\/*[^\/]+\/signin$/
       end
       it "should notify the user that they are signed out" do
         request.cookies['remember_token'] = "#{@user_token.token}/#{@user.id}"
         delete 'destroy'
-        flash[:notice].should match /You are now signed out/
+        expect(flash[:notice]).to match /You are now signed out/
       end
     end
   end
@@ -150,7 +150,7 @@ describe SessionsController, type: :controller do
           authentication = FactoryGirl.create(:authentication, provider: 'twitter')
           set_mock_auth(authentication.provider, authentication.uid)
           get :oauth_callback, provider: 'twitter'
-          flash[:notice].should match /You are now signed in/
+          expect(flash[:notice]).to match /You are now signed in/
         end
       end
       context "when already logged in" do
@@ -162,7 +162,7 @@ describe SessionsController, type: :controller do
           request.cookies['remember_token'] = "#{user_token.token}/#{user.id}" # user is signed in
           session[:source] = nil
           get :oauth_callback, provider: 'twitter'
-          session[:source].should eq 'twitter'
+          expect(session[:source]).to eq 'twitter'
         end
       end
       context "when logged in as a different user" do
@@ -188,7 +188,7 @@ describe SessionsController, type: :controller do
           request.cookies['remember_token'] = "#{user_token.token}/#{user.id}" # user is signed in
           get :oauth_callback, provider: 'new-provider'
           user.reload
-          user.authentications.count.should eq 1
+          expect(user.authentications.count).to eq 1
         end
       end
       context "when not logged in" do
