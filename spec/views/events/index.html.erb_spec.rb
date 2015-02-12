@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'page_metadata'
 
-describe "events/index.html.erb" do
+describe 'events/index.html.erb', type: :view do
   before(:each) do
     assign(:events, [
       stub_model(Event,

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "calendar/day.html.erb" do
+describe 'calendar/day.html.erb', type: :view do
   before(:all) do
     User.delete_all
     @admin = FactoryGirl.create(:user, name: 'Admin User')

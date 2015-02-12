@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "layouts/_pagination_selector.html.erb" do
+describe 'layouts/_pagination_selector.html.erb', type: :view do
   before(:each) do
     assign(:max, 10)
     assign(:page, 3)

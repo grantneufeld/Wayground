@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe AuthoritiesController do
+describe AuthoritiesController, type: :routing do
   describe "routing" do
     it "recognizes and generates #index" do
       { get: "/authorities" }.should route_to(controller: "authorities", action: "index")

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'sources/show.html.erb' do
+describe 'sources/show.html.erb', type: :view do
   before(:each) do
     @source = assign(:source, stub_model(Source,
       :processor => 'The Processor',

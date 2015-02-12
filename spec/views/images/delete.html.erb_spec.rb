@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "images/delete.html.erb" do
+describe 'images/delete.html.erb', type: :view do
 
   let(:image) { $image = Image.new(title: 'Delete Me') }
   before(:each) do

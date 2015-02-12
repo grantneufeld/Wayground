@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe PathsController do
+describe PathsController, type: :routing do
   describe "routing" do
 
     it "handles the root url" do

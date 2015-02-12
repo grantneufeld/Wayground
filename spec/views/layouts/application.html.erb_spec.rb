@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'page_metadata'
 
-describe "layouts/application.html.erb" do
+describe 'layouts/application.html.erb', type: :view do
   before do
     controller.singleton_class.class_eval do
       protected

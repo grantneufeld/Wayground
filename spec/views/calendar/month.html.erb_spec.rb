@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "calendar/month.html.erb" do
+describe 'calendar/month.html.erb', type: :view do
   before(:all) do
     @date = assign(:date, Date.new(2013, 3, 1))
     User.delete_all

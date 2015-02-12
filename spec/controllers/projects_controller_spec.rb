@@ -5,7 +5,7 @@ require 'user'
 require 'user_token'
 require 'rememberer'
 
-describe ProjectsController do
+describe ProjectsController, type: :controller do
 
   before(:all) do
     Authority.delete_all

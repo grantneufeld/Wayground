@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Version do
+describe Version, type: :model do
 
   before(:all) do
     Version.delete_all

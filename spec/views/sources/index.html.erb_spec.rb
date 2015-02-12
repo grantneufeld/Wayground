@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sources/index.html.erb" do
+describe 'sources/index.html.erb', type: :view do
   before(:each) do
     assign(:sources, [
       stub_model(Source,

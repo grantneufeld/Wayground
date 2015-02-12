@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "settings/index" do
+describe 'settings/index', type: :view do
   before(:each) do
     assign(:settings, [
       stub_model(Setting,

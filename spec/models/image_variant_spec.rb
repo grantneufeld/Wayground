@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'image_variant'
 require 'image'
 
-describe ImageVariant do
+describe ImageVariant, type: :model do
 
   before(:all) do
     ImageVariant.delete_all

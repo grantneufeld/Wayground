@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Project do
+describe Project, type: :model do
   let(:minimum_valid_params) { $minimum_valid_params = {
       :name => 'Project Name'
   } }

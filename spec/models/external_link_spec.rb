@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ExternalLink do
+describe ExternalLink, type: :model do
   before(:all) do
     @item = FactoryGirl.create(:page)
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DocumentsController do
+describe DocumentsController, type: :controller do
 
   before(:all) do
     Authority.delete_all

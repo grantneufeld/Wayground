@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ExternalLinksController do
+describe ExternalLinksController, type: :routing do
   describe "routing" do
     describe "nested under events" do
       it "recognizes and generates #index" do

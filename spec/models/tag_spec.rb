@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tag'
 
-describe Tag do
+describe Tag, type: :model do
 
   before(:all) do
     Event.delete_all

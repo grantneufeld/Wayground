@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe VersionsController do
+describe VersionsController, type: :controller do
 
   before(:all) do
     Version.delete_all

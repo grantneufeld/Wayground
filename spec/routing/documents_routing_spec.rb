@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe DocumentsController do
+describe DocumentsController, type: :routing do
   describe "routing" do
 
     it "routes to #download" do

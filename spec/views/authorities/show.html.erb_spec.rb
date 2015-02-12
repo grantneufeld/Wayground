@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "authorities/show.html.erb" do
+describe 'authorities/show.html.erb', type: :view do
   before(:each) do
     @authority = assign(:authority, stub_model(Authority,
     :user => stub_model(User, {:id => 123, :email => 'user@test.tld'}),

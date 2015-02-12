@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TestModel do
+describe TestModel, type: :model do
   it "should have a testable method" do
     test_object = TestModel.new
     test_object.testable_method.should == 'Method tested.'

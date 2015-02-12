@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 # Most of this is based on the rspec scaffold generated tests.
-describe SettingsController do
+describe SettingsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
   # Setting. As you add validations to Setting, be sure to

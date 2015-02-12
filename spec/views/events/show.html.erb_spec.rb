@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "events/show.html.erb" do
+describe 'events/show.html.erb', type: :view do
   before(:each) do
     @event = assign(:event, stub_model(Event,
       :user => nil,

@@ -7,7 +7,7 @@ require 'sourced_item'
 require 'user'
 require 'import/ical_importer'
 
-describe SourcesController do
+describe SourcesController, type: :controller do
   before(:all) do
     Source.destroy_all
     Authority.delete_all

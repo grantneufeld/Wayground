@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "layouts/_pagination_header.html.erb" do
+describe 'layouts/_pagination_header.html.erb', type: :view do
   before(:each) do
     assign(:source_total, 42)
     assign(:selected_total, 10)

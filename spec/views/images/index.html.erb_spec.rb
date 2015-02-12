@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'image'
 require 'image_variant'
 
-describe "images/index.html.erb" do
+describe 'images/index.html.erb', type: :view do
   before(:all) do
     @image = Image.new(
       title: 'Stub Title',

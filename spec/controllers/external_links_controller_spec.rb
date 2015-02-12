@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ExternalLinksController do
+describe ExternalLinksController, type: :controller do
 
   before(:all) do
     ExternalLink.destroy_all

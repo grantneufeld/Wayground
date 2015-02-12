@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'image'
 
-describe Image do
+describe Image, type: :model do
 
   describe "attribute mass assignment security" do
     it "should allow title" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "events/show.ics.erb" do
+describe 'events/show.ics.erb', type: :view do
   before(:all) do
     Event.delete(123)
     Version.delete_all

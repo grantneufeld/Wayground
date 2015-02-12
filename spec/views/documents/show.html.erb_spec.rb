@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "documents/show.html.erb" do
+describe 'documents/show.html.erb', type: :view do
   before(:each) do
     @document = assign(:document, stub_model(Document,
       :user => stub_model(User, :name => 'The User'),

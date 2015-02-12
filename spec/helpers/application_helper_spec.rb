@@ -9,7 +9,7 @@ require 'spec_helper'
 #      end
 #    end
 #  end
-describe ApplicationHelper do
+describe ApplicationHelper, type: :helper do
   describe "#show_errors" do
     it "displays errors (ActiveRecord-style) from an object" do
       item = User.new({email: 'invalid'})

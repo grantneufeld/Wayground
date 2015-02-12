@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Path do
+describe Path, type: :model do
   describe "validation" do
     describe "of sitepath" do
       it "should reject an empty sitepath" do

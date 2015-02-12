@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "pages/new.html.erb" do
+describe 'pages/new.html.erb', type: :view do
   before(:each) do
     assign(:page, stub_model(Page,
       :parent => nil,

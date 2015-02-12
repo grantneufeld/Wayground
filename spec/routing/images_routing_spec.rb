@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ImagesController do
+describe ImagesController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do

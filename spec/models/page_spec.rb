@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Page do
+describe Page, type: :model do
   before(:all) do
     @editor = FactoryGirl.create(:user)
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Setting do
+describe Setting, type: :model do
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Admin” area" do

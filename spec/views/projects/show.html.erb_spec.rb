@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "projects/show" do
+describe 'projects/show', type: :view do
   before(:each) do
     @project = assign(:project, stub_model(Project,
       :parent => stub_model(Project, :name => 'Parent Project'),

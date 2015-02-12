@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "images/show.html.erb" do
+describe 'images/show.html.erb', type: :view do
 
   let(:variant) do
     $variant = ImageVariant.new(

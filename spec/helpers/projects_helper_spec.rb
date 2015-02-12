@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ProjectsHelper do
+describe ProjectsHelper, type: :helper do
   let(:project) { $project = FactoryGirl.create(:project, :filename => nil) }
   let(:named_project) { $named_project = FactoryGirl.create(:project, :filename => 'named') }
   describe ".project_smart_path" do

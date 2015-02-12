@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UsersController do
+describe UsersController, type: :routing do
   describe "routing" do
     it "recognizes and generates #new" do
       { :get => "/signup" }.should route_to(:controller => "users", :action => "new")

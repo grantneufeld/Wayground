@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'images_controller'
 
-describe ImagesController do
+describe ImagesController, type: :controller do
 
   before(:all) do
     Authority.delete_all

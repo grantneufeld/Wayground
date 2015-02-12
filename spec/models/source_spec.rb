@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Source do
+describe Source, type: :model do
   before(:all) do
     Authority.delete_all
     User.destroy_all

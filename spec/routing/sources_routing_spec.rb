@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe SourcesController do
+describe SourcesController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe SettingsController do
+describe SettingsController, type: :routing do
   describe "routing" do
 
     it "routes to #initialize_defaults" do

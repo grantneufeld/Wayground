@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe PagesController do
+describe PagesController, type: :routing do
   describe "routing" do
 
     it "recognizes and generates #index" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Document do
+describe Document, type: :model do
   before(:all) do
     @sample_file = File.new("#{Rails.root}/spec/fixtures/files/sample.txt")
   end

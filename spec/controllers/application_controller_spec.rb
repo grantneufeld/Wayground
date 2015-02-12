@@ -5,7 +5,7 @@ require 'user_token'
 require 'document'
 require 'active_record'
 
-describe ApplicationController do
+describe ApplicationController, type: :controller do
 
   describe '#current_user' do
     # use controller.send(:current_user) to access the protected method

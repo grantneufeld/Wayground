@@ -3,7 +3,7 @@ require 'calendar_controller'
 require 'event'
 require 'user'
 
-describe CalendarController do
+describe CalendarController, type: :controller do
   before(:all) do
     Event.destroy_all
     creator = User.first || FactoryGirl.create(:user, :name => 'Event Creator')

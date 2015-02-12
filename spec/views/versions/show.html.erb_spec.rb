@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "versions/show.html.erb" do
+describe 'versions/show.html.erb', type: :view do
   before(:each) do
     @version = assign(:version, stub_model(Version,
       item: stub_model(Page, title: 'Page Title'),

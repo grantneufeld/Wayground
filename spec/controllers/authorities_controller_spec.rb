@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AuthoritiesController do
+describe AuthoritiesController, type: :controller do
 
   before(:all) do
     Authority.delete_all

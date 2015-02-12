@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "settings/show" do
+describe 'settings/show', type: :view do
   before(:each) do
     @setting = assign(:setting, stub_model(Setting,
       :key => "Key",

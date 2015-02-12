@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'user'
 require 'authority'
 
-describe User do
+describe User, type: :model do
   def mock_auth(stubs = {})
     @mock_auth = mock_model(Authentication, stubs)
   end

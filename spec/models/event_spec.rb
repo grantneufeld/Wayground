@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Event do
+describe Event, type: :model do
 
   before(:all) do
     Authority.delete_all

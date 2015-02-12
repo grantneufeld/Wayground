@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'authority'
 require 'active_record'
 
-describe Authority do
+describe Authority, type: :model do
   # == VALIDATIONS
   describe "validations" do
     before(:each) do

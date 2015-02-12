@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe VersionsController do
+describe VersionsController, type: :routing do
   describe "routing" do
     describe "nested under pages" do
       it "recognizes and generates #index" do

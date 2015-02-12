@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SessionsController do
+describe SessionsController, type: :routing do
   describe "routing" do
     it "recognizes and generates #new" do
       { :get => "/signin" }.should route_to(:controller => "sessions", :action => "new")

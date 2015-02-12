@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "paths/new.html.erb" do
+describe 'paths/new.html.erb', type: :view do
   before(:each) do
     assign(:path, stub_model(Path,
       :item => nil,

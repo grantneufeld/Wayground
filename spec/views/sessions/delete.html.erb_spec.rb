@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-#describe "sessions/delete.html.erb" do
+#describe 'sessions/delete.html.erb', type: :view do
 #end

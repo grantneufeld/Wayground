@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EventsController do
+describe EventsController, type: :controller do
 
   before(:all) do
     Event.destroy_all

@@ -5,7 +5,7 @@ require 'user'
 require 'user_token'
 require 'omniauth'
 
-describe SessionsController do
+describe SessionsController, type: :controller do
 
   def login_mock_user
     mock_user = User.new(name: 'mock user')

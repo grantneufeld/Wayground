@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'user_token'
 require 'user'
 
-describe UserToken do
+describe UserToken, type: :model do
 
   describe "attribute mass assignment security" do
     it "should allow expires_at" do

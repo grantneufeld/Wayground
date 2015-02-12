@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "images/edit.html.erb" do
+describe 'images/edit.html.erb', type: :view do
   let(:variant) do
     $variant = ImageVariant.new(
       height: 123, width: 234,

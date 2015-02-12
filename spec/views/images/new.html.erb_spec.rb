@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'image'
 require 'image_variant'
 
-describe "images/new.html.erb" do
+describe 'images/new.html.erb', type: :view do
   let(:image) { $image = Image.new }
   before(:each) do
     assign(:image, image)
