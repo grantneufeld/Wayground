@@ -4,6 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/simple_cov_config'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'rspec/active_model/mocks'
 require 'factory_girl'
 require 'factory_girl_rails'
 
@@ -55,4 +56,8 @@ RSpec.configure do |config|
     # ...or explicitly enable both
     c.syntax = [:should, :expect]
   end
+
+  # while upgrading to Rspec 3 via 2.99
+  config.raise_errors_for_deprecations!
+  config.infer_spec_type_from_file_location!
 end

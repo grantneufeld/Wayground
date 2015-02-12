@@ -64,8 +64,8 @@ end
 
 group :test do
   # specs/testing:
-  gem 'rspec', '>= 2.11.0', require: false # core testing framework
-  gem 'rspec-rails', '>= 2.11.0', require: false
+  gem 'rspec-rails', '~> 2.99', require: false
+  gem 'rspec-activemodel-mocks', require: false
   # features / acceptance tests:
   gem 'cucumber', '>= 1.2.1', require: false
   gem 'cucumber-rails', '>= 1.3.0', require: false
