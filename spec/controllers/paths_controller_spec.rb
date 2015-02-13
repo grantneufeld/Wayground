@@ -8,39 +8,18 @@ describe PathsController, type: :controller do
 
   before(:all) do
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
+    Path.delete_all
+    @default_admin = FactoryGirl.create(:user, email: 'test+mockadmin@wayground.ca', name: 'The Admin')
+    @default_path = FactoryGirl.create(:path, {:redirect => '/'})
   end
 
-  def set_logged_in_admin(stubs={})
-    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
+  def default_path
+    @default_path
   end
-  def set_logged_in_user(stubs={})
-    allow(controller).to receive(:current_user).and_return(mock_user(stubs))
-  end
-  def mock_admin(stubs={})
-    @mock_admin ||= mock_model(
-      User, {
-        id: 1, email: 'test+mockadmin@wayground.ca', name: 'The Admin',
-        has_authority_for_area: mock_admin_authority
-      }.merge(stubs)
-    )
-  end
-  def mock_user(stubs={})
-    @mock_user ||= mock_model(
-      User, {
-        id: 2, email: 'test+mockuser@wayground.ca', name: 'A. User', has_authority_for_area: nil
-      }.merge(stubs)
-    )
-  end
-  def mock_authority(stubs={})
-    @mock_authority ||= mock_model(
-      Authority, { area: 'Content', user: @mock_user }.merge(stubs)
-    ).as_null_object
-  end
-  def mock_admin_authority(stubs={})
-    @mock_admin_authority ||= mock_model(
-      Authority, { area: 'Content', is_owner: true, user: @mock_admin }.merge(stubs)
-    ).as_null_object
+
+  def set_logged_in_default_admin
+    allow(controller).to receive(:current_user).and_return(@default_admin)
   end
 
   def mock_path(stubs={})
@@ -71,7 +50,7 @@ describe PathsController, type: :controller do
       expect(assigns(:page)).to eq page
     end
     it "shows the 501 unimplemented error if the Path’s item is not supported" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       item = FactoryGirl.create(:user)
       path = FactoryGirl.create(:path, {:item => item})
       get :sitepath, {:url => path.sitepath}
@@ -84,7 +63,7 @@ describe PathsController, type: :controller do
       expect(response.status).to eq 404
     end
     it "allows an authorized user to access an authority controlled item" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       page = FactoryGirl.create(:page, {:is_authority_controlled => true})
       path = FactoryGirl.create(:path, {:item => page})
       get :sitepath, {:url => path.sitepath}
@@ -94,7 +73,7 @@ describe PathsController, type: :controller do
 
   describe "GET index" do
     it "assigns all paths as @paths" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(controller).to receive(:paginate).and_return([mock_path])
       get :index
       expect(assigns(:paths)).to eq([mock_path])
@@ -103,7 +82,7 @@ describe PathsController, type: :controller do
 
   describe "GET show" do
     it "assigns the requested path as @path" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       get :show, :id => "37"
       expect(assigns(:path)).to be(mock_path)
@@ -117,7 +96,7 @@ describe PathsController, type: :controller do
     end
 
     it "assigns a new path as @path" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Path).to receive(:new) { mock_path }
       get :new
       expect(assigns(:path)).to be(mock_path)
@@ -132,30 +111,34 @@ describe PathsController, type: :controller do
 
     describe "with valid params" do
       it "assigns a newly created path as @path" do
-        set_logged_in_admin
-        allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => true) }
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:new).with({'these' => 'params'}) { path }
+        allow(path).to receive(:save).and_return(true)
         post :create, :path => {'these' => 'params'}
-        expect(assigns(:path)).to be(mock_path)
+        expect(assigns(:path)).to be(path)
       end
 
       it "redirects to the created path" do
-        set_logged_in_admin
-        allow(Path).to receive(:new) { mock_path(:save => true) }
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:new) { path }
+        allow(path).to receive(:save).and_return(true)
         post :create, :path => {}
-        expect(response).to redirect_to(path_url(mock_path))
+        expect(response).to redirect_to(path_url(path))
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved path as @path" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => false) }
         post :create, :path => {'these' => 'params'}
         expect(assigns(:path)).to be(mock_path)
       end
 
       it "re-renders the 'new' template" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         allow(Path).to receive(:new) { mock_path(:save => false) }
         post :create, :path => {}
         expect(response).to render_template("new")
@@ -171,7 +154,7 @@ describe PathsController, type: :controller do
     end
 
     it "assigns the requested path as @path" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       get :edit, :id => "37"
       expect(assigns(:path)).to be(mock_path)
@@ -180,46 +163,54 @@ describe PathsController, type: :controller do
 
   describe "PUT update" do
     it "requires the user to have authority" do
-      path = FactoryGirl.create(:path, {:redirect => '/'})
-      patch :update, id: path.id.to_s
+      patch :update, id: default_path.id.to_s
       expect(response.status).to eq 403
     end
 
     describe "with valid params" do
       it "updates the requested path" do
-        set_logged_in_admin
-        allow(Path).to receive(:find).with("37") { mock_path }
-        expect(mock_path).to receive(:update).with('these' => 'params')
-        patch :update, id: '37', path: { 'these' => 'params' }
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:find).with(path.id.to_s) { path }
+        expect(path).to receive(:update).with('these' => 'params').and_return(true)
+        patch :update, id: path.id.to_s, path: { 'these' => 'params' }
       end
 
       it "assigns the requested path as @path" do
-        set_logged_in_admin
-        allow(Path).to receive(:find) { mock_path(update: true) }
-        patch :update, id: '1'
-        expect(assigns(:path)).to be(mock_path)
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:find) { path }
+        allow(path).to receive(:update).and_return(true)
+        patch :update, id: path.id.to_s
+        expect(assigns(:path)).to be(path)
       end
 
       it "redirects to the path" do
-        set_logged_in_admin
-        allow(Path).to receive(:find) { mock_path(update: true) }
-        patch :update, id: '1'
-        expect(response).to redirect_to(path_url(mock_path))
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:find) { path }
+        allow(path).to receive(:update).and_return(true)
+        patch :update, id: path.id.to_s
+        expect(response).to redirect_to(path_url(path))
       end
     end
 
     describe "with invalid params" do
       it "assigns the path as @path" do
-        set_logged_in_admin
-        allow(Path).to receive(:find) { mock_path(update: false) }
-        patch :update, id: '1'
-        expect(assigns(:path)).to be(mock_path)
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:find) { path }
+        allow(path).to receive(:update).and_return(false)
+        patch :update, id: path.id.to_s
+        expect(assigns(:path)).to be(path)
       end
 
       it "re-renders the 'edit' template" do
-        set_logged_in_admin
-        allow(Path).to receive(:find) { mock_path(update: false) }
-        patch :update, id: '1'
+        set_logged_in_default_admin
+        path = default_path
+        allow(Path).to receive(:find) { path }
+        allow(path).to receive(:update).and_return(false)
+        patch :update, id: path.id.to_s
         expect(response).to render_template("edit")
       end
     end
@@ -232,7 +223,7 @@ describe PathsController, type: :controller do
       expect(response.status).to eq 403
     end
     it "shows a form for confirming deletion of a path" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       get :delete, :id => "37"
       expect(assigns(:path)).to be(mock_path)
@@ -247,14 +238,14 @@ describe PathsController, type: :controller do
     end
 
     it "destroys the requested path" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Path).to receive(:find).with("37") { mock_path }
       expect(mock_path).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the paths list" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Path).to receive(:find) { mock_path }
       delete :destroy, :id => "1"
       expect(response).to redirect_to(paths_url)

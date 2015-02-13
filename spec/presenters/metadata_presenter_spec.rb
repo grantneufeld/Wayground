@@ -10,10 +10,8 @@ describe MetadataPresenter do
 
   def view_stub
     view = double('View')
-    view.stub_chain(:request, :path).and_return(path)
-    #allow(view).to receive_message_chain(:request, :path) { path }
-    view.stub_chain(:request, :url).and_return(url)
-    #allow(view).to receive_message_chain(:request, :url) { url }
+    allow(view).to receive_message_chain(:request, :path) { path }
+    allow(view).to receive_message_chain(:request, :url) { url }
     view
   end
 

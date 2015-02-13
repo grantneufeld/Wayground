@@ -9,39 +9,17 @@ describe PagesController, type: :controller do
   before(:all) do
     Authority.delete_all
     User.destroy_all
+    Page.delete_all
+    @default_admin = FactoryGirl.create(:user, email: 'test+mockadmin@wayground.ca', name: 'The Admin')
+    @default_page = FactoryGirl.create(:page)
   end
 
-  def set_logged_in_admin(stubs={})
-    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
+  def default_page
+    @default_page
   end
-  def set_logged_in_user(stubs={})
-    allow(controller).to receive(:current_user).and_return(mock_user(stubs))
-  end
-  def mock_admin(stubs={})
-    @mock_admin ||= mock_model(
-      User, {
-        id: 1, email: 'test+mockadmin@wayground.ca', name: 'The Admin',
-        has_authority_for_area: mock_admin_authority, has_authority_for_item: mock_admin_authority
-      }.merge(stubs)
-    )
-  end
-  def mock_user(stubs={})
-    @mock_user ||= mock_model(
-      User, {
-        id: 2, email: 'test+mockuser@wayground.ca', name: 'A. User',
-        has_authority_for_area: nil
-      }.merge(stubs)
-    )
-  end
-  def mock_authority(stubs={})
-    @mock_authority ||= mock_model(
-      Authority, { area: 'Content', user: @mock_user }.merge(stubs)
-    ).as_null_object
-  end
-  def mock_admin_authority(stubs={})
-    @mock_admin_authority ||= mock_model(
-      Authority, { area: 'Content', is_owner: true, user: @mock_admin }.merge(stubs)
-    ).as_null_object
+
+  def set_logged_in_default_admin
+    allow(controller).to receive(:current_user).and_return(@default_admin)
   end
 
   def mock_page(stubs={})
@@ -58,7 +36,7 @@ describe PagesController, type: :controller do
 
   describe "GET show" do
     it "assigns the requested page as @page" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       get :show, :id => "37"
       expect(assigns(:page)).to be(mock_page)
@@ -72,14 +50,14 @@ describe PagesController, type: :controller do
     end
 
     it "assigns a new page as @page" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Page).to receive(:new) { mock_page }
       get :new
       expect(assigns(:page)).to be(mock_page)
     end
 
     it "assigns the parent page if given" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       parent_page = FactoryGirl.create(:page)
       get :new, :parent => parent_page.id.to_s
       expect(assigns(:page).parent).to eq parent_page
@@ -94,14 +72,16 @@ describe PagesController, type: :controller do
 
     describe "with valid params" do
       it "assigns a newly created page as @page" do
-        set_logged_in_admin
-        allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => true) }
+        set_logged_in_default_admin
+        page = default_page
+        allow(Page).to receive(:new).with({'these' => 'params'}).and_return(page)
+        allow(page).to receive(:save).and_return(true)
         post :create, :page => {'these' => 'params'}
-        expect(assigns(:page)).to be(mock_page)
+        expect(assigns(:page)).to be(page)
       end
 
       it "assigns the parent page if given" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         parent_page = FactoryGirl.create(:page)
         parent_page.path ||= FactoryGirl.create(:path, :item => parent_page)
         post(:create,
@@ -112,23 +92,25 @@ describe PagesController, type: :controller do
       end
 
       it "redirects to the created page" do
-        set_logged_in_admin
-        allow(Page).to receive(:new) { mock_page(:save => true) }
+        set_logged_in_default_admin
+        page = default_page
+        allow(Page).to receive(:new).and_return(page)
+        allow(page).to receive(:save).and_return(true)
         post :create, :page => {}
-        expect(response).to redirect_to(page_url(mock_page))
+        expect(response).to redirect_to(page_url(page))
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved page as @page" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => false) }
         post :create, :page => {'these' => 'params'}
         expect(assigns(:page)).to be(mock_page)
       end
 
       it "re-renders the 'new' template" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         allow(Page).to receive(:new) { mock_page(:save => false) }
         post :create, :page => {}
         expect(response).to render_template("new")
@@ -144,7 +126,7 @@ describe PagesController, type: :controller do
     end
 
     it "assigns the requested page as @page" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       get :edit, :id => "37"
       expect(assigns(:page)).to be(mock_page)
@@ -160,37 +142,43 @@ describe PagesController, type: :controller do
 
     describe "with valid params" do
       it "updates the requested page" do
-        set_logged_in_admin
+        set_logged_in_default_admin
+        page = default_page
+        allow(Page).to receive(:find).with(page.id.to_s) { page }
         allow(Page).to receive(:find).with("37") { mock_page }
-        expect(mock_page).to receive(:update).with('these' => 'params')
-        patch :update, id: '37', page: { 'these' => 'params' }
+        expect(page).to receive(:update).with('these' => 'params')
+        patch :update, id: page.id.to_s, page: { 'these' => 'params' }
       end
 
       it "assigns the requested page as @page" do
-        set_logged_in_admin
-        allow(Page).to receive(:find) { mock_page(update: true) }
-        patch :update, id: '1'
-        expect(assigns(:page)).to be(mock_page)
+        set_logged_in_default_admin
+        page = default_page
+        allow(Page).to receive(:find) { page }
+        allow(page).to receive(:update).and_return(true)
+        patch :update, id: page.id.to_s
+        expect(assigns(:page)).to be(page)
       end
 
       it "redirects to the page" do
-        set_logged_in_admin
-        allow(Page).to receive(:find) { mock_page(update: true) }
-        patch :update, id: '1'
-        expect(response).to redirect_to(page_url(mock_page))
+        set_logged_in_default_admin
+        page = default_page
+        allow(Page).to receive(:find) { page }
+        allow(page).to receive(:update).and_return(true)
+        patch :update, id: page.id.to_s
+        expect(response).to redirect_to(page_url(page))
       end
     end
 
     describe "with invalid params" do
       it "assigns the page as @page" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         allow(Page).to receive(:find) { mock_page(update: false) }
         patch :update, id: '1'
         expect(assigns(:page)).to be(mock_page)
       end
 
       it "re-renders the 'edit' template" do
-        set_logged_in_admin
+        set_logged_in_default_admin
         allow(Page).to receive(:find) { mock_page(update: false) }
         patch :update, id: '1'
         expect(response).to render_template("edit")
@@ -206,7 +194,7 @@ describe PagesController, type: :controller do
     end
 
     it "shows a form for confirming deletion of a page" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       get :delete, :id => "37"
       expect(assigns(:page)).to be(mock_page)
@@ -221,14 +209,14 @@ describe PagesController, type: :controller do
     end
 
     it "destroys the requested page" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       expect(mock_page).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the pages list" do
-      set_logged_in_admin
+      set_logged_in_default_admin
       allow(Page).to receive(:find) { mock_page }
       delete :destroy, :id => "1"
       expect(response).to redirect_to(pages_url)

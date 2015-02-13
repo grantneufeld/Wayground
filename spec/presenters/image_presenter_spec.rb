@@ -5,7 +5,6 @@ describe ImagePresenter do
 
   def view_stub
     view = double('View')
-    #view.stub_chain(:request, :path).and_return(path)
     #allow(view).to receive_message_chain(:request, :path) { path }
     view
   end
