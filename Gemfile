@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.8'
+gem 'rails', '4.2.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -9,13 +9,13 @@ gem 'pg'
 #gem 'queue_classic', '2.0.0rc12'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3', require: false
+gem 'sass-rails', '~> 5.0', require: false
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0', require: false
 
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0', require: false
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.1.0', require: false
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -29,14 +29,8 @@ gem 'jbuilder', '~> 2.0', require: false
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', require: false, group: :doc
 
-# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
-
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
-
-# Use debugger
-gem 'byebug', group: [:development, :test]
 
 # deprecated compatibility
 gem 'protected_attributes', '>= 1.0.5'
@@ -47,6 +41,17 @@ gem 'omniauth-facebook', '>= 1.3.0'
 gem 'omniauth-twitter', '>= 0.0.11'
 
 gem 'tzinfo', '>= 0.3.38'
+
+group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
+
+  # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console', '~> 2.0'
+
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+end
 
 group :development do
   # code analysis tools:
@@ -67,7 +72,7 @@ group :test do
   # specs/testing:
   gem 'rspec-rails', '~> 3.0', require: false
   gem 'rspec-activemodel-mocks', require: false
-  gem 'rspec-autotest', require: false
+  gem 'rspec-autotest', require: false, github: 'grantneufeld/rspec-autotest'
   gem 'rspec-html-matchers', require: false
   # features / acceptance tests:
   gem 'cucumber', '>= 1.2.1', require: false
