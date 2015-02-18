@@ -11,7 +11,9 @@ describe 'calendar/day.html.erb', type: :view do
     @event1 = stub_model(Event, id: 123, title: 'Test Title', start_at: Time.zone.parse('2013-03-04 1pm'))
     @event2 = stub_model(Event, id: 234, title: 'Test Title', start_at: Time.zone.parse('2013-03-04 2pm'))
     @events = assign(:events, [])
+    rspec_stubs_lazy
     allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
   context "with no user" do
     before(:each) do

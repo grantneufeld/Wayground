@@ -10,10 +10,12 @@ describe 'pages/show.html.erb', type: :view do
       :description => "My description.",
       :content => "<p>My content.</p>"
     ))
+    rspec_stubs_lazy
+    allow(view).to receive(:current_user).and_return(nil)
+    rspec_stubs_strict
   end
 
   it "renders attributes in <p>" do
-    allow(view).to receive(:current_user) { nil }
     render
     expect(rendered).to match(/myfilename/)
     expect(rendered).to match(/My Title/)

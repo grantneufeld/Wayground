@@ -47,7 +47,9 @@ describe Merger::Base do
       dest = double('destination')
       allow(dest).to receive(:id).and_return(123)
       # what we’re testing for:
+      rspec_stubs_lazy
       expect(authorities).to receive(:update_all).with(item_id: 123)
+      rspec_stubs_strict
       # Do the merger operation
       merger = Merger::Base.new(source)
       merger.merge_authorities_into(dest)
@@ -61,7 +63,9 @@ describe Merger::Base do
       source_authority = double('authority')
       allow(source_authority).to receive(:user).and_return(user)
       authorities = [source_authority]
+      rspec_stubs_lazy
       allow(authorities).to receive(:update_all)
+      rspec_stubs_strict
       allow(source).to receive(:authorities).and_return(authorities)
       # set up the destination
       dest = double('destination')
@@ -90,7 +94,9 @@ describe Merger::Base do
       dest = double('destination')
       allow(dest).to receive(:id).and_return(345)
       # what we’re testing for:
+      rspec_stubs_lazy
       expect(links).to receive(:update_all).with(item_id: 345)
+      rspec_stubs_strict
       # Do the merger operation
       merger = Merger::Base.new(source)
       merger.merge_external_links_into(dest)
@@ -102,7 +108,9 @@ describe Merger::Base do
       source_link = double('link')
       allow(source_link).to receive(:url).and_return('url')
       links = [source_link]
+      rspec_stubs_lazy
       allow(links).to receive(:update_all)
+      rspec_stubs_strict
       allow(source).to receive(:external_links).and_return(links)
       # set up the destination
       dest = double('destination')
@@ -131,7 +139,9 @@ describe Merger::Base do
       dest = double('destination')
       allow(dest).to receive(:id).and_return(456)
       # what we’re testing for:
+      rspec_stubs_lazy
       expect(sourced_items).to receive(:update_all).with(item_id: 456, has_local_modifications: true)
+      rspec_stubs_strict
       # Do the merger operation
       merger = Merger::Base.new(source)
       merger.merge_sourced_items_into(dest)
@@ -148,7 +158,9 @@ describe Merger::Base do
       dest = double('destination')
       allow(dest).to receive(:id).and_return(567)
       # what we’re testing for:
+      rspec_stubs_lazy
       expect(versions).to receive(:update_all).with(item_id: 567)
+      rspec_stubs_strict
       # Do the merger operation
       merger = Merger::Base.new(source)
       merger.merge_versions_into(dest)

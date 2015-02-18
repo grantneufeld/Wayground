@@ -77,6 +77,26 @@ RSpec.configure do |config|
 
     # Prevents you from mocking or stubbing a method that does not exist on
     # a real object. This is generally recommended.
-    mocks.verify_partial_doubles = false
+    mocks.verify_partial_doubles = true
+  end
+end
+
+# HELPERS
+
+# View specs annoyingly don’t seem to load controller helpers,
+# and rspec annoyingly doesn’t have a way to say that a particular stub call should not do method verification.
+# So, these are custom methods to wrap around stub calls that need to be set as not verified.
+def rspec_stubs_lazy
+  RSpec.configure do |config|
+    config.mock_with :rspec do |mocks|
+      mocks.verify_partial_doubles = false
+    end
+  end
+end
+def rspec_stubs_strict
+  RSpec.configure do |config|
+    config.mock_with :rspec do |mocks|
+      mocks.verify_partial_doubles = true
+    end
   end
 end

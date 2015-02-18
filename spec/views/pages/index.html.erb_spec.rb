@@ -26,10 +26,12 @@ describe 'pages/index.html.erb', type: :view do
     assign(:default_max, 23)
     assign(:source_total, 30)
     assign(:selected_total, 2)
+    rspec_stubs_lazy
+    allow(view).to receive(:current_user).and_return(nil)
+    rspec_stubs_strict
   end
 
   it "renders a list of pages" do
-    allow(view).to receive(:current_user) { nil }
     render
     assert_select "tr>td", :text => "/myfilename".to_s
     assert_select "tr>td", :text => "My Title".to_s

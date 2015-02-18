@@ -11,7 +11,9 @@ describe 'calendar/month.html.erb', type: :view do
     @events = assign(:events, [@event])
   end
   before(:each) do
+    rspec_stubs_lazy
     allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
   context "with no user" do
     before(:each) do

@@ -14,7 +14,9 @@ describe 'calendar/year.html.erb', type: :view do
     )
   end
   before(:each) do
+    rspec_stubs_lazy
     allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
   context "with no user" do
     before(:all) do

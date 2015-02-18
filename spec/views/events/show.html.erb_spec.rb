@@ -26,7 +26,9 @@ describe 'events/show.html.erb', type: :view do
       :country => "Country",
       :location_url => "http://location.url.tld/"
     ))
+    rspec_stubs_lazy
     allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
 
   it "renders the expected text" do

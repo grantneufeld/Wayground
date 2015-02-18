@@ -53,7 +53,9 @@ describe 'events/index.html.erb', type: :view do
         :location_url => "Location Url"
       )
     ])
+    rspec_stubs_lazy
     allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
 
   it "renders a list of events" do
