@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.12'
+gem 'rails', '4.1.8'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -9,7 +9,7 @@ gem 'pg'
 #gem 'queue_classic', '2.0.0rc12'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.2', require: false
+gem 'sass-rails', '~> 4.0.3', require: false
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0', require: false
@@ -24,12 +24,13 @@ gem 'coffee-rails', '~> 4.0.0', require: false
 gem 'jquery-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2', require: false
+gem 'jbuilder', '~> 2.0', require: false
 
-group :doc do
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', require: false
-end
+# bundle exec rake doc:rails generates the API under doc/api.
+gem 'sdoc', '~> 0.4.0', require: false, group: :doc
+
+# Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+gem 'spring',        group: :development
 
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'

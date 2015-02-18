@@ -14,7 +14,11 @@ class SourcedItem < ActiveRecord::Base
 
   # Set the last_sourced_at datetime if not set by the processor.
   def set_date
-    self.last_sourced_at ||= Time.now
+    if source.present?
+      self.last_sourced_at ||= source.last_updated_at || Time.now
+    else
+      self.last_sourced_at ||= Time.now
+    end
   end
 
   # last_sourced_at should not be set in the future.

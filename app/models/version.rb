@@ -35,8 +35,8 @@ class Version < ActiveRecord::Base
   # * version is a version on the same type of item model as self
   def diff_with(version)
     diff = {}
-    diff[:filename] = version.filename unless filename == version.filename
-    diff[:title] = version.title unless title == version.title
+    diff['filename'] = version.filename unless filename == version.filename
+    diff['title'] = version.title unless title == version.title
     values.keys.each do |key|
       value = (values[key.to_s] || values[key.to_sym]).to_s
       version_value = (version.values[key.to_s] || version.values[key.to_sym]).to_s

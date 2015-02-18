@@ -185,29 +185,34 @@ describe Version, type: :model do
       version_old = @event.new_version
       version_new = @event.new_version
       version_new.filename = 'different'
-      expect( version_old.diff_with(version_new) ).to eq(filename: 'different')
+      expect( version_old.diff_with(version_new) ).to eq('filename' => 'different')
     end
     it 'should set the title to the new title in the diff when titles differ' do
       @event.editor = @user
       version_old = @event.new_version
       version_new = @event.new_version
       version_new.title = 'different'
-      expect( version_old.diff_with(version_new) ).to eq(title: 'different')
+      expect( version_old.diff_with(version_new) ).to eq('title' => 'different')
     end
     it 'should set the different values' do
       @event.editor = @user
       version_old = @event.new_version
       version_new = @event.new_version
-      version_new.values[:city] = 'Diffville'
-      version_new.values[:province] = 'Difference'
-      version_new.values[:country] = 'Diffland'
+      version_new.values.delete('city')
+      version_new.values['city'] = 'Diffville'
+      version_new.values.delete('province')
+      version_new.values['province'] = 'Difference'
+      version_new.values.delete('country')
+      version_new.values['country'] = 'Diffland'
       diff = version_old.diff_with(version_new)
-      expect( diff ).to eq(city: 'Diffville', province: 'Difference', country: 'Diffland')
+      expect( diff ).to eq('city' => 'Diffville', 'province' => 'Difference', 'country' => 'Diffland')
     end
     it 'should handle values with keys that are strings or symbols' do
+      # FIXME: this test example seems to be broken (seed 31045)
       @event.editor = @user
       version_old = @event.new_version
       version_new = @event.new_version
+      version_old.values.delete('city')
       version_old.values[:city] = 'Diffville'
       version_new.values.delete(:city)
       version_new.values['city'] = 'Diffville'
