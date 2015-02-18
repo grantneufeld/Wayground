@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'paths/new.html.erb', type: :view do
   before(:each) do

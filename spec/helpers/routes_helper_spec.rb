@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe RoutesHelper, type: :helper do
   describe ".calendar_day_path_for_date" do

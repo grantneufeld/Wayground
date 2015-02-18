@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # For testing purposes, currently relying on the following models:
 # - Authentication as a model that is not using authority control

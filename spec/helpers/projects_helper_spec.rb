@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ProjectsHelper, type: :helper do
   let(:project) { $project = FactoryGirl.create(:project, :filename => nil) }

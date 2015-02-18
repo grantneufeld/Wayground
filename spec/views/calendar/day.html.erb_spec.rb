@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'calendar/day.html.erb', type: :view do
   before(:all) do

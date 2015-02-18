@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'authentication'
 
 describe Authentication, type: :model do

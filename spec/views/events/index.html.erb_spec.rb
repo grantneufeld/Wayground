@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'page_metadata'
 
 describe 'events/index.html.erb', type: :view do

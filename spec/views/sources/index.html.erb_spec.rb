@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'sources/index.html.erb', type: :view do
   before(:each) do

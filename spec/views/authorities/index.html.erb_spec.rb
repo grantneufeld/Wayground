@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'authorities/index.html.erb', type: :view do
   before(:each) do

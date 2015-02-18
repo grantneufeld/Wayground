@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'tag'
 
 describe Tag, type: :model do

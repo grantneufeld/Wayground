@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'layouts/_pagination_header.html.erb', type: :view do
   before(:each) do

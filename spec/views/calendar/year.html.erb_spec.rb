@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'calendar/year.html.erb', type: :view do
   before(:all) do

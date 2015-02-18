@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # Most of this is based on the rspec scaffold generated tests.
 describe SettingsController, type: :controller do

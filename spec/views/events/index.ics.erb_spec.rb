@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'events/index.ics.erb', type: :view do
   before(:each) do

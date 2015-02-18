@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'layouts/application.ics.erb', type: :view do
   it "should render a standard icalendar header" do

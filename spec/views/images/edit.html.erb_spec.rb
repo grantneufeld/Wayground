@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'images/edit.html.erb', type: :view do
   let(:variant) do

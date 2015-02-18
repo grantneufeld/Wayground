@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'sources_controller'
 require 'authority'
 require 'event'

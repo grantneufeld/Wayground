@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'events/edit.html.erb', type: :view do
   before(:each) do

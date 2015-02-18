@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'page_metadata'
 
 describe 'layouts/application.html.erb', type: :view do

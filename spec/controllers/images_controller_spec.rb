@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'images_controller'
 
 describe ImagesController, type: :controller do

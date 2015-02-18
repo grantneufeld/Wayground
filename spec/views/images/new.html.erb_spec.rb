@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'image'
 require 'image_variant'
 

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'pages/show.html.erb', type: :view do
   before(:each) do

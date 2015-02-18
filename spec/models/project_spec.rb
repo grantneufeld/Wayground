@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Project, type: :model do
   let(:minimum_valid_params) { $minimum_valid_params = {
