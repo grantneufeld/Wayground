@@ -1,6 +1,9 @@
 require 'rails_helper'
+require 'rspec-html-matchers'
 
 describe 'calendar/month.html.erb', type: :view do
+  include RSpecHtmlMatchers
+
   before(:all) do
     @date = assign(:date, Date.new(2013, 3, 1))
     User.delete_all
@@ -56,8 +59,9 @@ describe 'calendar/month.html.erb', type: :view do
     end
     it "should render the event on the 14th" do
       render
-      expect(rendered).to match(
-        /<a href="\/events\/#{@event.id}" title="6pm: Test Event">6pm: Test Event<\/a>/
+      expect(rendered).to have_tag('a',
+        with: { href: "/events/#{@event.id}", title: '6pm: Test Event' },
+        text: '6pm: Test Event'
       )
     end
   end

@@ -68,6 +68,7 @@ group :test do
   gem 'rspec-rails', '~> 3.0', require: false
   gem 'rspec-activemodel-mocks', require: false
   gem 'rspec-autotest', require: false
+  gem 'rspec-html-matchers', require: false
   # features / acceptance tests:
   gem 'cucumber', '>= 1.2.1', require: false
   gem 'cucumber-rails', '>= 1.3.0', require: false
