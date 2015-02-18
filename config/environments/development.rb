@@ -29,6 +29,9 @@ Wayground::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 
+  # Raises error for missing translations
+  # config.action_view.raise_on_missing_translations = true
+
   # Raise exceptions on unpermitted parameters.
   # Can notify when there's a mis-match between the expected parameters and those submitted from a form.
   config.action_controller.action_on_unpermitted_parameters = :raise

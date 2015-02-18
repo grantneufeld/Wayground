@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.4'
+gem 'rails', '4.0.12'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -9,13 +9,13 @@ gem 'pg'
 #gem 'queue_classic', '2.0.0rc12'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.1', require: false
+gem 'sass-rails', '~> 4.0.2', require: false
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0', require: false
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.1', require: false
+gem 'coffee-rails', '~> 4.0.0', require: false
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -32,7 +32,7 @@ group :doc do
 end
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use debugger
 gem 'byebug', group: [:development, :test]
