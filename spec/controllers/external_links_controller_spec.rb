@@ -3,10 +3,10 @@ require 'rails_helper'
 describe ExternalLinksController, type: :controller do
 
   before(:all) do
-    ExternalLink.destroy_all
-    Event.destroy_all
-    Authority.destroy_all
-    User.destroy_all
+    ExternalLink.delete_all
+    Event.delete_all
+    Authority.delete_all
+    User.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')

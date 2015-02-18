@@ -8,7 +8,7 @@ describe Project, type: :model do
 
   before(:all) do
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')

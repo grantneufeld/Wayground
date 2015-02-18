@@ -9,9 +9,9 @@ require 'import/ical_importer'
 
 describe SourcesController, type: :controller do
   before(:all) do
-    Source.destroy_all
+    Source.delete_all
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, name: 'Admin User')
     @user_normal = FactoryGirl.create(:user, name: 'Normal User')

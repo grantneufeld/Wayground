@@ -176,7 +176,7 @@ describe User, type: :model do
 
   describe "email code confirmation" do
     before(:each) do
-      @user.authorizations.destroy_all
+      @user.authorizations.delete_all
     end
     it "should generate a confirmation token when creating a new user" do
       expect( @user.confirmation_token.blank? ).to be_falsey

@@ -41,7 +41,7 @@ module Wayground
         context "with no existing authentication" do
           context "with a current user" do
             it "should add a new authentication to the user" do
-              @user.authentications.destroy_all
+              @user.authentications.delete_all
               provider = 'newproviderforuser'
               uid = 'newuidforuser'
               auth_hash = {'provider' => provider, 'uid' => uid}
@@ -68,7 +68,7 @@ module Wayground
         end
         context '...' do
           before(:each) do
-            @user.authentications.destroy_all
+            @user.authentications.delete_all
           end
           it 'should figure out the facebook url' do
             provider = 'facebook'

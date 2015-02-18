@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UsersController, type: :controller do
 
   before(:all) do
-    User.destroy_all
+    User.delete_all
   end
 
   def mock_user(stubs={})

@@ -8,7 +8,7 @@ describe PagesController, type: :controller do
 
   before(:all) do
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
     Page.delete_all
     @default_admin = FactoryGirl.create(:user, email: 'test+mockadmin@wayground.ca', name: 'The Admin')
     @default_page = FactoryGirl.create(:page)

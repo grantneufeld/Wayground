@@ -132,7 +132,7 @@ describe ImageVariant, type: :model do
       context "with no ‘original’ variants" do
         before(:all) do
           # make sure there are no original variants
-          @image.image_variants.where(style: 'original').destroy_all
+          @image.image_variants.where(style: 'original').delete_all
         end
         it "should return the scaled variant" do
           expect( @image.image_variants.originals ).to eq [@scaled]
@@ -140,7 +140,7 @@ describe ImageVariant, type: :model do
       end
       context "with one ‘original’ variant" do
         before(:all) do
-          @image.image_variants.where(style: 'original').destroy_all
+          @image.image_variants.where(style: 'original').delete_all
           @variant = @image.image_variants.create!(url: 'http://o.tld/', style: 'original', format: 'png')
         end
         it "should return the one variant and the scaled" do

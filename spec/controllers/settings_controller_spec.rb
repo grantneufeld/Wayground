@@ -19,7 +19,7 @@ describe SettingsController, type: :controller do
 
   before(:all) do
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
@@ -39,7 +39,7 @@ describe SettingsController, type: :controller do
       expect(response.status).to eq 403
     end
     it "initializes the default settings" do
-      Setting.destroy_all
+      Setting.delete_all
       set_logged_in_admin
       get :initialize_defaults
       expect(Setting[:global_start_date]).to eq(Time.now.to_date.to_s)

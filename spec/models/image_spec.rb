@@ -73,20 +73,20 @@ describe Image, type: :model do
     end
     context "with no variants" do
       it "should return nil" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         expect( @image.get_best_variant ).to eq nil
       end
     end
     context "with one variant" do
       it "should return the variant" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         variant = @image.image_variants.create!(style: 'scaled', url: 'http://a.tld', format: 'png')
         expect( @image.get_best_variant ).to eq variant
       end
     end
     context "with no original variants" do
       it "should return the largest scaled variant" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         variant1 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
@@ -99,7 +99,7 @@ describe Image, type: :model do
     end
     context "with one original variant" do
       it "should return the original" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         variant = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
@@ -112,7 +112,7 @@ describe Image, type: :model do
     end
     context "with multiple original variants" do
       it "should return the largest" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         original1 = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
