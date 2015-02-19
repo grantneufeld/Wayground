@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "documents/show.html.erb" do
+describe 'documents/show.html.erb', type: :view do
   before(:each) do
     @document = assign(:document, stub_model(Document,
       :user => stub_model(User, :name => 'The User'),
@@ -14,11 +14,11 @@ describe "documents/show.html.erb" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(/The User/)
-    rendered.should match(/filename\.txt/)
-    rendered.should match(/9/)
-    rendered.should match(/text\/plain/)
-    rendered.should match(/The document description\./)
+    expect(rendered).to match(/The User/)
+    expect(rendered).to match(/filename\.txt/)
+    expect(rendered).to match(/9/)
+    expect(rendered).to match(/text\/plain/)
+    expect(rendered).to match(/The document description\./)
     # the document data is not shown
   end
 end

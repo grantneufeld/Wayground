@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "pages/show.html.erb" do
+describe 'pages/show.html.erb', type: :view do
   before(:each) do
     @page = assign(:page, stub_model(Page,
       :parent => nil,
@@ -10,14 +10,16 @@ describe "pages/show.html.erb" do
       :description => "My description.",
       :content => "<p>My content.</p>"
     ))
+    rspec_stubs_lazy
+    allow(view).to receive(:current_user).and_return(nil)
+    rspec_stubs_strict
   end
 
   it "renders attributes in <p>" do
-    view.stub(:current_user) { nil }
     render
-    rendered.should match(/myfilename/)
-    rendered.should match(/My Title/)
-    rendered.should match(/My description/)
-    rendered.should match(/My content\./)
+    expect(rendered).to match(/myfilename/)
+    expect(rendered).to match(/My Title/)
+    expect(rendered).to match(/My description/)
+    expect(rendered).to match(/My content\./)
   end
 end

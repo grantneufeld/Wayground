@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "paths/show.html.erb" do
+describe 'paths/show.html.erb', type: :view do
   before(:each) do
     @path = assign(:path, stub_model(Path,
       :item => nil,
@@ -11,8 +11,8 @@ describe "paths/show.html.erb" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(//)
-    rendered.should match(/MyText/)
-    rendered.should match(/MyText/)
+    expect(rendered).to match(//)
+    expect(rendered).to match(/MyText/)
+    expect(rendered).to match(/MyText/)
   end
 end

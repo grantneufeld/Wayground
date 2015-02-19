@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'elections_controller'
 
-describe ElectionsController do
+describe ElectionsController, type: :controller do
 
   before(:all) do
     Level.delete_all
@@ -17,10 +17,10 @@ describe ElectionsController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -33,7 +33,7 @@ describe ElectionsController do
 
   describe 'GET index' do
     before(:each) do
-      @level.stub(:elections).and_return([election])
+      allow(@level).to receive(:elections).and_return([election])
       get :index, level_id: @level.to_param
     end
     it 'assigns all elections as @elections' do
@@ -142,7 +142,7 @@ describe ElectionsController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Election.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Election).to receive(:save).and_return(false)
         post :create, election: {}, level_id: @level.to_param
       end
       it 'assigns a newly created but unsaved election as @election' do
@@ -194,7 +194,7 @@ describe ElectionsController do
     describe 'with valid params' do
       it 'updates the requested election' do
         set_logged_in_admin
-        Election.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
+        expect_any_instance_of(Election).to receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: election.filename, election: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
@@ -221,7 +221,7 @@ describe ElectionsController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Election.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Election).to receive(:save).and_return(false)
         patch :update, id: election.filename, election: {}, level_id: @level.to_param
       end
       it 'assigns the election as @election' do

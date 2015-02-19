@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'parties/edit.html.erb' do
+describe 'parties/edit.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:party_attrs) do
     $party_attrs = {
@@ -24,7 +23,7 @@ describe 'parties/edit.html.erb' do
 
   before(:each) do
     assign(:level, level)
-    party.stub(:to_param).and_return('abc')
+    allow(party).to receive(:to_param).and_return('abc')
     assign(:party, party)
     render
   end

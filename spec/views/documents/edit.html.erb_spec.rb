@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "documents/edit.html.erb" do
+describe 'documents/edit.html.erb', type: :view do
   before(:each) do
     @document = assign(:document, stub_model(Document,
       :user => nil,

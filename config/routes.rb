@@ -1,4 +1,4 @@
-Wayground::Application.routes.draw do
+Rails.application.routes.draw do
   concern :versioned do
     resources :versions, except: [:new, :create, :edit, :update, :destroy]
   end

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "authorities/show.html.erb" do
+describe 'authorities/show.html.erb', type: :view do
   before(:each) do
     @authority = assign(:authority, stub_model(Authority,
     :user => stub_model(User, {:id => 123, :email => 'user@test.tld'}),
@@ -19,16 +19,16 @@ describe "authorities/show.html.erb" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(//)
-    rendered.should match(//)
-    rendered.should match(/Area/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
-    rendered.should match(/false/)
+    expect(rendered).to match(//)
+    expect(rendered).to match(//)
+    expect(rendered).to match(/Area/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
+    expect(rendered).to match(/false/)
   end
 end

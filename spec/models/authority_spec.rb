@@ -1,8 +1,8 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'authority'
 require 'active_record'
 
-describe Authority do
+describe Authority, type: :model do
   # == VALIDATIONS
   describe "validations" do
     before(:each) do
@@ -28,18 +28,18 @@ describe Authority do
     it "should create a new instance given valid attributes" do
       a = Authority.new(@valid_attributes)
       a.user = @valid_user
-      a.save.should be_true
+      expect(a.save).to be_truthy
     end
     it "should require a user" do
       a = Authority.new(@valid_attributes)
-      a.valid?.should be_false
+      expect(a.valid?).to be_falsey
     end
     it "should require either an item or an area" do
       invalid_attrs = @valid_attributes.dup
       invalid_attrs[:area] = nil
       a = Authority.new(invalid_attrs)
       a.user = @valid_user
-      a.valid?.should be_false
+      expect(a.valid?).to be_falsey
     end
   end
 
@@ -81,7 +81,7 @@ describe Authority do
         authority_params: {user_proxy: user.email, area: 'Content'},
         authorized_by: authorizer
       )
-      authority.user.should == user
+      expect(authority.user).to eq user
     end
   end
 
@@ -99,7 +99,7 @@ describe Authority do
     end
     it "should return the user’s authority for the item when no action_type" do
       authorization = Authority.user_has_for_item(@item_user, @item2, nil)
-      authorization.item.should == @item2
+      expect(authorization.item).to eq @item2
     end
     it "should pick an authority for the user as owner of the item over any other authority" do
     end
@@ -120,17 +120,17 @@ describe Authority do
     it "should make the user nil if item is blank" do
         authority = Authority.new
         authority.user_proxy = ''
-        authority.user.should be_nil
+        expect(authority.user).to be_nil
     end
     it "should assign the user if the item is a valid string identifier (id, email, name)" do
       authority = Authority.new
       authority.user_proxy = @proxy_user.email
-      authority.user.should eq @proxy_user
+      expect(authority.user).to eq @proxy_user
     end
     it "should set the user if the item is a User instance" do
       authority = Authority.new
       authority.user_proxy = @proxy_user
-      authority.user.should eq @proxy_user
+      expect(authority.user).to eq @proxy_user
     end
   end
 
@@ -143,7 +143,7 @@ describe Authority do
 
   describe "#authority_area" do
     it "should be in the “Authority” area" do
-      Authority.new.authority_area.should eq "Authority"
+      expect(Authority.new.authority_area).to eq "Authority"
     end
   end
 
@@ -167,7 +167,7 @@ describe Authority do
         item: FactoryGirl.create(:event), can_view: true, can_update: true
       )
       authority1.merge_into!(authority2)
-      (
+      authority_assignments = (
         ( # these fields should be true
           authority2.is_owner && authority2.can_delete &&
           authority2.can_update && authority2.can_update
@@ -176,7 +176,8 @@ describe Authority do
           authority2.can_create || authority2.can_invite ||
           authority2.can_permit || authority2.can_approve
         )
-      ).should be_true
+      )
+      expect(authority_assignments).to be_truthy
     end
 
     it "should save the changes to the destination authority" do
@@ -185,7 +186,7 @@ describe Authority do
         item: FactoryGirl.create(:event), can_view: true
       )
       authority1.merge_into!(authority2)
-      authority2.changed?.should be_false # no unsaved changes
+      expect(authority2.changed?).to be_falsey # no unsaved changes
     end
 
     it "should destroy the source authority" do
@@ -199,9 +200,9 @@ describe Authority do
 
     it "should not destroy the source authority if saving the destination fails" do
       authority2 = FactoryGirl.create(:authority, user: user, item: item)
-      Authority.any_instance.should_receive(:save).and_return(false)
+      expect_any_instance_of(Authority).to receive(:save).and_return(false)
       authority1.merge_into!(authority2)
-      Authority.find(authority1.id).should eq authority1
+      expect(Authority.find(authority1.id)).to eq authority1
     end
   end
 

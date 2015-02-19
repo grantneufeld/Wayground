@@ -1,20 +1,20 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Setting do
+describe Setting, type: :model do
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Admin” area" do
-      Setting.authority_area.should eq 'Admin'
+      expect(Setting.authority_area).to eq 'Admin'
     end
   end
 
   describe "validation" do
     describe "of key" do
       it "should require key to be set" do
-        Setting.new(:key => 'set').valid?.should be_true
+        expect(Setting.new(:key => 'set').valid?).to be_truthy
       end
       it "should fail if key is not set" do
-        Setting.new.valid?.should be_false
+        expect(Setting.new.valid?).to be_falsey
       end
     end
   end
@@ -24,15 +24,15 @@ describe Setting do
       key = 'indexed lookup'
       val = 'from index'
       Setting.create(:key => key, :value => val)
-      Setting[key].should eq val
+      expect(Setting[key]).to eq val
     end
     it "should return nil if there is no setting matching the key" do
-      Setting['non-existant'].should be_nil
+      expect(Setting['non-existant']).to be_nil
     end
     it "should accept symbols for keys" do
       value = 'value for symbol'
       Setting.create(:key => 'symbolickey', :value => value)
-      Setting[:symbolickey].should eq value
+      expect(Setting[:symbolickey]).to eq value
     end
   end
 
@@ -42,18 +42,18 @@ describe Setting do
       new_val = 'has been changed'
       Setting.create(:key => key, :value => 'original')
       Setting[key] = new_val
-      Setting[key].should eq new_val
+      expect(Setting[key]).to eq new_val
     end
     it "should create a setting for the key if one doesn’t exist" do
       key = 'not already existing'
       new_val = 'created with new value'
       Setting[key] = new_val
-      Setting[key].should eq new_val
+      expect(Setting[key]).to eq new_val
     end
     it "should accept symbols for keys" do
       value = 'assigned for symbol'
       Setting[:assignbysymbol] = value
-      Setting['assignbysymbol'].should eq value
+      expect(Setting['assignbysymbol']).to eq value
     end
   end
 
@@ -80,15 +80,15 @@ describe Setting do
   describe ".set_defaults" do
     it "should set setting values when no pre-existing settings for the keys" do
       Setting.set_defaults({'abc'=>'123', 'def'=>'456'})
-      Setting['abc'].should eq '123'
-      Setting['def'].should eq '456'
+      expect(Setting['abc']).to eq '123'
+      expect(Setting['def']).to eq '456'
     end
     it "should not overwrite existing values" do
       key = 'pre-existing'
       original_value = 'already exists'
       Setting.create(:key => key, :value => original_value)
       Setting.set_defaults({key=>'should not change'})
-      Setting[key].should eq original_value
+      expect(Setting[key]).to eq original_value
     end
   end
 end

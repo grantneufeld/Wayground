@@ -168,12 +168,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should return the candidate is_rumoured' do
       form = Wayground::Democracy::CandidateForm.new
       form.candidate = candidate
-      expect( form.is_rumoured ).to be_true
+      expect( form.is_rumoured ).to be_truthy
     end
     context 'with no candidate' do
       it 'should default to false' do
         form = Wayground::Democracy::CandidateForm.new
-        expect( form.is_rumoured ).to be_false
+        expect( form.is_rumoured ).to be_falsey
       end
     end
   end
@@ -182,12 +182,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should return the candidate is_confirmed' do
       form = Wayground::Democracy::CandidateForm.new
       form.candidate = candidate
-      expect( form.is_confirmed ).to be_true
+      expect( form.is_confirmed ).to be_truthy
     end
     context 'with no candidate' do
       it 'should default to false' do
         form = Wayground::Democracy::CandidateForm.new
-        expect( form.is_confirmed ).to be_false
+        expect( form.is_confirmed ).to be_falsey
       end
     end
   end
@@ -196,12 +196,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should return the candidate is_incumbent' do
       form = Wayground::Democracy::CandidateForm.new
       form.candidate = candidate
-      expect( form.is_incumbent ).to be_true
+      expect( form.is_incumbent ).to be_truthy
     end
     context 'with no candidate' do
       it 'should default to false' do
         form = Wayground::Democracy::CandidateForm.new
-        expect( form.is_incumbent ).to be_false
+        expect( form.is_incumbent ).to be_falsey
       end
     end
   end
@@ -210,12 +210,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should return the candidate is_leader' do
       form = Wayground::Democracy::CandidateForm.new
       form.candidate = candidate
-      expect( form.is_leader ).to be_true
+      expect( form.is_leader ).to be_truthy
     end
     context 'with no candidate' do
       it 'should default to false' do
         form = Wayground::Democracy::CandidateForm.new
-        expect( form.is_leader ).to be_false
+        expect( form.is_leader ).to be_falsey
       end
     end
   end
@@ -224,12 +224,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should return the candidate is_acclaimed' do
       form = Wayground::Democracy::CandidateForm.new
       form.candidate = candidate
-      expect( form.is_acclaimed ).to be_true
+      expect( form.is_acclaimed ).to be_truthy
     end
     context 'with no candidate' do
       it 'should default to false' do
         form = Wayground::Democracy::CandidateForm.new
-        expect( form.is_acclaimed ).to be_false
+        expect( form.is_acclaimed ).to be_falsey
       end
     end
   end
@@ -238,12 +238,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should return the candidate is_elected' do
       form = Wayground::Democracy::CandidateForm.new
       form.candidate = candidate
-      expect( form.is_elected ).to be_true
+      expect( form.is_elected ).to be_truthy
     end
     context 'with no candidate' do
       it 'should default to false' do
         form = Wayground::Democracy::CandidateForm.new
-        expect( form.is_elected ).to be_false
+        expect( form.is_elected ).to be_falsey
       end
     end
   end
@@ -311,12 +311,12 @@ describe Wayground::Democracy::CandidateForm do
     it 'should pass if the minimum values and the ballot are set' do
       form = Wayground::Democracy::CandidateForm.new(minimum_valid_params)
       form.ballot = ballot
-      expect( form.valid? ).to be_true
+      expect( form.valid? ).to be_truthy
     end
     describe 'of ballot' do
       it 'should fail if ballot is not set' do
         form = Wayground::Democracy::CandidateForm.new(minimum_valid_params)
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
     end
     describe 'of person' do
@@ -324,7 +324,7 @@ describe Wayground::Democracy::CandidateForm do
         form = Wayground::Democracy::CandidateForm.new(minimum_valid_params)
         form.ballot = ballot
         form.person = duplicate_person
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
     end
     describe 'of name' do
@@ -332,28 +332,28 @@ describe Wayground::Democracy::CandidateForm do
         minimum_valid_params.delete('name')
         form = Wayground::Democracy::CandidateForm.new(minimum_valid_params)
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
       it 'should fail if name contains an angle-bracket' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('name' => 'Angle < Bracket')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
       it 'should fail if name contains an ampersand' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('name' => 'Ampersand & Test')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
       it 'should fail if name is not unique on the ballot' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('name' => 'Duplicate Candidate')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
     end
     describe 'of filename' do
@@ -361,28 +361,28 @@ describe Wayground::Democracy::CandidateForm do
         minimum_valid_params.delete('filename')
         form = Wayground::Democracy::CandidateForm.new(minimum_valid_params)
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
       it 'should fail if filename contains whitespace' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('filename' => 'white space')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
       it 'should fail if filename is not unique on the ballot' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('filename' => 'duplicate_candidate')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
       it 'should fail if filename is not unique for the person' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('filename' => 'duplicate_person')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
     end
     describe 'of dates' do
@@ -391,35 +391,35 @@ describe Wayground::Democracy::CandidateForm do
           minimum_valid_params.merge('announced_on' => '2000-01-01')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_true
+        expect( form.valid? ).to be_truthy
       end
       it 'should pass if just quit_on is set' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('quit_on' => '2000-01-01')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_true
+        expect( form.valid? ).to be_truthy
       end
       it 'should pass if announced_on and quit_on are the same day' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('announced_on' => '2000-01-01', 'quit_on' => '2000-01-01')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_true
+        expect( form.valid? ).to be_truthy
       end
       it 'should pass if quit_on is after announced_on' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('announced_on' => '2000-01-01', 'quit_on' => '2000-01-02')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_true
+        expect( form.valid? ).to be_truthy
       end
       it 'should fail if quit_on is before announced_on' do
         form = Wayground::Democracy::CandidateForm.new(
           minimum_valid_params.merge('announced_on' => '2000-01-02', 'quit_on' => '2000-01-01')
         )
         form.ballot = ballot
-        expect( form.valid? ).to be_false
+        expect( form.valid? ).to be_falsey
       end
     end
   end
@@ -433,12 +433,12 @@ describe Wayground::Democracy::CandidateForm do
       form.attributes = {}
       expect( form.name ).to eq 'Candidate'
       expect( form.filename ).to eq 'candidate'
-      expect( form.is_rumoured ).to be_true
-      expect( form.is_confirmed ).to be_true
-      expect( form.is_incumbent ).to be_true
-      expect( form.is_leader ).to be_true
-      expect( form.is_acclaimed ).to be_true
-      expect( form.is_elected ).to be_true
+      expect( form.is_rumoured ).to be_truthy
+      expect( form.is_confirmed ).to be_truthy
+      expect( form.is_incumbent ).to be_truthy
+      expect( form.is_leader ).to be_truthy
+      expect( form.is_acclaimed ).to be_truthy
+      expect( form.is_elected ).to be_truthy
       expect( form.announced_on.to_s ).to eq '2001-02-03'
       expect( form.quit_on.to_s ).to eq '2002-03-04'
       expect( form.vote_count.to_i ).to eq 1234
@@ -457,32 +457,32 @@ describe Wayground::Democracy::CandidateForm do
     it 'should set is_rumoured' do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'is_rumoured' => '1' }
-      expect( form.is_rumoured ).to be_true
+      expect( form.is_rumoured ).to be_truthy
     end
     it 'should set is_confirmed' do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'is_confirmed' => '1' }
-      expect( form.is_confirmed ).to be_true
+      expect( form.is_confirmed ).to be_truthy
     end
     it 'should set is_incumbent' do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'is_incumbent' => '1' }
-      expect( form.is_incumbent ).to be_true
+      expect( form.is_incumbent ).to be_truthy
     end
     it 'should set is_leader' do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'is_leader' => '1' }
-      expect( form.is_leader ).to be_true
+      expect( form.is_leader ).to be_truthy
     end
     it 'should set is_acclaimed' do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'is_acclaimed' => '1' }
-      expect( form.is_acclaimed ).to be_true
+      expect( form.is_acclaimed ).to be_truthy
     end
     it 'should set is_elected' do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'is_elected' => '1' }
-      expect( form.is_elected ).to be_true
+      expect( form.is_elected ).to be_truthy
     end
     it 'should set announced_on' do
       form = Wayground::Democracy::CandidateForm.new
@@ -568,7 +568,7 @@ describe Wayground::Democracy::CandidateForm do
         new_candidate = Candidate.new
         form = Wayground::Democracy::CandidateForm.new
         form.candidate = new_candidate
-        expect( form.save ).to be_false
+        expect( form.save ).to be_falsey
       end
     end
   end

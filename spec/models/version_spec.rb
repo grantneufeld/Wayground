@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Version do
+describe Version, type: :model do
 
   before(:all) do
     Version.delete_all
@@ -60,21 +60,21 @@ describe Version do
     it "should pass when all required fields are set" do
       version = @item.versions.build(edited_at: Time.now)
       version.user = @user
-      expect( version.valid? ).to be_true
+      expect( version.valid? ).to be_truthy
     end
     it "should require an item" do
       version = Version.new(edited_at: Time.now)
       version.user = @user
-      expect( version.valid? ).to be_false
+      expect( version.valid? ).to be_falsey
     end
     it "should require a user" do
-      version = @item.versions.build(edited_at: Time.now)
-      expect( version.valid? ).to be_false
+      version = @item.versions.new(edited_at: Time.now)
+      expect( version.valid? ).to be_falsey
     end
     it "should require an edited at datetime" do
       version = @item.versions.build
       version.user = @user
-      expect( version.valid? ).to be_false
+      expect( version.valid? ).to be_falsey
     end
   end
 
@@ -155,7 +155,7 @@ describe Version do
   describe "#is_current?" do
     it "should be true if this is the only version" do
       item = FactoryGirl.create(:event)
-      expect( item.versions[0].is_current? ).to be_true
+      expect( item.versions[0].is_current? ).to be_truthy
     end
     it "should be true if this is the latest version" do
       Version.delete_all
@@ -163,13 +163,13 @@ describe Version do
       # create an additional, earlier, version to make sure we’re ordering by date properly
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.day.ago)
       @item.reload
-      expect( version.is_current? ).to be_true
+      expect( version.is_current? ).to be_truthy
     end
     it "should be false if this is not the latest version" do
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 2.weeks.ago)
       FactoryGirl.create(:version, item: @item, user: @user, edited_at: 1.week.from_now)
       middle_version = FactoryGirl.create(:version, item: @item, user: @user, edited_at: 6.days.from_now)
-      expect( middle_version.is_current? ).to be_false
+      expect( middle_version.is_current? ).to be_falsey
     end
   end
 
@@ -185,29 +185,34 @@ describe Version do
       version_old = @event.new_version
       version_new = @event.new_version
       version_new.filename = 'different'
-      expect( version_old.diff_with(version_new) ).to eq(filename: 'different')
+      expect( version_old.diff_with(version_new) ).to eq('filename' => 'different')
     end
     it 'should set the title to the new title in the diff when titles differ' do
       @event.editor = @user
       version_old = @event.new_version
       version_new = @event.new_version
       version_new.title = 'different'
-      expect( version_old.diff_with(version_new) ).to eq(title: 'different')
+      expect( version_old.diff_with(version_new) ).to eq('title' => 'different')
     end
     it 'should set the different values' do
       @event.editor = @user
       version_old = @event.new_version
       version_new = @event.new_version
-      version_new.values[:city] = 'Diffville'
-      version_new.values[:province] = 'Difference'
-      version_new.values[:country] = 'Diffland'
+      version_new.values.delete('city')
+      version_new.values['city'] = 'Diffville'
+      version_new.values.delete('province')
+      version_new.values['province'] = 'Difference'
+      version_new.values.delete('country')
+      version_new.values['country'] = 'Diffland'
       diff = version_old.diff_with(version_new)
-      expect( diff ).to eq(city: 'Diffville', province: 'Difference', country: 'Diffland')
+      expect( diff ).to eq('city' => 'Diffville', 'province' => 'Difference', 'country' => 'Diffland')
     end
     it 'should handle values with keys that are strings or symbols' do
+      # FIXME: this test example seems to be broken (seed 31045)
       @event.editor = @user
       version_old = @event.new_version
       version_new = @event.new_version
+      version_old.values.delete('city')
       version_old.values[:city] = 'Diffville'
       version_new.values.delete(:city)
       version_new.values['city'] = 'Diffville'

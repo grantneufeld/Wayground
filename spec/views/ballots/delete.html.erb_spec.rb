@@ -1,11 +1,10 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'election'
 
-describe "ballots/delete.html.erb" do
+describe 'ballots/delete.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
-    $office = level.offices.build(filename: 'offc', name: 'Stub Name', filename: 'stub_filename')
+    $office = level.offices.build(filename: 'offc', name: 'Stub Name')
     $office.level = level
     $office
   end
@@ -24,7 +23,7 @@ describe "ballots/delete.html.erb" do
   before(:each) do
     assign(:level, level)
     assign(:election, election)
-    ballot.stub(:to_param).and_return('abc')
+    allow(ballot).to receive(:to_param).and_return('abc')
     assign(:ballot, ballot)
     render
   end

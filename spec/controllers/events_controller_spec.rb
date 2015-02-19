@@ -1,21 +1,21 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe EventsController do
+describe EventsController, type: :controller do
 
   before(:all) do
-    Event.destroy_all
+    Event.delete_all
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
     @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   def mock_event(stubs={})
@@ -45,7 +45,7 @@ describe EventsController do
     it "assigns all upcoming events, including unapproved, as @events for moderators" do
       set_logged_in_admin
       get :index
-      assigns(:events).should eq([@event1, @event2])
+      expect(assigns(:events)).to eq([@event1, @event2])
     end
     it "should assign nil to @range the default “upcoming”" do
       get :index, {}
@@ -59,7 +59,7 @@ describe EventsController do
       it "assigns all past events, including unapproved, as @events for moderators" do
         set_logged_in_admin
         get :index, {r: 'past'}
-        assigns(:events).should eq([@event4, @event3])
+        expect(assigns(:events)).to eq([@event4, @event3])
       end
       it "should assign 'past' to @range" do
         get :index, {r: 'past'}
@@ -74,7 +74,7 @@ describe EventsController do
       it "assigns all past events, including unapproved, as @events for moderators" do
         set_logged_in_admin
         get :index, {r: 'all'}
-        assigns(:events).should eq([@event4, @event3, @event1, @event2])
+        expect(assigns(:events)).to eq([@event4, @event3, @event1, @event2])
       end
       it "should assign 'all' to @range" do
         get :index, {r: 'all'}
@@ -104,42 +104,42 @@ describe EventsController do
     it "assigns the requested event as @event" do
       event = FactoryGirl.create(:event)
       get :show, :id => event.id
-      assigns(:event).should eq(event)
+      expect(assigns(:event)).to eq(event)
     end
     it "shows an alert when an event is_cancelled" do
       event = FactoryGirl.create(:event, :is_cancelled => true)
       get :show, :id => event.id
-      request.flash[:alert].should match /[Cc]ancelled/
+      expect(request.flash[:alert]).to match /[Cc]ancelled/
     end
     it "shows an alert when an event is_tentative" do
       event = FactoryGirl.create(:event, is_tentative: true)
       get :show, :id => event.id
-      request.flash[:alert].should match /[Tt]entative/
+      expect(request.flash[:alert]).to match /[Tt]entative/
     end
     it "shows an alert when an event is not approved" do
       event = FactoryGirl.create(:event, :is_approved => false)
       get :show, :id => event.id
-      request.flash[:alert].should match /not been approved/
+      expect(request.flash[:alert]).to match /not been approved/
     end
   end
 
   describe "GET new" do
     it "fails if not logged in" do
       get :new
-      response.status.should eq 401
+      expect(response.status).to eq 401
     end
 
     it "assigns a new event as @event" do
       set_logged_in_user
       get :new
-      assigns(:event).should be_a_new(Event)
+      expect(assigns(:event)).to be_a_new(Event)
     end
   end
 
   describe "POST create" do
     it "fails if not logged in" do
       post :create, :event => valid_attributes
-      response.status.should eq 401
+      expect(response.status).to eq 401
     end
 
     describe "with valid params" do
@@ -153,15 +153,15 @@ describe EventsController do
       it "assigns a newly created event as @event" do
         set_logged_in_user
         post :create, :event => valid_attributes
-        assigns(:event).should be_a(Event)
-        assigns(:event).should be_persisted
+        expect(assigns(:event)).to be_a(Event)
+        expect(assigns(:event)).to be_persisted
       end
 
       it "redirects to the created event" do
         Event.delete_all
         set_logged_in_user
         post :create, :event => valid_attributes
-        response.should redirect_to(Event.last)
+        expect(response).to redirect_to(Event.last)
       end
     end
 
@@ -169,17 +169,17 @@ describe EventsController do
       it "assigns a newly created but unsaved event as @event" do
         set_logged_in_user
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         post :create, :event => {}
-        assigns(:event).should be_a_new(Event)
+        expect(assigns(:event)).to be_a_new(Event)
       end
 
       it "re-renders the 'new' template" do
         set_logged_in_user
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         post :create, :event => {}
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
 
@@ -187,16 +187,16 @@ describe EventsController do
       it "saves and posts the event" do
         set_logged_in_admin
         post :create, :event => valid_attributes
-        request.flash[:notice].should eq 'The event has been saved.'
-        assigns(:event).is_approved.should be_true
+        expect(request.flash[:notice]).to eq 'The event has been saved.'
+        expect(assigns(:event).is_approved).to be_truthy
       end
     end
     describe "as non-admin user" do
       it "saves and submits the event for review" do
         set_logged_in_user
         post :create, :event => valid_attributes
-        request.flash[:notice].should eq 'The event has been submitted.'
-        assigns(:event).is_approved.should be_false
+        expect(request.flash[:notice]).to eq 'The event has been submitted.'
+        expect(assigns(:event).is_approved).to be_falsey
       end
     end
   end
@@ -206,14 +206,14 @@ describe EventsController do
       set_logged_in_user
       event = FactoryGirl.create(:event)
       get :edit, :id => event.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "assigns the requested event as @event" do
       set_logged_in_admin
       event = FactoryGirl.create(:event)
       get :edit, :id => event.id
-      assigns(:event).should eq(event)
+      expect(assigns(:event)).to eq(event)
     end
   end
 
@@ -222,7 +222,7 @@ describe EventsController do
       set_logged_in_user
       event = FactoryGirl.create(:event)
       patch :update, id: event.id, event: { 'these' => 'params' }
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     describe "with valid params" do
@@ -233,7 +233,7 @@ describe EventsController do
         # specifies that the Event created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        Event.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Event).to receive(:update).with('these' => 'params')
         patch :update, id: event.id, event: { 'these' => 'params' }
       end
 
@@ -241,14 +241,14 @@ describe EventsController do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
         patch :update, id: event.id, event: valid_attributes
-        assigns(:event).should eq(event)
+        expect(assigns(:event)).to eq(event)
       end
 
       it "redirects to the event" do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
         patch :update, id: event.id, event: valid_attributes
-        response.should redirect_to(event)
+        expect(response).to redirect_to(event)
       end
     end
 
@@ -257,18 +257,18 @@ describe EventsController do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         patch :update, id: event.id, event: {}
-        assigns(:event).should eq(event)
+        expect(assigns(:event)).to eq(event)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         event = FactoryGirl.create(:event)
         # Trigger the behavior that occurs when invalid params are submitted
-        Event.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Event).to receive(:save).and_return(false)
         patch :update, id: event.id, event: {}
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -278,14 +278,14 @@ describe EventsController do
       set_logged_in_user
       event = FactoryGirl.create(:event)
       get :delete, :id => event.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "shows a form for confirming deletion of an event" do
       set_logged_in_admin
-      Event.stub(:find).with("37") { mock_event }
+      allow(Event).to receive(:find).with("37") { mock_event }
       get :delete, :id => "37"
-      assigns(:event).should be(mock_event)
+      expect(assigns(:event)).to be(mock_event)
     end
   end
 
@@ -294,7 +294,7 @@ describe EventsController do
       set_logged_in_user
       event = FactoryGirl.create(:event)
       delete :destroy, :id => event.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "destroys the requested event" do
@@ -309,7 +309,7 @@ describe EventsController do
       set_logged_in_admin
       event = FactoryGirl.create(:event)
       delete :destroy, :id => event.id
-      response.should redirect_to(events_url)
+      expect(response).to redirect_to(events_url)
     end
   end
 
@@ -319,19 +319,19 @@ describe EventsController do
     it "requires the user to have authority" do
       set_logged_in_user
       get :approve, :id => event.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "shows a form for confirming approval of an event" do
       set_logged_in_admin
       get :approve, :id => event.id
-      response.should render_template("approve")
+      expect(response).to render_template("approve")
     end
     it "should redirect to the event if already approved" do
       event.approve_by(@user_admin)
       set_logged_in_admin
       get :approve, :id => event.id
-      response.should redirect_to(event)
+      expect(response).to redirect_to(event)
     end
   end
 
@@ -340,27 +340,27 @@ describe EventsController do
     it "requires the user to have authority" do
       set_logged_in_user
       post :set_approved, :id => event.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "approves the requested event" do
       set_logged_in_admin
       post :set_approved, :id => event.id
       event.reload
-      event.is_approved?.should be_true
+      expect(event.is_approved?).to be_truthy
     end
 
     it "redirects to the event" do
       set_logged_in_admin
       post :set_approved, :id => event.id
-      response.should redirect_to(event)
+      expect(response).to redirect_to(event)
     end
 
     it "posts an alert flash if fails to approve" do
       set_logged_in_admin
-      Event.any_instance.stub(:approve_by).and_return(false)
+      allow_any_instance_of(Event).to receive(:approve_by).and_return(false)
       post :set_approved, :id => event.id
-      request.flash[:alert].should match /[Ff]ailed/
+      expect(request.flash[:alert]).to match /[Ff]ailed/
     end
   end
 
@@ -370,13 +370,13 @@ describe EventsController do
     it "requires the user to have authority" do
       set_logged_in_user
       get :merge, :id => event.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "shows a form for merging with another event" do
       set_logged_in_admin
       get :merge, :id => event.id
-      response.should render_template("merge")
+      expect(response).to render_template("merge")
     end
 
     it "shows a list of other events on the same day" do
@@ -409,7 +409,7 @@ describe EventsController do
     it "requires the user to have authority" do
       set_logged_in_user
       post :perform_merge, :id => event.id, :merge_with => merge_with.id
-      response.status.should eq 403
+      expect(response.status).to eq 403
     end
 
     it "deletes the event" do
@@ -422,13 +422,13 @@ describe EventsController do
     it "assigns merge conflicts to @conflicts" do
       set_logged_in_admin
       post :perform_merge, :id => event.id, :merge_with => merge_with.id
-      assigns(:conflicts)[:title].should eq 'source'
+      expect(assigns(:conflicts)[:title]).to eq 'source'
     end
 
     it "shows the merge results to the event" do
       set_logged_in_admin
       post :perform_merge, :id => event.id, :merge_with => merge_with.id
-      response.should render_template("perform_merge")
+      expect(response).to render_template("perform_merge")
     end
   end
 

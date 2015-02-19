@@ -41,7 +41,7 @@ describe PartyPresenter do
       expect( result ).to match /<\/li>\z/
     end
     it 'should be html safe' do
-      expect( presenter.present_as_list_item.html_safe? ).to be_true
+      expect( presenter.present_as_list_item.html_safe? ).to be_truthy
     end
     context 'with an ended_on date' do
       let(:party_extra_attrs) { $party_extra_attrs = {ended_on: '2009-08-07'.to_date} }
@@ -83,7 +83,7 @@ describe PartyPresenter do
       it 'should not include “party-unregistered” in the class of the h1 element' do
         expect( presenter.present_heading.match(
           /<h1 (?:|[^>] )class="(?:|[^"]* )party-unregistered(?:| [^"]*)"/
-        )).to be_false
+        )).to be_falsey
       end
     end
     context 'with an unregistered party' do
@@ -95,7 +95,7 @@ describe PartyPresenter do
       end
     end
     it 'should be html safe' do
-      expect( presenter.present_heading.html_safe? ).to be_true
+      expect( presenter.present_heading.html_safe? ).to be_truthy
     end
   end
 
@@ -121,7 +121,7 @@ describe PartyPresenter do
         expect( presenter.present_dates ).to match /Established on April 5, 2003\./
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
     end
     context 'with all 3 dates' do
@@ -142,7 +142,7 @@ describe PartyPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
       context 'with a custom separator' do
         it 'should return the plain dates, separated by the custom separator' do
@@ -151,7 +151,7 @@ describe PartyPresenter do
           )
         end
         it 'should be html safe' do
-          expect( presenter.present_dates.html_safe? ).to be_true
+          expect( presenter.present_dates.html_safe? ).to be_truthy
         end
       end
     end

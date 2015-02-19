@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'levels_controller'
 
-describe LevelsController do
+describe LevelsController, type: :controller do
 
   before(:all) do
     Level.delete_all
@@ -15,10 +15,10 @@ describe LevelsController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -29,7 +29,7 @@ describe LevelsController do
 
   describe 'GET index' do
     before(:each) do
-      Level.stub(:all).and_return([level])
+      allow(Level).to receive(:all).and_return([level])
       get :index
     end
     it 'assigns all levels as @levels' do
@@ -151,7 +151,7 @@ describe LevelsController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Level.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Level).to receive(:save).and_return(false)
         post :create, level: {}
       end
       it 'assigns a newly created but unsaved level as @level' do
@@ -203,7 +203,7 @@ describe LevelsController do
     describe 'with valid params' do
       it 'updates the requested level' do
         set_logged_in_admin
-        Level.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
+        expect_any_instance_of(Level).to receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: level.filename, level: { 'these' => 'params' }
       end
       context 'with attributes' do
@@ -230,7 +230,7 @@ describe LevelsController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Level.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Level).to receive(:save).and_return(false)
         patch :update, id: level.filename, level: {}
       end
       it 'assigns the level as @level' do

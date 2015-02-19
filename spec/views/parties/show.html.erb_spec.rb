@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'parties/show.html.erb' do
+describe 'parties/show.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl', name: 'Level') }
   let(:party_attrs) do
     $party_attrs = {
@@ -52,7 +51,7 @@ describe 'parties/show.html.erb' do
   end
   context 'when registered' do
     it 'does not render the heading with the “party-unregistered” class' do
-      expect( rendered.match /<h1(?:| [^>]*)unregistered[^>]*>/ ).to be_false
+      expect( rendered.match /<h1(?:| [^>]*)unregistered[^>]*>/ ).to be_falsey
     end
   end
   context 'when not registered' do

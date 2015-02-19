@@ -3,6 +3,7 @@
 --
 
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -134,11 +135,11 @@ CREATE TABLE ballots (
     election_id integer NOT NULL,
     office_id integer NOT NULL,
     "position" integer DEFAULT 999 NOT NULL,
-    section character varying(255),
+    section character varying,
     term_start_on date,
     term_end_on date,
     is_byelection boolean DEFAULT false NOT NULL,
-    url character varying(255),
+    url character varying,
     description text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -174,8 +175,8 @@ CREATE TABLE candidates (
     person_id integer NOT NULL,
     party_id integer,
     submitter_id integer,
-    filename character varying(255) NOT NULL,
-    name character varying(255) NOT NULL,
+    filename character varying NOT NULL,
+    name character varying NOT NULL,
     is_rumoured boolean DEFAULT false NOT NULL,
     is_confirmed boolean DEFAULT false NOT NULL,
     is_incumbent boolean DEFAULT false NOT NULL,
@@ -216,25 +217,25 @@ ALTER SEQUENCE candidates_id_seq OWNED BY candidates.id;
 CREATE TABLE contacts (
     id integer NOT NULL,
     item_id integer NOT NULL,
-    item_type character varying(255) NOT NULL,
+    item_type character varying NOT NULL,
     "position" integer DEFAULT 999 NOT NULL,
     is_public boolean DEFAULT false NOT NULL,
     confirmed_at timestamp without time zone,
     expires_at timestamp without time zone,
-    name character varying(255),
-    organization character varying(255),
-    email character varying(255),
-    twitter character varying(255),
-    url character varying(255),
-    phone character varying(255),
-    phone2 character varying(255),
-    fax character varying(255),
-    address1 character varying(255),
-    address2 character varying(255),
-    city character varying(255),
-    province character varying(255),
-    country character varying(255),
-    postal character varying(255),
+    name character varying,
+    organization character varying,
+    email character varying,
+    twitter character varying,
+    url character varying,
+    phone character varying,
+    phone2 character varying,
+    fax character varying,
+    address1 character varying,
+    address2 character varying,
+    city character varying,
+    province character varying,
+    country character varying,
+    postal character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -335,7 +336,7 @@ CREATE TABLE elections (
     id integer NOT NULL,
     level_id integer,
     filename character varying(63) NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying NOT NULL,
     start_on date,
     end_on date,
     description text,
@@ -535,7 +536,7 @@ CREATE TABLE levels (
     id integer NOT NULL,
     parent_id integer,
     filename character varying(63) NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying NOT NULL,
     url text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -605,8 +606,8 @@ CREATE TABLE offices (
     level_id integer NOT NULL,
     previous_id integer,
     filename character varying(63) NOT NULL,
-    name character varying(255) NOT NULL,
-    title character varying(255),
+    name character varying NOT NULL,
+    title character varying,
     "position" integer DEFAULT 0 NOT NULL,
     established_on date,
     ended_on date,
@@ -679,12 +680,12 @@ ALTER SEQUENCE pages_id_seq OWNED BY pages.id;
 CREATE TABLE parties (
     id integer NOT NULL,
     level_id integer NOT NULL,
-    filename character varying(255) NOT NULL,
-    name character varying(255) NOT NULL,
-    abbrev character varying(255) NOT NULL,
+    filename character varying NOT NULL,
+    name character varying NOT NULL,
+    abbrev character varying NOT NULL,
     is_registered boolean DEFAULT false NOT NULL,
-    colour character varying(255),
-    url character varying(255),
+    colour character varying,
+    url character varying,
     description text,
     established_on date,
     registered_on date,
@@ -756,9 +757,9 @@ CREATE TABLE people (
     id integer NOT NULL,
     user_id integer,
     submitter_id integer,
-    filename character varying(255) NOT NULL,
-    fullname character varying(255) NOT NULL,
-    aliases character varying(255)[] DEFAULT '{}'::character varying[] NOT NULL,
+    filename character varying NOT NULL,
+    fullname character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     bio text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -2142,3 +2143,4 @@ INSERT INTO schema_migrations (version) VALUES ('7');
 INSERT INTO schema_migrations (version) VALUES ('8');
 
 INSERT INTO schema_migrations (version) VALUES ('9');
+

@@ -37,9 +37,9 @@ describe Wayground::TagList do
   describe '#tags=' do
     it 'should call through to the sub-methods' do
       list = Wayground::TagList.new
-      list.should_receive(:determine_existing_tags)
-      list.should_receive(:figure_out_tags_to_include).with('the tag string')
-      list.should_receive(:remove_leftover_existing_tags)
+      expect(list).to receive(:determine_existing_tags)
+      expect(list).to receive(:figure_out_tags_to_include).with('the tag string')
+      expect(list).to receive(:remove_leftover_existing_tags)
       list.tags = 'the tag string'
     end
     it 'should handle the whole stack' do
@@ -77,9 +77,9 @@ describe Wayground::TagList do
   describe '#figure_out_tags_to_include' do
     it 'should call include_tag_title for each title in the given string' do
       list = Wayground::TagList.new
-      list.should_receive(:include_tag_title).with('a')
-      list.should_receive(:include_tag_title).with('b')
-      list.should_receive(:include_tag_title).with('c')
+      expect(list).to receive(:include_tag_title).with('a')
+      expect(list).to receive(:include_tag_title).with('b')
+      expect(list).to receive(:include_tag_title).with('c')
       list.figure_out_tags_to_include('a,b,c')
     end
   end
@@ -104,7 +104,7 @@ describe Wayground::TagList do
     end
     it 'should call through to ensure_tag_title' do
       list = Wayground::TagList.new
-      list.should_receive(:ensure_tag_title).with('A Tag')
+      expect(list).to receive(:ensure_tag_title).with('A Tag')
       list.include_tag_title('A Tag')
     end
     it 'should not create duplicates' do
@@ -119,13 +119,13 @@ describe Wayground::TagList do
   describe '#ensure_tag_title' do
     it 'should call through to update_existing_tag' do
       list = Wayground::TagList.new
-      list.should_receive(:update_existing_tag).with('ensure').and_return(true)
+      expect(list).to receive(:update_existing_tag).with('ensure').and_return(true)
       list.ensure_tag_title('ensure')
     end
     it 'should call through to new_tag when it doesn’t update_existing_tag' do
       list = Wayground::TagList.new
-      list.stub(:update_existing_tag).with('ensure').and_return(false)
-      list.should_receive(:new_tag).with('ensure')
+      allow(list).to receive(:update_existing_tag).with('ensure').and_return(false)
+      expect(list).to receive(:new_tag).with('ensure')
       list.ensure_tag_title('ensure')
     end
   end
@@ -149,7 +149,7 @@ describe Wayground::TagList do
         @list.determine_existing_tags
       end
       it 'should not update the tag' do
-        Tag.any_instance.should_not_receive(:update!)
+        expect_any_instance_of(Tag).not_to receive(:update!)
         @list.update_existing_tag('same title')
       end
       it 'should return the tag' do
@@ -200,8 +200,8 @@ describe Wayground::TagList do
       tags = [taga, tagb]
       list = Wayground::TagList.new(tags: tags)
       list.determine_existing_tags
-      taga.should_receive(:destroy)
-      tagb.should_receive(:destroy)
+      expect(taga).to receive(:destroy)
+      expect(tagb).to receive(:destroy)
       list.remove_leftover_existing_tags
     end
   end

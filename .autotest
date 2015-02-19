@@ -1,6 +1,5 @@
 require 'autotest/bundler'
 require 'autotest/fsevent'
-require 'autotest/growl'
 require 'autotest/timestamp'
 
 Autotest.add_hook :initialize do |at|

@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'elections/show.html.erb' do
+describe 'elections/show.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:election_attrs) do
     $election_attrs = {

@@ -1,7 +1,7 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'page_metadata'
 
-describe "events/index.html.erb" do
+describe 'events/index.html.erb', type: :view do
   before(:each) do
     assign(:events, [
       stub_model(Event,
@@ -53,12 +53,14 @@ describe "events/index.html.erb" do
         :location_url => "Location Url"
       )
     ])
-    view.stub(:add_submenu_item)
+    rspec_stubs_lazy
+    allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
 
   it "renders a list of events" do
     @page_metadata = Wayground::PageMetadata.new(title: 'Title')
-    view.stub(:page_metadata).and_return(@page_metadata)
+    allow(view).to receive(:page_metadata).and_return(@page_metadata)
     render template: 'events/index.html.erb'
     assert_select "div.vevent>h4>span.status", :text => "Cancelled:", :count => 1
     assert_select "div.vevent>h4>time.dtstart", :text => "11:00am", :count => 2

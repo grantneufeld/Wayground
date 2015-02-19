@@ -49,37 +49,37 @@ describe ContactPresenter do
       }
     end
     it 'should be the presented url, email, phone, short address, and twitter' do
-      presenter.stub(:present_url).and_return('url')
-      presenter.stub(:present_email).and_return('email')
-      presenter.stub(:present_phone).and_return('phone')
-      presenter.stub(:present_phone2).and_return('phone2')
-      presenter.stub(:present_fax).and_return('fax')
-      presenter.stub(:present_address).and_return('address')
-      presenter.stub(:present_twitter).and_return('twitter')
+      allow(presenter).to receive(:present_url).and_return('url')
+      allow(presenter).to receive(:present_email).and_return('email')
+      allow(presenter).to receive(:present_phone).and_return('phone')
+      allow(presenter).to receive(:present_phone2).and_return('phone2')
+      allow(presenter).to receive(:present_fax).and_return('fax')
+      allow(presenter).to receive(:present_address).and_return('address')
+      allow(presenter).to receive(:present_twitter).and_return('twitter')
       expect( presenter.present_attributes ).to eq "url\nemail\nphone\nphone2\nfax\naddress\ntwitter"
     end
     it 'should not include blank parts' do
-      presenter.stub(:present_url).and_return('')
-      presenter.stub(:present_email).and_return('')
-      presenter.stub(:present_phone).and_return('phone')
-      presenter.stub(:present_phone2).and_return('')
-      presenter.stub(:present_fax).and_return('')
-      presenter.stub(:present_address).and_return('')
-      presenter.stub(:present_twitter).and_return('')
+      allow(presenter).to receive(:present_url).and_return('')
+      allow(presenter).to receive(:present_email).and_return('')
+      allow(presenter).to receive(:present_phone).and_return('phone')
+      allow(presenter).to receive(:present_phone2).and_return('')
+      allow(presenter).to receive(:present_fax).and_return('')
+      allow(presenter).to receive(:present_address).and_return('')
+      allow(presenter).to receive(:present_twitter).and_return('')
       expect( presenter.present_attributes ).to eq "phone"
     end
     it 'should accept a custom separator' do
-      presenter.stub(:present_url).and_return('url')
-      presenter.stub(:present_email).and_return('email')
-      presenter.stub(:present_phone).and_return('phone')
-      presenter.stub(:present_phone2).and_return('phone2')
-      presenter.stub(:present_fax).and_return('fax')
-      presenter.stub(:present_address).and_return('address')
-      presenter.stub(:present_twitter).and_return('twitter')
+      allow(presenter).to receive(:present_url).and_return('url')
+      allow(presenter).to receive(:present_email).and_return('email')
+      allow(presenter).to receive(:present_phone).and_return('phone')
+      allow(presenter).to receive(:present_phone2).and_return('phone2')
+      allow(presenter).to receive(:present_fax).and_return('fax')
+      allow(presenter).to receive(:present_address).and_return('address')
+      allow(presenter).to receive(:present_twitter).and_return('twitter')
       expect( presenter.present_attributes('•') ).to eq "url•email•phone•phone2•fax•address•twitter"
     end
     it 'should be html safe' do
-      expect( presenter.present_attributes.html_safe? ).to be_true
+      expect( presenter.present_attributes.html_safe? ).to be_truthy
     end
   end
 
@@ -115,31 +115,31 @@ describe ContactPresenter do
       expect( presenter.present_attributes_short ).not_to match /•/
     end
     it 'should be the presented url, email, phone, short address, and twitter' do
-      presenter.stub(:present_url).and_return('url')
-      presenter.stub(:present_email).and_return('email')
-      presenter.stub(:present_phone).and_return('phone')
-      presenter.stub(:present_address_short).and_return('address')
-      presenter.stub(:present_twitter).and_return('twitter')
+      allow(presenter).to receive(:present_url).and_return('url')
+      allow(presenter).to receive(:present_email).and_return('email')
+      allow(presenter).to receive(:present_phone).and_return('phone')
+      allow(presenter).to receive(:present_address_short).and_return('address')
+      allow(presenter).to receive(:present_twitter).and_return('twitter')
       expect( presenter.present_attributes_short ).to eq "url\nemail\nphone\naddress\ntwitter"
     end
     it 'should not include blank parts' do
-      presenter.stub(:present_url).and_return('')
-      presenter.stub(:present_email).and_return('')
-      presenter.stub(:present_phone).and_return('phone')
-      presenter.stub(:present_address_short).and_return('')
-      presenter.stub(:present_twitter).and_return('')
+      allow(presenter).to receive(:present_url).and_return('')
+      allow(presenter).to receive(:present_email).and_return('')
+      allow(presenter).to receive(:present_phone).and_return('phone')
+      allow(presenter).to receive(:present_address_short).and_return('')
+      allow(presenter).to receive(:present_twitter).and_return('')
       expect( presenter.present_attributes_short ).to eq "phone"
     end
     it 'should accept a custom separator' do
-      presenter.stub(:present_url).and_return('url')
-      presenter.stub(:present_email).and_return('email')
-      presenter.stub(:present_phone).and_return('phone')
-      presenter.stub(:present_address_short).and_return('address')
-      presenter.stub(:present_twitter).and_return('twitter')
+      allow(presenter).to receive(:present_url).and_return('url')
+      allow(presenter).to receive(:present_email).and_return('email')
+      allow(presenter).to receive(:present_phone).and_return('phone')
+      allow(presenter).to receive(:present_address_short).and_return('address')
+      allow(presenter).to receive(:present_twitter).and_return('twitter')
       expect( presenter.present_attributes_short('•') ).to eq "url•email•phone•address•twitter"
     end
     it 'should be html safe' do
-      expect( presenter.present_attributes_short.html_safe? ).to be_true
+      expect( presenter.present_attributes_short.html_safe? ).to be_truthy
     end
   end
 
@@ -149,7 +149,7 @@ describe ContactPresenter do
         expect( presenter.present_url ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_url.html_safe? ).to be_true
+        expect( presenter.present_url.html_safe? ).to be_truthy
       end
     end
     context 'with url set' do
@@ -173,7 +173,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_url.html_safe? ).to be_true
+        expect( presenter.present_url.html_safe? ).to be_truthy
       end
     end
   end
@@ -184,7 +184,7 @@ describe ContactPresenter do
         expect( presenter.present_email ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_email.html_safe? ).to be_true
+        expect( presenter.present_email.html_safe? ).to be_truthy
       end
     end
     context 'with email set' do
@@ -207,7 +207,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_email.html_safe? ).to be_true
+        expect( presenter.present_email.html_safe? ).to be_truthy
       end
     end
   end
@@ -218,7 +218,7 @@ describe ContactPresenter do
         expect( presenter.present_phone ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_phone.html_safe? ).to be_true
+        expect( presenter.present_phone.html_safe? ).to be_truthy
       end
     end
     context 'with phone set' do
@@ -236,7 +236,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_phone.html_safe? ).to be_true
+        expect( presenter.present_phone.html_safe? ).to be_truthy
       end
     end
   end
@@ -247,7 +247,7 @@ describe ContactPresenter do
         expect( presenter.present_phone2 ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_phone2.html_safe? ).to be_true
+        expect( presenter.present_phone2.html_safe? ).to be_truthy
       end
     end
     context 'with phone2 set' do
@@ -265,7 +265,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_phone2.html_safe? ).to be_true
+        expect( presenter.present_phone2.html_safe? ).to be_truthy
       end
     end
   end
@@ -276,7 +276,7 @@ describe ContactPresenter do
         expect( presenter.present_fax ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_fax.html_safe? ).to be_true
+        expect( presenter.present_fax.html_safe? ).to be_truthy
       end
     end
     context 'with fax set' do
@@ -294,7 +294,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_fax.html_safe? ).to be_true
+        expect( presenter.present_fax.html_safe? ).to be_truthy
       end
     end
   end
@@ -305,7 +305,7 @@ describe ContactPresenter do
         expect( presenter.present_address ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_address.html_safe? ).to be_true
+        expect( presenter.present_address.html_safe? ).to be_truthy
       end
     end
     context 'with with both address and locality set' do
@@ -320,30 +320,30 @@ describe ContactPresenter do
         )
       end
       it 'should should include the address and locality, wrapped in a span of class “adr”' do
-        presenter.stub(:present_street_address).and_return('•')
-        presenter.stub(:present_locality).and_return('¶')
+        allow(presenter).to receive(:present_street_address).and_return('•')
+        allow(presenter).to receive(:present_locality).and_return('¶')
         expect( presenter.present_address(':') ).to match(/<span class="adr">•:¶<\/span>/)
       end
       it 'should use a default separator' do
-        presenter.stub(:present_street_address).and_return('•')
-        presenter.stub(:present_locality).and_return('¶')
+        allow(presenter).to receive(:present_street_address).and_return('•')
+        allow(presenter).to receive(:present_locality).and_return('¶')
         expect( presenter.present_address ).to match(/•;\n¶/)
       end
       it 'should be html safe' do
-        expect( presenter.present_address.html_safe? ).to be_true
+        expect( presenter.present_address.html_safe? ).to be_truthy
       end
     end
     context 'with with just the address set' do
       let(:contact_attrs) { $contact_attrs = { address1: 'The Location' } }
       it 'should should include the address , wrapped in a span of class “adr”' do
-        presenter.stub(:present_street_address).and_return('•')
+        allow(presenter).to receive(:present_street_address).and_return('•')
         expect( presenter.present_address(':') ).to match(/<span class="adr">•<\/span>/)
       end
     end
     context 'with with just the locality set' do
       let(:contact_attrs) { $contact_attrs = { city: 'Townsville' } }
       it 'should should include the address , wrapped in a span of class “adr”' do
-        presenter.stub(:present_locality).and_return('¶')
+        allow(presenter).to receive(:present_locality).and_return('¶')
         expect( presenter.present_address(':') ).to match(/<span class="adr">¶<\/span>/)
       end
     end
@@ -355,13 +355,13 @@ describe ContactPresenter do
         expect( presenter.present_address_short ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_address_short.html_safe? ).to be_true
+        expect( presenter.present_address_short.html_safe? ).to be_truthy
       end
     end
     context 'with with both address1 and address2 set' do
       let(:contact_attrs) { $contact_attrs = { address1: 'The Location', address2: '123 Street' } }
       it 'should should include the street address, wrapped in a span of class “adr”' do
-        presenter.stub(:present_street_address).and_return('•')
+        allow(presenter).to receive(:present_street_address).and_return('•')
         expect( presenter.present_address_short ).to match(/<span class="adr">•<\/span>/)
       end
       it 'should wrap the response in a span element of class “address”' do
@@ -374,7 +374,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_address_short.html_safe? ).to be_true
+        expect( presenter.present_address_short.html_safe? ).to be_truthy
       end
     end
   end
@@ -385,7 +385,7 @@ describe ContactPresenter do
         expect( presenter.present_street_address ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_street_address.html_safe? ).to be_true
+        expect( presenter.present_street_address.html_safe? ).to be_truthy
       end
     end
     context 'with address1 set' do
@@ -394,7 +394,7 @@ describe ContactPresenter do
         expect( presenter.present_street_address ).to eq '<span class="street-address">The Location</span>'
       end
       it 'should be html safe' do
-        expect( presenter.present_street_address.html_safe? ).to be_true
+        expect( presenter.present_street_address.html_safe? ).to be_truthy
       end
     end
     context 'with address2 set' do
@@ -403,7 +403,7 @@ describe ContactPresenter do
         expect( presenter.present_street_address ).to eq '<span class="street-address">123 Street</span>'
       end
       it 'should be html safe' do
-        expect( presenter.present_street_address.html_safe? ).to be_true
+        expect( presenter.present_street_address.html_safe? ).to be_truthy
       end
     end
     context 'with with both address1 and address2 set' do
@@ -414,7 +414,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_street_address.html_safe? ).to be_true
+        expect( presenter.present_street_address.html_safe? ).to be_truthy
       end
     end
   end
@@ -425,7 +425,7 @@ describe ContactPresenter do
         expect( presenter.present_locality ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_locality.html_safe? ).to be_true
+        expect( presenter.present_locality.html_safe? ).to be_truthy
       end
     end
     context 'with just city set' do
@@ -434,7 +434,7 @@ describe ContactPresenter do
         expect( presenter.present_locality ).to eq '<span class="locality">Townsville</span>'
       end
       it 'should be html safe' do
-        expect( presenter.present_locality.html_safe? ).to be_true
+        expect( presenter.present_locality.html_safe? ).to be_truthy
       end
     end
     context 'with just province set' do
@@ -443,7 +443,7 @@ describe ContactPresenter do
         expect( presenter.present_locality ).to eq '<span class="region">Chunkland</span>'
       end
       it 'should be html safe' do
-        expect( presenter.present_locality.html_safe? ).to be_true
+        expect( presenter.present_locality.html_safe? ).to be_truthy
       end
     end
     context 'with just country set' do
@@ -452,7 +452,7 @@ describe ContactPresenter do
         expect( presenter.present_locality ).to eq '<span class="country-name">Landistan</span>'
       end
       it 'should be html safe' do
-        expect( presenter.present_locality.html_safe? ).to be_true
+        expect( presenter.present_locality.html_safe? ).to be_truthy
       end
     end
     context 'with just postal set' do
@@ -461,7 +461,7 @@ describe ContactPresenter do
         expect( presenter.present_locality ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_locality.html_safe? ).to be_true
+        expect( presenter.present_locality.html_safe? ).to be_truthy
       end
     end
     context 'with all locality fields set' do
@@ -479,7 +479,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_locality.html_safe? ).to be_true
+        expect( presenter.present_locality.html_safe? ).to be_truthy
       end
     end
   end
@@ -490,7 +490,7 @@ describe ContactPresenter do
         expect( presenter.present_twitter ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_twitter.html_safe? ).to be_true
+        expect( presenter.present_twitter.html_safe? ).to be_truthy
       end
     end
     context 'with twitter set' do
@@ -513,7 +513,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_twitter.html_safe? ).to be_true
+        expect( presenter.present_twitter.html_safe? ).to be_truthy
       end
     end
   end
@@ -524,7 +524,7 @@ describe ContactPresenter do
         expect( presenter.present_dates ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
     end
     context 'with confirmed_at set' do
@@ -537,7 +537,7 @@ describe ContactPresenter do
         expect( presenter.present_dates ).to match /<\/p>[\r\n]*\z/
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
     end
     context 'with expires_at set to the past' do
@@ -550,7 +550,7 @@ describe ContactPresenter do
         expect( presenter.present_dates ).to match /<\/p>[\r\n]*\z/
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
     end
     context 'with expires_at set to the future' do
@@ -563,7 +563,7 @@ describe ContactPresenter do
         expect( presenter.present_dates ).to match /<\/p>[\r\n]*\z/
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
     end
     context 'with both dates set' do
@@ -585,7 +585,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_true
+        expect( presenter.present_dates.html_safe? ).to be_truthy
       end
     end
   end
@@ -596,7 +596,7 @@ describe ContactPresenter do
         expect( presenter.present_actions ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_actions.html_safe? ).to be_true
+        expect( presenter.present_actions.html_safe? ).to be_truthy
       end
     end
     context 'with a user' do
@@ -605,7 +605,7 @@ describe ContactPresenter do
         expect( presenter.present_actions ).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_actions.html_safe? ).to be_true
+        expect( presenter.present_actions.html_safe? ).to be_truthy
       end
     end
     context 'with an admin user' do
@@ -621,7 +621,7 @@ describe ContactPresenter do
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_actions.html_safe? ).to be_true
+        expect( presenter.present_actions.html_safe? ).to be_truthy
       end
     end
   end

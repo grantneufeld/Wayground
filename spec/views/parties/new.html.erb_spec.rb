@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'parties/new.html.erb' do
+describe 'parties/new.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:party) do
     $party = level.parties.build

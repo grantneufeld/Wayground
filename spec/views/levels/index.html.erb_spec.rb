@@ -1,15 +1,14 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe "levels/index.html.erb" do
+describe 'levels/index.html.erb', type: :view do
   let(:level_attrs) do
     $level_attrs = { name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/' }
   end
   let(:level) { $level = Level.new(level_attrs) }
 
   before(:each) do
-    level.stub(:id).and_return(123)
+    allow(level).to receive(:id).and_return(123)
     assign(:levels, [level, level])
     render
   end

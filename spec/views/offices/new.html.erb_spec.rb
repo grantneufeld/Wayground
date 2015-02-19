@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'offices/new.html.erb' do
+describe 'offices/new.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
     $office = level.offices.build(url: 'http://no.previous/')

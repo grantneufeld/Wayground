@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "projects/show" do
+describe 'projects/show', type: :view do
   before(:each) do
     @project = assign(:project, stub_model(Project,
       :parent => stub_model(Project, :name => 'Parent Project'),
@@ -23,11 +23,11 @@ describe "projects/show" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(/Parent Project/)
-    rendered.should match(/User Who Created/)
-    rendered.should match(/User Who Owns/)
-    rendered.should match(/view_spec_filename/)
-    rendered.should match(/View Spec Name/)
-    rendered.should match(/View Spec Description/)
+    expect(rendered).to match(/Parent Project/)
+    expect(rendered).to match(/User Who Created/)
+    expect(rendered).to match(/User Who Owns/)
+    expect(rendered).to match(/view_spec_filename/)
+    expect(rendered).to match(/View Spec Name/)
+    expect(rendered).to match(/View Spec Description/)
   end
 end

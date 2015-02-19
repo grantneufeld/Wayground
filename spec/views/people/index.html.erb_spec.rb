@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'person'
 
-describe "people/index.html.erb" do
+describe 'people/index.html.erb', type: :view do
   let(:person_attrs) do
     $person_attrs = { fullname: 'Stub Name', filename: 'stub_filename', bio: 'Stub bio.' }
   end

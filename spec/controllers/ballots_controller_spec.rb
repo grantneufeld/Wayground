@@ -9,7 +9,7 @@ require 'person'
 require 'candidate'
 require 'authority'
 
-describe BallotsController do
+describe BallotsController, type: :controller do
 
   before(:all) do
     Level.delete_all
@@ -37,10 +37,10 @@ describe BallotsController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -54,7 +54,7 @@ describe BallotsController do
 
   describe 'GET index' do
     before(:each) do
-      @election.stub(:ballots).and_return([ballot])
+      allow(@election).to receive(:ballots).and_return([ballot])
       get :index, level_id: @level.to_param, election_id: @election.to_param
     end
     it 'assigns all ballots as @ballots' do
@@ -176,7 +176,7 @@ describe BallotsController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Ballot.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Ballot).to receive(:save).and_return(false)
         post :create, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
       end
       it 'assigns a newly created but unsaved ballot as @ballot' do
@@ -229,7 +229,7 @@ describe BallotsController do
     describe 'with valid params' do
       it 'updates the requested ballot' do
         set_logged_in_admin
-        Ballot.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
+        expect_any_instance_of(Ballot).to receive(:update).with({ 'these' => 'params' }).and_return(true)
         patch :update, id: ballot.to_param, ballot: { 'these' => 'params' },
           level_id: @level.to_param, election_id: @election.to_param
       end
@@ -258,7 +258,7 @@ describe BallotsController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Ballot.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Ballot).to receive(:save).and_return(false)
         patch :update, id: ballot.to_param, ballot: {},
           level_id: @level.to_param, election_id: @election.to_param
       end

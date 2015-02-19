@@ -77,7 +77,7 @@ echo "Generating Rails Best Practices report..."
 bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
 echo ""
 echo "Generating reek report..."
-bundle exec reek --quiet --config config/reek.yml app/controllers app/models app/helpers app/presenters app/validators app/wayground lib > reports/reek.txt
+bundle exec reek --no-color --config config/reek.yml app/controllers app/models app/helpers app/presenters app/validators app/wayground lib > reports/reek.txt
 echo ""
 echo "Generating roodi report..."
 bundle exec roodi "app/**/*.rb" "lib/**/*.rb" > reports/roodi.txt
@@ -86,8 +86,8 @@ echo "Generating stats report..."
 bundle exec rake stats > reports/stats.txt
 echo ""
 echo "Generating tailor report..."
-bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --no-color app/**/*.rb > reports/tailor.txt
-bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --no-color lib/**/*.rb >> reports/tailor.txt
+bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --allow-unnecessary-double-quotes off --no-color app/**/*.rb > reports/tailor.txt
+bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --allow-unnecessary-double-quotes off --no-color lib/**/*.rb >> reports/tailor.txt
 echo ""
 
 echo "Please review the reports found in the project's 'reports' directory."

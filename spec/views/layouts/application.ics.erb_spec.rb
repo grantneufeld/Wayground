@@ -1,12 +1,12 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "layouts/application.ics.erb" do
+describe 'layouts/application.ics.erb', type: :view do
   it "should render a standard icalendar header" do
     render template: 'layouts/application.ics.erb'
-    rendered.should match(/\ABEGIN:VCALENDAR(\r\n?|\n)VERSION:2\.0(\r\n?|\n)PRODID:-\/\/.+$/)
+    expect(rendered).to match(/\ABEGIN:VCALENDAR(\r\n?|\n)VERSION:2\.0(\r\n?|\n)PRODID:-\/\/.+$/)
   end
   it "should render a standard icalendar footer" do
     render template: 'layouts/application.ics.erb'
-    rendered.should match(/^END:VCALENDAR[\r\n]*\z/)
+    expect(rendered).to match(/^END:VCALENDAR[\r\n]*\z/)
   end
 end

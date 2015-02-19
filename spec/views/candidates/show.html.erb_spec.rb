@@ -1,8 +1,8 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
+require 'person'
 
-describe 'candidates/show.html.erb' do
+describe 'candidates/show.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:person) { $person = Person.new(filename: 'prsn') }
   let(:election) do

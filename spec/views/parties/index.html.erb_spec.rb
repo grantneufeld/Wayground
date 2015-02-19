@@ -1,8 +1,10 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
+require 'rspec-html-matchers'
 require 'level'
 
-describe 'parties/index.html.erb' do
+describe 'parties/index.html.erb', type: :view do
+  include RSpecHtmlMatchers
+
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:party_attrs) do
     $party_attrs = {
@@ -20,14 +22,14 @@ describe 'parties/index.html.erb' do
 
   before(:each) do
     assign(:level, level)
-    party.stub(:to_param).and_return('abc')
+    allow(party).to receive(:to_param).and_return('abc')
     assign(:parties, [party, party])
     render
   end
   it 'should present a list of the parties' do
-    assert_select 'ul' do
-      assert_select 'li', count: 2 do
-        assert_select 'a', href: '/levels/lvl/parties/stub_filename', text: 'Stub Name'
+    expect(rendered).to have_tag('ul') do
+      with_tag('li', count: 2) do
+        with_tag 'a', href: '/levels/lvl/parties/stub_filename', text: 'Stub Name'
       end
     end
   end

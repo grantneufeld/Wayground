@@ -1,11 +1,11 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'calendar_controller'
 require 'event'
 require 'user'
 
-describe CalendarController do
+describe CalendarController, type: :controller do
   before(:all) do
-    Event.destroy_all
+    Event.delete_all
     creator = User.first || FactoryGirl.create(:user, :name => 'Event Creator')
     # create some events
     @e1 = FactoryGirl.create(:event, user: creator,

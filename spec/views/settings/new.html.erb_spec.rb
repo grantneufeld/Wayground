@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "settings/new" do
+describe 'settings/new', type: :view do
   before(:each) do
     assign(:setting, stub_model(Setting,
       :key => "MyString",

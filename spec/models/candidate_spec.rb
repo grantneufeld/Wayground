@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'candidate'
 
-describe Candidate do
+describe Candidate, type: :model do
 
   before(:all) do
     Candidate.delete_all
@@ -14,7 +13,7 @@ describe Candidate do
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Democracy” area" do
-      Candidate.authority_area.should eq 'Democracy'
+      expect(Candidate.authority_area).to eq 'Democracy'
     end
   end
 
@@ -58,22 +57,22 @@ describe Candidate do
       expect( Candidate.new(name: name).name ).to eq name
     end
     it "should allow is_rumoured" do
-      expect( Candidate.new(is_rumoured: true).is_rumoured ).to be_true
+      expect( Candidate.new(is_rumoured: true).is_rumoured ).to be_truthy
     end
     it "should allow is_confirmed" do
-      expect( Candidate.new(is_confirmed: true).is_confirmed ).to be_true
+      expect( Candidate.new(is_confirmed: true).is_confirmed ).to be_truthy
     end
     it "should allow is_incumbent" do
-      expect( Candidate.new(is_incumbent: true).is_incumbent ).to be_true
+      expect( Candidate.new(is_incumbent: true).is_incumbent ).to be_truthy
     end
     it "should allow is_leader" do
-      expect( Candidate.new(is_leader: true).is_leader ).to be_true
+      expect( Candidate.new(is_leader: true).is_leader ).to be_truthy
     end
     it "should allow is_acclaimed" do
-      expect( Candidate.new(is_acclaimed: true).is_acclaimed ).to be_true
+      expect( Candidate.new(is_acclaimed: true).is_acclaimed ).to be_truthy
     end
     it "should allow is_elected" do
-      expect( Candidate.new(is_elected: true).is_elected ).to be_true
+      expect( Candidate.new(is_elected: true).is_elected ).to be_truthy
     end
     it "should allow announced_on" do
       announced_on = '2000-01-02'
@@ -130,34 +129,34 @@ describe Candidate do
     it "should validate with all required values" do
       candidate = @ballot.candidates.build(required)
       candidate.person = @person
-      expect( candidate.valid? ).to be_true
+      expect( candidate.valid? ).to be_truthy
     end
     describe 'of ballot' do
       it 'should fail if ballot is not set' do
         candidate = Candidate.new(required)
         candidate.person = @person
-        expect( candidate.valid? ).to be_false
+        expect( candidate.valid? ).to be_falsey
       end
     end
     describe 'of person' do
       it 'should fail if person is not set' do
         candidate = Candidate.new(required)
         candidate.person = @person
-        expect( candidate.valid? ).to be_false
+        expect( candidate.valid? ).to be_falsey
       end
       it 'should fail if there is already a candidate for the person for the ballot' do
         person = FactoryGirl.create(:person)
         existing_candidate = FactoryGirl.create(:candidate, ballot: @ballot, person: person)
         candidate = @ballot.candidates.build(required)
         candidate.person = person
-        expect( candidate.valid? ).to be_false
+        expect( candidate.valid? ).to be_falsey
       end
       it 'should validate if there is already a candidate for the person for a different ballot' do
         person = FactoryGirl.create(:person)
         different_ballot_candidacy = FactoryGirl.create(:candidate, person: person)
         candidate = @ballot.candidates.build(required)
         candidate.person = person
-        expect( candidate.valid? ).to be_true
+        expect( candidate.valid? ).to be_truthy
       end
     end
     describe "of filename" do
@@ -166,13 +165,13 @@ describe Candidate do
         FactoryGirl.create(:candidate, ballot: @ballot, filename: 'duplicate-on-ballot')
         candidate = @ballot.candidates.build(required.merge(filename: 'duplicate-on-ballot'))
         candidate.person = @person
-        expect( candidate.valid? ).to be_false
+        expect( candidate.valid? ).to be_falsey
       end
       it 'should validate if filename is a duplicate, but not for the ballot' do
         FactoryGirl.create(:candidate, person: @person, filename: 'duplicate')
         candidate = @ballot.candidates.build(required.merge(filename: 'duplicate'))
         candidate.person = @person
-        expect( candidate.valid? ).to be_true
+        expect( candidate.valid? ).to be_truthy
       end
     end
     describe "of name" do
@@ -181,13 +180,13 @@ describe Candidate do
         FactoryGirl.create(:candidate, ballot: @ballot, name: 'Duplicate On Ballot')
         candidate = @ballot.candidates.build(required.merge(name: 'Duplicate On Ballot'))
         candidate.person = @person
-        expect( candidate.valid? ).to be_false
+        expect( candidate.valid? ).to be_falsey
       end
       it 'should validate if name is a duplicate, but not for the ballot' do
         FactoryGirl.create(:candidate, person: @person, name: 'Duplicate')
         candidate = @ballot.candidates.build(required.merge(name: 'Duplicate'))
         candidate.person = @person
-        expect( candidate.valid? ).to be_true
+        expect( candidate.valid? ).to be_truthy
       end
     end
   end

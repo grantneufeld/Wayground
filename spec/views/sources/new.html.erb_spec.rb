@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe 'sources/new.html.erb' do
+describe 'sources/new.html.erb', type: :view do
   before(:each) do
     assign(:source, stub_model(Source,
       :processor => 'Mystring',

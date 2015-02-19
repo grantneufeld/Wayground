@@ -1,11 +1,10 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'election'
 
-describe 'ballots/new.html.erb' do
+describe 'ballots/new.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
-    $office = level.offices.build(filename: 'offc', name: 'Stub Name', filename: 'stub_filename')
+    $office = level.offices.build(filename: 'offc', name: 'Stub Name')
     $office.level = level
     $office
   end

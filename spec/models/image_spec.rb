@@ -1,7 +1,7 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'image'
 
-describe Image do
+describe Image, type: :model do
 
   describe "attribute mass assignment security" do
     it "should allow title" do
@@ -37,19 +37,19 @@ describe Image do
 
   describe "validations" do
     it "should validate with all blank values" do
-      expect( Image.new().valid? ).to be_true
+      expect( Image.new().valid? ).to be_truthy
     end
     it "should validate with a valid attribution url" do
-      expect( Image.new(attribution_url: 'http://test.tld/').valid? ).to be_true
+      expect( Image.new(attribution_url: 'http://test.tld/').valid? ).to be_truthy
     end
     it "should not validate with an invalid attribution url" do
-      expect( Image.new(attribution_url: 'not an url').valid? ).to be_false
+      expect( Image.new(attribution_url: 'not an url').valid? ).to be_falsey
     end
     it "should validate with a valid license url" do
-      expect( Image.new(license_url: 'http://license.tld/').valid? ).to be_true
+      expect( Image.new(license_url: 'http://license.tld/').valid? ).to be_truthy
     end
     it "should not validate with an invalid license url" do
-      expect( Image.new(license_url: 'not an url').valid? ).to be_false
+      expect( Image.new(license_url: 'not an url').valid? ).to be_falsey
     end
   end
 
@@ -73,21 +73,21 @@ describe Image do
     end
     context "with no variants" do
       it "should return nil" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         expect( @image.get_best_variant ).to eq nil
       end
     end
     context "with one variant" do
       it "should return the variant" do
-        @image.image_variants.destroy_all
+        @image.image_variants.delete_all
         variant = @image.image_variants.create!(style: 'scaled', url: 'http://a.tld', format: 'png')
         expect( @image.get_best_variant ).to eq variant
       end
     end
     context "with no original variants" do
       it "should return the largest scaled variant" do
-        @image.image_variants.destroy_all
-        variant1 = @image.image_variants.build(style: 'scaled', url: 'http://a.tld', format: 'png',
+        @image.image_variants.delete_all
+        variant1 = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
         variant2 = @image.image_variants.build(style: 'scaled', url: 'http://a.tld', format: 'png',
@@ -99,8 +99,8 @@ describe Image do
     end
     context "with one original variant" do
       it "should return the original" do
-        @image.image_variants.destroy_all
-        variant = @image.image_variants.build(style: 'scaled', url: 'http://a.tld', format: 'png',
+        @image.image_variants.delete_all
+        variant = @image.image_variants.new(style: 'scaled', url: 'http://a.tld', format: 'png',
           height: 100, width: 100
         )
         original = @image.image_variants.build(style: 'original', url: 'http://a.tld', format: 'png',
@@ -112,8 +112,8 @@ describe Image do
     end
     context "with multiple original variants" do
       it "should return the largest" do
-        @image.image_variants.destroy_all
-        original1 = @image.image_variants.build(style: 'original', url: 'http://a.tld', format: 'png',
+        @image.image_variants.delete_all
+        original1 = @image.image_variants.new(style: 'original', url: 'http://a.tld', format: 'png',
           height: 10, width: 10
         )
         original2 = @image.image_variants.build(style: 'original', url: 'http://a.tld', format: 'png',

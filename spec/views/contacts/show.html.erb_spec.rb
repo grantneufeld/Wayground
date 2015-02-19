@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'person'
 
-describe 'contacts/show.html.erb' do
+describe 'contacts/show.html.erb', type: :view do
   let(:person) { $person = Person.new(filename: 'prsn') }
   let(:contact_attrs) do
     $contact_attrs = {

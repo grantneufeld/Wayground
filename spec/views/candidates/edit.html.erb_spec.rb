@@ -1,13 +1,13 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
+require 'person'
 require 'democracy/candidate_form'
 
-describe 'candidates/edit.html.erb' do
+describe 'candidates/edit.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:person) { $person = Person.new(filename: 'prsn') }
   let(:office) do
-    $office = level.offices.build(filename: 'offc', name: 'Stub Name', filename: 'stub_filename')
+    $office = level.offices.build(filename: 'offc', name: 'Stub Name')
     $office.level = level
     $office
   end
@@ -46,7 +46,7 @@ describe 'candidates/edit.html.erb' do
     assign(:level, level)
     assign(:election, election)
     assign(:ballot, ballot)
-    candidate.stub(:to_param).and_return('abc')
+    allow(candidate).to receive(:to_param).and_return('abc')
     assign(:candidate, candidate)
     assign(:candidate_form, candidate_form)
     render

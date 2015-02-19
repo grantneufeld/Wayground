@@ -12,11 +12,11 @@ describe Wayground::PageMetadata do
       expect( Wayground::PageMetadata.new(description: 'Description.').description ).to eq 'Description.'
     end
     it "should accept a nocache param" do
-      expect( Wayground::PageMetadata.new(nocache: true).nocache ).to be_true
+      expect( Wayground::PageMetadata.new(nocache: true).nocache ).to be_truthy
     end
     context "with no params" do
       it "should default to nocache being false" do
-        expect( Wayground::PageMetadata.new.nocache ).to be_false
+        expect( Wayground::PageMetadata.new.nocache ).to be_falsey
       end
     end
   end
@@ -35,7 +35,7 @@ describe Wayground::PageMetadata do
     it "should accept a nocache param" do
       meta = Wayground::PageMetadata.new
       meta.merge_params(nocache: true)
-      expect( meta.nocache ).to be_true
+      expect( meta.nocache ).to be_truthy
     end
     context "with no params" do
       before(:all) do
@@ -49,7 +49,7 @@ describe Wayground::PageMetadata do
         expect( @meta.description ).to eq 'B'
       end
       it "should not change nocache" do
-        expect( @meta.nocache ).to be_true
+        expect( @meta.nocache ).to be_truthy
       end
     end
   end

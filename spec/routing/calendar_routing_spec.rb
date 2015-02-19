@@ -1,6 +1,6 @@
-require "spec_helper"
+require 'rails_helper'
 
-describe CalendarController do
+describe CalendarController, type: :routing do
   describe "routing" do
 
     it 'handles the index path' do

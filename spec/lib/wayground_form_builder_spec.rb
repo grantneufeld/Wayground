@@ -13,15 +13,15 @@ describe WaygroundFormBuilder, :type => :view do
 
     it 'should generate a text field' do
       render :inline => template, :locals => {:event => Event.new}
-      rendered.should match /<input ([^<>]* )?type="text"( [^<>]+)? \/>/
+      expect(rendered).to match /<input ([^<>]* )?type="text"( [^<>]+)? \/>/
     end
     it 'should assign the right field name' do
       render :inline => template, :locals => {:event => Event.new}
-      rendered.should match /<input ([^<>]+ )?name="event\[start_at\]"( [^<>]+)? \/>/
+      expect(rendered).to match /<input ([^<>]+ )?name="event\[start_at\]"( [^<>]+)? \/>/
     end
     it 'should present dates in natural language' do
       render :inline => template, :locals => {:event => Event.new(:start_at => '2001-02-03')}
-      rendered.should match /<input ([^<>]+ )?value="February +3, 2001"( [^<>]+)? \/>/
+      expect(rendered).to match /<input ([^<>]+ )?value="February +3, 2001"( [^<>]+)? \/>/
     end
   end
 
@@ -36,15 +36,15 @@ describe WaygroundFormBuilder, :type => :view do
 
     it 'should generate a text field' do
       render :inline => template, :locals => {:event => Event.new}
-      rendered.should match /<input ([^<>]* )?type="text"( [^<>]+)? \/>/
+      expect(rendered).to match /<input ([^<>]* )?type="text"( [^<>]+)? \/>/
     end
     it 'should assign the right field name' do
       render :inline => template, :locals => {:event => Event.new}
-      rendered.should match /<input ([^<>]+ )?name="event\[start_at\]"( [^<>]+)? \/>/
+      expect(rendered).to match /<input ([^<>]+ )?name="event\[start_at\]"( [^<>]+)? \/>/
     end
     it 'should present dates in natural language' do
       render :inline => template, :locals => {:event => Event.new(:start_at => '2001-02-03 04:05:00')}
-      rendered.should match /<input ([^<>]+ )?value="February +3, 2001 at +4:05 AM"( [^<>]+)? \/>/
+      expect(rendered).to match /<input ([^<>]+ )?value="February +3, 2001 at +4:05 AM"( [^<>]+)? \/>/
     end
   end
 end

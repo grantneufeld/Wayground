@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'election'
 
-describe "ballots/index.html.erb" do
+describe 'ballots/index.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
     $office = level.offices.build(filename: 'offc', name: 'Stub Office')
@@ -29,9 +28,9 @@ describe "ballots/index.html.erb" do
   before(:each) do
     assign(:level, level)
     assign(:election, election)
-    ballot.stub(:to_param).and_return('abc')
+    allow(ballot).to receive(:to_param).and_return('abc')
     candidate
-    ballot.stub_chain(:candidates, :running).and_return([candidate])
+    allow(ballot).to receive_message_chain(:candidates, :running) { [candidate] }
     assign(:ballots, [ballot, ballot])
     render
   end

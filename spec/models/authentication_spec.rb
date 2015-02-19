@@ -1,7 +1,7 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'authentication'
 
-describe Authentication do
+describe Authentication, type: :model do
   describe "#label" do
     it "should make a special case for Twitter" do
       authentication = Authentication.new(provider: 'twitter', uid: '123', nickname: 'nick')

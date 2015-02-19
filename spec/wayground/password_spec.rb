@@ -14,7 +14,7 @@ module Wayground
 
     describe "#==" do
       it "should call through to the crypted password" do
-        CryptedPassword.any_instance.should_receive(:==).with('pass').and_return(true)
+        expect_any_instance_of(CryptedPassword).to receive(:==).with('pass').and_return(true)
         Password.new('pass') == 'pass'
       end
     end

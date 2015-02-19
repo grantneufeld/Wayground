@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "authorities/edit.html.erb" do
+describe 'authorities/edit.html.erb', type: :view do
   before(:each) do
     @authority = assign(:authority, stub_model(Authority,
     :user => nil,

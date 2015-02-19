@@ -40,18 +40,18 @@ describe Wayground::Democracy::ElectionBuilder do
     context 'with no ballots for the election yet' do
       it 'should include all the level’s offices' do
         election = double('election')
-        election.stub_chain(:ballots).and_return([])
+        allow(election).to receive_message_chain(:ballots) { [] }
         builder = Wayground::Democracy::ElectionBuilder.new(election: election)
-        builder.should_receive(:offices_for_level)
+        expect(builder).to receive(:offices_for_level)
         builder.offices_to_add_ballots_for
       end
     end
     context 'with some existing ballots for the election' do
       it 'should figure out which offices to include' do
         election = double('election')
-        election.stub_chain(:ballots).and_return([:ballot])
+        allow(election).to receive_message_chain(:ballots) { [:ballot] }
         builder = Wayground::Democracy::ElectionBuilder.new(election: election)
-        builder.should_receive(:offices_without_ballots)
+        expect(builder).to receive(:offices_without_ballots)
         builder.offices_to_add_ballots_for
       end
     end
@@ -60,13 +60,13 @@ describe Wayground::Democracy::ElectionBuilder do
   describe '#offices_without_ballots' do
     it 'should return a list of applicable offices that don’t have a ballot for the election' do
       office1 = double('office 1')
-      office1.stub(:id).and_return(1)
+      allow(office1).to receive(:id).and_return(1)
       office2 = double('office 2')
-      office2.stub(:id).and_return(2)
+      allow(office2).to receive(:id).and_return(2)
       election = double('election')
-      election.stub_chain(:level, :offices).and_return([office1, office2])
-      election.stub_chain(:ballots, :where).with(office_id: 1).and_return([])
-      election.stub_chain(:ballots, :where).with(office_id: 2).and_return([:ballot])
+      allow(election).to receive_message_chain(:level, :offices) { [office1, office2] }
+      allow(election).to receive_message_chain(:ballots, :where).with(office_id: 1) { [] }
+      allow(election).to receive_message_chain(:ballots, :where).with(office_id: 2) { [:ballot] }
       builder = Wayground::Democracy::ElectionBuilder.new(election: election)
       expect( builder.offices_without_ballots ).to eq [office1]
     end
@@ -76,7 +76,7 @@ describe Wayground::Democracy::ElectionBuilder do
     context 'with a term_start_on date' do
       it 'should just get the offices association from the election’s level association' do
         election = double('election')
-        election.stub_chain(:level, :offices, :active_on).with(:term_start_on).and_return(:active_offices)
+        allow(election).to receive_message_chain(:level, :offices, :active_on).with(:term_start_on) { :active_offices }
         builder = Wayground::Democracy::ElectionBuilder.new(election: election, term_start_on: :term_start_on)
         expect( builder.offices_for_level ).to eq :active_offices
       end
@@ -84,7 +84,7 @@ describe Wayground::Democracy::ElectionBuilder do
     context 'with no term_start_on date' do
       it 'should just get the offices association from the election’s level association' do
         election = double('election')
-        election.stub_chain(:level, :offices).and_return(:offices)
+        allow(election).to receive_message_chain(:level, :offices) { :offices }
         builder = Wayground::Democracy::ElectionBuilder.new(election: election)
         expect( builder.offices_for_level ).to eq :offices
       end

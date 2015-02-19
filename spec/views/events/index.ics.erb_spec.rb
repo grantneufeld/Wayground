@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "events/index.ics.erb" do
+describe 'events/index.ics.erb', type: :view do
   before(:each) do
     Event.delete_all
     Version.delete_all

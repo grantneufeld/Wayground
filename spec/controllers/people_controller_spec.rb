@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'people_controller'
 
-describe PeopleController do
+describe PeopleController, type: :controller do
 
   before(:all) do
     Person.delete_all
@@ -15,10 +15,10 @@ describe PeopleController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -29,7 +29,7 @@ describe PeopleController do
 
   describe 'GET index' do
     before(:each) do
-      Person.stub_chain(:order, :all).and_return([person])
+      allow(Person).to receive_message_chain(:order, :all) { [person] }
       get :index
     end
     it 'assigns all people as @people' do
@@ -138,7 +138,7 @@ describe PeopleController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Person.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Person).to receive(:save).and_return(false)
         post :create, person: {}
       end
       it 'assigns a newly created but unsaved person as @person' do
@@ -190,7 +190,7 @@ describe PeopleController do
     describe 'with valid params' do
       it 'updates the requested person' do
         set_logged_in_admin
-        Person.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
+        expect_any_instance_of(Person).to receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: person.filename, person: { 'these' => 'params' }
       end
       context 'with attributes' do
@@ -217,7 +217,7 @@ describe PeopleController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Person.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Person).to receive(:save).and_return(false)
         patch :update, id: person.filename, person: {}
       end
       it 'assigns the person as @person' do

@@ -10,7 +10,7 @@ require 'candidate'
 require 'authority'
 require 'democracy/candidate_form'
 
-describe CandidatesController do
+describe CandidatesController, type: :controller do
 
   before(:all) do
     Level.delete_all
@@ -40,10 +40,10 @@ describe CandidatesController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -58,7 +58,7 @@ describe CandidatesController do
 
   describe 'GET index' do
     before(:each) do
-      @ballot.stub(:candidates).and_return([candidate])
+      allow(@ballot).to receive(:candidates).and_return([candidate])
       get :index, level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
     end
     it 'assigns all candidates as @candidates' do
@@ -183,7 +183,7 @@ describe CandidatesController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Candidate.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Candidate).to receive(:save).and_return(false)
         post :create, wayground_democracy_candidate_form: {},
           level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
       end
@@ -239,7 +239,7 @@ describe CandidatesController do
     describe 'with valid params' do
       it 'updates the requested candidate' do
         set_logged_in_admin
-        Wayground::Democracy::CandidateForm.any_instance.should_receive(:save).and_return(true)
+        expect_any_instance_of(Wayground::Democracy::CandidateForm).to receive(:save).and_return(true)
         put(:update, id: candidate.to_param, wayground_democracy_candidate_form: { 'these' => 'params' },
           level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
         )
@@ -269,7 +269,7 @@ describe CandidatesController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Candidate.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Candidate).to receive(:save).and_return(false)
         put :update, id: candidate.to_param, wayground_democracy_candidate_form: {},
           level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
       end

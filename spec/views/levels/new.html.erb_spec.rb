@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe "levels/new.html.erb" do
+describe 'levels/new.html.erb', type: :view do
   let(:level) { $level = Level.new(url: 'http://no.parent/') }
 
   before(:each) do

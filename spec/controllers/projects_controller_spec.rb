@@ -1,11 +1,11 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'project'
 require 'authority'
 require 'user'
 require 'user_token'
 require 'rememberer'
 
-describe ProjectsController do
+describe ProjectsController, type: :controller do
 
   before(:all) do
     Authority.delete_all
@@ -72,13 +72,13 @@ describe ProjectsController do
   describe "GET new" do
     it "fails if not logged in" do
       get :new
-      response.status.should eq 401
+      expect(response.status).to eq 401
     end
 
     it "assigns a new project as @project" do
       set_logged_in_admin
       get :new
-      assigns(:project).should be_a_new(Project)
+      expect(assigns(:project)).to be_a_new(Project)
     end
   end
 
@@ -94,32 +94,32 @@ describe ProjectsController do
       it "assigns a newly created project as @project" do
         set_logged_in_admin
         post :create, {:project => valid_attributes}, valid_session
-        assigns(:project).should be_a(Project)
-        assigns(:project).should be_persisted
+        expect(assigns(:project)).to be_a(Project)
+        expect(assigns(:project)).to be_persisted
       end
 
       it "redirects to the created project" do
         set_logged_in_admin
         post :create, {:project => valid_attributes}, valid_session
-        response.should redirect_to(Project.last)
+        expect(response).to redirect_to(Project.last)
       end
     end
 
     context "with invalid params" do
       it "assigns a newly created but unsaved project as @project" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, {:project => {}}, valid_session
-        assigns(:project).should be_a_new(Project)
+        expect(assigns(:project)).to be_a_new(Project)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, {:project => {}}, valid_session
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -146,7 +146,7 @@ describe ProjectsController do
         # specifies that the Project created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        Project.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Project).to receive(:update).with('these' => 'params')
         set_logged_in_admin
         patch :update, { id: project.to_param, project: { 'these' => 'params' } }, valid_session
       end
@@ -155,21 +155,21 @@ describe ProjectsController do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
         patch :update, { id: project.to_param, project: valid_attributes }, valid_session
-        assigns(:project).should eq(project)
+        expect(assigns(:project)).to eq(project)
       end
 
       it "redirects to the project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
         patch :update, { id: project.to_param, project: valid_attributes }, valid_session
-        response.should redirect_to(project_name_url(project.filename))
+        expect(response).to redirect_to(project_name_url(project.filename))
       end
     end
 
     context "with invalid params" do
       it "assigns the project as @project" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, { id: @admin_project.to_param, project: {} }
         expect( assigns(:project) ).to eq @admin_project
@@ -177,10 +177,10 @@ describe ProjectsController do
 
       it "re-renders the 'edit' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Project.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, { id: @admin_project.to_param, project: {} }
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -198,7 +198,7 @@ describe ProjectsController do
       project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       set_logged_in_admin
       delete :destroy, {:id => project.to_param}, valid_session
-      response.should redirect_to(projects_url)
+      expect(response).to redirect_to(projects_url)
     end
   end
 

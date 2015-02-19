@@ -1,24 +1,24 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe ExternalLink do
+describe ExternalLink, type: :model do
   before(:all) do
     @item = FactoryGirl.create(:page)
   end
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Content” area" do
-      ExternalLink.authority_area.should eq 'Content'
+      expect(ExternalLink.authority_area).to eq 'Content'
     end
   end
 
   describe "attr_accessible" do
     it "should allow title to be set" do
       elink = ExternalLink.new(:title => 'set title')
-      elink.title.should eq 'set title'
+      expect(elink.title).to eq 'set title'
     end
     it "should allow url to be set" do
       elink = ExternalLink.new(:url => 'set url')
-      elink.url.should eq 'set url'
+      expect(elink.url).to eq 'set url'
     end
     it "should not allow position to be set" do
       expect {
@@ -51,7 +51,7 @@ describe ExternalLink do
     it "should pass if all required values are set" do
       elink = ExternalLink.new(:title => 'A', :url => 'http://validation.test/all/required/values')
       elink.position = 1
-      elink.valid?.should be_true
+      expect(elink.valid?).to be_truthy
     end
     describe "of item" do
       it "should fail if Item is not set on update" do
@@ -59,59 +59,59 @@ describe ExternalLink do
         elink.item = @item
         elink.save!
         elink.item = nil
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
     end
     describe "of title" do
       it "should set the title from the url if title is not set" do
         elink = ExternalLink.new(:url => 'http://nil.title.test/no-title')
-        elink.valid?.should be_true
-        elink.title.should eq 'nil.title.test'
+        expect(elink.valid?).to be_truthy
+        expect(elink.title).to eq 'nil.title.test'
       end
       it "should set the title from the url if title is blank" do
         elink = ExternalLink.new(:title => '', :url => 'http://blank.title.test/blank_title')
-        elink.valid?.should be_true
-        elink.title.should eq 'blank.title.test'
+        expect(elink.valid?).to be_truthy
+        expect(elink.title).to eq 'blank.title.test'
       end
       it "should fail if title is too long" do
         elink = ExternalLink.new(:title => ('A' * 256), :url => 'http://long.title.test/too/long#title')
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
     end
     describe "of url" do
       it "should fail if url is not set" do
         elink = ExternalLink.new(:title => 'A')
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
       it "should fail if url is blank" do
         elink = ExternalLink.new(:title => 'A', :url => '')
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
       it "should fail if url is not an url string" do
         elink = ExternalLink.new(:title => 'A', :url => 'not actually an url')
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
       it "should fail if url is too long" do
         elink = ExternalLink.new(title: 'A', url: 'http://url.test/' + ('c' * 1008))
         # (1008 == 1024 - 'http://url.test/'.size)
-        expect(elink.valid?).to be_false
+        expect(elink.valid?).to be_falsey
       end
     end
     describe "of position" do
       it "should fail if value is negative" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://position.test/-negative')
         elink.position = -2
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
       it "should fail if value is zero" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://position.test/0/value')
         elink.position = 0
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
       it "should fail if value is not an integer" do
         elink = ExternalLink.new(:title => 'A', :url => 'http://position.test/not_an_integer')
         elink.position = 3.14
-        elink.valid?.should be_false
+        expect(elink.valid?).to be_falsey
       end
     end
   end
@@ -119,38 +119,38 @@ describe ExternalLink do
   describe "#set_default_position" do
     it "should set position to 1 if no other ExternalLinks are on the item" do
       external_links = double('external links on item')
-      external_links.stub(order: external_links)
-      external_links.stub(first: nil)
-      @item.stub(external_links: external_links)
+      allow(external_links).to receive(:order).and_return(external_links)
+      allow(external_links).to receive(:first).and_return(nil)
+      allow(@item).to receive(:external_links).and_return(external_links)
       elink = ExternalLink.new
       elink.item = @item
       elink.set_default_position
-      elink.position.should eq 1
+      expect(elink.position).to eq 1
     end
     it "should set position to come after all other ExternalLinks on the item" do
       mock_link = double('external link')
-      mock_link.stub(position: 72)
+      allow(mock_link).to receive(:position).and_return(72)
       external_links = double('external links on item')
-      external_links.stub(order: external_links)
-      external_links.stub(first: mock_link)
-      @item.stub(external_links: external_links)
+      allow(external_links).to receive(:order).and_return(external_links)
+      allow(external_links).to receive(:first).and_return(mock_link)
+      allow(@item).to receive(:external_links).and_return(external_links)
       elink = ExternalLink.new
       elink.item = @item
       elink.set_default_position
-      elink.position.should eq 73
+      expect(elink.position).to eq 73
     end
     it "should automatically assign the position when creating an ExternalLink" do
       elink = ExternalLink.new(:title => 'New', :url => 'http://new.position.test/')
       elink.item = @item
       elink.save!
-      elink.position.should eq 1
+      expect(elink.position).to eq 1
     end
     it "should not overwrite position if already set" do
       elink = ExternalLink.new
       elink.item = @item
       elink.position = 123
       elink.set_default_position
-      elink.position.should eq 123
+      expect(elink.position).to eq 123
     end
   end
 
@@ -158,32 +158,32 @@ describe ExternalLink do
     it "shoud do nothing when title is already set" do
       elink = ExternalLink.new(:url => 'http://test.tld/', :title => 'Already Set')
       elink.set_title
-      elink.title.should eq 'Already Set'
+      expect(elink.title).to eq 'Already Set'
     end
     it "should default to using the domain name from the url" do
       elink = ExternalLink.new(:url => 'http://test.tld/')
       elink.set_title
-      elink.title.should eq 'test.tld'
+      expect(elink.title).to eq 'test.tld'
     end
     it "should special-case Facebook event urls" do
       elink = ExternalLink.new(:url => 'http://www.facebook.com/events/1234/')
       elink.set_title
-      elink.title.should eq 'Facebook event'
+      expect(elink.title).to eq 'Facebook event'
     end
     it "should special-case Eventbrite urls" do
       elink = ExternalLink.new(:url => 'http://test.eventbrite.com/')
       elink.set_title
-      elink.title.should eq 'Event Registration (Eventbrite)'
+      expect(elink.title).to eq 'Event Registration (Eventbrite)'
     end
     it "should special-case Meetup event urls" do
       elink = ExternalLink.new(:url => 'http://www.meetup.com/group/events/1234/')
       elink.set_title
-      elink.title.should eq 'Meetup event'
+      expect(elink.title).to eq 'Meetup event'
     end
     it "should be called before validation" do
       elink = ExternalLink.new(:url => 'http://test.tld/')
       elink.valid?
-      elink.title.should eq 'test.tld'
+      expect(elink.title).to eq 'test.tld'
     end
   end
 
@@ -237,17 +237,17 @@ describe ExternalLink do
     it "should set the url attribute" do
       elink = ExternalLink.new
       elink.url = 'test'
-      elink.url.should eq 'test'
+      expect(elink.url).to eq 'test'
     end
     it "should clear the url attribute when nil is given" do
       elink = ExternalLink.new(url: 'http://wayground.ca/')
       elink.url = nil
-      elink.url.should be_nil
+      expect(elink.url).to be_nil
     end
     it "should try to clean up urls" do
       elink = ExternalLink.new
       elink.url = 'http://twitter.com/#!/wayground'
-      elink.url.should eq 'https://twitter.com/wayground'
+      expect(elink.url).to eq 'https://twitter.com/wayground'
     end
   end
 
@@ -256,26 +256,26 @@ describe ExternalLink do
       @elink = ExternalLink.new(:title => 'ELink', :url => 'http://elink.tld/')
     end
     it "should generate an html anchor element" do
-      @elink.to_html.should eq '<a href="http://elink.tld/">ELink</a>'
+      expect(@elink.to_html).to eq '<a href="http://elink.tld/">ELink</a>'
     end
     it "should include the id attribute when passed in" do
-      @elink.to_html(:id => 'elink').should eq '<a href="http://elink.tld/" id="elink">ELink</a>'
+      expect(@elink.to_html(:id => 'elink')).to eq '<a href="http://elink.tld/" id="elink">ELink</a>'
     end
     it "should include the class attribute when passed in" do
-      @elink.to_html(:class => 'e_link').should eq '<a href="http://elink.tld/" class="e_link">ELink</a>'
+      expect(@elink.to_html(:class => 'e_link')).to eq '<a href="http://elink.tld/" class="e_link">ELink</a>'
     end
     it "should include the class attribute when the ExternalLink#site is set" do
       @elink.site = 'elink'
-      @elink.to_html.should eq '<a href="http://elink.tld/" class="elink">ELink</a>'
+      expect(@elink.to_html).to eq '<a href="http://elink.tld/" class="elink">ELink</a>'
       @elink.site = nil
     end
     it "should include the class attribute, merged with the ExternalLink#site, when passed in" do
       @elink.site = 'site'
-      @elink.to_html(:class => 'e_link').should eq '<a href="http://elink.tld/" class="e_link site">ELink</a>'
+      expect(@elink.to_html(:class => 'e_link')).to eq '<a href="http://elink.tld/" class="e_link site">ELink</a>'
       @elink.site = nil
     end
     it "should include both the class and id attributes when passed in" do
-      @elink.to_html(:id => 'a1', :class => 'test').should eq(
+      expect(@elink.to_html(:id => 'a1', :class => 'test')).to eq(
         '<a href="http://elink.tld/" id="a1" class="test">ELink</a>'
       )
     end

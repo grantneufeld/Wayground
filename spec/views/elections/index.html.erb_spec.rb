@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe "elections/index.html.erb" do
+describe 'elections/index.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:election_attrs) do
     $election_attrs = { name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/' }
@@ -11,7 +10,7 @@ describe "elections/index.html.erb" do
 
   before(:each) do
     assign(:level, level)
-    election.stub(:to_param).and_return('abc')
+    allow(election).to receive(:to_param).and_return('abc')
     assign(:elections, [election, election])
     render
   end

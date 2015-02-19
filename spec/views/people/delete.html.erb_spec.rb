@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'person'
 
-describe "people/delete.html.erb" do
+describe 'people/delete.html.erb', type: :view do
   let(:person) { $person = Person.new(fullname: 'Delete Me', filename: 'bob') }
 
   before(:each) do

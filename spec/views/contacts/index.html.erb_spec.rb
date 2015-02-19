@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'person'
 
-describe "contacts/index.html.erb" do
+describe 'contacts/index.html.erb', type: :view do
   let(:person) { $person = Person.new(filename: 'prsn') }
   let(:contact_attrs) do
     $contact_attrs = {
@@ -24,7 +23,7 @@ describe "contacts/index.html.erb" do
 
   before(:each) do
     assign(:item, person)
-    contact.stub(:to_param).and_return('123')
+    allow(contact).to receive(:to_param).and_return('123')
     assign(:contacts, [contact, contact])
     render
   end

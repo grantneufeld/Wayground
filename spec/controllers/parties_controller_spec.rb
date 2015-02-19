@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'parties_controller'
 
-describe PartiesController do
+describe PartiesController, type: :controller do
 
   before(:all) do
     Level.delete_all
@@ -17,10 +17,10 @@ describe PartiesController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -34,7 +34,7 @@ describe PartiesController do
 
   describe 'GET index' do
     before(:each) do
-      @level.stub(:parties).and_return([party])
+      allow(@level).to receive(:parties).and_return([party])
       get :index, level_id: @level.to_param
     end
     it 'assigns all parties as @parties' do
@@ -143,7 +143,7 @@ describe PartiesController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Party.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Party).to receive(:save).and_return(false)
         post :create, party: {}, level_id: @level.to_param
       end
       it 'assigns a newly created but unsaved party as @party' do
@@ -195,7 +195,7 @@ describe PartiesController do
     describe 'with valid params' do
       it 'updates the requested party' do
         set_logged_in_admin
-        Party.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
+        expect_any_instance_of(Party).to receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: party.filename, party: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
@@ -222,7 +222,7 @@ describe PartiesController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Party.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Party).to receive(:save).and_return(false)
         patch :update, id: party.filename, party: {}, level_id: @level.to_param
       end
       it 'assigns the party as @party' do

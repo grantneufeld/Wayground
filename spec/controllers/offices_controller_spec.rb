@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'offices_controller'
 
-describe OfficesController do
+describe OfficesController, type: :controller do
 
   before(:all) do
     Level.delete_all
@@ -17,10 +17,10 @@ describe OfficesController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) do
@@ -31,7 +31,7 @@ describe OfficesController do
 
   describe 'GET index' do
     before(:each) do
-      @level.stub(:offices).and_return([office])
+      allow(@level).to receive(:offices).and_return([office])
       get :index, level_id: @level.to_param
     end
     it 'assigns all offices as @offices' do
@@ -153,7 +153,7 @@ describe OfficesController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Office.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Office).to receive(:save).and_return(false)
         post :create, office: {}, level_id: @level.to_param
       end
       it 'assigns a newly created but unsaved office as @office' do
@@ -205,7 +205,7 @@ describe OfficesController do
     describe 'with valid params' do
       it 'updates the requested office' do
         set_logged_in_admin
-        Office.any_instance.should_receive(:update).with({'these' => 'params'}).and_return(true)
+        expect_any_instance_of(Office).to receive(:update).with({'these' => 'params'}).and_return(true)
         patch :update, id: office.filename, office: { 'these' => 'params' }, level_id: @level.to_param
       end
       context 'with attributes' do
@@ -232,7 +232,7 @@ describe OfficesController do
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Office.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Office).to receive(:save).and_return(false)
         patch :update, id: office.filename, office: {}, level_id: @level.to_param
       end
       it 'assigns the office as @office' do

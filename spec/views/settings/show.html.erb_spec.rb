@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "settings/show" do
+describe 'settings/show', type: :view do
   before(:each) do
     @setting = assign(:setting, stub_model(Setting,
       :key => "Key",
@@ -10,7 +10,7 @@ describe "settings/show" do
 
   it "renders attributes in <p>" do
     render
-    rendered.should match(/Key/)
-    rendered.should match(/MyText/)
+    expect(rendered).to match(/Key/)
+    expect(rendered).to match(/MyText/)
   end
 end

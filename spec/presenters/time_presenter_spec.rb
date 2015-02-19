@@ -134,7 +134,7 @@ describe TimePresenter do
         expect( presenter.microformat(html_class: 'dtend') ).to match ' class="dtend"'
       end
       it "should return an html_safe string" do
-        expect( presenter.microformat.html_safe ).to be_true
+        expect( presenter.microformat.html_safe ).to be_truthy
       end
     end
     context "with a content block" do

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "layouts/_pagination_selector.html.erb" do
+describe 'layouts/_pagination_selector.html.erb', type: :view do
   before(:each) do
     assign(:max, 10)
     assign(:page, 3)
@@ -12,8 +12,8 @@ describe "layouts/_pagination_selector.html.erb" do
 
   it "renders a sequence of page links" do
     render
-    rendered.should match /First/
-    rendered.should match /5/
-    rendered.should match /Last/
+    expect(rendered).to match /First/
+    expect(rendered).to match /5/
+    expect(rendered).to match /Last/
   end
 end

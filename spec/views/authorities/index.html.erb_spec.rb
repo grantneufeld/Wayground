@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "authorities/index.html.erb" do
+describe 'authorities/index.html.erb', type: :view do
   before(:each) do
     assign(:authorities, [
       stub_model(Authority,

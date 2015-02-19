@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'offices/show.html.erb' do
+describe 'offices/show.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office_attrs) do
     $office_attrs = {

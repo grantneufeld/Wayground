@@ -1,7 +1,7 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'images_controller'
 
-describe ImagesController do
+describe ImagesController, type: :controller do
 
   before(:all) do
     Authority.delete_all
@@ -13,10 +13,10 @@ describe ImagesController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   let(:valid_attributes) { $valid_attributes = {} }
@@ -25,7 +25,7 @@ describe ImagesController do
   describe "GET index" do
     it "assigns all images as @images" do
       image
-      Image.stub(:all).and_return([image])
+      allow(Image).to receive(:all).and_return([image])
       get :index
       expect( assigns(:images) ).to eq([image])
     end
@@ -96,14 +96,14 @@ describe ImagesController do
       it "assigns a newly created but unsaved image as @image" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Image.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Image).to receive(:save).and_return(false)
         post :create, image: {}
         expect( assigns(:image) ).to be_a_new(Image)
       end
       it "re-renders the 'new' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Image.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Image).to receive(:save).and_return(false)
         post :create, image: {}
         expect( response ).to render_template("new")
       end
@@ -134,7 +134,7 @@ describe ImagesController do
     describe "with valid params" do
       it "updates the requested image" do
         set_logged_in_admin
-        Image.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Image).to receive(:update).with('these' => 'params')
         patch :update, id: image.id, image: { 'these' => 'params' }
       end
       it "assigns the requested image as @image" do
@@ -158,14 +158,14 @@ describe ImagesController do
       it "assigns the image as @image" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Image.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Image).to receive(:save).and_return(false)
         patch :update, id: image.id, image: {}
         expect( assigns(:image) ).to eq(image)
       end
       it "re-renders the 'edit' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Image.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Image).to receive(:save).and_return(false)
         patch :update, id: image.id, image: {}
         expect( response ).to render_template("edit")
       end

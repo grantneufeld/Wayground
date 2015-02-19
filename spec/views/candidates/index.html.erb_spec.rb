@@ -1,8 +1,8 @@
-# encoding: utf-8
-require 'spec_helper'
-require 'Level'
+require 'rails_helper'
+require 'level'
+require 'person'
 
-describe "candidates/index.html.erb" do
+describe 'candidates/index.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:person) { $person = Person.new(filename: 'prsn') }
   let(:office) do
@@ -33,7 +33,7 @@ describe "candidates/index.html.erb" do
     assign(:election, election)
     assign(:ballot, ballot)
     assign(:person, person)
-    candidate.stub(:to_param).and_return('abc')
+    allow(candidate).to receive(:to_param).and_return('abc')
     assign(:candidates, [candidate, candidate])
     render
   end

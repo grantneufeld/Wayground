@@ -1,9 +1,8 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'contact'
 require 'person'
 
-describe Contact do
+describe Contact, type: :model do
 
   before(:all) do
     Contact.delete_all
@@ -12,7 +11,7 @@ describe Contact do
 
   describe 'acts_as_authority_controlled' do
     it 'should be in the “Democracy” area' do
-      Contact.authority_area.should eq 'Democracy'
+      expect(Contact.authority_area).to eq 'Democracy'
     end
   end
 
@@ -36,7 +35,7 @@ describe Contact do
       expect( Contact.new(position: 123).position ).to eq 123
     end
     it 'should allow is_public' do
-      expect( Contact.new(is_public: true).is_public ).to be_true
+      expect( Contact.new(is_public: true).is_public ).to be_truthy
     end
     it 'should allow confirmed_at' do
       confirmed_at = DateTime.parse '2001-02-03 04:05:06'
@@ -116,62 +115,62 @@ describe Contact do
   describe 'validation' do
     let(:required) { $required = {} }
     it 'should validate with all required values' do
-      expect( @item.contacts.build(required).valid? ).to be_true
+      expect( @item.contacts.build(required).valid? ).to be_truthy
     end
     describe 'of item' do
       it 'should fail if item is not set' do
-        expect( Contact.new(required).valid? ).to be_false
+        expect( Contact.new(required).valid? ).to be_falsey
       end
     end
     describe 'of email' do
       it 'should validate if email is nil' do
-        expect( @item.contacts.build(required.merge(email: nil)).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(email: nil)).valid? ).to be_truthy
       end
       it 'should validate if email is blank' do
-        expect( @item.contacts.build(required.merge(email: '')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(email: '')).valid? ).to be_truthy
       end
       it 'should validate if email is a proper email address' do
-        expect( @item.contacts.build(required.merge(email: 'proper@email.tld')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(email: 'proper@email.tld')).valid? ).to be_truthy
       end
       it 'should fail if email is an invalid format for an email address' do
-        expect( @item.contacts.build(required.merge(email: '<improper@email.tld>')).valid? ).to be_false
+        expect( @item.contacts.build(required.merge(email: '<improper@email.tld>')).valid? ).to be_falsey
       end
     end
     describe 'of twitter' do
       it 'should validate if twitter is nil' do
-        expect( @item.contacts.build(required.merge(twitter: nil)).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(twitter: nil)).valid? ).to be_truthy
       end
       it 'should validate if twitter is blank' do
-        expect( @item.contacts.build(required.merge(twitter: '')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(twitter: '')).valid? ).to be_truthy
       end
       it 'should validate if twitter is lower-case characters' do
-        expect( @item.contacts.build(required.merge(twitter: 'abcdefghijklmnopqrstuvwxyz')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(twitter: 'abcdefghijklmnopqrstuvwxyz')).valid? ).to be_truthy
       end
       it 'should validate if twitter is upper-case characters' do
-        expect( @item.contacts.build(required.merge(twitter: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(twitter: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')).valid? ).to be_truthy
       end
       it 'should validate if twitter is integer digits' do
-        expect( @item.contacts.build(required.merge(twitter: '0123456789')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(twitter: '0123456789')).valid? ).to be_truthy
       end
       it 'should validate if twitter contains underscores and dashes' do
-        expect( @item.contacts.build(required.merge(twitter: '_-')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(twitter: '_-')).valid? ).to be_truthy
       end
       it 'should fail if twitter contains invalid characters' do
-        expect( @item.contacts.build(required.merge(twitter: 'invalid: !')).valid? ).to be_false
+        expect( @item.contacts.build(required.merge(twitter: 'invalid: !')).valid? ).to be_falsey
       end
     end
     describe 'of url' do
       it 'should validate if url is nil' do
-        expect( @item.contacts.build(required.merge(url: nil)).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(url: nil)).valid? ).to be_truthy
       end
       it 'should validate if url is blank' do
-        expect( @item.contacts.build(required.merge(url: '')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(url: '')).valid? ).to be_truthy
       end
       it 'should validate if a proper url' do
-        expect( @item.contacts.build(required.merge(url: 'https://valid.url:123/stuff.etc')).valid? ).to be_true
+        expect( @item.contacts.build(required.merge(url: 'https://valid.url:123/stuff.etc')).valid? ).to be_truthy
       end
       it 'should fail if an improper url' do
-        expect( @item.contacts.build(required.merge(url: 'invalid://not.url/')).valid? ).to be_false
+        expect( @item.contacts.build(required.merge(url: 'invalid://not.url/')).valid? ).to be_falsey
       end
     end
   end

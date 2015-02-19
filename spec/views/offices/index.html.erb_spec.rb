@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe "offices/index.html.erb" do
+describe 'offices/index.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office_attrs) do
     $office_attrs = { name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/' }
@@ -11,7 +10,7 @@ describe "offices/index.html.erb" do
 
   before(:each) do
     assign(:level, level)
-    office.stub(:to_param).and_return('abc')
+    allow(office).to receive(:to_param).and_return('abc')
     assign(:offices, [office, office])
     render
   end

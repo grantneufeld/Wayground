@@ -1,14 +1,13 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe 'parties/delete.html.erb' do
+describe 'parties/delete.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:party) { $party = level.parties.build(name: 'Delete Me') }
 
   before(:each) do
     assign(:level, level)
-    party.stub(:to_param).and_return('abc')
+    allow(party).to receive(:to_param).and_return('abc')
     assign(:party, party)
     render
   end

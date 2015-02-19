@@ -1,58 +1,58 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Path do
+describe Path, type: :model do
   describe "validation" do
     describe "of sitepath" do
       it "should reject an empty sitepath" do
         path = Path.new(:sitepath => '', :redirect => '/')
-        path.valid?.should be_false
+        expect(path.valid?).to be_falsey
       end
       it "should reject multiple periods" do
         path = Path.new(:sitepath => '/file.name.etc', :redirect => '/')
-        path.valid?.should be_false
+        expect(path.valid?).to be_falsey
       end
       it "should reject spaces" do
         path = Path.new(:sitepath => '/file name', :redirect => '/')
-        path.valid?.should be_false
+        expect(path.valid?).to be_falsey
       end
       it "should accept a single slash" do
         path = Path.new(:sitepath => '/', :redirect => '/home')
-        path.valid?.should be_true
+        expect(path.valid?).to be_truthy
       end
       it "should accept letters, numbers, dashes, percentage signs, underscores and slashes" do
         path = Path.new(:sitepath => '/AZaz/09-%_', :redirect => '/')
-        path.valid?.should be_true
+        expect(path.valid?).to be_truthy
       end
       it "should accept a file extension" do
         path = Path.new(:sitepath => '/file.extension', :redirect => '/')
-        path.valid?.should be_true
+        expect(path.valid?).to be_truthy
       end
       it "should reject a duplicate sitepath" do
         FactoryGirl.create(:path, :sitepath => '/duplciate', :redirect => '/')
         path = Path.new(:sitepath => '/duplciate', :redirect => '/dupe')
-        path.valid?.should be_false
+        expect(path.valid?).to be_falsey
       end
     end
     describe "of redirect" do
       it "should be required if Path has no item" do
         path = Path.new(:sitepath => '/', :redirect => '')
-        path.valid?.should be_false
+        expect(path.valid?).to be_falsey
       end
       it "should allow an http url" do
         path = Path.new(:sitepath => '/', :redirect => 'http://host.tld/')
-        path.valid?.should be_true
+        expect(path.valid?).to be_truthy
       end
       it "should allow an https url" do
         path = Path.new(:sitepath => '/', :redirect => 'https://host.tld/')
-        path.valid?.should be_true
+        expect(path.valid?).to be_truthy
       end
       it "should reject other urls" do
         path = Path.new(:sitepath => '/', :redirect => 'ftp://host.tld/')
-        path.valid?.should be_false
+        expect(path.valid?).to be_falsey
       end
       it "should allow paths relative to root" do
         path = Path.new(:sitepath => '/', :redirect => '/redirect')
-        path.valid?.should be_true
+        expect(path.valid?).to be_truthy
       end
     end
   end
@@ -64,22 +64,22 @@ describe Path do
         @path = FactoryGirl.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
       end
       it "should return nil when no matching Path" do
-        Path.for_sitepath('/non-existant').should eq []
+        expect(Path.for_sitepath('/non-existant')).to eq []
       end
       it "should return the Path when the sitepath matches" do
-        Path.for_sitepath('/valid_sitepath').should eq [@path]
+        expect(Path.for_sitepath('/valid_sitepath')).to eq [@path]
       end
       it "should return the Path when the sitepath to search for has an extra trailing slash" do
-        Path.for_sitepath('/valid_sitepath/').should eq [@path]
+        expect(Path.for_sitepath('/valid_sitepath/')).to eq [@path]
       end
     end
     context ":home" do
       it "should return nil when no home path record exists" do
-        Path.home.should be_nil
+        expect(Path.home).to be_nil
       end
       it "should return the home Path" do
         home = FactoryGirl.create(:path, :sitepath => '/', :redirect => '/home')
-        Path.home.should eq home
+        expect(Path.home).to eq home
       end
     end
     context ":for_user" do
@@ -103,18 +103,18 @@ describe Path do
         @user.set_authority_on_item(@user_path.item)
       end
       it "should find everything for admins" do
-        Path.for_user(@admin).order(:sitepath).should eq [
+        expect(Path.for_user(@admin).order(:sitepath)).to eq [
           @admin_path, @controlled_path, @public_path, @user_path
         ]
       end
       it "should exclude paths the user doesn’t have authority to view" do
-        Path.for_user(@user).order(:sitepath).should eq [@controlled_path, @public_path, @user_path]
+        expect(Path.for_user(@user).order(:sitepath)).to eq [@controlled_path, @public_path, @user_path]
       end
       it "should exclude all authority controlled paths for anonymous users" do
-        Path.for_user(nil).order(:sitepath).should eq [@public_path]
+        expect(Path.for_user(nil).order(:sitepath)).to eq [@public_path]
       end
       it "should return a subset of all possible results when limit set" do
-        Path.for_user(@admin).order(:sitepath).limit(2).offset(1).should eq [@controlled_path,@public_path]
+        expect(Path.for_user(@admin).order(:sitepath).limit(2).offset(1)).to eq [@controlled_path,@public_path]
       end
     end
   end
@@ -125,13 +125,13 @@ describe Path do
       @path = FactoryGirl.create(:path, :sitepath => '/valid_sitepath', :redirect => '/')
     end
     it "should return nil if no matching path" do
-      Path.find_for_path('/non-existant').should be_nil
+      expect(Path.find_for_path('/non-existant')).to be_nil
     end
     it "should return the Path for a given sitepath" do
-      Path.find_for_path('/valid_sitepath').should eq @path
+      expect(Path.find_for_path('/valid_sitepath')).to eq @path
     end
     it "should return the Path that matches the sitepath plus a leading slash" do
-      Path.find_for_path('valid_sitepath').should eq @path
+      expect(Path.find_for_path('valid_sitepath')).to eq @path
     end
   end
 
@@ -139,22 +139,22 @@ describe Path do
     it "should leave a sitepath with no trailing slash alone" do
       path = Path.new(:sitepath => '/no-trailing', :redirect => '/')
       path.clean_sitepath
-      path.sitepath.should eq '/no-trailing'
+      expect(path.sitepath).to eq '/no-trailing'
     end
     it "should ignore the root sitepath" do
       path = Path.new(:sitepath => '/', :redirect => '/redirect')
       path.clean_sitepath
-      path.sitepath.should eq '/'
+      expect(path.sitepath).to eq '/'
     end
     it "should strip a trailing slash from sitepath" do
       path = Path.new(:sitepath => '/trailing/', :redirect => '/')
       path.clean_sitepath
-      path.sitepath.should eq '/trailing'
+      expect(path.sitepath).to eq '/trailing'
     end
     it "should filter the sitepath before validating the Path" do
       path = Path.new(:sitepath => '/trailing/', :redirect => '/')
       path.valid?
-      path.sitepath.should eq '/trailing'
+      expect(path.sitepath).to eq '/trailing'
     end
   end
 

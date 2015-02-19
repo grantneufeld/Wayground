@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "calendar/day.html.erb" do
+describe 'calendar/day.html.erb', type: :view do
   before(:all) do
     User.delete_all
     @admin = FactoryGirl.create(:user, name: 'Admin User')
@@ -11,7 +11,9 @@ describe "calendar/day.html.erb" do
     @event1 = stub_model(Event, id: 123, title: 'Test Title', start_at: Time.zone.parse('2013-03-04 1pm'))
     @event2 = stub_model(Event, id: 234, title: 'Test Title', start_at: Time.zone.parse('2013-03-04 2pm'))
     @events = assign(:events, [])
-    view.stub(:add_submenu_item)
+    rspec_stubs_lazy
+    allow(view).to receive(:add_submenu_item)
+    rspec_stubs_strict
   end
   context "with no user" do
     before(:each) do
@@ -25,21 +27,21 @@ describe "calendar/day.html.erb" do
     end
     context 'with earlier and later events' do
       it 'should render a link to the previous day' do
-        Event.stub(:earliest_date).and_return(Date.parse('2000-01-01'))
+        allow(Event).to receive(:earliest_date).and_return(Date.parse('2000-01-01'))
         render
         expect(rendered).to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/03"/
       end
       it 'should render a link to the next day' do
-        Event.stub(:last_date).and_return(Date.parse('2100-01-01'))
+        allow(Event).to receive(:last_date).and_return(Date.parse('2100-01-01'))
         render
         expect(rendered).to match /<a (?:|[^>]+ )href="\/calendar\/2013\/03\/05"/
       end
     end
     context "with no events" do
       before(:each) do
-        Event.stub(:earliest_date).and_return(nil)
-        Event.stub(:last_date).and_return(nil)
-        Event.stub(:count).and_return(0)
+        allow(Event).to receive(:earliest_date).and_return(nil)
+        allow(Event).to receive(:last_date).and_return(nil)
+        allow(Event).to receive(:count).and_return(0)
       end
       it "should render the calendar heading" do
         render
@@ -101,8 +103,8 @@ describe "calendar/day.html.erb" do
 
     context "with update permissions" do
       it "should show the action menu with the events" do
-        @event1.stub(:has_authority_for_user_to?).and_return(true)
-        @event1.stub(:is_approved?).and_return(false)
+        allow(@event1).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(@event1).to receive(:is_approved?).and_return(false)
         render
         expect(rendered).to match(
           /<a\ (?:|[^>]+\ )href="\/events\/123\/edit"[^•]+
@@ -113,7 +115,7 @@ describe "calendar/day.html.erb" do
     end
     context "with no update permission" do
       it "should not show the action menu with the events" do
-        @event1.stub(:has_authority_for_user_to?).and_return(false)
+        allow(@event1).to receive(:has_authority_for_user_to?).and_return(false)
         render
         expect( rendered ).not_to match(
           /href="\/events\/123\/edit"|href="\/events\/123\/approve"|href="\/events\/123\/delete"/
@@ -126,7 +128,7 @@ describe "calendar/day.html.erb" do
       assign(:user, @admin)
     end
     it 'should add the new event link to the submenu' do
-      view.should_receive(:add_submenu_item).with(
+      expect(view).to receive(:add_submenu_item).with(
         title: 'New Event', path: '/events/new', attrs: { class: 'new' }
       )
       render

@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe "levels/show.html.erb" do
+describe 'levels/show.html.erb', type: :view do
   let(:level_attrs) do
     $level_attrs = { name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/' }
   end

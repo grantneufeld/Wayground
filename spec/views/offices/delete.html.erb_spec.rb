@@ -1,14 +1,13 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe "offices/delete.html.erb" do
+describe 'offices/delete.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) { $office = level.offices.build(name: 'Delete Me') }
 
   before(:each) do
     assign(:level, level)
-    office.stub(:to_param).and_return('abc')
+    allow(office).to receive(:to_param).and_return('abc')
     assign(:office, office)
     render
   end

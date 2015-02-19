@@ -2,7 +2,7 @@
 <h1>Parties for <%= @level.name %></h1>
 <ul>
 <% @parties.each do |party|
-  %><li><%= render 'list_item', { party: party, user: @user } %></li>
+  %><%= render 'list_item', { party: party, user: @user } %>
 <%
 end
 %></ul>

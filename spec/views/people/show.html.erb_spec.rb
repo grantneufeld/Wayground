@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'person'
 
-describe "people/show.html.erb" do
+describe 'people/show.html.erb', type: :view do
   let(:level) do
     $level = Level.new(filename: 'lvl')
   end

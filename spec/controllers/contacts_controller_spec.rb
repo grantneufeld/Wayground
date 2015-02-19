@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe ContactsController do
+describe ContactsController, type: :controller do
 
   before(:all) do
     Contact.destroy_all
@@ -29,10 +29,10 @@ describe ContactsController do
   end
 
   def set_logged_in_admin
-    controller.stub(:current_user).and_return(@user_admin)
+    allow(controller).to receive(:current_user).and_return(@user_admin)
   end
   def set_logged_in_user
-    controller.stub(:current_user).and_return(@user_normal)
+    allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
   def valid_attributes
@@ -166,20 +166,20 @@ describe ContactsController do
       it 'assigns a newly created but unsaved Contact as @contact' do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Contact.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Contact).to receive(:save).and_return(false)
         post :create, person_id: person.to_param, contact: {}
         expect( assigns(:contact) ).to be_a_new(Contact)
       end
       it 'associates the new Contact with the person' do
         set_logged_in_admin
-        Contact.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Contact).to receive(:save).and_return(false)
         post :create, person_id: person.to_param, contact: {}
         expect( assigns(:contact).item ).to eq person
       end
       it 're-renders the “new” template' do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Contact.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Contact).to receive(:save).and_return(false)
         post :create, person_id: person.to_param, contact: {}
         expect( response ).to render_template('new')
       end
@@ -212,7 +212,7 @@ describe ContactsController do
         set_logged_in_admin
         # This specifies that the Contact receives the :update message
         # with whatever params are submitted in the request.
-        Contact.any_instance.should_receive(:update).with('these' => 'params')
+        expect_any_instance_of(Contact).to receive(:update).with('these' => 'params')
         patch :update, person_id: person.to_param, id: contact.id, contact: { 'these' => 'params' }
       end
 
@@ -233,7 +233,7 @@ describe ContactsController do
       it 'assigns the contact as @contact' do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Contact.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Contact).to receive(:save).and_return(false)
         patch :update, person_id: person.to_param, id: contact.id, contact: { url: 'invalid url' }
         expect( assigns(:contact) ).to eq(contact)
       end
@@ -241,7 +241,7 @@ describe ContactsController do
       it 're-renders the “edit” template' do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        Contact.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Contact).to receive(:save).and_return(false)
         patch :update, person_id: person.to_param, id: contact.id, contact: { url: 'invalid url' }
         expect( response ).to render_template('edit')
       end

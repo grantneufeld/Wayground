@@ -1,12 +1,11 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'person'
 
-describe Person do
+describe Person, type: :model do
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Democracy” area" do
-      Person.authority_area.should eq 'Democracy'
+      expect(Person.authority_area).to eq 'Democracy'
     end
   end
 
@@ -75,31 +74,31 @@ describe Person do
   describe "validations" do
     let(:required) { $required = {filename: 'required', fullname: 'Required'} }
     it "should validate with all required values" do
-      expect( Person.new(required).valid? ).to be_true
+      expect( Person.new(required).valid? ).to be_truthy
     end
     describe "of filename" do
       let(:required) { $required = {fullname: 'Required'} }
       it "should fail if filename is blank" do
-        expect( Person.new(required.merge(filename: '')).valid? ).to be_false
+        expect( Person.new(required.merge(filename: '')).valid? ).to be_falsey
       end
       it "should fail if filename is nil" do
-        expect( Person.new(required).valid? ).to be_false
+        expect( Person.new(required).valid? ).to be_falsey
       end
       it 'should fail if filename is a duplicate ' do
         Person.new(fullname: 'Duplicate Filename', filename: 'duplicate-filename').save!
-        expect( Person.new(required.merge(filename: 'duplicate-filename')).valid? ).to be_false
+        expect( Person.new(required.merge(filename: 'duplicate-filename')).valid? ).to be_falsey
       end
       it 'should fail if filename contains invalid characters' do
-        expect( Person.new(required.merge(filename: 'Has invalid characters!')).valid? ).to be_false
+        expect( Person.new(required.merge(filename: 'Has invalid characters!')).valid? ).to be_falsey
       end
     end
     describe "of fullname" do
       let(:required) { $required = {filename: 'required'} }
       it "should fail if fullname is blank" do
-        expect( Person.new(required.merge(fullname: '')).valid? ).to be_false
+        expect( Person.new(required.merge(fullname: '')).valid? ).to be_falsey
       end
       it "should fail if fullname is nil" do
-        expect( Person.new(required).valid? ).to be_false
+        expect( Person.new(required).valid? ).to be_falsey
       end
     end
   end

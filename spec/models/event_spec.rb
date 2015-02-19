@@ -1,10 +1,10 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Event do
+describe Event, type: :model do
 
   before(:all) do
     Authority.delete_all
-    User.destroy_all
+    User.delete_all
     # first user is automatically an admin
     @user_admin = FactoryGirl.create(:user, name: 'Admin User')
     @user_normal = FactoryGirl.create(:user, name: 'Normal User')
@@ -56,11 +56,11 @@ describe Event do
     end
     it "should allow is_allday to be set" do
       event = Event.new(is_allday: true)
-      expect( event.is_allday ).to be_true
+      expect( event.is_allday ).to be_truthy
     end
     it "should allow is_draft to be set" do
       event = Event.new(is_draft: true)
-      expect( event.is_draft ).to be_true
+      expect( event.is_draft ).to be_truthy
     end
     it "should not allow is_approved to be set" do
       expect {
@@ -69,23 +69,23 @@ describe Event do
     end
     it "should allow is_wheelchair_accessible to be set" do
       event = Event.new(is_wheelchair_accessible: true)
-      expect( event.is_wheelchair_accessible ).to be_true
+      expect( event.is_wheelchair_accessible ).to be_truthy
     end
     it "should allow is_adults_only to be set" do
       event = Event.new(is_adults_only: true)
-      expect( event.is_adults_only ).to be_true
+      expect( event.is_adults_only ).to be_truthy
     end
     it "should allow is_tentative to be set" do
       event = Event.new(is_tentative: true)
-      expect( event.is_tentative ).to be_true
+      expect( event.is_tentative ).to be_truthy
     end
     it "should allow is_cancelled to be set" do
       event = Event.new(is_cancelled: true)
-      expect( event.is_cancelled ).to be_true
+      expect( event.is_cancelled ).to be_truthy
     end
     it "should allow is_featured to be set" do
       event = Event.new(is_featured: true)
-      expect( event.is_featured ).to be_true
+      expect( event.is_featured ).to be_truthy
     end
     it "should allow title to be set" do
       event = Event.new(title: 'set title')
@@ -151,7 +151,7 @@ describe Event do
     describe "of start_at" do
       it "should fail if start_at is not set" do
         event = Event.new(title: 'missing start_at')
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of end_at" do
@@ -159,33 +159,33 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'end_at = start_at',
           end_at: '2012-01-01 01:01:01'
         )
-        expect( event.valid? ).to be_true
+        expect( event.valid? ).to be_truthy
       end
       it "should fail if end_at is less than start_at" do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'end_at < start_at',
           end_at: '2012-01-01 01:01:00'
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of timezone" do
       it "should pass if timezone is nil" do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'not a timezone', timezone: nil)
-        expect( event.valid? ).to be_true
+        expect( event.valid? ).to be_truthy
       end
       it "should pass if timezone is blank" do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'not a timezone', timezone: '')
-        expect( event.valid? ).to be_true
+        expect( event.valid? ).to be_truthy
       end
       it "should pass if timezone is one of the recognized timezones" do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'UTC timezone', timezone: 'UTC')
-        expect( event.valid? ).to be_true
+        expect( event.valid? ).to be_truthy
       end
       it "should fail if the string is present but not a timezone" do
         event = Event.new(
           start_at: '2012-01-01 01:01:01', title: 'not a timezone', timezone: 'invalid timezone'
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of is_approved" do
@@ -194,21 +194,21 @@ describe Event do
           is_draft: true
         )
         event.is_approved = true
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of title" do
       it "should fail if title is not set" do
         event = Event.new(start_at: '2012-01-01 01:01:01')
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
       it "should fail if title is blank" do
         event = Event.new(title: '', start_at: '2012-01-01 01:01:01')
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
       it "should fail if title is too long" do
         event = Event.new(title: ('A' * 256), start_at: '2012-01-01 01:01:01')
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of description" do
@@ -216,13 +216,13 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'max length description',
           description: ('A' * 511)
         )
-        expect( event.valid? ).to be_true
+        expect( event.valid? ).to be_truthy
       end
       it "should fail if description is too long" do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long description',
           description: ('A' * 512)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of content" do
@@ -230,7 +230,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long content',
           content: ('A' * 8192)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of organizer" do
@@ -238,7 +238,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long organizer',
           organizer: ('A' * 256)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of organizer_url" do
@@ -246,7 +246,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long organizer_url',
           organizer_url: ('A' * 256)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of location" do
@@ -254,7 +254,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long location',
           location: ('A' * 256)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of address" do
@@ -262,7 +262,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long address',
           address: ('A' * 256)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of city" do
@@ -270,7 +270,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long city',
           city: ('A' * 256)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of province" do
@@ -278,7 +278,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long province',
           province: ('A' * 32)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of country" do
@@ -286,7 +286,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long country',
           country: ('A' * 3)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
     describe "of location_url" do
@@ -294,7 +294,7 @@ describe Event do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long location_url',
           location_url: ('A' * 256)
         )
-        expect( event.valid? ).to be_false
+        expect( event.valid? ).to be_falsey
       end
     end
   end
@@ -428,30 +428,30 @@ describe Event do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
       event.user = @user_normal
       # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_false
+      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
       # actual tests:
       event.approve_if_authority
-      expect( event.is_approved ).to be_false
+      expect( event.is_approved ).to be_falsey
     end
     it "should set is_approved to true when user has authority" do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'admin created event')
       event.user = FactoryGirl.create(:user)
       authority = FactoryGirl.create(:owner_authority, area: 'Calendar', user: event.user)
       # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_true
+      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_truthy
       # actual tests:
       event.approve_if_authority
-      expect( event.is_approved ).to be_true
+      expect( event.is_approved ).to be_truthy
     end
     it "should not change is_approved if already true" do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
       event.is_approved = true
       event.user = @user_normal
       # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_false
+      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
       # actual tests:
       event.approve_if_authority
-      expect( event.is_approved ).to be_true
+      expect( event.is_approved ).to be_truthy
     end
   end
 
@@ -484,7 +484,7 @@ describe Event do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'auto-set timezone on create')
       event.editor = @user_admin
       event.save!
-      expect( event.timezone.present? ).to be_true
+      expect( event.timezone.present? ).to be_truthy
     end
     it "should not be called on update" do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'no timezone on update')
@@ -492,7 +492,7 @@ describe Event do
       event.save!
       event.timezone = nil
       event.save!
-      expect( event.timezone.present? ).to be_false
+      expect( event.timezone.present? ).to be_falsey
     end
   end
 
@@ -507,7 +507,7 @@ describe Event do
       sourced_item.save!
       event.update(title: 'Updated')
       sourced_item.reload
-      expect( sourced_item.has_local_modifications? ).to be_true
+      expect( sourced_item.has_local_modifications? ).to be_truthy
     end
     it "should set the has_local_modifications for all sourced_items" do
       sourced_item.has_local_modifications = false
@@ -517,19 +517,19 @@ describe Event do
       sourced_item2.source = source2
       sourced_item2.save!
       # should not have updated event yet
-      expect( sourced_item.has_local_modifications? ).to be_false
-      expect( sourced_item2.has_local_modifications? ).to be_false
+      expect( sourced_item.has_local_modifications? ).to be_falsey
+      expect( sourced_item2.has_local_modifications? ).to be_falsey
       # “update” the event
       event.flag_as_modified_for_sourcing
-      expect( event.sourced_items[0].has_local_modifications? ).to be_true
-      expect( event.sourced_items[1].has_local_modifications? ).to be_true
+      expect( event.sourced_items[0].has_local_modifications? ).to be_truthy
+      expect( event.sourced_items[1].has_local_modifications? ).to be_truthy
     end
     it "should not touch the sourced_items when is_sourcing is set true" do
       sourced_item.has_local_modifications = false
       sourced_item.save!
       event.is_sourcing = true
       event.flag_as_modified_for_sourcing
-      expect( event.sourced_items[0].has_local_modifications? ).to be_false
+      expect( event.sourced_items[0].has_local_modifications? ).to be_falsey
     end
   end
 
@@ -539,18 +539,18 @@ describe Event do
     end
     it "should add a Version" do
       @versioned_event.editor = @user_admin
-      Version.any_instance.stub(:diff_with).and_return(title: 'Different')
+      allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect { @versioned_event.add_version }.to change{ @versioned_event.versions.count }.by(1)
     end
     it "should not add a Version when there have been no changes" do
       @versioned_event.editor = @user_admin
       @versioned_event.edit_comment = 'saving without changes'
-      Version.any_instance.stub(:diff_with).and_return({})
+      allow_any_instance_of(Version).to receive(:diff_with).and_return({})
       expect { @versioned_event.add_version }.to change{ @versioned_event.versions.count }.by(0)
     end
     it "should fail if editor has not been set" do
       @versioned_event.editor = nil
-      Version.any_instance.stub(:diff_with).and_return(title: 'Different')
+      allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect { @versioned_event.add_version }.to raise_error(ActiveRecord::RecordInvalid)
     end
     it "should be called after an event is created" do
@@ -559,7 +559,7 @@ describe Event do
     end
     it "should be called after an event is updated" do
       event = FactoryGirl.create(:event, editor: @user_admin, edit_comment: 'add_version after update')
-      Version.any_instance.stub(:diff_with).and_return(title: 'Different')
+      allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect {
         event.update(title: 'updated version')
       }.to change{ event.versions.count }.by(1)
@@ -568,15 +568,18 @@ describe Event do
 
   describe '#new_version' do
     it "should build a new Version for the event" do
-      values1 = { timezone: 'Central Time (US & Canada)', is_allday: true, is_draft: false }
+      values1 = {
+        'timezone' => 'Central Time (US & Canada)', 'is_allday' => 'true', 'is_draft' => 'false'
+      }
       values2 = {
-        is_wheelchair_accessible: true, is_adults_only: true, is_tentative: true,
-        is_cancelled: true, is_featured: true,
-        organizer: 'Organizer', organizer_url: 'http://organizer.url/',
-        location: 'Location', address: 'Address', city: 'City', province: 'Province', country: 'Co',
-        location_url: 'http://location.url/',
-        content: 'Content', description: 'Description',
-        start_at: Time.zone.parse('2000-01-01 02:03pm'), end_at: Time.zone.parse('2000-01-01 04:05pm')
+        'is_wheelchair_accessible' => 'true', 'is_adults_only' => 'true', 'is_tentative' => 'true',
+        'is_cancelled' => 'true', 'is_featured' => 'true',
+        'organizer' => 'Organizer', 'organizer_url' => 'http://organizer.url/',
+        'location' => 'Location', 'address' => 'Address',
+        'city' => 'City', 'province' => 'Province', 'country' => 'Co',
+        'location_url' => 'http://location.url/',
+        'content' => 'Content', 'description' => 'Description',
+        'start_at' => '2000-01-01 14:03:00 -0700', 'end_at' => '2000-01-01 16:05:00 -0700'
       }
       event = Event.new(
         { edit_comment: 'Edit Comment', title: 'Title' }.merge(values1).merge(values2)
@@ -592,7 +595,7 @@ describe Event do
       expect( version.edited_at ).to eq updated_at
       expect( version.edit_comment ).to eq 'Edit Comment'
       expect( version.title ).to eq 'Title'
-      expect( version.values ).to eq values1.merge(is_approved: true).merge(values2)
+      expect( version.values ).to eq values1.merge('is_approved' => 'true').merge(values2)
     end
   end
 
@@ -845,7 +848,7 @@ describe Event do
     end
     context 'with no events' do
       before(:each) do
-        Event.stub(:first).and_return(nil)
+        allow(Event).to receive(:first).and_return(nil)
       end
       it 'should return nil' do
         expect(Event.earliest_date).to be_nil
@@ -863,7 +866,7 @@ describe Event do
     end
     context 'with no events' do
       before(:each) do
-        Event.stub(:last).and_return(nil)
+        allow(Event).to receive(:last).and_return(nil)
       end
       it 'should return nil' do
         expect(Event.last_date).to be_nil
@@ -875,19 +878,19 @@ describe Event do
     let(:event) { $event = Event.new(start_at: '2004-05-06 7:08am') }
     context "with no end time" do
       it "should return false" do
-        expect( event.is_multi_day ).to be_false
+        expect( event.is_multi_day ).to be_falsey
       end
     end
     context "with an end time on the same date as the start time" do
       it "should return false" do
         event.end_at = event.start_at + 1.hour
-        expect( event.is_multi_day ).to be_false
+        expect( event.is_multi_day ).to be_falsey
       end
     end
     context "with an end time on a later date" do
       it "should return true" do
         event.end_at = event.start_at + 1.week
-        expect( event.is_multi_day ).to be_true
+        expect( event.is_multi_day ).to be_truthy
       end
     end
   end
@@ -896,23 +899,23 @@ describe Event do
     let(:event) { $event = FactoryGirl.create(:event, is_approved: false) }
     it "should return true if already approved" do
       event.is_approved = true
-      expect( event.approve_by(nil) ).to be_true
+      expect( event.approve_by(nil) ).to be_truthy
     end
     context "with an authorized user" do
       it "should set is_approved" do
         event.approve_by(@user_admin)
-        expect( event.is_approved? ).to be_true
+        expect( event.is_approved? ).to be_truthy
       end
       it "should save the event" do
         event.approve_by(@user_admin)
-        expect( event.changed? ).to be_false
+        expect( event.changed? ).to be_falsey
       end
     end
     it "should return false if user is nil" do
-      expect( event.approve_by(nil) ).to be_false
+      expect( event.approve_by(nil) ).to be_falsey
     end
     it "should return false if user is unauthorized" do
-      expect( event.approve_by(@user_normal) ).to be_false
+      expect( event.approve_by(@user_normal) ).to be_falsey
     end
     it "should not set the locally modified flag on shared items" do
       sourced_at = 1.hour.ago
@@ -920,7 +923,7 @@ describe Event do
       sourced_item.source = FactoryGirl.create(:source, last_updated_at: sourced_at)
       sourced_item.save
       event.approve_by(@user_admin)
-      expect( event.sourced_items.first.has_local_modifications? ).to be_false
+      expect( event.sourced_items.first.has_local_modifications? ).to be_falsey
     end
   end
 
@@ -965,7 +968,7 @@ describe Event do
       # TODO: handle processing an update for an event with local changes
       it "should return false" do
         # set the last arg to true (has_local_modifications)
-        expect( Event.new.update_from_icalendar(changed_ievent, has_local_modifications: true) ).to be_false
+        expect( Event.new.update_from_icalendar(changed_ievent, has_local_modifications: true) ).to be_falsey
       end
     end
   end

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "pages/edit.html.erb" do
+describe 'pages/edit.html.erb', type: :view do
   before(:each) do
     @page = assign(:page, stub_model(Page,
       :parent => nil,

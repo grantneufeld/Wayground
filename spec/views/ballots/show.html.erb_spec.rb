@@ -1,8 +1,7 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'election'
 
-describe 'ballots/show.html.erb' do
+describe 'ballots/show.html.erb', type: :view do
   let(:level) { $level = Level.new(filename: 'lvl') }
   let(:office) do
     $office = level.offices.build(filename: 'offc', name: 'Stub Office Name')
@@ -32,7 +31,7 @@ describe 'ballots/show.html.erb' do
   end
   let(:candidate) do
     $candidate = ballot.candidates.build(filename: 'cnd', name: 'Stub Candidate Name')
-    $candidate.stub(:persisted?).and_return(true)
+    allow($candidate).to receive(:persisted?).and_return(true)
     $candidate.ballot = ballot
     $candidate
   end

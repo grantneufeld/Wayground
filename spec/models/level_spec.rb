@@ -1,12 +1,11 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'level'
 
-describe Level do
+describe Level, type: :model do
 
   describe "acts_as_authority_controlled" do
     it "should be in the “Democracy” area" do
-      Level.authority_area.should eq 'Democracy'
+      expect(Level.authority_area).to eq 'Democracy'
     end
   end
 
@@ -56,39 +55,39 @@ describe Level do
   describe "validations" do
     let(:required) { $required = {filename: 'required', name: 'Required'} }
     it "should validate with all required values" do
-      expect( Level.new(required).valid? ).to be_true
+      expect( Level.new(required).valid? ).to be_truthy
     end
     describe "of filename" do
       let(:required) { $required = {name: 'Required'} }
       it "should fail if filename is blank" do
-        expect( Level.new(required.merge(filename: '')).valid? ).to be_false
+        expect( Level.new(required.merge(filename: '')).valid? ).to be_falsey
       end
       it "should fail if filename is nil" do
-        expect( Level.new(required).valid? ).to be_false
+        expect( Level.new(required).valid? ).to be_falsey
       end
       it 'should fail if filename is a duplicate' do
         FactoryGirl.create(:level, filename: 'duplicate')
-        expect( Level.new(required.merge(filename: 'duplicate')).valid? ).to be_false
+        expect( Level.new(required.merge(filename: 'duplicate')).valid? ).to be_falsey
       end
       it 'should fail if filename contains invalid characters' do
-        expect( Level.new(required.merge(filename: 'Has invalid characters!')).valid? ).to be_false
+        expect( Level.new(required.merge(filename: 'Has invalid characters!')).valid? ).to be_falsey
       end
     end
     describe "of name" do
       let(:required) { $required = {filename: 'required'} }
       it "should fail if name is blank" do
-        expect( Level.new(required.merge(name: '')).valid? ).to be_false
+        expect( Level.new(required.merge(name: '')).valid? ).to be_falsey
       end
       it "should fail if name is nil" do
-        expect( Level.new(required).valid? ).to be_false
+        expect( Level.new(required).valid? ).to be_falsey
       end
     end
     describe "of url" do
       it "should fail if url is not an url string" do
-        expect( Level.new(required.merge(url: 'not an url')).valid? ).to be_false
+        expect( Level.new(required.merge(url: 'not an url')).valid? ).to be_falsey
       end
       it "should pass if the url is a valid url" do
-        expect( Level.new(required.merge(url: 'https://valid.url:8080/should/pass')).valid? ).to be_true
+        expect( Level.new(required.merge(url: 'https://valid.url:8080/should/pass')).valid? ).to be_truthy
       end
     end
   end

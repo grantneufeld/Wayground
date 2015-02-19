@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "documents/index.html.erb" do
+describe 'documents/index.html.erb', type: :view do
   before(:each) do
     assign(:documents, [
       stub_model(Document,
@@ -31,7 +31,7 @@ describe "documents/index.html.erb" do
   it "renders a list of documents" do
     render
     # pagination
-    rendered.should match(/Showing 2 of 7 documents\./)
+    expect(rendered).to match(/Showing 2 of 7 documents\./)
     expect(rendered).to match(
       /Pages:\s*
       <a[^>]*>First<\/a>\s*

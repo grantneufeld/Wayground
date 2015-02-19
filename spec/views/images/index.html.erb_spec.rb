@@ -1,8 +1,8 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'image'
 require 'image_variant'
 
-describe "images/index.html.erb" do
+describe 'images/index.html.erb', type: :view do
   before(:all) do
     @image = Image.new(
       title: 'Stub Title',
@@ -25,7 +25,7 @@ describe "images/index.html.erb" do
   end
 
   it "should present a gallery of the images" do
-    @image.stub(:id).and_return(123)
+    allow(@image).to receive(:id).and_return(123)
     render
     assert_select 'div', class: 'gallery' do
       assert_select 'p', class: 'image', count: 2 do

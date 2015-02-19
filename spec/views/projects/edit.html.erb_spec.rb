@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "projects/edit" do
+describe 'projects/edit', type: :view do
   before(:each) do
     @project = assign(:project, stub_model(Project,
       :parent => nil,

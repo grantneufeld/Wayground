@@ -35,7 +35,7 @@ module Wayground
           expect( Base.new.user ).to be_nil
         end
         it "should return nil on an ActiveRecord::RecordNotFound exception" do
-          Base.any_instance.stub(:find_user).and_raise(ActiveRecord::RecordNotFound)
+          allow_any_instance_of(Base).to receive(:find_user).and_raise(ActiveRecord::RecordNotFound)
           expect( Base.new.user ).to be_nil
         end
       end
