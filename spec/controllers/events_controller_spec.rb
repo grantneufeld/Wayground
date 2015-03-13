@@ -273,6 +273,43 @@ describe EventsController, type: :controller do
     end
   end
 
+  describe 'POST update_tags' do
+    before(:all) do
+      @event = Event.first || FactoryGirl.create(:event)
+      @event.tag_list = 'first, second, third'
+    end
+    let(:event) { $event = @event }
+    context 'when event update succeeds' do
+      before(:each) do
+        set_logged_in_admin
+        expect_any_instance_of(Event).to receive(:save).and_return(true)
+        post :update_tags, id: event.id, tag_list: 'a, bc, def'
+      end
+      it 'should set the tags on the event from the tag_list param' do
+        expect(assigns(:event).tag_list.to_s).to eq 'a, bc, def'
+      end
+      it 'should set the flash to a success notice' do
+        expect(request.flash[:notice]).to match /saved/
+      end
+      it 'should redirect to the event' do
+        expect(response).to redirect_to(event)
+      end
+    end
+    context 'when event update fails' do
+      before(:each) do
+        set_logged_in_admin
+        expect_any_instance_of(Event).to receive(:save).and_return(false)
+        post :update_tags, id: event.id, tag_list: 'a, bc, def'
+      end
+      it 'should set the flash to an error message' do
+        expect(request.flash[:alert]).to match /Unable/
+      end
+      it 'should redirect to the event' do
+        expect(response).to redirect_to(event)
+      end
+    end
+  end
+
   describe "GET delete" do
     it "requires the user to have authority" do
       set_logged_in_user

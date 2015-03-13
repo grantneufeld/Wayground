@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       post 'approve' => 'events#set_approved'
       get 'merge'
       post 'merge' => 'events#perform_merge'
+      post 'update_tags'
     end
     resources :external_links
   end

@@ -58,8 +58,8 @@ if event.external_links.count > 0
   end
 end
 
-
-if event.tags.count > 0
+user_can_update_this_event = @user && event.has_authority_for_user_to?(@user, :can_update)
+if event.tags.count > 0 || user_can_update_this_event
   content_for(:other_sections) do
     %>
 <section class="tags"><h3>Tags</h3>
@@ -70,7 +70,15 @@ if event.tags.count > 0
 <%
   end
 %></ul>
-</section>
+<%
+if user_can_update_this_event
+  existing_tags = event.tag_list.to_s
+  %><%= form_tag(update_tags_event_url(event)) do %>
+<p><%= text_field_tag :tag_list, existing_tags %>
+<br /><%= submit_tag "Update Tags" %></p>
+<% end %><%
+end
+%></section>
 <%
   end
 end

@@ -23,6 +23,9 @@ describe EventsController, type: :routing do
     it "routes to #update" do
       expect(patch: '/events/1').to route_to('events#update', id: '1')
     end
+    it "routes to #update_tags" do
+      expect(post: '/events/1/update_tags').to route_to('events#update_tags', id: '1')
+    end
 
     it "routes to #delete" do
       expect(get: "/events/1/delete").to route_to("events#delete", id: "1")
