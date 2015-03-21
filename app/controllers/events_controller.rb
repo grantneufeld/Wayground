@@ -69,6 +69,19 @@ class EventsController < ApplicationController
     end
   end
 
+  def update_tags
+    @event.tag_list = params[:tag_list]
+    @event.editor = @user
+    @event.edit_comment = 'Updated tag list.'
+    if @event.save
+      notice = 'The event tags have been saved.'
+      redirect_to(@event, notice: notice)
+    else
+      notice = 'Unable to save the changes to the tags!'
+      redirect_to(@event, alert: notice)
+    end
+  end
+
   def delete
     page_metadata(title: "Delete Event: #{@event.title}")
   end

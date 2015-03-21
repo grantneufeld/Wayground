@@ -579,6 +579,7 @@ describe Event, type: :model do
         'city' => 'City', 'province' => 'Province', 'country' => 'Co',
         'location_url' => 'http://location.url/',
         'content' => 'Content', 'description' => 'Description',
+        'tag_list' => 'abc, def',
         'start_at' => '2000-01-01 14:03:00 -0700', 'end_at' => '2000-01-01 16:05:00 -0700'
       }
       event = Event.new(

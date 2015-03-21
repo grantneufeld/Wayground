@@ -1,0 +1,32 @@
+<h1>Tags</h1>
+<p class="wordcloud"><%
+scales = []
+@tags_with_counts.each_value do |count|
+  scales << count
+end
+scales.uniq!
+scales.sort!
+scale_map = {}
+if scales.size == 0
+  
+elsif scales.size < 6
+  counter = 1
+  scales.each do |scale|
+    scale_map[scale] = "scale#{counter}"
+    counter += 1
+  end
+else
+  counter = 1
+  scales.each do |scale|
+    scale_map[scale] = "scale#{counter}"
+    counter += 1 if counter < 6
+  end
+  
+end
+
+
+@tags_with_counts.each_pair do |tag, count|
+  %><span class="<%= scale_map[count] %>"><%= tag %></span>
+<%
+end
+%></p>

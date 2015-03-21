@@ -6,28 +6,16 @@ describe DocumentsController, type: :controller do
     Authority.delete_all
     User.delete_all
     Document.delete_all
+    @admin = FactoryGirl.create(:user)
     # create 11 public documents and 1 private
-    @document = FactoryGirl.create(:document)
+    @document = FactoryGirl.create(:document, user: @admin)
     FactoryGirl.create_list(:document, 10, :user => @document.user)
-    # create a document that should nto be viewable without authority
+    # create a document that should not be viewable without authority
     @private_doc = FactoryGirl.create(:document, :is_authority_controlled => true)
   end
 
   def set_logged_in_admin(stubs={})
-    allow(controller).to receive(:current_user).and_return(mock_admin(stubs))
-  end
-  def mock_admin(stubs={})
-    @mock_admin ||= mock_model(
-      User, {
-        id: 1, email: 'test+mockadmin@wayground.ca', name: 'The Admin',
-        has_authority_for_area: mock_admin_authority, has_authority_for_item: mock_admin_authority
-      }.merge(stubs)
-    )
-  end
-  def mock_admin_authority(stubs={})
-    @mock_admin_authority ||= mock_model(
-      Authority, { area: 'Content', is_owner: true, user: @mock_admin }.merge(stubs)
-    ).as_null_object
+    allow(controller).to receive(:current_user).and_return(@admin)
   end
 
   def mock_document(stubs={})

@@ -202,6 +202,7 @@ class Event < ActiveRecord::Base
       location_url: location_url,
       content: content,
       description: description,
+      tag_list: tag_list.to_s,
       start_at: start_at,
       end_at: end_at
     }

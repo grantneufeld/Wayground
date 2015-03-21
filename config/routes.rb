@@ -58,6 +58,7 @@ Rails.application.routes.draw do
       post 'approve' => 'events#set_approved'
       get 'merge'
       post 'merge' => 'events#perform_merge'
+      post 'update_tags'
     end
     resources :external_links
   end
@@ -68,6 +69,8 @@ Rails.application.routes.draw do
       post 'processor' => 'sources#runprocessor'
     end
   end
+  get 'tags' => 'tags#index'
+  get 'tags/:tag' => 'tags#tag'
 
   # PROJECTS
   resources :projects
