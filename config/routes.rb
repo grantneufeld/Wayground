@@ -47,6 +47,8 @@ Rails.application.routes.draw do
       post 'processor' => 'sources#runprocessor'
     end
   end
+  get 'tags' => 'tags#index'
+  get 'tags/:tag' => 'tags#tag'
 
   # PROJECTS
   resources :projects

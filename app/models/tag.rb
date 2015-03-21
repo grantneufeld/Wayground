@@ -12,6 +12,8 @@ class Tag < ActiveRecord::Base
   belongs_to :user
 
   default_scope { order(:tag) }
+  scope :tag_labels, -> { select('tag') }
+  scope :grouped_with_counts, -> { group(:tag).count }
 
   validates :tag, presence: true, uniqueness: { scope: [:item_type, :item_id] },
     format: { with: /\A[a-z0-9]+\z/ }
