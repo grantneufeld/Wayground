@@ -253,29 +253,59 @@ describe SourcesController, type: :controller do
   end
 
   describe "POST runprocessor" do
-    let(:source) do
-      $source = FactoryGirl.create(:source,
-        processor: 'iCalendar', url: "#{Rails.root}/spec/fixtures/files/sample.ics"
-      )
+    let(:source) { $source = Source.new(title: 'Test Source') }
+    before(:each) do
+      allow(Source).to receive(:find).with('123').and_return(source)
     end
 
     it "requires the user to have authority" do
+      allow(source).to receive(:has_authority_for_user_to?).and_return(false)
       set_logged_in_user
-      post :runprocessor, id: source.id
+      post :runprocessor, id: '123'
       expect(response.status).to eq 403
     end
 
-    describe "with valid params" do
-      it "processess the requested source" do
-        SourcedItem.delete_all
-        Event.delete_all
-        # Assuming there are no other sources in the database, this
-        # specifies that the Source created on the previous line
-        # receives the :process message with the admin User as an arg.
-        expect_any_instance_of(Source).to receive(:run_processor).
-          with(@user_admin, false).and_return(Wayground::Import::IcalImporter.new)
+    context 'with valid params' do
+      let(:importer) { $importer = Wayground::Import::IcalImporter.new }
+      before(:each) do
         set_logged_in_admin
-        post :runprocessor, id: source.id
+      end
+      it 'assigns source' do
+        allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
+        post :runprocessor, id: '123'
+        expect(assigns(:source)).to eq source
+      end
+      it 'assigns the page metadata title' do
+        allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
+        post :runprocessor, id: '123'
+        expect(assigns(:page_metadata).title).to match /^Processed Source:.*#{source.name}/
+      end
+      it 'processess the requested source' do
+        expect(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
+        post :runprocessor, id: '123'
+      end
+      it 'sets a flash notice' do
+        allow(importer).to receive(:new_events).and_return([1,2,3])
+        allow(importer).to receive(:updated_events).and_return([12,23,34,45])
+        allow(importer).to receive(:skipped_ievents).and_return([123,234,345,456,567])
+        allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
+        post :runprocessor, id: '123'
+        expect(flash[:notice]).to match /Processing complete/
+        expect(flash[:notice]).to match /3 items were created/
+        expect(flash[:notice]).to match /4 items were updated/
+        expect(flash[:notice]).to match /5 items were skipped/
+      end
+      it 'assigns sourced_items' do
+        allow(importer).to receive(:new_events).and_return([123])
+        allow(importer).to receive(:updated_events).and_return([234])
+        allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
+        post :runprocessor, id: '123'
+        expect(assigns(:sourced_items)).to eq [123,234]
+      end
+      it 'renders the show template' do
+        allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
+        post :runprocessor, id: '123'
+        expect(response).to render_template('show')
       end
     end
   end

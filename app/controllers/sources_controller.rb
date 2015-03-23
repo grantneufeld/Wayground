@@ -56,7 +56,7 @@ class SourcesController < ApplicationController
   end
 
   def runprocessor
-    page_metadata(title: "Process Source: #{@source.name}")
+    page_metadata(title: "Processed Source: #{@source.name}")
     processor = @source.run_processor(@user, params[:approve] == 'all')
     msgs = ['Processing complete.']
     new_events_size = processor.new_events.size
@@ -65,7 +65,9 @@ class SourcesController < ApplicationController
     msgs << "#{updated_events_size} items were updated." if updated_events_size > 0
     skipped_ievents_size = processor.skipped_ievents.size
     msgs << "#{skipped_ievents_size} items were skipped." if skipped_ievents_size > 0
-    redirect_to @source, :notice => msgs.join('<br />').html_safe
+    flash.now.notice = msgs.join('<br />').html_safe
+    @sourced_items = processor.new_events + processor.updated_events
+    render template: 'sources/show'
   end
 
   protected
