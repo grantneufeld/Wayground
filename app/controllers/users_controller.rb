@@ -2,9 +2,9 @@
 # Accessed by users as the singular resource “/account”,
 # and by admins as the plural resources “/users”.
 class UsersController < ApplicationController
-  before_action :set_user, except: [:profile, :new, :create]
-  before_action :set_site_location, except: [:profile, :show]
-  before_action :cant_be_signed_in, only: [:new, :create]
+  before_action :set_user, except: [:profile] #, :new, :create]
+  # before_action :set_site_location, except: [:profile, :show]
+  # before_action :cant_be_signed_in, only: [:new, :create]
 
   def profile
     @profile_user = User.find(params[:id])
@@ -14,41 +14,41 @@ class UsersController < ApplicationController
   def show
   end
 
-  def new
-    @user = User.new
-  end
-
-  def create
-    @user = User.new(params[:user])
-    if @user.save
-      cookie_set_remember_me(@user)
-      if @user.admin?
-        # an authority was created along with the user, so they must be an admin
-        notice = "You are now registered as an administrator for this site."
-      else
-        notice = "You are now registered on this site."
-      end
-      redirect_to account_url, :notice => notice
-    else
-      @user.password = @user.password_confirmation = nil
-      render "new"
-    end
-  end
-
-  def confirm
-    if @user.email_confirmed
-      message = { notice: "Your email address was already confirmed." }
-    elsif @user.confirm_code!(params[:confirmation_code])
-      message = { notice: "Thank-you for confirming your email address." }
-    else
-      message = { alert: "Invalid confirmation code. Your email has not been confirmed." }
-    end
-    redirect_to account_url, message
-  rescue
-    redirect_to account_url, status: 500,
-      alert: "We are sorry. There was a problem while trying to update your information. " +
-        "Please try again or contact a system administrator."
-  end
+  # def new
+  #   @user = User.new
+  # end
+  #
+  # def create
+  #   @user = User.new(params[:user])
+  #   if @user.save
+  #     cookie_set_remember_me(@user)
+  #     if @user.admin?
+  #       # an authority was created along with the user, so they must be an admin
+  #       notice = "You are now registered as an administrator for this site."
+  #     else
+  #       notice = "You are now registered on this site."
+  #     end
+  #     redirect_to account_url, :notice => notice
+  #   else
+  #     @user.password = @user.password_confirmation = nil
+  #     render "new"
+  #   end
+  # end
+  #
+  # def confirm
+  #   if @user.email_confirmed
+  #     message = { notice: "Your email address was already confirmed." }
+  #   elsif @user.confirm_code!(params[:confirmation_code])
+  #     message = { notice: "Thank-you for confirming your email address." }
+  #   else
+  #     message = { alert: "Invalid confirmation code. Your email has not been confirmed." }
+  #   end
+  #   redirect_to account_url, message
+  # rescue
+  #   redirect_to account_url, status: 500,
+  #     alert: "We are sorry. There was a problem while trying to update your information. " +
+  #       "Please try again or contact a system administrator."
+  # end
 
 
   protected
@@ -72,14 +72,14 @@ class UsersController < ApplicationController
     end
   end
 
-  # Breadcrumbs for actions on this controller start with the index page.
-  def set_site_location
-    @site_breadcrumbs = [{ text: 'Users', url: account_path }]
-  end
-
-  def cant_be_signed_in
-    if current_user.present?
-      redirect_to account_url, :notice => "You are already signed up."
-    end
-  end
+  # # Breadcrumbs for actions on this controller start with the index page.
+  # def set_site_location
+  #   @site_breadcrumbs = [{ text: 'Users', url: account_path }]
+  # end
+  #
+  # def cant_be_signed_in
+  #   if current_user.present?
+  #     redirect_to account_url, :notice => "You are already signed up."
+  #   end
+  # end
 end

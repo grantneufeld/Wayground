@@ -6,9 +6,9 @@ Rails.application.routes.draw do
   root to: "paths#sitepath", via: :get, defaults: { url: '/' }
 
   # USERS
-  get "signup" => "users#new", :as => :signup
-  post "signup" => "users#create"
-  get "account/confirm/:confirmation_code" => "users#confirm", :as => :confirm_account
+  # get "signup" => "users#new", :as => :signup
+  # post "signup" => "users#create"
+  # get "account/confirm/:confirmation_code" => "users#confirm", :as => :confirm_account
   resource :account, :controller => 'users', :except => [:index, :new, :create, :destroy]
   get 'profile/:id' => 'users#profile', :as => :profile
   # SESSIONS

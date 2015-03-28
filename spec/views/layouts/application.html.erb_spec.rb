@@ -174,7 +174,7 @@ describe 'layouts/application.html.erb', type: :view do
   describe "signed-out user" do
     before { render }
     it "should flag the usermenu as signed-out" do
-      expect(rendered).to match('<div id="usermenu" class="signed-out"')
+      expect(rendered).to match('<div id="usermenu" class="hidden"')
     end
     #it "should have a registration link" do
     #  expect(rendered).to match(/<a href="\/signup">Register[^<]*<\/a>/)
