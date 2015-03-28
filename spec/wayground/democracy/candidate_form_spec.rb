@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'democracy/candidate_form'
 require 'candidate'
 
@@ -113,10 +112,39 @@ describe Wayground::Democracy::CandidateForm do
   end
 
   describe '#person' do
-    it 'should return the person' do
-      form = Wayground::Democracy::CandidateForm.new
-      form.candidate = candidate
-      expect( form.person ).to eq candidate.person
+    context 'with a candidate assigned' do
+      context 'with a candidate with a person assigned' do
+        it 'should return the person' do
+          form = Wayground::Democracy::CandidateForm.new
+          form.candidate = candidate
+          expect(form.person).to be candidate.person
+        end
+      end
+      context 'without a person assigned' do
+        it 'should return a new person' do
+          form = Wayground::Democracy::CandidateForm.new
+          form.candidate = Candidate.new
+          expect(form.person).to be_a(Person)
+        end
+        
+      end
+    end
+    context 'with no candidate assigned' do
+      context 'with no ballot assigned' do
+        it 'should return nil' do
+          form = Wayground::Democracy::CandidateForm.new
+          expect(form.person).to be_nil
+        end
+      end
+      context 'with a ballot assigned' do
+        it 'should create a new person for a new candidate for the ballot' do
+          form = Wayground::Democracy::CandidateForm.new
+          form.ballot = ballot
+          expect(form.person).to be_a(Person)
+          expect(form.candidate).to be_a(Candidate)
+          expect(form.candidate.ballot).to be(ballot)
+        end
+      end
     end
   end
   describe '#person=' do
@@ -125,6 +153,26 @@ describe Wayground::Democracy::CandidateForm do
       form.candidate = Candidate.new
       form.person = person
       expect( form.person ).to eq(person)
+    end
+    context 'without values set for the candidate, or from params' do
+      it 'should assign the filename from the person' do
+        form = Wayground::Democracy::CandidateForm.new
+        form.ballot = ballot
+        form.person = Person.new(filename: 'from_person')
+        expect(form.filename).to eq 'from_person'
+      end
+      it 'should assign the name from the person.fullname' do
+        form = Wayground::Democracy::CandidateForm.new
+        form.ballot = ballot
+        form.person = Person.new(fullname: 'From Person')
+        expect(form.name).to eq 'From Person'
+      end
+      it 'should assign the bio from the person' do
+        form = Wayground::Democracy::CandidateForm.new
+        form.ballot = ballot
+        form.person = Person.new(bio: 'From Person.')
+        expect(form.bio).to eq 'From Person.'
+      end
     end
   end
 

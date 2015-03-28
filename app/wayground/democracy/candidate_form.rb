@@ -30,8 +30,10 @@ module Wayground
       end
 
       def person
-        if @candidate
+        if candidate
           @candidate.person ||= Person.new(person_attributes)
+        else
+          nil
         end
       end
       def person=(value)
@@ -138,9 +140,9 @@ module Wayground
       end
 
       def attrs_from_person
-        self.filename ||= person.filename
-        self.name ||= person.fullname
-        self.bio ||= person.bio
+        self.filename = person.filename if filename.blank?
+        self.name = person.fullname if name.blank?
+        self.bio = person.bio if bio.blank?
       end
 
       def persist
