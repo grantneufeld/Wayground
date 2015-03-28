@@ -12,7 +12,7 @@ class Election < ActiveRecord::Base
   has_many :ballots
 
   validates :level_id, presence: true
-  validates :filename, presence: true, uniqueness: { scope: :level_id }, format: { with: /\A[a-z0-9_\-]+\z/ }
+  validates :filename, presence: true, uniqueness: { scope: :level_id }, format: { with: /\A[a-z0-9_\-]+\z/, message: 'must be only lowercase letters, numbers, dashes, and underscores' }
   validates :name, presence: true, uniqueness: { scope: :level_id }
   validates :url, http_url: true, allow_blank: true
   validates :end_on, presence: true
