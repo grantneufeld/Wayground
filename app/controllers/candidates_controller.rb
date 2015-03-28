@@ -89,11 +89,11 @@ class CandidatesController < ApplicationController
     page_metadata(title: 'New Candidate')
     @candidate_form = Wayground::Democracy::CandidateForm.new
     @candidate_form.ballot = @ballot
+    @candidate_form.attributes = params[:wayground_democracy_candidate_form]
     if params[:person_id]
       @person = Person.from_param(params[:person_id]).first
       @candidate_form.person = @person
     end
-    @candidate_form.attributes = params[:wayground_democracy_candidate_form]
   end
 
   def prep_edit
