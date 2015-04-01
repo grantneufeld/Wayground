@@ -294,6 +294,11 @@ describe EventsController, type: :controller do
       it 'should redirect to the event' do
         expect(response).to redirect_to(event)
       end
+      context 'when event is a sourced_item' do
+        it 'should leave has_local_modifications on the sourced_item as false' do
+          # TODO: write the test for has_local_modifications on sourced_item
+        end
+      end
     end
     context 'when event update fails' do
       before(:each) do
