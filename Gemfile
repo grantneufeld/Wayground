@@ -83,9 +83,8 @@ group :test do
   gem 'simplecov', '>= 0.7.1', require: false
   gem 'simplecov-html', '>= 0.7.1', require: false
   # continuous testing:
-  gem 'autotest-fsevent', '>= 0.2.8', require: false
-  gem 'autotest-growl', '>= 0.2.9', require: false
   gem 'autotest-rails', '>= 4.1.2', require: false
+  gem 'autotest-fsevent', '>= 0.2.8', require: false
   # data factories:
   gem 'factory_girl', '>= 3.5.0', require: false
   gem 'factory_girl_rails', '>= 3.5.0', require: false

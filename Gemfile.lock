@@ -54,7 +54,6 @@ GEM
     ast (2.0.0)
     autotest-fsevent (0.2.10)
       sys-uname
-    autotest-growl (0.2.16)
     autotest-rails (4.2.1)
       ZenTest (~> 4.5)
     bcrypt (3.1.10)
@@ -382,7 +381,6 @@ PLATFORMS
 
 DEPENDENCIES
   autotest-fsevent (>= 0.2.8)
-  autotest-growl (>= 0.2.9)
   autotest-rails (>= 4.1.2)
   bcrypt (~> 3.1.7)
   brakeman
