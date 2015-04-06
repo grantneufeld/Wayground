@@ -66,7 +66,9 @@ class SourcesController < ApplicationController
     skipped_ievents_size = processor.skipped_ievents.size
     msgs << "#{skipped_ievents_size} items were skipped." if skipped_ievents_size > 0
     flash.now.notice = msgs.join('<br />').html_safe
-    @sourced_items = processor.new_events + processor.updated_events
+    items = processor.new_events + processor.updated_events
+    @sourced_items = items.map { |item| item.sourced_items.first }
+    @sourced_items.compact!
     render template: 'sources/show'
   end
 

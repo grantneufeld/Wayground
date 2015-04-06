@@ -285,22 +285,34 @@ describe SourcesController, type: :controller do
         post :runprocessor, id: '123'
       end
       it 'sets a flash notice' do
-        allow(importer).to receive(:new_events).and_return([1,2,3])
-        allow(importer).to receive(:updated_events).and_return([12,23,34,45])
-        allow(importer).to receive(:skipped_ievents).and_return([123,234,345,456,567])
+        new_event = Event.new
+        new_event.sourced_items << SourcedItem.new
+        updated_event = Event.new
+        updated_event.sourced_items << SourcedItem.new
+        skipped_event = Event.new
+        skipped_event.sourced_items << SourcedItem.new
+        allow(importer).to receive(:new_events).and_return([new_event])
+        allow(importer).to receive(:updated_events).and_return([updated_event])
+        allow(importer).to receive(:skipped_ievents).and_return([skipped_event])
         allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
         post :runprocessor, id: '123'
         expect(flash[:notice]).to match /Processing complete/
-        expect(flash[:notice]).to match /3 items were created/
-        expect(flash[:notice]).to match /4 items were updated/
-        expect(flash[:notice]).to match /5 items were skipped/
+        expect(flash[:notice]).to match /1 items were created/
+        expect(flash[:notice]).to match /1 items were updated/
+        expect(flash[:notice]).to match /1 items were skipped/
       end
       it 'assigns sourced_items' do
-        allow(importer).to receive(:new_events).and_return([123])
-        allow(importer).to receive(:updated_events).and_return([234])
+        new_event = Event.new
+        new_event.sourced_items << SourcedItem.new
+        updated_event = Event.new
+        updated_event.sourced_items << SourcedItem.new
+        allow(importer).to receive(:new_events).and_return([new_event])
+        allow(importer).to receive(:updated_events).and_return([updated_event])
         allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
         post :runprocessor, id: '123'
-        expect(assigns(:sourced_items)).to eq [123,234]
+        expect(assigns(:sourced_items)).to eq(
+          [new_event.sourced_items.first, updated_event.sourced_items.first]
+        )
       end
       it 'renders the show template' do
         allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
