@@ -426,6 +426,7 @@ describe Wayground::Democracy::CandidateForm do
     describe 'of filename' do
       it 'should fail if filename is not set' do
         minimum_valid_params.delete('filename')
+        minimum_valid_params.delete('name')
         form = Wayground::Democracy::CandidateForm.new(minimum_valid_params)
         form.ballot = ballot
         expect( form.valid? ).to be_falsey
@@ -516,6 +517,11 @@ describe Wayground::Democracy::CandidateForm do
       form = Wayground::Democracy::CandidateForm.new
       form.attributes = { 'filename' => 'x' }
       expect( form.filename ).to eq 'x'
+    end
+    it 'should set filename from name when filename not set' do
+      form = Wayground::Democracy::CandidateForm.new
+      form.attributes = { 'name' => ' Test 123-456 ' }
+      expect(form.filename).to eq 'test_123-456'
     end
     it 'should set name' do
       form = Wayground::Democracy::CandidateForm.new

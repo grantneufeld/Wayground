@@ -104,6 +104,7 @@ module Wayground
           self.vote_count   = params['vote_count']   if params.has_key?('vote_count')
           self.bio          = params['bio']          if params.has_key?('bio')
           self.party_id     = params['party_id']     if params.has_key?('party_id')
+          self.filename = self.name.strip.downcase.gsub(/ +/, '_') if self.name && self.filename.blank?
         end
       end
 
