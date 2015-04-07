@@ -11,6 +11,7 @@ office ||= @office || ballot.office
 level ||= @level || election.level
 person ||= @person || candidate.person
 user ||= @user
+party ||= @party || candidate.party
 
 content_for(:head) do
   %><link rel="profile" href="http://microformats.org/profile/hcard" />
@@ -19,7 +20,13 @@ end
 
 %><%= render 'ballots/breadcrumb', { ballot: ballot } %>
 <h1><%= candidate.name %></h1>
-<p>Candidate for <%= link_to office.name, [level, election, ballot] %><%
+<%
+if party
+  %><p class="party-label" style="border-color:<%= party.colour %>"><%= link_to party.name, [party.level, party] %> c<%
+else
+  %><p>C<%
+end
+%>andidate for <%= link_to office.name, [level, election, ballot] %><%
 if candidate.is_rumoured
   %> <span class="rumoured">(unconfirmed)</span><%
 end %>.

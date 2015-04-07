@@ -17,7 +17,7 @@ def merge_parts(items)
 end
 
 
-%>Section ID,Ballot ID,Ballot Name,Candidate,Website,Email,Twitter,Phone,Office,Links
+%>Section ID,Ballot ID,Ballot Name,Candidate,Party,Website,Email,Twitter,Phone,Office,Links
 <%
 
 section = nil
@@ -31,8 +31,11 @@ section_counter = 0
   ballot_prefix = "#{section_counter},#{ballot.position},#{csvize(ballot.descriptor)}".html_safe
   ballot.candidates.running.each do |candidate|
     contact = candidate.contacts.only_public.first || Contact.new
+    party = candidate.party
+    party_name = party ? party.name : ''
     %><%= ballot_prefix
     %>,<%= csvize(candidate.name)
+    %>,<%= csvize(party_name)
     %>,<%= csvize(contact.url)
     %>,<%= csvize(contact.email)
     %>,<%= contact.twitter.present? ? csvize("@#{contact.twitter}") : ''

@@ -10,7 +10,12 @@ div_classes << 'rumoured' if candidate.is_rumoured?
 div_classes << 'elected' if candidate.is_elected?
 div_classes << 'quit' if candidate.quit_on?
 %><div class="<%= div_classes.join(' ') %>">
-<h3 class="fn"><%= link_to candidate.name, candidate.items_for_path, class: 'url' %></h3>
+<h3 class="fn"><%= link_to candidate.name, candidate.items_for_path, class: 'url' %><%
+party = candidate.party
+if party
+  %> (<%= link_to party.name, [party.level, party] %>)<%
+end
+%></h3>
 <%
 if candidate.vote_count > 0
   %>received <%= candidate.vote_count %> votes.
