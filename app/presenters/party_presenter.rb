@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'html_presenter'
 
 # Present a political Party.
@@ -19,7 +18,7 @@ class PartyPresenter < HtmlPresenter
 
   def present_heading
     html_tag_with_newline(:h1, party_attrs) do
-      html_escape("#{level.name} party: ") + linked_party_name + html_escape(" [#{party.abbrev}]")
+      linked_party_name + html_escape(" [#{party.abbrev}]")
     end
   end
 

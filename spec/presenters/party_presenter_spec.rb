@@ -67,9 +67,6 @@ describe PartyPresenter do
         /<h1 (?:|[^>]* )style="border-color:aqua"/
       )
     end
-    it 'should identify the level' do
-      expect( presenter.present_heading ).to match /Test Level/
-    end
     it 'should include the linked party name' do
       expect( presenter.present_heading ).to match(
         /<a href="\/levels\/test_level\/parties\/test_party">Test Party<\/a>/

@@ -43,10 +43,8 @@ describe Candidate, type: :model do
         Candidate.new(party: Party.new)
       }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
     end
-    it "should not allow party_id" do
-      expect {
-        Candidate.new(party_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
+    it "should allow party_id" do
+      expect(Candidate.new(party_id: 1).party_id).to eq 1
     end
     it "should allow filename" do
       filename = 'example_filename'

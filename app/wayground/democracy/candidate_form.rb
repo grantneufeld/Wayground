@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'filename_validator'
 require 'person'
 
@@ -53,6 +52,7 @@ module Wayground
       attribute :quit_on,      ::Date
       attribute :vote_count,   ::Integer, default: 0
       attribute :bio,          ::String
+      attribute :party_id,     ::Integer, default: nil
 
       # VALIDATIONS
 
@@ -103,6 +103,7 @@ module Wayground
           self.quit_on      = params['quit_on']      if params.has_key?('quit_on')
           self.vote_count   = params['vote_count']   if params.has_key?('vote_count')
           self.bio          = params['bio']          if params.has_key?('bio')
+          self.party_id     = params['party_id']     if params.has_key?('party_id')
         end
       end
 
@@ -137,6 +138,7 @@ module Wayground
         self.quit_on ||= @candidate.quit_on
         self.vote_count = @candidate.vote_count if !vote_count || vote_count == 0
         self.bio ||= (person ? person.bio : nil)
+        self.party_id ||= @candidate.party_id
       end
 
       def attrs_from_person
@@ -158,7 +160,8 @@ module Wayground
           filename: filename, name: name,
           is_rumoured: is_rumoured, is_confirmed: is_confirmed, is_incumbent: is_incumbent,
           is_leader: is_leader, is_acclaimed: is_acclaimed, is_elected: is_elected,
-          announced_on: announced_on, quit_on: quit_on, vote_count: vote_count
+          announced_on: announced_on, quit_on: quit_on, vote_count: vote_count,
+          party_id: party_id
         }
       end
 

@@ -12,6 +12,7 @@ class CandidatesController < ApplicationController
   before_filter :set_candidate, only: [:show, :edit, :update, :delete, :destroy]
   before_filter :prep_new, only: [:new, :create]
   before_filter :prep_edit, only: [:edit, :update]
+  before_filter :prep_form, only: [:new, :create, :edit, :update]
   before_filter :prep_delete, only: [:delete, :destroy]
   before_filter :set_section
 
@@ -102,6 +103,10 @@ class CandidatesController < ApplicationController
     @candidate_form = Wayground::Democracy::CandidateForm.new
     @candidate_form.candidate = @candidate
     @candidate_form.attributes = params[:wayground_democracy_candidate_form]
+  end
+
+  def prep_form
+    @parties = @level.parties.order(:name)
   end
 
   def prep_delete

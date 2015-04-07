@@ -7,6 +7,8 @@ describe Wayground::Democracy::CandidateForm do
   before(:all) do
     Person.delete_all
     @ballot = FactoryGirl.create(:ballot)
+    @level = @ballot.election.level
+    @party = FactoryGirl.create(:party, level: @level)
     @duplicate_person = FactoryGirl.create(:person, filename: 'duplicate_person', fullname: 'Duplicate Person')
     dup_candidate = @ballot.candidates.build(filename: 'duplicate_candidate', name: 'Duplicate Candidate')
     dup_candidate.person = @duplicate_person
@@ -14,6 +16,9 @@ describe Wayground::Democracy::CandidateForm do
   end
   def ballot
     @ballot
+  end
+  def party
+    @party
   end
   def duplicate_person
     @duplicate_person
@@ -30,6 +35,7 @@ describe Wayground::Democracy::CandidateForm do
       announced_on: '2001-02-03', quit_on: '2002-03-04', vote_count: '1234'
     )
     $candidate.person = person
+    $candidate.party = party
     $candidate
   end
 
@@ -351,6 +357,20 @@ describe Wayground::Democracy::CandidateForm do
     end
   end
 
+  describe '#party_id' do
+    it 'should return the party_id' do
+      form = Wayground::Democracy::CandidateForm.new
+      form.party_id = 123
+      expect( form.party_id ).to eq 123
+    end
+    context 'with no party' do
+      it 'should default to nil' do
+        form = Wayground::Democracy::CandidateForm.new
+        expect( form.party_id ).to be_nil
+      end
+    end
+  end
+
   # VALIDATIONS
 
   describe 'validation' do
@@ -490,6 +510,7 @@ describe Wayground::Democracy::CandidateForm do
       expect( form.quit_on.to_s ).to eq '2002-03-04'
       expect( form.vote_count.to_i ).to eq 1234
       expect( form.bio ).to eq 'Bio.'
+      expect(form.party_id).to eq party.id
     end
     it 'should set filename' do
       form = Wayground::Democracy::CandidateForm.new
@@ -551,6 +572,11 @@ describe Wayground::Democracy::CandidateForm do
       form.attributes = { 'bio' => 'x' }
       expect( form.bio ).to eq 'x'
     end
+    it 'should set party_id' do
+      form = Wayground::Democracy::CandidateForm.new
+      form.attributes = { 'party_id' => '123' }
+      expect( form.party_id ).to eq 123
+    end
   end
 
   describe '#save' do
@@ -559,7 +585,7 @@ describe Wayground::Democracy::CandidateForm do
         'is_rumoured' => true, 'is_confirmed' => true, 'is_incumbent' => true,
         'is_leader' => true, 'is_acclaimed' => true, 'is_elected' => true,
         'announced_on' => '2001-02-03', 'quit_on' => '2002-03-04', 'vote_count' => 345,
-        'bio' => 'Bio.'
+        'bio' => 'Bio.', 'party_id' => 123
       }
     end
     context 'with valid parameters set' do
