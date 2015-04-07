@@ -1,0 +1,16 @@
+<%
+ballots ||= @ballots
+election ||= @election
+level ||= @level || election.level
+user ||= @user
+
+%>
+<%= render 'levels/breadcrumb', { level: level } %>
+<h1>Generated <%= ballots.count %> Ballots for <%= link_to election.descriptor, [level, election] %></h1>
+
+<ul>
+<%
+ballots.each do |ballot|
+  %><%= render 'ballots/list_item', { ballot: ballot, user: user } %><%
+end -%>
+</ul>

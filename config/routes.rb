@@ -29,6 +29,10 @@ Rails.application.routes.draw do
   resources :levels do
     get 'new/:parent_id' => 'levels#new', on: :collection, as: :new_level_with_parent
     resources :elections do
+      member do
+        get 'ballot_maker'
+        post 'generate_ballots'
+      end
       resources :ballots do
         resources :candidates do
           resources :contacts

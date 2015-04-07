@@ -1,16 +1,17 @@
-# encoding: utf-8
 require 'election'
 require 'level'
+require 'democracy/election_builder'
 
 # RESTful controller for Election records.
 # Called as a sub-controller under LevelsController
 class ElectionsController < ApplicationController
   before_action :set_user
   before_action :set_level
-  before_action :set_election, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_election, except: [:index, :new, :create]
   before_action :prep_new, only: [:new, :create]
   before_action :prep_edit, only: [:edit, :update]
   before_action :prep_delete, only: [:delete, :destroy]
+  before_action :prep_generate, only: [:ballot_maker, :generate_ballots]
   before_action :set_section
 
   def index
@@ -51,6 +52,20 @@ class ElectionsController < ApplicationController
     redirect_to level_elections_url(@level)
   end
 
+  def ballot_maker
+    page_metadata(title: "Generate Ballots for “#{@election.name}”")
+  end
+
+  def generate_ballots
+    page_metadata(title: "Generate Ballots for “#{@election.descriptor}”")
+    term_start_on = Date.parse(params[:term_start_on]) rescue nil
+    term_end_on = Date.parse(params[:term_end_on]) rescue nil
+    builder = Wayground::Democracy::ElectionBuilder.new(
+      election: @election, term_start_on: term_start_on, term_end_on: term_end_on
+    )
+    @ballots = builder.generate_ballots
+  end
+
   protected
 
   def set_user
@@ -84,6 +99,10 @@ class ElectionsController < ApplicationController
 
   def prep_delete
     requires_authority(:can_delete)
+  end
+
+  def prep_generate
+    requires_authority(:can_create)
   end
 
   def requires_authority(action)

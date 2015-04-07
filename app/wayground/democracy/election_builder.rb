@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Wayground
   module Democracy
 
@@ -16,12 +14,15 @@ module Wayground
       end
 
       def generate_ballots
+        new_ballots = []
         offices_to_add_ballots_for.each do |office|
           ballot = @election.ballots.build(term_start_on: @term_start_on, term_end_on: @term_end_on)
           ballot.office = office
           #ballot.save!
+          new_ballots << ballot
         end
         @election.save!
+        new_ballots
       end
 
       # protected

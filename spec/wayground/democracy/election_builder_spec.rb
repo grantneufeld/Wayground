@@ -32,7 +32,9 @@ describe Wayground::Democracy::ElectionBuilder do
       office3 = FactoryGirl.create(:office, level: level)
       election = FactoryGirl.create(:election, level: level)
       builder = Wayground::Democracy::ElectionBuilder.new(election: election)
-      expect { builder.generate_ballots }.to change(Ballot, :count).by(3)
+      new_ballots = []
+      expect { new_ballots = builder.generate_ballots }.to change(Ballot, :count).by(3)
+      expect(new_ballots.size).to eq 3
     end
   end
 

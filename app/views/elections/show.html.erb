@@ -55,6 +55,7 @@ if user
     add_submenu_item(title: 'New Election', path: new_level_election_path(level))
   end
   if user.has_authority_for_area(Ballot.authority_area, :can_create)
+    add_submenu_item(title: 'Generate Ballots', path: ballot_maker_level_election_path(level, election))
     add_submenu_item(title: 'Add Ballot', path: new_level_election_ballot_path(level, election))
   end
 end

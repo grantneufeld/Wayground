@@ -1,6 +1,6 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'elections_controller'
+require 'democracy/election_builder'
 
 describe ElectionsController, type: :controller do
 
@@ -282,6 +282,78 @@ describe ElectionsController, type: :controller do
       it 'redirects to the elections list' do
         delete :destroy, id: election.filename, level_id: @level.to_param
         expect( response ).to redirect_to(level_elections_url(@level))
+      end
+    end
+  end
+
+  describe 'GET ballot_maker' do
+    it 'requires the user to have authority' do
+      set_logged_in_user
+      get :ballot_maker, id: election.filename, level_id: @level.to_param
+      expect(response.status).to eq 403
+    end
+    context 'with authority' do
+      before(:each) do
+        set_logged_in_admin
+        get :ballot_maker, id: election.filename, level_id: @level.to_param
+      end
+      it 'assigns the election' do
+        expect(assigns(:election)).to eq election
+      end
+      it 'assigns a title to the page_metadata' do
+        expect(assigns(:page_metadata).title).to match /Generate Ballots/
+      end
+      it 'renders the ‘ballot_maker’ template' do
+        expect(response).to render_template('elections/ballot_maker')
+      end
+      it 'assigns the site section' do
+        expect(assigns(:site_section)).to eq :elections
+      end
+    end
+  end
+
+  describe 'POST generate_ballots' do
+    it 'requires the user to have authority' do
+      set_logged_in_user
+      post :generate_ballots, id: election.filename, level_id: @level.to_param
+      expect(response.status).to eq 403
+    end
+    context 'with authority' do
+      before(:each) do
+        set_logged_in_admin
+      end
+      it 'assigns the election' do
+        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        expect(assigns(:election)).to eq election
+      end
+      it 'assigns a title to the page_metadata' do
+        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        expect(assigns(:page_metadata).title).to match /Generate Ballots/
+      end
+      it 'assigns the site section' do
+        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        expect(assigns(:site_section)).to eq :elections
+      end
+      it 'uses the date parameters' do
+        builder = Wayground::Democracy::ElectionBuilder.new(election: election)
+        allow(builder).to receive(:generate_ballots).and_return([])
+        expect(Wayground::Democracy::ElectionBuilder).to receive(:new).with(
+          election: election, term_start_on: '2001-02-03'.to_date, term_end_on: '2002-03-04'.to_date
+        ).and_return(builder)
+        post :generate_ballots, id: election.filename, level_id: @level.to_param, term_start_on: '2001-02-03', term_end_on: '2002-03-04'
+      end
+      it 'assigns the ballots' do
+        ballot = Ballot.new
+        ballots = [ballot]
+        builder = Wayground::Democracy::ElectionBuilder.new(election: election)
+        allow(builder).to receive(:generate_ballots).and_return(ballots)
+        allow(Wayground::Democracy::ElectionBuilder).to receive(:new).and_return(builder)
+        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        expect(assigns(:ballots)).to eq [ballot]
+      end
+      it 'renders the ‘generate_ballots’ template' do
+        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        expect(response).to render_template('elections/generate_ballots')
       end
     end
   end

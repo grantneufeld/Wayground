@@ -1,0 +1,17 @@
+<%= render 'elections/breadcrumb', { level: @level, election: @election } %>
+<h1>Generate Ballots for “<%= link_to @election.name, [@level, @election] %>” Election?</h1>
+
+<p>There are currently <%= @election.ballots.count %> Ballots on the election.</p>
+
+<p>Ballots will be generated for <%= @level.offices.count %> Offices.</p>
+
+<%= form_tag(generate_ballots_level_election_path(@level, @election), method: :post) do %>
+<table><tbody>
+<tr><th><%= label_tag :term_start_on %></th>
+  <td><%= date_field_tag :term_start_on %> (date)</td></tr>
+<tr><th><%= label_tag :term_end_on %></th>
+  <td><%= date_field_tag :term_end_on %> (date)</td></tr>
+</tbody>
+<tfoot><tr><th></th> <td><%= submit_tag "Generate Ballots for Election" %></td></tr></tfoot>
+</table>
+<% end %>

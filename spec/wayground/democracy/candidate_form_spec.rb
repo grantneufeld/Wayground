@@ -126,7 +126,6 @@ describe Wayground::Democracy::CandidateForm do
           form.candidate = Candidate.new
           expect(form.person).to be_a(Person)
         end
-        
       end
     end
     context 'with no candidate assigned' do

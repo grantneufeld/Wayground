@@ -24,7 +24,7 @@ describe 'ballots/index.html.erb', type: :view do
     $candidate.ballot = ballot
     $candidate
   end
-  
+
   before(:each) do
     assign(:level, level)
     assign(:election, election)

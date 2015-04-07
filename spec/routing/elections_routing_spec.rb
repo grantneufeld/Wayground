@@ -45,5 +45,16 @@ describe ElectionsController, type: :routing do
       )
     end
 
+    it 'routes to #ballot_maker' do
+      expect(get: '/levels/def/elections/abc/ballot_maker').to route_to(
+        'elections#ballot_maker', id: 'abc', level_id: 'def'
+      )
+    end
+    it 'routes to #generate_ballots' do
+      expect(post: '/levels/def/elections/abc/generate_ballots').to route_to(
+        'elections#generate_ballots', id: 'abc', level_id: 'def'
+      )
+    end
+
   end
 end
