@@ -4,16 +4,29 @@ require 'external_link_presenter'
 
 # requires candidate
 user ||= nil
+party ||= candidate.party
+level ||= candidate.ballot.election.level
+has_parties ||= level.parties.count > 0
 
 div_classes = ['vcard']
 div_classes << 'rumoured' if candidate.is_rumoured?
 div_classes << 'elected' if candidate.is_elected?
 div_classes << 'quit' if candidate.quit_on?
 %><div class="<%= div_classes.join(' ') %>">
-<h3 class="fn"><%= link_to candidate.name, candidate.items_for_path, class: 'url' %><%
-party = candidate.party
-if party
-  %> (<%= link_to party.name, [party.level, party] %>)<%
+<%
+if has_parties
+  party_colour = party ? party.colour : nil
+  %><h3 class="fn party-label" style="border-color:<%= party_colour %>"><%
+else
+  %><h3 class="fn"><%
+end
+%><%= link_to candidate.name, candidate.items_for_path, class: 'url' %><%
+if has_parties
+  if party
+    %> (<%= link_to content_tag(:abbr, title: party.name) { party.abbrev }, [party.level, party] %>)<%
+  else
+    %> (<a>independent</a>)<%
+  end
 end
 %></h3>
 <%

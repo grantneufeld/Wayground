@@ -19,9 +19,9 @@ if election.end_on %>
 end %></h1>
 
 <%
+section_links = []
 section = nil
 section_counter = 0
-section_links = []
 @ballots.each do |ballot|
   if ballot.section != section
     section = ballot.section
@@ -29,6 +29,12 @@ section_links = []
     if section_counter > 1
       section_links << link_to(section, "#ballot-section-#{section_counter}")
     end
+  end
+end    
+if ballots.count > 5 && ballots.first.section.blank?
+  # we have a lot of uncategorized ballots, make a table of contents for them
+  ballots.each do |ballot|
+    section_links << link_to(ballot.descriptor, "#ballot-#{ballot.office.filename}")
   end
 end
 if section_links.size > 0
@@ -49,7 +55,7 @@ section_counter = 0
     %><h1 id="ballot-section-<%= section_counter %>" class="section-heading"><%= section %></h1>
 <%
   end
-  %><h2><%= link_to ballot.descriptor, ballot.items_for_path %></h2>
+  %><h2><%= link_to ballot.descriptor, ballot.items_for_path, { name: "ballot-#{ballot.office.filename}" } %></h2>
 <%
   ballot.candidates.running.each do |candidate|
     %><%= render 'candidates/candidate_brief', { candidate: candidate, user: user } %><%

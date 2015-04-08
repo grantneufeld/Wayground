@@ -15,7 +15,10 @@ class BallotsController < ApplicationController
   before_action :set_section
 
   def index
-    page_metadata(title: 'Ballots')
+    page_metadata(
+      title: "Ballots for #{@level.name} #{@election.descriptor}",
+      description: "Listings of citizen and voter resources about of ballots and candidates for #{@election.descriptor} in #{@level.name}."
+    )
     @ballots = @election.ballots
   end
 
