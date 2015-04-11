@@ -12,6 +12,8 @@ level ||= @level || election.level
 person ||= @person || candidate.person
 user ||= @user
 party ||= @party || candidate.party
+has_parties ||= level.parties.count > 0
+
 
 content_for(:head) do
   %><link rel="profile" href="http://microformats.org/profile/hcard" />
@@ -100,6 +102,41 @@ bio = person.bio
 if bio.present?
   %><h2>Biography</h2>
 <p><%= bio %></p>
+<%
+end
+
+candidates = ballot.candidates
+if candidates.count > 1
+-%>
+</section>
+
+<section class="contentchunk">
+<h2>Other candidates for <%= ballot.descriptor %>:</h2>
+<ul>
+<%
+  candidates.each do |other_candidate|
+    unless other_candidate == candidate
+      if has_parties
+        other_party = other_candidate.party
+        party_colour = other_party ? other_party.colour : nil
+        %><li class="party-label" style="border-color:<%= party_colour %>"><%
+      else
+        other_party = nil
+        %><li><%
+      end
+      %><%= link_to other_candidate.name, [level, election, ballot, other_candidate] %><%
+      if has_parties
+        if other_party
+          %> (<%= content_tag(:abbr, title: other_party.name) { other_party.abbrev } %>)<%
+        else
+          %> (independent)<%
+        end
+      end
+      %></li><%
+    end
+  end
+-%>
+</ul>
 <%
 end
 -%>
