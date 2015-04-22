@@ -16,14 +16,14 @@ class BallotsController < ApplicationController
 
   def index
     page_metadata(
-      title: "Ballots for #{@level.name} #{@election.descriptor}",
+      title: "Candidates for #{@level.name} #{@election.descriptor}",
       description: "Listings of citizen and voter resources about of ballots and candidates for #{@election.descriptor} in #{@level.name}."
     )
     @ballots = @election.ballots
   end
 
   def show
-    page_metadata(title: "Ballot for “#{@office.name}”")
+    page_metadata(title: "#{@office.name} candidates in #{@election.descriptor}")
     @candidates = @ballot.candidates.running
     @candidates_who_quit = @ballot.candidates.not_running
   end

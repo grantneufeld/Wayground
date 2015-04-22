@@ -20,7 +20,7 @@ class ElectionsController < ApplicationController
   end
 
   def show
-    page_metadata(title: "Election “#{@election.name}”")
+    page_metadata(title: "#{@election.descriptor}, #{@level.descriptor}")
   end
 
   def new; end

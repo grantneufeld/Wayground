@@ -140,6 +140,13 @@ describe Level, type: :model do
     end
   end
 
+  describe '#descriptor' do
+    it 'should return the name' do
+      level = Level.new(name: 'The Name')
+      expect( level.descriptor ).to eq 'The Name'
+    end
+  end
+
   describe '#items_for_path' do
     it 'should return an array of just the level' do
       level = Level.new

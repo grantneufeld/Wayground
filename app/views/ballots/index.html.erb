@@ -34,7 +34,7 @@ end
 if ballots.count > 5 && ballots.first.section.blank?
   # we have a lot of uncategorized ballots, make a table of contents for them
   ballots.each do |ballot|
-    section_links << link_to(ballot.descriptor, "#ballot-#{ballot.office.filename}")
+    section_links << link_to(ballot.descriptor, "#ballot-#{ballot.office.filename}", { class: 'nowrap' })
   end
 end
 if section_links.size > 0

@@ -37,6 +37,10 @@ class Level < ActiveRecord::Base
     filename
   end
 
+  def descriptor
+    name
+  end
+
   def items_for_path
     [self]
   end
