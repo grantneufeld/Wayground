@@ -66,7 +66,7 @@ if event.tags.count > 0 || user_can_update_this_event
 <ul>
 <%
   event.tags.each do |tag|
-    %><li><%= link_to tag.title, events_path(tag: tag.tag) %></li>
+    %><li><%= link_to tag.title, events_path(tag: tag.tag), { rel: 'tag' } %></li>
 <%
   end
 %></ul>
