@@ -14,7 +14,7 @@ h1,h2,h3,h4,h5,h6,h1 *,h2 *,h3 *,h4 *,h5 *,h6 *{font-family:$font_title_condense
 h1{font-size:2.5em;}
 h2{font-size:1.75em;}
 h1,h2,h3,h4,h5,h6,ol,p,ul{margin:0em;}
-* + h2, * + p{margin-top:0.5em;}
+* + h2, * + blockquote, * + p{margin-top:0.5em;}
 ul{padding:0em 0em 0em 2em;}
 
 a:link{color:#00B; text-decoration:none;}
@@ -25,6 +25,7 @@ a:link:active, a:visited:active{color:#F00; text-decoration:none;}
 tbody{vertical-align:top;}
 
 .truncate{display:none;}
+.fineprint{font-size:80%; opacity:0.7;}
 
 header{
   background:#333; color:white; margin:0em; padding:0em 1.5em;

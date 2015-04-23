@@ -101,7 +101,8 @@ end -%>
 bio = person.bio
 if bio.present?
   %><h2>Biography</h2>
-<p><%= bio %></p>
+<p class="fineprint">(The following text was provided by the candidate or campaign.)</p>
+<blockquote><%= simple_text_to_html bio %></blockquote>
 <%
 end
 
