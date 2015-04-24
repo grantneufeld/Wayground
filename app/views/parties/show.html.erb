@@ -9,7 +9,7 @@ presenter = PartyPresenter.new(view: self, party: party, user: user)
 
 -%>
 <%= render 'levels/breadcrumb', { level: level } %>
-<%= presenter.present_heading %>
+<%= presenter.present_heading(true) %>
 <%
 
 if party.aliases && party.aliases.size > 0
@@ -28,6 +28,31 @@ if party.description?
   %><p><%= party.description %></p>
 <%
 end
+
+%><h2>Candidates in Elections</h2>
+<%
+level.elections.each do |election|
+  %><table>
+<thead><tr><th colspan="2"><h3><%= link_to election.descriptor, election.items_for_path %></h3></th></tr></thead>
+<tbody>
+<%
+  election.ballots.each do |ballot|
+    candidates = ballot.candidates.running.where(party_id: @party.id)
+    if candidates.count > 0
+      candidate_links = []
+      candidates.each do |candidate|
+        candidate_links << link_to(candidate.descriptor, candidate.items_for_path)
+      end
+      %><tr><th><%= ballot.descriptor %></th> <td><%= safe_join(candidate_links, ', '.html_safe) %></td></tr>
+<%
+    end
+  end
+%></tbody>
+</table>
+<%
+end
+
+
 
 if user.present?
   actions = []

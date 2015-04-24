@@ -20,7 +20,12 @@ textarea{width:98%;}
 // tables
 table, tr, th, td{border-spacing:0em;}
 table.full{width:100%;}
-thead, thead > tr, tr.heading > th{background:#999; color:white; text-shadow:0em 0em 0.2em black;}
+thead, thead > tr, tr.heading > th{
+  background:#999; color:white; text-shadow:0em 0em 0.2em black;
+  a, *:link, *:visited{
+    color:white;
+  }
+}
 th, td{padding:0.2em 0.4em; vertical-align:top;}
 th{text-align:left;}
 thead > tr > th{text-align:center;}

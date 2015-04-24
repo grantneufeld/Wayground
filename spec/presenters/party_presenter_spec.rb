@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'party_presenter'
 require_relative 'view_double'
 
@@ -74,6 +73,15 @@ describe PartyPresenter do
     end
     it 'should include the abbreviation' do
       expect( presenter.present_heading ).to match 'TP'
+    end
+    context 'with true passed as parameter' do
+      it 'should not link the party name' do
+        result = presenter.present_heading(true)
+        expect(result).not_to match(
+          /<a href="\/levels\/test_level\/parties\/test_party">Test Party<\/a>/
+        )
+        expect(result).to match(/Test Party/)
+      end
     end
     context 'with a registered party' do
       let(:party_extra_attrs) { $party_extra_attrs = {is_registered: true} }

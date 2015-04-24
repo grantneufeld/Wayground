@@ -16,9 +16,9 @@ class PartyPresenter < HtmlPresenter
     end
   end
 
-  def present_heading
+  def present_heading(is_no_link = false)
     html_tag_with_newline(:h1, party_attrs) do
-      linked_party_name + html_escape(" [#{party.abbrev}]")
+      (is_no_link ? party.name : linked_party_name) + html_escape(" [#{party.abbrev}]")
     end
   end
 
