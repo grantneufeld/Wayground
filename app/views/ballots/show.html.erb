@@ -47,6 +47,7 @@ end
 -%>
 
 <h2>Candidates</h2>
+<p>This is a summary of candidate information. Select an individual candidate’s name for more details.</p>
 <% candidates.each do |candidate|
   %><%= render 'candidates/candidate_brief', { candidate: candidate, user: user } %><%
 end -%>
