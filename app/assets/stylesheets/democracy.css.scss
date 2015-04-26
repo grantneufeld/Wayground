@@ -17,10 +17,10 @@ h1,h2,h3,h4,h5,h6,ol,p,ul{margin:0em;}
 * + h2, * + blockquote, * + p{margin-top:0.5em;}
 ul{padding:0em 0em 0em 2em;}
 
-a:link{color:#00B; text-decoration:none;}
-a:visited{color:#409; text-decoration:none;}
-a:link:hover, a:visited:hover{color:#00F; text-decoration:underline;}
-a:link:active, a:visited:active{color:#F00; text-decoration:none;}
+a:link{color:$link_link_color; text-decoration:none;}
+a:visited{color:$link_visited_color; text-decoration:none;}
+a:link:hover, a:visited:hover{color:$link_hover_color; text-decoration:underline;}
+a:link:active, a:visited:active{color:$link_active_color; text-decoration:none;}
 
 tbody{vertical-align:top;}
 

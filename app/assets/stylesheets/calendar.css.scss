@@ -2,7 +2,7 @@
 
 section.calendar, section#main.calendar{
   max-width:none; margin:0em; padding:0em 0em 1em;
-  > *{margin-left:1em; margin-right:1em;}
+  > *{margin-left:1em; margin-right:1em; max-width:none;}
   > .calendar{margin-left:0em; margin-right:0em;}
 }
 
@@ -24,13 +24,14 @@ section.calendar, section#main.calendar{
 
 // A 7-day-wide calendar grid.
 table.calendar{
-  background:white; color:black; border-collapse:collapse; border-spacing:0em; width:100%; margin:0em;
+  background:$default_background; color:$default_text_color;
+  border-collapse:collapse; border-spacing:0em; width:100%; margin:0em;
   td, th{
     background:transparent; color:inherit; border:thin solid #333; width:14.2857143%;
   }
   > thead {
     > tr {
-      background:white; color:black; text-shadow:none;
+      background:$default_background; color:$default_text_color; text-shadow:none;
       > th{padding:0.2em 0.5em; vertical-align:middle;}
     }
     // The column headers that display the day of the week.
