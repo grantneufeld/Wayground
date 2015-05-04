@@ -115,12 +115,15 @@ end %>
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
-  candidate_list: { title: 'Alberta Candidates 2015', path: '/levels/alberta/elections/2015/ballots' },
-  # surveys: { title: 'Candidate Survey Responses', path: '/levels/calgary/elections/2013/surveys', class: 'survey' },
-  # videos: { title: 'Videos', path: '/video', class: 'vimeo' },
-  # media: { title: 'Media', path: '/levels/calgary/elections/2013/media', class: 'media' },
-  calendar: { title: 'Calendar', path: '/calendar', class: 'cal' },
-  twitter: { title: 'Twitter Resources', path: '/twitter', class: 'twitter' }
+  candidate_list: { title: 'Alberta Candidates 2015', path: '/levels/alberta/elections/2015/ballots', attrs: { class: 'list' } },
+  how_to_vote: {
+    title: 'How To Vote', path: 'http://www.howtovote.ca/', attrs: { class: 'external-link', target: '_blank' } 
+  },
+  # surveys: { title: 'Candidate Survey Responses', path: '/levels/calgary/elections/2013/surveys', attrs: { class: 'survey' } },
+  # videos: { title: 'Videos', path: '/video', attrs: { class: 'vimeo' } },
+  # media: { title: 'Media', path: '/levels/calgary/elections/2013/media', attrs: { class: 'media' } },
+  calendar: { title: 'Calendar', path: '/calendar', attrs: { class: 'cal' } },
+  twitter: { title: 'Twitter Resources', path: '/twitter', attrs: { class: 'twitter' } }
 }
 site_hidden_sections = {
   levels: { title: 'Levels', path: levels_path },
@@ -144,7 +147,8 @@ site_sections.each do |key, nav_section|
   else
     %><li><%
   end
-  %><%= link_to nav_section[:title], nav_section[:path], class: nav_section[:class] %></li>
+  attrs = nav_section[:attrs] || {}
+  %><%= link_to nav_section[:title], nav_section[:path], attrs %></li>
 <%
 end
 -%>
