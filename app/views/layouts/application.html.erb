@@ -118,7 +118,7 @@ end
 <nav role="navigation"><%
 today = Date.today
 site_sections = {
-  calendar: { title: 'Calendar', path: calendar_path, class: 'cal' },
+  calendar: { title: 'Calendar', path: calendar_path, attrs: { class: 'cal' } },
   projects: {title: 'Projects', path: projects_path},
   pages: {title: 'Pages', path: pages_path},
   documents: {title: 'Documents', path: documents_path},
@@ -135,11 +135,12 @@ site_hidden_sections = {
 if @site_section
   current_section = site_sections[@site_section] || site_hidden_sections[@site_section]
   if current_section
-    %><p><%= link_to current_section[:title], current_section[:path] %></p>
+    %><p><%= link_to current_section[:title], current_section[:path], current_section[:attrs] %></p>
 <%
   end
 end
 %><ul>
+
 <%
 site_sections.each do |key, nav_section|
   if @site_section == key
@@ -147,10 +148,12 @@ site_sections.each do |key, nav_section|
   else
     %><li><%
   end
-  %><%= link_to nav_section[:title], nav_section[:path] %></li>
+  attrs = nav_section[:attrs] || {}
+  %><%= link_to nav_section[:title], nav_section[:path], attrs %></li>
 <%
 end
-%><li class="more"></li>
+-%>
+<li class="more"></li>
 </ul></nav>
 <div id="headerspace"></div>
 

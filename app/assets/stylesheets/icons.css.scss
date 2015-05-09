@@ -14,6 +14,7 @@ $icon-calendar-empty: "\f133";
 $icon-chevron-right: "\f054";
 $icon-download: "\f019";
 $icon-envelope-alt: "\f003";
+$icon-external-link: "\f08e";
 $icon-facebook-sign: "\f082";
 $icon-facetime-video: "\f03d";
 $icon-flickr: "\f16e";
@@ -39,6 +40,7 @@ $icon-youtube: "\f167";
 .cal:before,
 .download:before,
 .emailadr:before,
+.external-link:before,
 .fax:before,
 .home:before,
 .list:before,
@@ -65,6 +67,7 @@ $icon-youtube: "\f167";
 .cal:before{content: $icon-calendar; font-size: 1em;}
 .download:before{content: $icon-download;}
 .emailadr:before{content: $icon-envelope-alt;}
+.external-link:before{content: $icon-external-link;}
 .fax:before{content: $icon-print;}
 .home:before{content: $icon-home;}
 .list:before{content: $icon-list;}
