@@ -122,7 +122,7 @@ site_sections = {
   # surveys: { title: 'Candidate Survey Responses', path: '/levels/calgary/elections/2013/surveys', attrs: { class: 'survey' } },
   # videos: { title: 'Videos', path: '/video', attrs: { class: 'vimeo' } },
   # media: { title: 'Media', path: '/levels/calgary/elections/2013/media', attrs: { class: 'media' } },
-  calendar: { title: 'Calendar', path: '/calendar', attrs: { class: 'cal' } },
+  calendar: { title: 'Calendar', path: calendar_path, attrs: { class: 'cal' } },
   twitter: { title: 'Twitter Resources', path: '/twitter', attrs: { class: 'twitter' } }
 }
 site_hidden_sections = {
@@ -140,6 +140,7 @@ site_hidden_sections = {
   settings: {title: 'Settings', path: settings_path}
 }
 %><ul>
+
 <%
 site_sections.each do |key, nav_section|
   if @site_section == key
