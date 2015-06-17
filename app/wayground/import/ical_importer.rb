@@ -90,6 +90,17 @@ module Wayground
           sourced_item = source.sourced_items.where(source_identifier: uid).first
         end
         if sourced_item
+          # check if our Event for it is in the past, but the ievent is in the future
+          # if so, make a new sourced item
+          current_time = Time.zone.now
+          if sourced_item.item.start_at < current_time
+            ievent_start = ievent['DTSTART'] ? ievent['DTSTART'][:value] : nil
+            if ievent_start > current_time
+              sourced_item = nil
+            end
+          end
+        end
+        if sourced_item
           if sourced_item.item.update_from_icalendar(
               ievent, editor: editor, has_local_modifications: sourced_item.has_local_modifications,
               processor: self

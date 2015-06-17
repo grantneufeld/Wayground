@@ -128,14 +128,31 @@ describe Wayground::Import::IcalImporter do
         event.reload
         expect(event.title).to eq 'Changed Summary'
       end
+      context 'that has passed while the ievent has a later start date' do
+        it 'should create a new SourcedItem and Event' do
+          old_event = Event.new(start_at: 24.hours.ago.to_datetime) #, title: 'Date Change')
+          sourced_item = SourcedItem.new
+          sourced_item.item = old_event
+          allow(source).to receive_message_chain(:sourced_items, :where, :first) { sourced_item }
+          new_sourced_item = SourcedItem.new
+          allow(new_sourced_item).to receive(:save!)
+          allow(source).to receive_message_chain(:sourced_items, :build) { new_sourced_item }
+          # prepare processor
+          proc = Wayground::Import::IcalImporter.new
+          proc.source = source
+          # call the method being tested
+          proc.process_event(ievent)
+          expect(proc.new_events[0]).to be_an Event
+        end
+      end
       context "that is flagged as locally modified" do
         it "should add the ical event and sourced item to the skipped list" do
           # prepare mocks and stubs
-          item = double('item')
-          allow(item).to receive(:update_from_icalendar).and_return(false)
+          event = Event.new(start_at: 24.hours.from_now.to_datetime)
+          allow(event).to receive(:update_from_icalendar).and_return(false)
           sourced_item = double('sourced item')
           allow(sourced_item).to receive(:has_local_modifications).and_return(true)
-          allow(sourced_item).to receive(:item).and_return(item)
+          allow(sourced_item).to receive(:item).and_return(event)
           sourced_items_where = double('sourced items where')
           allow(sourced_items_where).to receive(:first).and_return(sourced_item)
           sourced_items = double('sourced items')
