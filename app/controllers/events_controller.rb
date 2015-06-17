@@ -1,5 +1,6 @@
 require 'event/day_events'
 require 'event/event_selector'
+require 'merger'
 
 # Access events.
 class EventsController < ApplicationController
