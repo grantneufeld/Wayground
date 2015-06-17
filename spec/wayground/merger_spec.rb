@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_relative '../../app/wayground/merger'
 
 describe Merger::Base do
 
@@ -18,6 +19,7 @@ describe Merger::Base do
       expect(merger).to receive(:merge_fields_into).with(dest).and_return(:conflicts)
       expect(merger).to receive(:merge_authorities_into).with(dest)
       expect(merger).to receive(:merge_external_links_into).with(dest)
+      expect(merger).to receive(:merge_tags_into).with(dest)
       expect(merger).to receive(:merge_sourced_items_into).with(dest)
       expect(merger).to receive(:merge_versions_into).with(dest)
       expect(merger.merge_into!(dest)).to eq :conflicts
@@ -126,6 +128,51 @@ describe Merger::Base do
       # Do the merger operation
       merger = Merger::Base.new(source)
       merger.merge_external_links_into(dest)
+    end
+  end
+
+  describe '#merge_tags_into' do
+    it 'should move over any non-duplate tags' do
+      # set up the source
+      source = double('source')
+      tags = []
+      allow(source).to receive(:tags).and_return(tags)
+      # set up the destination
+      dest = double('destination')
+      allow(dest).to receive(:id).and_return(345)
+      # what we’re testing for:
+      rspec_stubs_lazy
+      expect(tags).to receive(:update_all).with(item_id: 345)
+      rspec_stubs_strict
+      # Do the merger operation
+      merger = Merger::Base.new(source)
+      merger.merge_tags_into(dest)
+    end
+
+    it 'should delete any duplicate tags on the source' do
+      # set up the source
+      source = double('source')
+      source_tag = double('tag')
+      allow(source_tag).to receive(:tag).and_return('tag')
+      tags = [source_tag]
+      rspec_stubs_lazy
+      allow(tags).to receive(:update_all)
+      rspec_stubs_strict
+      allow(source).to receive(:tags).and_return(tags)
+      # set up the destination
+      dest = double('destination')
+      allow(dest).to receive(:id).and_return(0)
+      destination_tag = double('destination tag')
+      dest_tags_where = double('tags where')
+      allow(dest_tags_where).to receive(:first).and_return(destination_tag)
+      dest_tags = double('tags')
+      allow(dest_tags).to receive(:where).with(tag: 'tag').and_return(dest_tags_where)
+      allow(dest).to receive(:tags).and_return(dest_tags)
+      # What we’re testing for:
+      expect(source_tag).to receive(:delete)
+      # Do the merger operation
+      merger = Merger::Base.new(source)
+      merger.merge_tags_into(dest)
     end
   end
 

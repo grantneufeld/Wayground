@@ -19,6 +19,7 @@ module Merger
       conflicts = merge_fields_into(destination)
       merge_authorities_into(destination)
       merge_external_links_into(destination)
+      merge_tags_into(destination)
       merge_sourced_items_into(destination)
       merge_versions_into(destination)
       @source.delete
@@ -55,6 +56,18 @@ module Merger
       end
       # we got rid of duplicates, now move over any remaining external links
       @source.external_links.update_all(item_id: destination.id)
+    end
+
+    # Move non-duplicate tags records associated with this item to another item.
+    def merge_tags_into(destination)
+      @source.tags.each do |tag|
+        if destination.tags.where(tag: tag.tag).first
+          # dispose of the tag if it has a duplicate in the destination
+          tag.delete
+        end
+      end
+      # we got rid of duplicates, now move over any remaining tags
+      @source.tags.update_all(item_id: destination.id)
     end
 
     # Move all of the sourced item records associated with the source
