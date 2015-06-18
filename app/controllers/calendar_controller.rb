@@ -21,28 +21,28 @@ class CalendarController < ApplicationController
   def year
     year = @date.year
     description = "#{Wayground::Application::NAME} calendar of events for #{year}."
-    page_metadata(title: year.to_s, description: description)
     year_start = Date.new(year, 1, 1)
     year_end = Date.new(year, 12, 31)
     @total_event_count = Event.approved.falls_between_dates(year_start, year_end).count
     @event_counts = Wayground::Event::Year.new(year: year).monthly_event_counts
+    page_metadata(title: year.to_s, description: description, nocache: (@total_event_count == 0))
     render
   end
 
   def month
     title_date = @date.strftime('%B %Y')
     description = "#{Wayground::Application::NAME} calendar of events for #{title_date}."
-    page_metadata(title: title_date, description: description)
     month_start = Date.new(@date.year, @date.month, 1)
     month_end = (month_start + 1.month) - 1.day
     @events = Event.approved.falls_between_dates(month_start, month_end)
+    page_metadata(title: title_date, description: description, nocache: (@events.count == 0))
   end
 
   def day
     title_date = @date.strftime('%B %-e, %Y')
     description = "#{Wayground::Application::NAME} calendar of events for #{title_date}."
-    page_metadata(title: title_date, description: description)
     @events = Event.approved.falls_on_date(Date.new(@date.year, @date.month, @date.day))
+    page_metadata(title: title_date, description: description, nocache: (@events.count == 0))
   end
 
   protected
