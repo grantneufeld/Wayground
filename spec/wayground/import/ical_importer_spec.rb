@@ -100,6 +100,19 @@ describe Wayground::Import::IcalImporter do
   describe "#process_event" do
     let(:ievent) { $ievent = new_ievent }
 
+    context 'when the pre-existing sourced_item is_ignored' do
+      it 'should add the ievent to the skipped list' do
+        sourced_item = source.sourced_items.new
+        sourced_item.is_ignored = true
+        allow(source).to receive_message_chain(:sourced_items, :where, :first) { sourced_item }
+        # prepare processor
+        proc = Wayground::Import::IcalImporter.new
+        proc.source = source
+        # call the method being tested
+        proc.process_event(ievent)
+        expect(proc.skipped_ievents).to eq [{ ievent: ievent, sourced_item: sourced_item }]
+      end
+    end
     context "with a pre-existing event" do
       let(:event) do
         proc = Wayground::Import::IcalImporter.new
@@ -150,9 +163,9 @@ describe Wayground::Import::IcalImporter do
           # prepare mocks and stubs
           event = Event.new(start_at: 24.hours.from_now.to_datetime)
           allow(event).to receive(:update_from_icalendar).and_return(false)
-          sourced_item = double('sourced item')
-          allow(sourced_item).to receive(:has_local_modifications).and_return(true)
-          allow(sourced_item).to receive(:item).and_return(event)
+          sourced_item = SourcedItem.new
+          sourced_item.has_local_modifications = true
+          sourced_item.item = event
           sourced_items_where = double('sourced items where')
           allow(sourced_items_where).to receive(:first).and_return(sourced_item)
           sourced_items = double('sourced items')

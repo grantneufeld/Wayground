@@ -89,6 +89,11 @@ module Wayground
           # check for pre-existing Event matching the ievent.uid
           sourced_item = source.sourced_items.where(source_identifier: uid).first
         end
+        if sourced_item && sourced_item.is_ignored
+          # skip ignored items
+          skipped_ievents << { ievent: ievent, sourced_item: sourced_item }
+          return self
+        end
         if sourced_item
           # check if our Event for it is in the past, but the ievent is in the future
           # if so, make a new sourced item
