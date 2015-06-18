@@ -62,6 +62,11 @@ describe SourcedItem, type: :model do
       sourced_item = SourcedItem.new(:has_local_modifications => true)
       expect(sourced_item.has_local_modifications).to be_truthy
     end
+    it 'should not allow is_ignored to be set' do
+      expect {
+        SourcedItem.new(is_ignored: true)
+      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
+    end
   end
 
   describe "validation" do
@@ -78,9 +83,31 @@ describe SourcedItem, type: :model do
       end
     end
     describe "of item" do
-      it "should fail if not set" do
-        si = source.sourced_items.new(minimum_valid_params)
-        expect(si.valid?).to be_falsey
+      context 'when is_ignored' do
+        it 'should pass if not set' do
+          si = source.sourced_items.new(minimum_valid_params)
+          si.is_ignored = true
+          expect(si.valid?).to be_truthy
+        end
+        it 'should fail if set' do
+          si = source.sourced_items.new(minimum_valid_params)
+          si.is_ignored = true
+          si.item = item
+          expect(si.valid?).to be_falsey
+        end
+      end
+      context 'when not is_ignored' do
+        it 'should fail if not set' do
+          si = source.sourced_items.new(minimum_valid_params)
+          si.is_ignored = false
+          expect(si.valid?).to be_falsey
+        end
+        it 'should pass if set' do
+          si = source.sourced_items.new(minimum_valid_params)
+          si.is_ignored = false
+          si.item = item
+          expect(si.valid?).to be_truthy
+        end
       end
     end
     describe "of last_sourced_at" do
