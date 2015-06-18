@@ -423,37 +423,7 @@ describe Event, type: :model do
     end
   end
 
-  describe "approve_if_authority" do
-    it "should not set is_approved if regular user" do
-      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
-      event.user = @user_normal
-      # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
-      # actual tests:
-      event.approve_if_authority
-      expect( event.is_approved ).to be_falsey
-    end
-    it "should set is_approved to true when user has authority" do
-      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'admin created event')
-      event.user = FactoryGirl.create(:user)
-      authority = FactoryGirl.create(:owner_authority, area: 'Calendar', user: event.user)
-      # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_truthy
-      # actual tests:
-      event.approve_if_authority
-      expect( event.is_approved ).to be_truthy
-    end
-    it "should not change is_approved if already true" do
-      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
-      event.is_approved = true
-      event.user = @user_normal
-      # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
-      # actual tests:
-      event.approve_if_authority
-      expect( event.is_approved ).to be_truthy
-    end
-  end
+  # CALLBACKS
 
   describe "#set_timezone" do
     it "should set the timezone based on the user" do
@@ -493,6 +463,38 @@ describe Event, type: :model do
       event.timezone = nil
       event.save!
       expect( event.timezone.present? ).to be_falsey
+    end
+  end
+
+  describe '#approve_if_authority' do
+    it 'should not set is_approved if regular user' do
+      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
+      event.user = @user_normal
+      # TESTING:
+      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
+      # actual tests:
+      event.approve_if_authority
+      expect( event.is_approved ).to be_falsey
+    end
+    it 'should set is_approved to true when user has authority' do
+      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'admin created event')
+      event.user = FactoryGirl.create(:user)
+      authority = FactoryGirl.create(:owner_authority, area: 'Calendar', user: event.user)
+      # TESTING:
+      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_truthy
+      # actual tests:
+      event.approve_if_authority
+      expect( event.is_approved ).to be_truthy
+    end
+    it 'should not change is_approved if already true' do
+      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
+      event.is_approved = true
+      event.user = @user_normal
+      # TESTING:
+      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
+      # actual tests:
+      event.approve_if_authority
+      expect( event.is_approved ).to be_truthy
     end
   end
 
@@ -566,6 +568,20 @@ describe Event, type: :model do
     end
   end
 
+  describe '#ignore_sourced_items_on_destroy' do
+    it 'should set the sourced_item to ignored' do
+      sourced_item = FactoryGirl.create(:sourced_item)
+      event = sourced_item.item
+      event.destroy!
+      sourced_item.reload
+      expect(sourced_item.is_ignored).to be_truthy
+      expect(sourced_item.item).to be_nil
+    end
+  end
+
+
+  # VERSIONS
+
   describe '#new_version' do
     it "should build a new Version for the event" do
       values1 = {
@@ -599,6 +615,11 @@ describe Event, type: :model do
       expect( version.values ).to eq values1.merge('is_approved' => 'true').merge(values2)
     end
   end
+
+  describe '#values_for_version' do
+  end
+
+  # SETTERS
 
   describe "#title=" do
     it "should set the title attribute" do
@@ -771,6 +792,8 @@ describe Event, type: :model do
     end
   end
 
+  # TAGS
+
   describe '#tag_list' do
     context 'with no tags' do
       it 'should return an empty string' do
@@ -838,6 +861,11 @@ describe Event, type: :model do
       end
     end
   end
+
+  describe '#save_tag_list' do
+  end
+
+  # VALUES
 
   describe '.earliest_date' do
     it 'should return the date of the earliest event' do

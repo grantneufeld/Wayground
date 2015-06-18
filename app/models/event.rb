@@ -26,7 +26,7 @@ class Event < ActiveRecord::Base
   has_many :external_links, as: :item
   accepts_nested_attributes_for :external_links,
     reject_if: lambda { |el| el[:url].blank? }, allow_destroy: true
-  has_many :sourced_items, as: :item, dependent: :delete_all
+  has_many :sourced_items, as: :item
   has_many :tags, as: :item, dependent: :delete_all
   has_many :versions, as: :item, dependent: :delete_all
 
@@ -93,6 +93,7 @@ class Event < ActiveRecord::Base
   after_update :flag_as_modified_for_sourcing
   after_save :add_version
   after_save :save_tag_list
+  before_destroy :ignore_sourced_items_on_destroy
 
   def initialize(*args)
     super(*args)
@@ -173,6 +174,15 @@ class Event < ActiveRecord::Base
       version.save!
     end
   end
+
+  # set the sourced_items to ignore when destroying this event
+  def ignore_sourced_items_on_destroy
+    sourced_items.update_all(
+      is_ignored: true, item_type: nil, item_id: nil
+    )
+  end
+
+  # VERSIONS
 
   def new_version
     self.versions.build(

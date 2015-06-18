@@ -50,14 +50,14 @@ SET default_with_oids = false;
 CREATE TABLE authentications (
     id integer NOT NULL,
     user_id integer,
-    provider character varying(255) NOT NULL,
-    uid character varying(255) NOT NULL,
-    nickname character varying(255),
-    name character varying(255),
-    email character varying(255),
-    location character varying(255),
-    url character varying(255),
-    image_url character varying(255),
+    provider character varying NOT NULL,
+    uid character varying NOT NULL,
+    nickname character varying,
+    name character varying,
+    email character varying,
+    location character varying,
+    url character varying,
+    image_url character varying,
     description text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -92,7 +92,7 @@ CREATE TABLE authorities (
     user_id integer,
     authorized_by_id integer,
     item_id integer,
-    item_type character varying(255),
+    item_type character varying,
     area character varying(31),
     is_owner boolean,
     can_create boolean,
@@ -301,7 +301,7 @@ CREATE TABLE documents (
     is_authority_controlled boolean DEFAULT false NOT NULL,
     filename character varying(127) NOT NULL,
     size integer NOT NULL,
-    content_type character varying(255) NOT NULL,
+    content_type character varying NOT NULL,
     charset character varying(31),
     description character varying(1023),
     created_at timestamp without time zone,
@@ -426,7 +426,7 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 CREATE TABLE external_links (
     id integer NOT NULL,
     item_id integer NOT NULL,
-    item_type character varying(255) NOT NULL,
+    item_type character varying NOT NULL,
     is_source boolean DEFAULT false NOT NULL,
     "position" integer,
     site character varying(31),
@@ -645,8 +645,8 @@ CREATE TABLE pages (
     id integer NOT NULL,
     parent_id integer,
     is_authority_controlled boolean DEFAULT false NOT NULL,
-    filename character varying(255) NOT NULL,
-    title character varying(255) NOT NULL,
+    filename character varying NOT NULL,
+    title character varying NOT NULL,
     description text,
     content text,
     created_at timestamp without time zone,
@@ -722,7 +722,7 @@ ALTER SEQUENCE parties_id_seq OWNED BY parties.id;
 CREATE TABLE paths (
     id integer NOT NULL,
     item_id integer,
-    item_type character varying(255),
+    item_type character varying,
     sitepath text NOT NULL,
     redirect text,
     created_at timestamp without time zone,
@@ -803,8 +803,8 @@ CREATE TABLE projects (
     is_moderated boolean DEFAULT false NOT NULL,
     is_only_admin_posts boolean DEFAULT false NOT NULL,
     is_no_comments boolean DEFAULT false NOT NULL,
-    filename character varying(255),
-    name character varying(255) NOT NULL,
+    filename character varying,
+    name character varying NOT NULL,
     description text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -835,7 +835,7 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -845,7 +845,7 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE settings (
     id integer NOT NULL,
-    key character varying(255),
+    key character varying,
     value text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -878,14 +878,15 @@ ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
 CREATE TABLE sourced_items (
     id integer NOT NULL,
     source_id integer NOT NULL,
-    item_id integer NOT NULL,
-    item_type character varying(255) NOT NULL,
+    item_id integer,
+    item_type character varying,
     datastore_id integer,
-    source_identifier character varying(255),
+    source_identifier character varying,
     last_sourced_at timestamp without time zone NOT NULL,
     has_local_modifications boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    is_ignored boolean DEFAULT false NOT NULL
 );
 
 
@@ -915,7 +916,7 @@ ALTER SEQUENCE sourced_items_id_seq OWNED BY sourced_items.id;
 CREATE TABLE sources (
     id integer NOT NULL,
     container_item_id integer,
-    container_item_type character varying(255),
+    container_item_type character varying,
     datastore_id integer,
     processor character varying(31) NOT NULL,
     url character varying(511) NOT NULL,
@@ -957,10 +958,10 @@ ALTER SEQUENCE sources_id_seq OWNED BY sources.id;
 CREATE TABLE tags (
     id integer NOT NULL,
     item_id integer NOT NULL,
-    item_type character varying(255) NOT NULL,
+    item_type character varying NOT NULL,
     user_id integer,
-    tag character varying(255) NOT NULL,
-    title character varying(255),
+    tag character varying NOT NULL,
+    title character varying,
     is_meta boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -1026,16 +1027,16 @@ ALTER SEQUENCE user_tokens_id_seq OWNED BY user_tokens.id;
 
 CREATE TABLE users (
     id integer NOT NULL,
-    email character varying(255),
+    email character varying,
     password_hash character varying(128),
-    name character varying(255),
+    name character varying,
     is_verified_realname boolean DEFAULT false NOT NULL,
     email_confirmed boolean DEFAULT false NOT NULL,
     confirmation_token character varying(128),
     remember_token character varying(128),
     filename character varying(63),
     timezone character varying(31),
-    location character varying(255),
+    location character varying,
     about text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -1068,12 +1069,12 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 CREATE TABLE versions (
     id integer NOT NULL,
     item_id integer NOT NULL,
-    item_type character varying(255) NOT NULL,
+    item_type character varying NOT NULL,
     user_id integer NOT NULL,
     edited_at timestamp without time zone NOT NULL,
-    edit_comment character varying(255),
-    filename character varying(255),
-    title character varying(255),
+    edit_comment character varying,
+    filename character varying,
+    title character varying,
     "values" hstore
 );
 
@@ -2107,6 +2108,8 @@ INSERT INTO schema_migrations (version) VALUES ('19');
 INSERT INTO schema_migrations (version) VALUES ('2');
 
 INSERT INTO schema_migrations (version) VALUES ('20');
+
+INSERT INTO schema_migrations (version) VALUES ('20150617230424');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
