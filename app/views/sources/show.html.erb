@@ -29,13 +29,26 @@ end
 
 <h2><%= @sourced_items.count %> Sourced Items</h2>
 <ul>
-<% @sourced_items.each do |sourced_item|
+<%
+ignored_item_count = 0
+@sourced_items.each do |sourced_item|
   item = sourced_item.item
-  %><li><%= item.class %>: <%
-  if sourced_item.has_local_modifications?
-     %>(<span title="This item has been modified from the original source.">modified</span>) <%
-  end %><%= link_to item.title, item %><%
-  if !(item.is_approved?)
-    %> (<span title="This item has not yet been approved.">not approved</span>)<%
-  end %></li>
-<% end %></ul>
+  if item
+    %><li><%= item.class %>: <%
+    if sourced_item.has_local_modifications?
+       %>(<span title="This item has been modified from the original source.">modified</span>) <%
+    end %><%= link_to item.title, item %><%
+    if !(item.is_approved?)
+      %> (<span title="This item has not yet been approved.">not approved</span>)<%
+    end %></li>
+<%
+  else
+    ignored_item_count += 1
+  end
+end %></ul>
+<%
+if ignored_item_count > 0
+  %><p>(<%= ignored_item_count %> items are ignored)</p>
+<%
+end
+-%>
