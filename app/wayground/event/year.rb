@@ -18,7 +18,7 @@ module Wayground
         (1..12).each do |month|
           month_start = ::Date.new(year, month, 1)
           month_end = month_start.next_month - 1.day
-          event_counts[month] = ::Event.falls_between_dates(month_start, month_end).count
+          event_counts[month] = ::Event.approved.falls_between_dates(month_start, month_end).count
         end
         event_counts
       end
