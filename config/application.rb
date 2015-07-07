@@ -54,6 +54,9 @@ module Wayground
     # Raise exception on mass assignment protection for Active Record models
     config.active_record.mass_assignment_sanitizer = :strict
 
+    # do not auto-include all helpers in all views
+    config.action_controller.include_all_helpers = false
+
     # Website metadata:
     NAME = 'Calgary Democracy'
     DESCRIPTION = 'Listings of citizen and voter resources about candidates and elected government representatives in Calgary. Includes detailed candidate lists for all positions, general election info, upcoming forums, media, blogs, video links, etc.'

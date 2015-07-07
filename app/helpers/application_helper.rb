@@ -1,5 +1,8 @@
 # Helpers available to all views.
 module ApplicationHelper
+
+  # LAYOUT HELPERS
+
   # Generate the errors report to show with a form.
   # item: the item to get the errors from
   # heading: the optional error message, shown as a heading above the list of errors
@@ -31,6 +34,15 @@ module ApplicationHelper
     return nil
   end
 
+  # Output a html separator element (`<span class="separator">,</span>`)
+  # that will be hidden in standard screen views,
+  # but used for separating links for increased accessibilty in assistive browsers.
+  def separator(sep_char = ',')
+    content_tag(:span, sep_char, class: 'separator')
+  end
+
+  # TEXT CONVERSION HELEPRS
+
   # Convert a string to simple html based on line-breaks.
   def simple_text_to_html(text)
     CGI.escapeHTML(text.strip). # remove leading & trailing whitespace, then escape html unsafe chars
@@ -51,11 +63,10 @@ module ApplicationHelper
       html_safe
   end
 
-  # Output a html separator element (`<span class="separator">,</span>`)
-  # that will be hidden in standard screen views,
-  # but used for separating links for increased accessibilty in assistive browsers.
-  def separator(sep_char = ',')
-    content_tag(:span, sep_char, class: 'separator')
+  # ROUTING LINK HELPERS
+
+  def calendar_day_path_for_date(date)
+    calendar_day_path(year: date.year, month: format('%02d', date.month), day: format('%02d', date.day))
   end
 
 end
