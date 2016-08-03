@@ -9,37 +9,6 @@ describe Tag, type: :model do
     @event = Event.new
   end
 
-  describe "attribute mass assignment security" do
-    it "should allow tag" do
-      alt_text = 'Example Alt Text'
-      expect( Tag.new(tag: 'test').tag ).to eq 'test'
-    end
-    it "should allow title" do
-      title = 'Example Tag Title'
-      expect( Tag.new(title: title).title ).to eq title
-    end
-    it "should allow is_meta" do
-      expect( Tag.new(is_meta: true).is_meta ).to be_truthy
-    end
-    it "should not allow item" do
-      item = Event.new
-      expect { Tag.new(item: item) }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item_type" do
-      expect { Tag.new(item_type: 'Event') }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item_id" do
-      expect { Tag.new(item_id: 123) }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow user" do
-      user = User.new
-      expect { Tag.new(user: user) }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow user_id" do
-      expect { Tag.new(user_id: 123) }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-  end
-
   describe "validations" do
     it "should validate with the minimum required values" do
       expect( Tag.new(tag: 'test').valid? ).to be_truthy

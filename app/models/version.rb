@@ -3,7 +3,6 @@
 # and they are responsible for generating their own Version records.
 class Version < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Content', inherits_from: :item
-  attr_accessible :user, :edited_at, :edit_comment, :filename, :title, :values
 
   belongs_to :item, polymorphic: true
   belongs_to :user

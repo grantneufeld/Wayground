@@ -74,9 +74,9 @@ describe PagesController, type: :controller do
       it "assigns a newly created page as @page" do
         set_logged_in_default_admin
         page = default_page
-        allow(Page).to receive(:new).with({'these' => 'params'}).and_return(page)
         allow(page).to receive(:save).and_return(true)
-        post :create, :page => {'these' => 'params'}
+        allow(Page).to receive(:new).with('filename' => 'valid_params').and_return(page)
+        post :create, page: { 'filename' => 'valid_params' }
         expect(assigns(:page)).to be(page)
       end
 
@@ -104,9 +104,10 @@ describe PagesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved page as @page" do
         set_logged_in_default_admin
-        allow(Page).to receive(:new).with({'these' => 'params'}) { mock_page(:save => false) }
-        post :create, :page => {'these' => 'params'}
-        expect(assigns(:page)).to be(mock_page)
+        post :create, page: { 'invalid' => 'params' }
+        page = assigns(:page)
+        expect(page.new_record?).to be_truthy
+        expect(page.errors).not_to be_nil
       end
 
       it "re-renders the 'new' template" do
@@ -145,9 +146,8 @@ describe PagesController, type: :controller do
         set_logged_in_default_admin
         page = default_page
         allow(Page).to receive(:find).with(page.id.to_s) { page }
-        allow(Page).to receive(:find).with("37") { mock_page }
-        expect(page).to receive(:update).with('these' => 'params')
-        patch :update, id: page.id.to_s, page: { 'these' => 'params' }
+        expect(page).to receive(:update).with('filename' => 'valid_params')
+        patch :update, id: page.id.to_s, page: { 'filename' => 'valid_params' }
       end
 
       it "assigns the requested page as @page" do

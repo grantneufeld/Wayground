@@ -4,22 +4,6 @@ require 'user'
 
 describe UserToken, type: :model do
 
-  describe "attribute mass assignment security" do
-    it "should allow expires_at" do
-      expires_at = Time.now
-      expect( UserToken.new(expires_at: expires_at).expires_at ).to eq expires_at
-    end
-    it "should allow token" do
-      token = 'test token'
-      expect( UserToken.new(token: token).token ).to eq token
-    end
-    it "should deny user id" do
-      expect{
-        UserToken.new(user_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-  end
-
   describe "validations" do
     it "should validate with just a user and token" do
       user = User.new

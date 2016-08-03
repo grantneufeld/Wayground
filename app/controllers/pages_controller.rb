@@ -46,7 +46,7 @@ class PagesController < ApplicationController
   # PUT /pages/1
   # PUT /pages/1.xml
   def update
-    if @page.update(params[:page])
+    if @page.update(page_params)
       redirect_to(@page, notice: 'Page was successfully updated.')
     else
       page_metadata(title: "Edit Page “#{@page.title}”")
@@ -99,7 +99,7 @@ class PagesController < ApplicationController
 
   def set_new_page
     page_metadata(title: 'New Page')
-    @page = Page.new(params[:page])
+    @page = Page.new(page_params)
     parent_id = params[:parent]
     if parent_id.present?
       @page.parent = Page.find(parent_id)
@@ -109,5 +109,11 @@ class PagesController < ApplicationController
 
   def set_editor
     @page.editor = current_user
+  end
+
+  def page_params
+    params.fetch(:page, {}).permit(
+      :filename, :title, :description, :content, :edit_comment, :is_authority_controlled
+    )
   end
 end

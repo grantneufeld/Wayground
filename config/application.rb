@@ -45,9 +45,6 @@ module Wayground
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    # Raise exception on mass assignment protection for Active Record models
-    config.active_record.mass_assignment_sanitizer = :strict
-
     # do not auto-include all helpers in all views
     config.action_controller.include_all_helpers = false
 

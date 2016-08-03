@@ -15,60 +15,6 @@ describe SourcedItem, type: :model do
     $minimum_valid_params = { last_sourced_at: 1.day.ago }
   }
 
-  describe "attr_accessible" do
-    it "should not allow source to be set" do
-      expect {
-        SourcedItem.new(:source => Project.new)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow source_id to be set" do
-      expect {
-        SourcedItem.new(:source_id => '1')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item to be set" do
-      expect {
-        SourcedItem.new(:item => Project.new)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item_type to be set" do
-      expect {
-        SourcedItem.new(:item_type => 'Event')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item_id to be set" do
-      expect {
-        SourcedItem.new(:item_id => '1')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow datastore to be set" do
-      expect {
-        SourcedItem.new(:datastore => Datastore.new)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow datastore_id to be set" do
-      expect {
-        SourcedItem.new(:datastore_id => '1')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should allow source_identifier to be set" do
-      expect(SourcedItem.new(:source_identifier => 'Test').source_identifier).to eq 'Test'
-    end
-    it "should allow last_sourced_at to be set" do
-      sourced_item = SourcedItem.new(:last_sourced_at => '2012-06-07 08:09:10')
-      expect(sourced_item.last_sourced_at?).to be_truthy
-    end
-    it "should allow has_local_modifications to be set" do
-      sourced_item = SourcedItem.new(:has_local_modifications => true)
-      expect(sourced_item.has_local_modifications).to be_truthy
-    end
-    it 'should not allow is_ignored to be set' do
-      expect {
-        SourcedItem.new(is_ignored: true)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-  end
-
   describe "validation" do
     it "should pass with minimum valid parameters" do
       si = source.sourced_items.new(minimum_valid_params)

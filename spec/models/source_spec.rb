@@ -9,64 +9,6 @@ describe Source, type: :model do
     @user_normal = FactoryGirl.create(:user, name: 'Normal User')
   end
 
-  describe "attr_accessible" do
-    it "should not allow container to be set" do
-      expect {
-        Source.new(container: Project.new)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow container_type to be set" do
-      expect {
-        Source.new(container_type: 'Project')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow container_id to be set" do
-      expect {
-        Source.new(container_id: '1')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow datastore to be set" do
-      expect {
-        Source.new(datastore: Datastore.new)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow datastore_id to be set" do
-      expect {
-        Source.new(datastore_id: '1')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow last_updated_at to be set" do
-      expect {
-        Source.new(last_updated_at: '2012-01-02 03:04:05')
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should allow refresh_after_at to be set" do
-      source = Source.new(refresh_after_at: '2012-06-07 08:09:10')
-      expect(source.refresh_after_at?).to be_truthy
-    end
-    it "should allow processor to be set" do
-      expect(Source.new(processor: 'Test').processor).to eq 'Test'
-    end
-    it "should allow url to be set" do
-      expect(Source.new(url: 'Test').url).to eq 'Test'
-    end
-    it "should allow method to be set" do
-      expect(Source.new(method: 'Test').method).to eq 'Test'
-    end
-    it "should allow post_args to be set" do
-      expect(Source.new(post_args: 'Test').post_args).to eq 'Test'
-    end
-    it "should allow title to be set" do
-      expect(Source.new(title: 'Test').title).to eq 'Test'
-    end
-    it "should allow description to be set" do
-      expect(Source.new(description: 'Test').description).to eq 'Test'
-    end
-    it "should allow options to be set" do
-      expect(Source.new(options: 'Test').options).to eq 'Test'
-    end
-  end
-
   describe "validation" do
     let(:minimum_valid_params) {
       $minimum_valid_params = { processor: 'iCalendar', url: 'http://test.tld/test.ics' }

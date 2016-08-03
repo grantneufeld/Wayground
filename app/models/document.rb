@@ -1,7 +1,6 @@
 # Metadata for a data file. (The actual file data is kept in Datastore.)
 class Document < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content'
-  attr_accessible :file, :custom_filename, :description, :is_authority_controlled, :data
 
   # the actual data of the file is stored in a separate table
   belongs_to :datastore

@@ -6,8 +6,6 @@ require 'user'
 # A token, attached to a User, used to “remember” that user.
 # Typically used to keep users logged-in via cookies.
 class UserToken < ActiveRecord::Base
-  attr_accessible :expires_at, :token
-
   belongs_to :user
 
   validates_presence_of :user_id

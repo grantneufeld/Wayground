@@ -92,10 +92,10 @@ describe AuthoritiesController, type: :controller do
     describe "with valid params" do
       it "assigns a newly created authority as @authority" do
         set_logged_in_default_admin
-        allow(Authority).to receive(:new).with({'these' => 'params'}) {
+        allow(Authority).to receive(:new).with('area' => 'Content') {
           mock_authority(save: true, user: default_user)
         }
-        post :create, :authority => {'these' => 'params'}
+        post :create, authority: { 'area' => 'Content' }
         expect(assigns(:authority)).to be(mock_authority)
         expect(assigns(:user)).not_to be_nil
       end
@@ -110,9 +110,10 @@ describe AuthoritiesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved authority as @authority" do
         set_logged_in_default_admin
-        allow(Authority).to receive(:new).with({'these' => 'params'}) { mock_authority(:save => false) }
-        post :create, :authority => {'these' => 'params'}
-        expect(assigns(:authority)).to be(mock_authority)
+        post :create, authority: { 'invalid' => 'params' }
+        authority = assigns(:authority)
+        expect(authority.new_record?).to be_truthy
+        expect(authority.errors).not_to be_nil
       end
       it "re-renders the 'new' template" do
         set_logged_in_default_admin
@@ -149,8 +150,8 @@ describe AuthoritiesController, type: :controller do
         set_logged_in_default_admin
         authority = default_admin_authority
         allow(Authority).to receive(:find).with("37") { authority }
-        expect(authority).to receive(:update).with('these' => 'params').and_return(true)
-        patch :update, id: '37', authority: { 'these' => 'params' }
+        expect(authority).to receive(:update).with('area' => 'global').and_return(true)
+        patch :update, id: '37', authority: { 'area' => 'global' }
       end
       it "assigns the requested authority as @authority" do
         set_logged_in_default_admin

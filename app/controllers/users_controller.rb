@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     if @user.save
       cookie_set_remember_me(@user)
       if @user.admin?
@@ -81,5 +81,9 @@ class UsersController < ApplicationController
     if current_user.present?
       redirect_to account_url, :notice => "You are already signed up."
     end
+  end
+
+  def user_params
+    params.fetch(:user, {}).permit(:email, :name, :password, :password_confirmation, :timezone)
   end
 end

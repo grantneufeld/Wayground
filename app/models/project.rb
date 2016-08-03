@@ -5,11 +5,6 @@ require 'filename_validator'
 # and various items (Events, Pages, Tasks, etc.).
 class Project < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Projects', :item_authority_flag_field => :always_viewable
-  attr_accessible(
-    :is_visible, :is_public_content, :is_visible_member_list, :is_joinable,
-    :is_members_can_invite, :is_not_unsubscribable, :is_moderated, :is_only_admin_posts,
-    :is_no_comments, :name, :filename, :description #, :editor, :edit_comment
-  )
 
   # The optional parent Project of this Project. The Project is a sub-project if it has a parent.
   belongs_to :parent, :class_name => "Project"

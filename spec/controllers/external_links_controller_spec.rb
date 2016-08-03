@@ -177,8 +177,8 @@ describe ExternalLinksController, type: :controller do
         set_logged_in_admin
         # This specifies that the ExternalLink receives the :update message
         # with whatever params are submitted in the request.
-        expect_any_instance_of(ExternalLink).to receive(:update).with('these' => 'params')
-        patch :update, event_id: event.id, id: external_link.id, external_link: { 'these' => 'params' }
+        expect_any_instance_of(ExternalLink).to receive(:update).with('title' => 'valid_params')
+        patch :update, event_id: event.id, id: external_link.id, external_link: { 'title' => 'valid_params' }
       end
 
       it "assigns the requested external_link as @external_link" do

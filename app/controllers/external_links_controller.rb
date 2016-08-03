@@ -38,7 +38,7 @@ class ExternalLinksController < ApplicationController
 
   def update
     page_metadata(title: "Edit External Link: #{@external_link.title}")
-    if @external_link.update(params[:external_link])
+    if @external_link.update(external_link_params)
       redirect_to(@external_link.items_for_path, notice: 'The external link has been saved.')
     else
       render action: "edit"
@@ -96,7 +96,10 @@ class ExternalLinksController < ApplicationController
 
   def set_new_external_link
     page_metadata(title: 'New External Link')
-    @external_link = @item.external_links.build(params[:external_link])
+    @external_link = @item.external_links.build(external_link_params)
   end
 
+  def external_link_params
+    params.fetch(:external_link, {}).permit(:title, :url)
+  end
 end

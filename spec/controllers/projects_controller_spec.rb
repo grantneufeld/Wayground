@@ -146,9 +146,9 @@ describe ProjectsController, type: :controller do
         # specifies that the Project created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Project).to receive(:update).with('these' => 'params')
+        expect_any_instance_of(Project).to receive(:update).with('name' => 'valid_params')
         set_logged_in_admin
-        patch :update, { id: project.to_param, project: { 'these' => 'params' } }, valid_session
+        patch :update, { id: project.to_param, project: { 'name' => 'valid_params' } }, valid_session
       end
 
       it "assigns the requested project as @project" do

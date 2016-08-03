@@ -6,7 +6,6 @@ require 'authority_controlled'
 # An optional title can present the tag with accents, punctuation, mixed-case, etc.
 class Tag < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Content', item_authority_flag_field: :always_viewable
-  attr_accessible :tag, :title, :is_meta
 
   belongs_to :item, polymorphic: true
   belongs_to :user

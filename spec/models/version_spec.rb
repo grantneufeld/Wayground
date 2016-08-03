@@ -11,51 +11,6 @@ describe Version, type: :model do
     @user = FactoryGirl.create(:user)
   end
 
-  describe "attr_accessible" do
-    it "should not allow item to be set" do
-      expect {
-        version = Version.new(item: @item)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item_type to be set" do
-      expect {
-        version = Version.new(item_type: @item.class.name)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow item_id to be set" do
-      expect {
-        version = Version.new(item_id: @item.id)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should allow user to be set" do
-      version = Version.new(user: @user)
-      expect( version.user_id ).to eq @user.id
-    end
-    it "should allow edited_at to be set" do
-      version = Version.new(edited_at: '2012-01-02 03:04:05')
-      expect( version.edited_at.getlocal.to_s(:db) ).to eq '2012-01-02 03:04:05'
-    end
-    it "should allow edit_comment to be set" do
-      version = Version.new(edit_comment: 'a comment for the edit')
-      expect( version.edit_comment ).to eq 'a comment for the edit'
-    end
-    it "should allow filename to be set" do
-      version = Version.new(filename: 'test_filename')
-      expect( version.filename ).to eq 'test_filename'
-    end
-    it "should allow title to be set" do
-      version = Version.new(title: 'Version Title')
-      expect( version.title ).to eq 'Version Title'
-    end
-    it "should allow values to be set" do
-      # save and reload to invoke the serialization
-      version = @item.versions.new(edited_at: Time.now, user: @user, values: { hash: 'values', abc: 123 })
-      version.save!
-      version = Version.find(version.id)
-      expect( version.values ).to eq('hash' => 'values', 'abc' => '123')
-    end
-  end
-
   describe "validation" do
     it "should pass when all required fields are set" do
       version = @item.versions.new(edited_at: Time.now)
