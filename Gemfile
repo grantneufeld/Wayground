@@ -43,7 +43,7 @@ gem 'omniauth-twitter', '>= 0.0.11'
 gem 'tzinfo', '>= 0.3.38'
 
 # ActiveRecord-style attributes on plain objects
-gem 'virtus', '~> 0.5.5'
+gem 'virtus', '>= 0.5.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

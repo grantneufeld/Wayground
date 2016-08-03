@@ -6,7 +6,7 @@ module Wayground
 
     # Process parameters passed in for a Candidate.
     class CandidateForm
-      include ::Virtus
+      include ::Virtus.model
       extend ActiveModel::Naming
       include ActiveModel::Conversion
       include ActiveModel::Validations
