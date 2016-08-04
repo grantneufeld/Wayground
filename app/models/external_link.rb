@@ -3,7 +3,7 @@ require 'http_url_validator'
 
 # External weblinks representing an item in our system.
 # E.g., a link to an event listing on another website might be for the same Event as listed on our site.
-class ExternalLink < ActiveRecord::Base
+class ExternalLink < ApplicationRecord
   acts_as_authority_controlled :authority_area => 'Content', :inherits_from => :item
 
   belongs_to :item, :polymorphic => true

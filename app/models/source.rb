@@ -2,7 +2,7 @@
 # Types of sources might include RSS feeds, iCalendars, APIs, microformat scrapings, etc.
 # May be dynamically maintained so the local items generated from the Source
 # can be updated based on changes to the Source.
-class Source < ActiveRecord::Base
+class Source < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Source', item_authority_flag_field: :always_private
 
   belongs_to :container_item, polymorphic: true

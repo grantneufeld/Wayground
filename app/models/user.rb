@@ -8,7 +8,7 @@ require 'active_support/values/time_zone'
 # Source References:
 # * http://railscasts.com/episodes/250-authentication-from-scratch
 # * https://github.com/rails/rails/commit/bd9dc4ff23ab1e185df6ccf35d6058c0a3d234ce
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   acts_as_authority_controlled :item_authority_flag_field => :always_private
   attr_reader :password
 

@@ -2,7 +2,7 @@ require 'active_record'
 require 'http_url_validator'
 
 # Meta data and collection container for a set of Image Variants.
-class Image < ActiveRecord::Base
+class Image < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Content', item_authority_flag_field: :always_viewable
 
   has_many :image_variants, dependent: :delete_all

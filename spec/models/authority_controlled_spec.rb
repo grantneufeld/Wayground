@@ -11,7 +11,7 @@ SELECTIVE_AUTHORITY_CLASS = Page
 INHERITED_AUTHORITY_CLASS = Path
 
 # Reopen User class to test handling of duplicate calls to acts_as_authority_controlled
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   acts_as_authority_controlled item_authority_flag_field: :always_private
   acts_as_authority_controlled item_authority_flag_field: :always_private
 end
@@ -21,7 +21,7 @@ end
 # However, ActiveRecord hits the database and custom sub-classes would have to have matching tables
 # in the database, unless I figure out how to stub out all the applicable parts of ActiveRecord.
 
-describe "authority_controlled extensions to ActiveRecord::Base" do
+describe "authority_controlled extensions to ApplicationRecord" do
   before(:all) do
     Authentication.delete_all
   end
@@ -123,13 +123,13 @@ describe "acts_as_authority_controlled" do
 
   it "should not allow a class to be assigned to the ‘global’ authority_area" do
     expect {
-      class TestAuthorityControlledCannotBeGlobal < ActiveRecord::Base
+      class TestAuthorityControlledCannotBeGlobal < ApplicationRecord
         acts_as_authority_controlled authority_area: 'global', item_authority_flag_field: :always_private
       end
     }.to raise_exception(Wayground::ModelAuthorityAreaCannotBeGlobal)
   end
   it "should allow a class to be assigned to a custom authority_area" do
-    class TestAuthorityControlledCustomArea < ActiveRecord::Base
+    class TestAuthorityControlledCustomArea < ApplicationRecord
       acts_as_authority_controlled authority_area: 'Custom Area', item_authority_flag_field: :always_private
     end
     expect(TestAuthorityControlledCustomArea.authority_area).to eq 'Custom Area'

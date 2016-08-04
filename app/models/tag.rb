@@ -4,7 +4,7 @@ require 'authority_controlled'
 # Associate a tag with any item.
 # Tags consist of lower-case, non-accented (ASCII) alpha-numeric characters.
 # An optional title can present the tag with accents, punctuation, mixed-case, etc.
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Content', item_authority_flag_field: :always_viewable
 
   belongs_to :item, polymorphic: true

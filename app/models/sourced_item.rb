@@ -1,6 +1,6 @@
 # Tracks items generated from processing Sources.
 # Items can be most models in the system, but must respond to the `name` method.
-class SourcedItem < ActiveRecord::Base
+class SourcedItem < ApplicationRecord
   belongs_to :source
   belongs_to :item, :polymorphic => true
   belongs_to :datastore

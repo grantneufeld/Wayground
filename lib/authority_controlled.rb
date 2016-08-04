@@ -4,7 +4,7 @@
 # Note that this relies on the User and Authority classes as defined in the wayground project.
 
 # extensions to ActiveRecord to support setting classes up as being Authority controlled.
-ActiveRecord::Base.class_eval do
+ApplicationRecord.class_eval do
   # options is a hash of optional parameters:
   # - :authority_area => A string defining the area of authority the model is to fall under.
   #    Defaults to the model’s class name.

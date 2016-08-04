@@ -1,5 +1,5 @@
 # Web pages.
-class Page < ActiveRecord::Base
+class Page < ApplicationRecord
   acts_as_authority_controlled :authority_area => 'Content'
   attr_accessor :editor, :edit_comment
 

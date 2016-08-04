@@ -1,7 +1,7 @@
 # Records a “version” (or “edit”) of a given “versionable” item.
 # Versionable items must have a `has_many :versions, as: :item` relation,
 # and they are responsible for generating their own Version records.
-class Version < ActiveRecord::Base
+class Version < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Content', inherits_from: :item
 
   belongs_to :item, polymorphic: true

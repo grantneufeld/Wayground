@@ -1,6 +1,6 @@
 # Defines custom URLs (“paths”) for arbitrary items on the site,
 # or to redirect local URLs to other local paths or to remote URLs.
-class Path < ActiveRecord::Base
+class Path < ApplicationRecord
   acts_as_authority_controlled :authority_area => 'Content', :inherits_from => :item
 
   belongs_to :item, :polymorphic => true

@@ -3,7 +3,7 @@ require 'filename_validator'
 
 # A grouping of Memberships (typically Users or EmailAddresses),
 # and various items (Events, Pages, Tasks, etc.).
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   acts_as_authority_controlled :authority_area => 'Projects', :item_authority_flag_field => :always_viewable
 
   # The optional parent Project of this Project. The Project is a sub-project if it has a parent.

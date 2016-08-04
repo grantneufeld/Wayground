@@ -7,7 +7,7 @@ require 'url_cleaner'
 require 'import/ical_importer'
 
 # Details of a calendar event
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Calendar', item_authority_flag_field: :always_viewable
   # editor and edit_comment are used for Version records
   # is_sourcing is set when generating or updating from a Source (and SourcedItem)

@@ -1,5 +1,5 @@
 # Metadata for a data file. (The actual file data is kept in Datastore.)
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   acts_as_authority_controlled :authority_area => 'Content'
 
   # the actual data of the file is stored in a separate table
