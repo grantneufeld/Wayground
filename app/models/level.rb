@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 require 'http_url_validator'
@@ -8,7 +7,6 @@ require 'http_url_validator'
 # a province/state has a country as a parent).
 class Level < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :filename, :name, :url
 
   belongs_to :parent, class_name: 'Level'
   has_many :elections

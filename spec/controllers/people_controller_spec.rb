@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'people_controller'
 
 describe PeopleController, type: :controller do
@@ -190,8 +189,8 @@ describe PeopleController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested person' do
         set_logged_in_admin
-        expect_any_instance_of(Person).to receive(:update).with({'these' => 'params'}).and_return(true)
-        patch :update, id: person.filename, person: { 'these' => 'params' }
+        expect_any_instance_of(Person).to receive(:update).with('fullname' => 'valid params').and_return(true)
+        patch :update, id: person.filename, person: { 'fullname' => 'valid params' }
       end
       context 'with attributes' do
         before(:each) do

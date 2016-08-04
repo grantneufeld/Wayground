@@ -82,8 +82,8 @@ class UsersController < ApplicationController
   #     redirect_to account_url, :notice => "You are already signed up."
   #   end
   # end
-
-  def user_params
-    params.fetch(:user, {}).permit(:email, :name, :password, :password_confirmation, :timezone)
-  end
+  #
+  # def user_params
+  #   params.fetch(:user, {}).permit(:email, :name, :password, :password_confirmation, :timezone)
+  # end
 end

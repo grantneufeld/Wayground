@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'contact'
 require 'candidate'
 require 'person'
@@ -36,7 +35,7 @@ class ContactsController < ApplicationController
   def edit; end
 
   def update
-    if @contact.update(params[:contact])
+    if @contact.update(contact_params)
       redirect_to(@contact.items_for_path, notice: 'The contact has been saved.')
     else
       render action: 'edit'
@@ -88,7 +87,7 @@ class ContactsController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Contact')
-    @contact = @item.contacts.build(params[:contact])
+    @contact = @item.contacts.build(contact_params)
   end
 
   def prep_edit
@@ -110,4 +109,11 @@ class ContactsController < ApplicationController
     end
   end
 
+  def contact_params
+    params.fetch(:contact, {}).permit(
+      :position, :is_public, :confirmed_at, :expires_at, :name, :organization,
+      :email, :twitter, :url, :phone, :phone2, :fax,
+      :address1, :address2, :city, :province, :country, :postal
+    )
+  end
 end

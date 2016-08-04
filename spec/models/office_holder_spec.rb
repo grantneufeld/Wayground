@@ -18,47 +18,6 @@ describe OfficeHolder, type: :model do
     end
   end
 
-  describe 'attribute mass assignment security' do
-    it 'should not allow office' do
-      expect {
-        OfficeHolder.new(office: Office.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should not allow office_id' do
-      expect {
-        OfficeHolder.new(office_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should not allow person' do
-      expect {
-        OfficeHolder.new(person: Person.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should not allow person_id' do
-      expect {
-        OfficeHolder.new(person_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should not allow previous' do
-      expect {
-        OfficeHolder.new(previous: OfficeHolder.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should not allow previous_id' do
-      expect {
-        OfficeHolder.new(previous_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should allow start_on' do
-      date = 1.day.ago.to_date
-      expect( OfficeHolder.new(start_on: date).start_on ).to eq date
-    end
-    it 'should allow end_on' do
-      date = 1.day.ago.to_date
-      expect( OfficeHolder.new(end_on: date).end_on ).to eq date
-    end
-  end
-
   describe '#office' do
     it 'should allow a user to be set' do
       office = Office.new

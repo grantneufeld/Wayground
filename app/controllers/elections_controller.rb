@@ -36,7 +36,7 @@ class ElectionsController < ApplicationController
   def edit; end
 
   def update
-    if @election.update(params[:election])
+    if @election.update(election_params)
       redirect_to([@level, @election], notice: 'The election has been saved.')
     else
       render action: 'edit'
@@ -89,7 +89,7 @@ class ElectionsController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Election')
-    @election = @level.elections.build(params[:election])
+    @election = @level.elections.build(election_params)
   end
 
   def prep_edit
@@ -114,4 +114,7 @@ class ElectionsController < ApplicationController
     end
   end
 
+  def election_params
+    params.fetch(:election, {}).permit(:filename, :name, :start_on, :end_on, :url, :description)
+  end
 end

@@ -9,50 +9,6 @@ describe Person, type: :model do
     end
   end
 
-  describe "attribute mass assignment security" do
-    it "should not allow user" do
-      expect {
-        Person.new(user: User.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow user_id" do
-      expect {
-        Person.new(user_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow submitter" do
-      expect {
-        Person.new(submitter: User.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow submitter_id" do
-      expect {
-        Person.new(submitter_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should allow filename" do
-      filename = 'example-filename'
-      expect( Person.new(filename: filename).filename ).to eq filename
-    end
-    it "should allow fullname" do
-      fullname = 'Example Name'
-      expect( Person.new(fullname: fullname).fullname ).to eq fullname
-    end
-    it "should not allow aliases" do
-      aliases = ['A.K.A.', 'Nick-Name']
-      expect {
-        Person.new(aliases: aliases)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should allow bio" do
-      bio = 'Example biography.'
-      expect( Person.new(bio: bio).bio ).to eq bio
-    end
-    it "should allow aliases_string" do
-      expect( Person.new(aliases_string: 'A, B').aliases_string ).to eq 'A, B'
-    end
-  end
-
   describe '#user' do
     it 'should allow a user to be set' do
       user = User.new

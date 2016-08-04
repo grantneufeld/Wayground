@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'party'
 require 'level'
 
@@ -35,7 +34,7 @@ class PartiesController < ApplicationController
   def edit; end
 
   def update
-    if @party.update(params[:party])
+    if @party.update(party_params)
       redirect_to([@level, @party], notice: 'The party has been saved.')
     else
       render action: 'edit'
@@ -74,7 +73,7 @@ class PartiesController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Party')
-    @party = @level.parties.build(params[:party])
+    @party = @level.parties.build(party_params)
   end
 
   def prep_edit
@@ -95,4 +94,10 @@ class PartiesController < ApplicationController
     end
   end
 
+  def party_params
+    params.fetch(:party, {}).permit(
+      :filename, :name, :aliases, :abbrev, :is_registered, :colour,
+      :url, :description, :established_on, :registered_on, :ended_on
+    )
+  end
 end

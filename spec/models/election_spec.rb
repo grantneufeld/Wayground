@@ -21,43 +21,6 @@ describe Election, type: :model do
     end
   end
 
-  describe "attribute mass assignment security" do
-    it "should not allow level" do
-      expect {
-        Election.new(level: Level.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow level_id" do
-      expect {
-        Election.new(level_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should allow filename" do
-      filename = 'example-filename'
-      expect( Election.new(filename: filename).filename ).to eq filename
-    end
-    it "should allow name" do
-      name = 'Example Name'
-      expect( Election.new(name: name).name ).to eq name
-    end
-    it "should allow start_on" do
-      start_on = '2000-01-02'
-      expect( Election.new(start_on: start_on).start_on.to_s ).to eq start_on
-    end
-    it "should allow end_on" do
-      end_on = '2012-11-10'
-      expect( Election.new(end_on: end_on).end_on.to_s ).to eq end_on
-    end
-    it "should allow description" do
-      description = 'Example Description'
-      expect( Election.new(description: description).description ).to eq description
-    end
-    it "should allow url" do
-      url = 'http://example.url/'
-      expect( Election.new(url: url).url ).to eq url
-    end
-  end
-
   describe '#level' do
     it 'should allow a level to be set' do
       level = Level.new

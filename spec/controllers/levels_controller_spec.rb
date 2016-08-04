@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'levels_controller'
 
 describe LevelsController, type: :controller do
@@ -203,8 +202,8 @@ describe LevelsController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested level' do
         set_logged_in_admin
-        expect_any_instance_of(Level).to receive(:update).with({'these' => 'params'}).and_return(true)
-        patch :update, id: level.filename, level: { 'these' => 'params' }
+        expect_any_instance_of(Level).to receive(:update).with('name' => 'valid params').and_return(true)
+        patch :update, id: level.filename, level: { 'name' => 'valid params' }
       end
       context 'with attributes' do
         before(:each) do

@@ -15,62 +15,6 @@ describe Party, type: :model do
     end
   end
 
-  describe 'attribute mass assignment security' do
-    it 'should not allow level' do
-      expect {
-        Party.new(level: Level.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should not allow level_id' do
-      expect {
-        Party.new(level_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it 'should allow filename' do
-      filename = 'example-filename'
-      expect( Party.new(filename: filename).filename ).to eq filename
-    end
-    it 'should allow name' do
-      name = 'Example Name'
-      expect( Party.new(name: name).name ).to eq name
-    end
-    it 'should allow aliases' do
-      aliases = ['A.K.A.', 'Nick-Name']
-      expect( Party.new(aliases: aliases).aliases ).to eq aliases
-    end
-    it 'should allow abbrev' do
-      abbrev = 'Examp.'
-      expect( Party.new(abbrev: abbrev).abbrev ).to eq abbrev
-    end
-    it 'should allow is_registered' do
-      expect( Party.new(is_registered: true).is_registered ).to be_truthy
-    end
-    it 'should allow colour' do
-      colour = '#abc123'
-      expect( Party.new(colour: colour).colour ).to eq colour
-    end
-    it 'should allow url' do
-      url = 'http://example.url/'
-      expect( Party.new(url: url).url ).to eq url
-    end
-    it 'should allow description' do
-      description = 'Example description.'
-      expect( Party.new(description: description).description ).to eq description
-    end
-    it 'should allow established_on' do
-      established_on = '2000-01-02'
-      expect( Party.new(established_on: established_on).established_on.to_s ).to eq established_on
-    end
-    it 'should allow registered_on' do
-      registered_on = '2001-02-03'
-      expect( Party.new(registered_on: registered_on).registered_on.to_s ).to eq registered_on
-    end
-    it 'should allow ended_on' do
-      ended_on = '2012-11-10'
-      expect( Party.new(ended_on: ended_on).ended_on.to_s ).to eq ended_on
-    end
-  end
-
   describe '#level' do
     it 'should allow a level to be set' do
       level = Level.new

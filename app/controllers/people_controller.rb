@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'person'
 
 class PeopleController < ApplicationController
@@ -31,7 +30,7 @@ class PeopleController < ApplicationController
   def edit; end
 
   def update
-    if @person.update(params[:person])
+    if @person.update(person_params)
       redirect_to(@person, notice: 'The person has been saved.')
     else
       render action: 'edit'
@@ -65,7 +64,7 @@ class PeopleController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Person')
-    @person = Person.new(params[:person])
+    @person = Person.new(person_params)
   end
 
   def prep_edit
@@ -86,4 +85,7 @@ class PeopleController < ApplicationController
     end
   end
 
+  def person_params
+    params.fetch(:person, {}).permit(:filename, :fullname, :aliases_string, :bio)
+  end
 end

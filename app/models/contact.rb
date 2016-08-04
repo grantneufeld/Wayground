@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 require 'email_validator'
@@ -7,12 +6,6 @@ require 'http_url_validator'
 # Contact information for an item (such as a Person or Candidate).
 class Contact < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :position, :is_public,
-    :confirmed_at, :expires_at,
-    :name, :organization,
-    :email, :twitter, :url,
-    :phone, :phone2, :fax,
-    :address1, :address2, :city, :province, :country, :postal
 
   belongs_to :item, polymorphic: true
 

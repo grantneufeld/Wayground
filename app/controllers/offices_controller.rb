@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'office'
 require 'level'
 
@@ -35,7 +34,7 @@ class OfficesController < ApplicationController
   def edit; end
 
   def update
-    if @office.update(params[:office])
+    if @office.update(office_params)
       redirect_to([@level, @office], notice: 'The office has been saved.')
     else
       render action: 'edit'
@@ -74,7 +73,7 @@ class OfficesController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Office')
-    @office = @level.offices.build(params[:office])
+    @office = @level.offices.build(office_params)
     if params[:previous_id]
       @office.previous = @level.offices.from_param(params[:previous_id]).first
     end
@@ -98,4 +97,9 @@ class OfficesController < ApplicationController
     end
   end
 
+  def office_params
+    params.fetch(:office, {}).permit(
+      :filename, :name, :title, :established_on, :ended_on, :description, :url
+    )
+  end
 end

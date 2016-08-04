@@ -9,31 +9,6 @@ describe Level, type: :model do
     end
   end
 
-  describe "attribute mass assignment security" do
-    it "should allow filename" do
-      filename = 'example-filename'
-      expect( Level.new(filename: filename).filename ).to eq filename
-    end
-    it "should allow name" do
-      name = 'Example Name'
-      expect( Level.new(name: name).name ).to eq name
-    end
-    it "should allow url" do
-      url = 'http://example.url/'
-      expect( Level.new(url: url).url ).to eq url
-    end
-    it "should not allow parent" do
-      expect {
-        Level.new(parent: Level.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow parent_id" do
-      expect {
-        Level.new(parent_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-  end
-
   describe '#parent' do
     it 'should allow a parent level to be set' do
       parent = Level.new

@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe ContactsController, type: :controller do
 
@@ -212,8 +211,8 @@ describe ContactsController, type: :controller do
         set_logged_in_admin
         # This specifies that the Contact receives the :update message
         # with whatever params are submitted in the request.
-        expect_any_instance_of(Contact).to receive(:update).with('these' => 'params')
-        patch :update, person_id: person.to_param, id: contact.id, contact: { 'these' => 'params' }
+        expect_any_instance_of(Contact).to receive(:update).with('name' => 'valid params')
+        patch :update, person_id: person.to_param, id: contact.id, contact: { 'name' => 'valid params' }
       end
 
       it 'assigns the requested contact as @contact' do

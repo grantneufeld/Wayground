@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'level'
 
 class LevelsController < ApplicationController
@@ -31,7 +30,7 @@ class LevelsController < ApplicationController
   #def edit; end
 
   def update
-    if @level.update(params[:level])
+    if @level.update(level_params)
       redirect_to(@level, notice: 'The level has been saved.')
     else
       render action: 'edit'
@@ -65,7 +64,7 @@ class LevelsController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Level')
-    @level = Level.new(params[:level])
+    @level = Level.new(level_params)
     if params[:parent_id]
       @level.parent = Level.from_param(params[:parent_id]).first
     end
@@ -89,4 +88,7 @@ class LevelsController < ApplicationController
     end
   end
 
+  def level_params
+    params.fetch(:level, {}).permit(:filename, :name, :url)
+  end
 end

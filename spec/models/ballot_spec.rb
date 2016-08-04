@@ -19,48 +19,6 @@ describe Ballot, type: :model do
     end
   end
 
-  describe "attribute mass assignment security" do
-    it "should not allow election" do
-      expect {
-        Ballot.new(election: Election.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow election_id" do
-      expect {
-        Ballot.new(election_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow office" do
-      expect {
-        Ballot.new(office: Office.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow office_id" do
-      expect {
-        Ballot.new(office_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should allow term_start_on" do
-      term_start_on = '2000-01-02'
-      expect( Ballot.new(term_start_on: term_start_on).term_start_on.to_s ).to eq term_start_on
-    end
-    it "should allow term_end_on" do
-      term_end_on = '2012-11-10'
-      expect( Ballot.new(term_end_on: term_end_on).term_end_on.to_s ).to eq term_end_on
-    end
-    it "should allow is_byelection" do
-      expect( Ballot.new(is_byelection: true).is_byelection ).to be_truthy
-    end
-    it "should allow url" do
-      url = 'http://example.url/'
-      expect( Ballot.new(url: url).url ).to eq url
-    end
-    it "should allow description" do
-      description = 'Example Description'
-      expect( Ballot.new(description: description).description ).to eq description
-    end
-  end
-
   describe '#election' do
     it 'should allow an election to be set' do
       election = Election.new

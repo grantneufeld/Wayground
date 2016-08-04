@@ -1,5 +1,4 @@
-# encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 require 'offices_controller'
 
 describe OfficesController, type: :controller do
@@ -205,8 +204,8 @@ describe OfficesController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested office' do
         set_logged_in_admin
-        expect_any_instance_of(Office).to receive(:update).with({'these' => 'params'}).and_return(true)
-        patch :update, id: office.filename, office: { 'these' => 'params' }, level_id: @level.to_param
+        expect_any_instance_of(Office).to receive(:update).with('name' => 'valid params').and_return(true)
+        patch :update, id: office.filename, office: { 'name' => 'valid params' }, level_id: @level.to_param
       end
       context 'with attributes' do
         before(:each) do

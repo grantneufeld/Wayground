@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 require 'http_url_validator'
@@ -6,7 +5,6 @@ require 'http_url_validator'
 # Represents an election at a level of government.
 class Ballot < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :position, :section, :term_start_on, :term_end_on, :is_byelection, :url, :description
 
   belongs_to :election
   belongs_to :office

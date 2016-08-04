@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'ballot'
 require 'democracy/candidate_form'
 
@@ -90,7 +89,7 @@ class CandidatesController < ApplicationController
     page_metadata(title: 'New Candidate')
     @candidate_form = Wayground::Democracy::CandidateForm.new
     @candidate_form.ballot = @ballot
-    @candidate_form.attributes = params[:wayground_democracy_candidate_form]
+    @candidate_form.attributes = candidate_params
     if params[:person_id]
       @person = Person.from_param(params[:person_id]).first
       @candidate_form.person = @person
@@ -102,7 +101,7 @@ class CandidatesController < ApplicationController
     page_metadata(title: "Edit Candidate for “#{@office.name}”")
     @candidate_form = Wayground::Democracy::CandidateForm.new
     @candidate_form.candidate = @candidate
-    @candidate_form.attributes = params[:wayground_democracy_candidate_form]
+    @candidate_form.attributes = candidate_params
   end
 
   def prep_form
@@ -126,4 +125,10 @@ class CandidatesController < ApplicationController
     end
   end
 
+  def candidate_params
+    params.fetch(:wayground_democracy_candidate_form, {}).permit(
+      :filename, :name, :is_rumoured, :is_confirmed, :is_incumbent, :is_leader,
+      :is_acclaimed, :is_elected, :announced_on, :quit_on, :vote_count, :bio, :party_id
+    )
+  end
 end

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'ballot'
 require 'election'
 
@@ -41,7 +40,7 @@ class BallotsController < ApplicationController
   def edit; end
 
   def update
-    if @ballot.update(params[:ballot])
+    if @ballot.update(ballot_params)
       redirect_to([@level, @election, @ballot], notice: 'The ballot has been saved.')
     else
       render action: 'edit'
@@ -84,7 +83,7 @@ class BallotsController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Ballot')
-    @ballot = @election.ballots.build(params[:ballot])
+    @ballot = @election.ballots.build(ballot_params)
     @offices = @level.offices
     @office_id = params[:office_id]
     @ballot.office = Office.from_param(@office_id).first if @office_id
@@ -112,4 +111,9 @@ class BallotsController < ApplicationController
     end
   end
 
+  def ballot_params
+    params.fetch(:ballot, {}).permit(
+      :position, :section, :term_start_on, :term_end_on, :is_byelection, :url, :description
+    )
+  end
 end

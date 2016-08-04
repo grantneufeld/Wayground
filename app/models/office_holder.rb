@@ -1,11 +1,10 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 
 # Link a Person to an Office as the holder of that office (an election winner).
 class OfficeHolder < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :start_on, :end_on
+  # attr_accessible :start_on, :end_on
 
   belongs_to :office
   belongs_to :person

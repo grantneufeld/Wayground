@@ -14,57 +14,6 @@ describe Office, type: :model do
     end
   end
 
-  describe "attribute mass assignment security" do
-    it "should not allow level" do
-      expect {
-        Office.new(level: Level.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow level_id" do
-      expect {
-        Office.new(level_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow previous" do
-      expect {
-        Office.new(previous: Office.new)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should not allow previous_id" do
-      expect {
-        Office.new(previous_id: 1)
-      }.to raise_exception(ActiveModel::MassAssignmentSecurity::Error)
-    end
-    it "should allow filename" do
-      filename = 'example-filename'
-      expect( Office.new(filename: filename).filename ).to eq filename
-    end
-    it "should allow name" do
-      name = 'Example Name'
-      expect( Office.new(name: name).name ).to eq name
-    end
-    it "should allow title" do
-      title = 'Example Title'
-      expect( Office.new(title: title).title ).to eq title
-    end
-    it "should allow established_on" do
-      established_on = '2000-01-02'
-      expect( Office.new(established_on: established_on).established_on.to_s ).to eq established_on
-    end
-    it "should allow ended_on" do
-      ended_on = '2012-11-10'
-      expect( Office.new(ended_on: ended_on).ended_on.to_s ).to eq ended_on
-    end
-    it "should allow description" do
-      description = 'Example Description'
-      expect( Office.new(description: description).description ).to eq description
-    end
-    it "should allow url" do
-      url = 'http://example.url/'
-      expect( Office.new(url: url).url ).to eq url
-    end
-  end
-
   describe '#level' do
     it 'should allow a level to be set' do
       level = Level.new

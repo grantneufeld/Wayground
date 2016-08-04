@@ -1,13 +1,9 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 
 # Represents the candidacy of a Person on a Ballot.
 class Candidate < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :filename, :name,
-    :is_rumoured, :is_confirmed, :is_incumbent, :is_leader, :is_acclaimed, :is_elected,
-    :announced_on, :quit_on, :vote_count, :party_id
 
   belongs_to :ballot
   belongs_to :person

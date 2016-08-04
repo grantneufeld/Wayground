@@ -194,12 +194,13 @@ describe PartiesController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested party' do
         set_logged_in_admin
-        expect_any_instance_of(Party).to receive(:update).with({'these' => 'params'}).and_return(true)
-        patch :update, id: party.filename, party: { 'these' => 'params' }, level_id: @level.to_param
+        expect_any_instance_of(Party).to receive(:update).with('name' => 'valid params').and_return(true)
+        patch :update, id: party.filename, party: { 'name' => 'valid params' }, level_id: @level.to_param
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
+          allow_any_instance_of(Party).to receive(:update).and_return(true)
           patch :update, id: party.filename, party: valid_attributes, level_id: @level.to_param
         end
         it 'assigns the requested party as @party' do
@@ -218,10 +219,15 @@ describe PartiesController, type: :controller do
     end
 
     describe 'with invalid params' do
+      before(:all) do
+        @invalid_party = FactoryGirl.build(:party, level: @level, filename: 'invalidparty')
+      end
+      let(:party) { @invalid_party }
       before(:each) do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Party).to receive(:save).and_return(false)
+        allow(party).to receive(:save).and_return(false)
+        allow_any_instance_of(Level).to receive_message_chain(:parties, :from_param).and_return([party])
         patch :update, id: party.filename, party: {}, level_id: @level.to_param
       end
       it 'assigns the party as @party' do
@@ -245,6 +251,8 @@ describe PartiesController, type: :controller do
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
+        allow(party).to receive(:destroy).and_return(party)
+        allow_any_instance_of(Level).to receive_message_chain(:parties, :from_param).and_return([party])
         get :delete, id: party.filename, level_id: @level.to_param
       end
       it 'shows a form for confirming deletion of an party' do

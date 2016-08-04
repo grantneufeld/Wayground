@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'active_record'
 require 'authority_controlled'
 require 'http_url_validator'
@@ -6,7 +5,6 @@ require 'http_url_validator'
 # Represents an office at a level of government (such as a councillor on a city council).
 class Office < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
-  attr_accessible :filename, :name, :title, :established_on, :ended_on, :description, :url
 
   belongs_to :level
   belongs_to :previous, class_name: 'Office'
