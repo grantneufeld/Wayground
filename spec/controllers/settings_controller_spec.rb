@@ -143,8 +143,8 @@ describe SettingsController, type: :controller do
         # specifies that the Setting created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Setting).to receive(:update).with('these' => 'params')
-        patch :update, { id: setting.to_param, setting: { 'these' => 'params' } }, valid_session
+        expect_any_instance_of(Setting).to receive(:update).with('value' => 'valid_params')
+        patch :update, { id: setting.to_param, setting: { 'value' => 'valid_params' } }, valid_session
       end
 
       it "assigns the requested setting as @setting" do

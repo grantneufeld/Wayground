@@ -233,8 +233,8 @@ describe EventsController, type: :controller do
         # specifies that the Event created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Event).to receive(:update).with('these' => 'params')
-        patch :update, id: event.id, event: { 'these' => 'params' }
+        expect_any_instance_of(Event).to receive(:update).with('title' => 'valid_params')
+        patch :update, id: event.id, event: { 'title' => 'valid_params' }
       end
 
       it "assigns the requested event as @event" do

@@ -20,67 +20,6 @@ describe Project, type: :model do
     end
   end
 
-  describe "attr_accessible" do
-    it 'should not allow creator to be set' do
-      expect {
-        project = Project.new(:creator => @user_normal)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should not allow creator_id to be set" do
-      expect {
-        project = Project.new(:creator_id => @user_normal.id)
-      }.to raise_error ActiveModel::MassAssignmentSecurity::Error
-    end
-    it "should allow is_visible to be set" do
-      project = Project.new(:is_visible => true)
-      expect(project.is_visible?).to be_truthy
-    end
-    it "should allow is_public_content to be set" do
-      project = Project.new(:is_public_content => true)
-      expect(project.is_public_content?).to be_truthy
-    end
-    it "should allow is_visible_member_list to be set" do
-      project = Project.new(:is_visible_member_list => true)
-      expect(project.is_visible_member_list?).to be_truthy
-    end
-    it "should allow is_joinable to be set" do
-      project = Project.new(:is_joinable => true)
-      expect(project.is_joinable?).to be_truthy
-    end
-    it "should allow is_members_can_invite to be set" do
-      project = Project.new(:is_members_can_invite => true)
-      expect(project.is_members_can_invite?).to be_truthy
-    end
-    it "should allow is_not_unsubscribable to be set" do
-      project = Project.new(:is_not_unsubscribable => true)
-      expect(project.is_not_unsubscribable?).to be_truthy
-    end
-    it "should allow is_moderated to be set" do
-      project = Project.new(:is_moderated => true)
-      expect(project.is_moderated?).to be_truthy
-    end
-    it "should allow is_only_admin_posts to be set" do
-      project = Project.new(:is_only_admin_posts => true)
-      expect(project.is_only_admin_posts?).to be_truthy
-    end
-    it "should allow is_no_comments to be set" do
-      project = Project.new(:is_no_comments => true)
-      expect(project.is_no_comments?).to be_truthy
-    end
-    it "should allow name to be set" do
-      project = Project.new(:name => 'Can Set Name')
-      expect(project.name).to eq 'Can Set Name'
-    end
-    it "should allow filename to be set" do
-      project = Project.new(:filename => 'can_set_filename')
-      expect(project.filename).to eq 'can_set_filename'
-    end
-    it "should allow description to be set" do
-      project = Project.new(:description => 'Can set description.')
-      expect(project.description).to eq 'Can set description.'
-    end
-  end
-
   describe "validation" do
     describe "of creator" do
       it "should fail if no creator" do

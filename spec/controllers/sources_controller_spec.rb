@@ -155,9 +155,9 @@ describe SourcesController, type: :controller do
         # specifies that the Source created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Source).to receive(:update).with('these' => 'params')
+        expect_any_instance_of(Source).to receive(:update).with('title' => 'valid_params')
         set_logged_in_admin
-        patch :update, id: source.id, source: { 'these' => 'params' }
+        patch :update, id: source.id, source: { 'title' => 'valid_params' }
       end
 
       it "assigns the requested source as @source" do

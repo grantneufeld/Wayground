@@ -66,7 +66,7 @@ class PathsController < ApplicationController
   # PUT /paths/1
   # PUT /paths/1.xml
   def update
-    if @path.update(params[:path])
+    if @path.update(path_params)
       redirect_to(@path, notice: 'Path was successfully updated.')
     else
       render action: "edit"
@@ -121,7 +121,7 @@ class PathsController < ApplicationController
 
   def set_new
     page_metadata(title: 'New Custom Path')
-    @path = Path.new(params[:path])
+    @path = Path.new(path_params)
   end
 
   def set_edit
@@ -144,5 +144,9 @@ class PathsController < ApplicationController
     page_metadata(title: @page.title, description: @page.description)
     @site_breadcrumbs = @page.breadcrumbs
     render template: 'paths/page'
+  end
+
+  def path_params
+    params.fetch(:path, {}).permit(:sitepath, :redirect)
   end
 end

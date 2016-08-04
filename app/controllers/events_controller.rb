@@ -62,7 +62,7 @@ class EventsController < ApplicationController
 
   def update
     page_metadata(title: "Edit Event: #{@event.title}")
-    if @event.update(params[:event])
+    if @event.update(event_params)
       notice = 'The event has been saved.'
       redirect_to(@event, notice: notice)
     else
@@ -164,10 +164,21 @@ class EventsController < ApplicationController
 
   def set_new_event
     page_metadata(title: 'New Event')
-    @event = Event.new(params[:event])
+    @event = Event.new(event_params)
   end
 
   def set_editor
     @event.editor = @user
+  end
+
+  def event_params
+    params.fetch(:event, {}).permit(
+      :start_at, :end_at, :timezone, :is_allday,
+      :is_draft, :is_wheelchair_accessible, :is_adults_only, :is_tentative, :is_cancelled, :is_featured,
+      :title, :description, :content,
+      :organizer, :organizer_url,
+      :location, :address, :city, :province, :country, :location_url,
+      :external_links_attributes, :edit_comment, :tag_list
+    )
   end
 end

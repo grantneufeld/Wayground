@@ -92,6 +92,27 @@ describe ImagesController, type: :controller do
       end
     end
 
+    context 'with valid image_variants params' do
+      it 'should create the image and variants' do
+        set_logged_in_admin
+        post(
+          :create,
+          image: {
+            'title' => 'with variants',
+            'image_variants_attributes' => [
+              { 'url' => 'http://test.tld/1', 'style' => 'original', 'format' => 'jpeg' },
+              { 'url' => 'http://test.tld/2', 'style' => 'preview', 'format' => 'png' }
+            ]
+          }
+        )
+        image = assigns(:image)
+        expect(image).not_to be_a_new(Image)
+        expect(image).to be_an(Image)
+        expect(image.errors.messages).to be_empty
+        expect(image.image_variants.count).to eq 2
+      end
+    end
+
     describe "with invalid params" do
       it "assigns a newly created but unsaved image as @image" do
         set_logged_in_admin
@@ -106,6 +127,18 @@ describe ImagesController, type: :controller do
         allow_any_instance_of(Image).to receive(:save).and_return(false)
         post :create, image: {}
         expect( response ).to render_template("new")
+      end
+      context 'with invalid image variant params' do
+        it 'should return an error' do
+          set_logged_in_admin
+          post(
+            :create,
+            image: { 'title' => 'with variants', 'image_variants_attributes' => [{ 'invalid' => 'param' }] }
+          )
+          image = assigns(:image)
+          expect(image).to be_a_new(Image)
+          expect(image.errors[:image_variants]).not_to be_nil
+        end
       end
     end
   end
@@ -134,8 +167,8 @@ describe ImagesController, type: :controller do
     describe "with valid params" do
       it "updates the requested image" do
         set_logged_in_admin
-        expect_any_instance_of(Image).to receive(:update).with('these' => 'params')
-        patch :update, id: image.id, image: { 'these' => 'params' }
+        expect_any_instance_of(Image).to receive(:update).with('title' => 'valid_params')
+        patch :update, id: image.id, image: { 'title' => 'valid_params' }
       end
       it "assigns the requested image as @image" do
         set_logged_in_admin

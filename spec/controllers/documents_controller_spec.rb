@@ -193,8 +193,8 @@ describe DocumentsController, type: :controller do
           # Assuming there are no other documents in the database, this
           # specifies that the document receives the :update message
           # with whatever params are submitted in the request.
-          expect_any_instance_of(Document).to receive(:update).with('these' => 'params')
-          patch :update, id: @document.id, document: { 'these' => 'params' }
+          expect_any_instance_of(Document).to receive(:update).with('custom_filename' => 'valid_params')
+          patch :update, id: @document.id, document: { 'custom_filename' => 'valid_params' }
         end
 
         it "assigns the requested document as @document" do

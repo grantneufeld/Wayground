@@ -4,15 +4,13 @@ require 'http_url_validator'
 
 # A specific instance (“variant”) of an image.
 class ImageVariant < ActiveRecord::Base
-  attr_accessible :height, :width, :format, :style, :url
-
   belongs_to :image
 
   # can’t require the image to be set before initial save when using nested attribute forms
   validates :image_id, presence: true, on: :update
   validates :height, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validates :width, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
-  validates :format, presence: true
+  validates :format, presence: true # e.g., png jpeg gif
   validates :style, presence: true # original scaled preview? square?
   validates :url, presence: true, http_url: true
 

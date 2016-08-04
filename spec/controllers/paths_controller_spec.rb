@@ -113,9 +113,9 @@ describe PathsController, type: :controller do
       it "assigns a newly created path as @path" do
         set_logged_in_default_admin
         path = default_path
-        allow(Path).to receive(:new).with({'these' => 'params'}) { path }
         allow(path).to receive(:save).and_return(true)
-        post :create, :path => {'these' => 'params'}
+        allow(Path).to receive(:new).with('sitepath' => 'valid_params') { path }
+        post :create, path: { 'sitepath' => 'valid_params' }
         expect(assigns(:path)).to be(path)
       end
 
@@ -132,9 +132,10 @@ describe PathsController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved path as @path" do
         set_logged_in_default_admin
-        allow(Path).to receive(:new).with({'these' => 'params'}) { mock_path(:save => false) }
-        post :create, :path => {'these' => 'params'}
-        expect(assigns(:path)).to be(mock_path)
+        post :create, path: { 'these' => 'invalid_params' }
+        path = assigns(:path)
+        expect(path.new_record?).to be_truthy
+        expect(path.errors).not_to be_nil
       end
 
       it "re-renders the 'new' template" do
@@ -172,8 +173,8 @@ describe PathsController, type: :controller do
         set_logged_in_default_admin
         path = default_path
         allow(Path).to receive(:find).with(path.id.to_s) { path }
-        expect(path).to receive(:update).with('these' => 'params').and_return(true)
-        patch :update, id: path.id.to_s, path: { 'these' => 'params' }
+        expect(path).to receive(:update).with('sitepath' => 'valid_params').and_return(true)
+        patch :update, id: path.id.to_s, path: { 'sitepath' => 'valid_params' }
       end
 
       it "assigns the requested path as @path" do

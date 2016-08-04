@@ -12,14 +12,6 @@ class Event < ActiveRecord::Base
   # editor and edit_comment are used for Version records
   # is_sourcing is set when generating or updating from a Source (and SourcedItem)
   attr_accessor :editor, :edit_comment, :is_sourcing
-  attr_accessible(
-    :start_at, :end_at, :timezone, :is_allday,
-    :is_draft, :is_wheelchair_accessible, :is_adults_only, :is_tentative, :is_cancelled, :is_featured,
-    :title, :description, :content,
-    :organizer, :organizer_url,
-    :location, :address, :city, :province, :country, :location_url,
-    :external_links_attributes, :edit_comment, :tag_list
-  )
 
   belongs_to :user
   belongs_to :image

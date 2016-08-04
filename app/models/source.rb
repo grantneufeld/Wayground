@@ -4,7 +4,6 @@
 # can be updated based on changes to the Source.
 class Source < ActiveRecord::Base
   acts_as_authority_controlled authority_area: 'Source', item_authority_flag_field: :always_private
-  attr_accessible :description, :method, :options, :post_args, :processor, :refresh_after_at, :title, :url
 
   belongs_to :container_item, polymorphic: true
   belongs_to :datastore

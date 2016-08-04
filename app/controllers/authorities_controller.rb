@@ -29,11 +29,10 @@ class AuthoritiesController < ApplicationController
 
   # POST /authorities
   def create
-    authority_params = { authority_params: params[:authority], authorized_by: current_user }
-    @authority = Authority.build_from_params(authority_params)
+    create_params = { authority_params: authority_params, authorized_by: current_user }
+    @authority = Authority.build_from_params(create_params)
     @user = @authority.user
     page_metadata(title: 'New Authority')
-
     if @authority.save
       redirect_to(authority_url(@authority.to_param), notice: 'Authority was successfully created.')
     else
@@ -51,8 +50,7 @@ class AuthoritiesController < ApplicationController
   def update
     @authority.authorized_by = current_user
     page_metadata(title: 'Update Authority')
-
-    if @authority.update(params[:authority])
+    if @authority.update(authority_params)
       redirect_to(@authority, notice: 'Authority was successfully updated.')
     else
       render action: "edit"
@@ -105,5 +103,12 @@ class AuthoritiesController < ApplicationController
     unless current_user && current_user.has_authority_for_area('Authority', :can_delete)
       raise Wayground::AccessDenied
     end
+  end
+
+  def authority_params
+    params.fetch(:authority, {}).permit(
+      :item_type, :item_id, :area, :is_owner, :can_create, :can_view, :can_update,
+      :can_delete, :can_invite, :can_permit, :can_approve, :user_proxy
+    )
   end
 end

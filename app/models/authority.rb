@@ -2,9 +2,6 @@ require 'user'
 
 # Gives authority to a user, on a given item or area, for performing specific actions.
 class Authority < ActiveRecord::Base
-  attr_accessible :item_type, :item_id, :area, :is_owner, :can_create,
-    :can_view, :can_update, :can_delete, :can_invite, :can_permit, :can_approve, :user_proxy
-
   belongs_to :user
   belongs_to :authorized_by, :class_name => 'User'
   belongs_to :item, :polymorphic => true

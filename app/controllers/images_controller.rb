@@ -34,7 +34,7 @@ class ImagesController < ApplicationController
   end
 
   def update
-    if @image.update(params[:image])
+    if @image.update(image_params)
       redirect_to(@image, notice: 'The image has been saved.')
     else
       render action: 'edit'
@@ -67,7 +67,7 @@ class ImagesController < ApplicationController
   def prep_new
     requires_authority(:can_create)
     page_metadata(title: 'New Image')
-    @image = Image.new(params[:image])
+    @image = Image.new(image_params)
   end
 
   def prep_edit
@@ -88,4 +88,11 @@ class ImagesController < ApplicationController
     end
   end
 
+  def image_params
+    params.fetch(:image, {}).permit(
+      :title, :alt_text, :description, :attribution, :attribution_url,
+      :license_url,
+      image_variants_attributes: [:height, :width, :format, :style, :url]
+    )
+  end
 end

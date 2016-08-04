@@ -54,7 +54,7 @@ class SettingsController < ApplicationController
   # PUT /settings/1
   # PUT /settings/1.xml
   def update
-    if @setting.update(params[:setting])
+    if @setting.update(setting_params)
       redirect_to(@setting, notice: 'Setting was successfully updated.')
     else
       page_metadata(title: "Edit Setting: #{@setting.key}")
@@ -109,6 +109,10 @@ class SettingsController < ApplicationController
 
   def set_new_setting
     page_metadata(title: 'New Setting')
-    @setting = Setting.new(params[:setting])
+    @setting = Setting.new(setting_params)
+  end
+
+  def setting_params
+    params.fetch(:setting, {}).permit(:key, :value)
   end
 end

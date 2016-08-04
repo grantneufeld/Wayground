@@ -3,38 +3,6 @@ require 'image'
 
 describe Image, type: :model do
 
-  describe "attribute mass assignment security" do
-    it "should allow title" do
-      title = 'Example Image Title'
-      expect( Image.new(title: title).title ).to eq title
-    end
-    it "should allow alt_text" do
-      alt_text = 'Example Alt Text'
-      expect( Image.new(alt_text: alt_text).alt_text ).to eq alt_text
-    end
-    it "should allow description" do
-      description = 'Example Description'
-      expect( Image.new(description: description).description ).to eq description
-    end
-    it "should allow attribution" do
-      attribution = 'Example Attribution'
-      expect( Image.new(attribution: attribution).attribution ).to eq attribution
-    end
-    it "should allow attribution_url" do
-      attribution_url = 'Example Attribution URL'
-      expect( Image.new(attribution_url: attribution_url).attribution_url ).to eq attribution_url
-    end
-    it "should allow license_url" do
-      license_url = 'Example License URL'
-      expect( Image.new(license_url: license_url).license_url ).to eq license_url
-    end
-    it "should allow image_variants_attributes to be set" do
-      url = 'http://set.image_variants_attributes.tld/'
-      image = Image.new(:image_variants_attributes => {'0' => {url: url, style: 'original'}})
-      expect( image.image_variants[0].url ).to eq url
-    end
-  end
-
   describe "validations" do
     it "should validate with all blank values" do
       expect( Image.new().valid? ).to be_truthy

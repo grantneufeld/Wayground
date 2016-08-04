@@ -27,7 +27,7 @@ class DocumentsController < ApplicationController
   end
 
   def create
-    @document = Document.new(params[:document])
+    @document = Document.new(document_params)
     @document.user = current_user
 
     if @document.save
@@ -43,7 +43,7 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    if @document.update(params[:document])
+    if @document.update(document_params)
       redirect_to(@document, notice: 'Document was successfully updated.')
     else
       page_metadata(title: "Edit Document #{@document.filename}")
@@ -91,5 +91,9 @@ class DocumentsController < ApplicationController
 
   def set_section
     @site_section = :documents
+  end
+
+  def document_params
+    params.fetch(:document, {}).permit(:file, :custom_filename, :description, :is_authority_controlled, :data)
   end
 end

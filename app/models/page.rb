@@ -2,7 +2,6 @@
 class Page < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content'
   attr_accessor :editor, :edit_comment
-  attr_accessible :filename, :title, :description, :content, :edit_comment, :is_authority_controlled
 
   belongs_to :parent, :class_name => 'Page'
   has_many :pages, :as => :parent

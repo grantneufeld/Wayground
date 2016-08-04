@@ -15,14 +15,6 @@ describe User, type: :model do
     @item = FactoryGirl.create(:page)
   end
 
-  describe "attr_accessible" do
-    it "should allow timezone to be set" do
-      tz_str = 'test timezone'
-      user = User.new(timezone: tz_str)
-      expect(user.timezone).to eq tz_str
-    end
-  end
-
   describe "validations" do
     context "of password" do
       it "should fail if there is no password" do

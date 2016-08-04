@@ -9,29 +9,6 @@ describe ImageVariant, type: :model do
     Image.delete_all
   end
 
-  describe "attribute mass assignment security" do
-    it "should allow height" do
-      height = '123'
-      expect( ImageVariant.new(height: height).height ).to eq height.to_i
-    end
-    it "should allow width" do
-      width = '456'
-      expect( ImageVariant.new(width: width).width ).to eq width.to_i
-    end
-    it "should allow format" do
-      format = 'example'
-      expect( ImageVariant.new(format: format).format ).to eq format
-    end
-    it "should allow style" do
-      style = 'resize'
-      expect( ImageVariant.new(style: style).style ).to eq style
-    end
-    it "should allow url" do
-      url = 'example url'
-      expect( ImageVariant.new(url: url).url ).to eq url
-    end
-  end
-
   describe "validations" do
     let(:image) { $image = Image.new }
     let(:min_params) { $min_params = {format: 'jpeg', style: 'original', url: 'http://required.tld/'} }

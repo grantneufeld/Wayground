@@ -31,7 +31,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(params[:project])
+    if @project.update(project_params)
       redirect_to_project(@project, notice: 'Project was successfully updated.')
     else
       render action: "edit"
@@ -101,7 +101,15 @@ class ProjectsController < ApplicationController
 
   def set_new_project
     page_metadata(title: 'New Project')
-    @project = Project.new(params[:project])
+    @project = Project.new(project_params)
     @project.creator = @project.owner = @user
+  end
+
+  def project_params
+    params.fetch(:project, {}).permit(
+      :is_visible, :is_public_content, :is_visible_member_list, :is_joinable,
+      :is_members_can_invite, :is_not_unsubscribable, :is_moderated, :is_only_admin_posts,
+      :is_no_comments, :name, :filename, :description #, :editor, :edit_comment
+    )
   end
 end

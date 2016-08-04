@@ -34,7 +34,7 @@ class SourcesController < ApplicationController
   end
 
   def update
-    if @source.update(params[:source])
+    if @source.update(source_params)
       redirect_to @source
     else
       page_metadata(title: "Edit Source: #{@source.name}")
@@ -111,7 +111,12 @@ class SourcesController < ApplicationController
 
   def set_new_source
     page_metadata(title: 'New Source')
-    @source = Source.new(params[:source])
+    @source = Source.new(source_params)
   end
 
+  def source_params
+    params.fetch(:source, {}).permit(
+      :description, :method, :options, :post_args, :processor, :refresh_after_at, :title, :url
+    )
+  end
 end

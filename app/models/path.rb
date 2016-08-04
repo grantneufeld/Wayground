@@ -2,7 +2,6 @@
 # or to redirect local URLs to other local paths or to remote URLs.
 class Path < ActiveRecord::Base
   acts_as_authority_controlled :authority_area => 'Content', :inherits_from => :item
-  attr_accessible :sitepath, :redirect
 
   belongs_to :item, :polymorphic => true
 
@@ -91,6 +90,7 @@ class Path < ActiveRecord::Base
 
   # The sitepath should not end in a slash, except for the root/home path.
   def clean_sitepath
+    self.sitepath ||= ''
     matches = self.sitepath.match /\A(.+)\/\z/
     self.sitepath = matches[1] if matches
   end
