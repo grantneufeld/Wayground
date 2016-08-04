@@ -5,8 +5,8 @@ gem 'rails', '~> 5.0.0'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
-#gem 'pg_search'
-#gem 'queue_classic', '2.0.0rc12'
+# gem 'pg_search'
+# gem 'queue_classic', '2.0.0rc12'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
@@ -53,21 +53,18 @@ group :development do
 
   # code analysis tools:
   gem 'brakeman', require: false # http://brakemanscanner.org/
-  gem 'cane', require: false # https://github.com/square/cane
   gem 'churn', require: false # https://github.com/danmayer/churn
   gem 'flay', require: false # https://github.com/seattlerb/flay
-  gem 'flog', require: false # https://github.com/seattlerb/flog
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
   gem 'reek', require: false # https://github.com/troessner/reek/wiki
-  gem 'roodi', require: false # https://github.com/martinjandrews/roodi
-  gem 'tailor', require: false # https://github.com/turboladen/tailor
+  gem 'rubocop', require: false # https://github.com/bbatsov/rubocop
   # gem validation
   gem 'bundler-audit', require: false # https://github.com/postmodern/bundler-audit
 end
 
 group :test do
-  gem 'rails-controller-testing'
   # specs/testing:
+  gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 3.0', require: false
   gem 'rspec-activemodel-mocks', require: false
   gem 'rspec-autotest', require: false, github: 'grantneufeld/rspec-autotest'
@@ -81,8 +78,8 @@ group :test do
   gem 'simplecov', '>= 0.7.1', require: false
   gem 'simplecov-html', '>= 0.7.1', require: false
   # continuous testing:
-  gem 'autotest-rails', '>= 4.1.2', require: false
   gem 'autotest-fsevent', '>= 0.2.8', require: false
+  gem 'autotest-rails', '>= 4.1.2', require: false
   # data factories:
   gem 'factory_girl', '>= 3.5.0', require: false
   gem 'factory_girl_rails', '>= 3.5.0', require: false

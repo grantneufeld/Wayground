@@ -1,0 +1,91 @@
+inherit_from: ../.rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - '(*)/**/*'
+    - 'features/**/*'
+
+# ############################################################################
+
+# Override some of the default configuration settings:
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+# TODO:?    - 'config/**/*'
+
+# TODO: Maybe drop the use of globals from the rspec `let` calls?
+Style/GlobalVars:
+  Exclude:
+    - 'spec/**/*'
+
+# I like a max line length wider than the traditional 80 character limit.
+
+Style/IfUnlessModifier:
+  MaxLineLength: 110
+
+Style/WhileUntilModifier:
+  MaxLineLength: 110
+
+Metrics/LineLength:
+  Max: 110
+
+
+# ############################################################################
+
+# Disable some of the cops that are enabled in the default configuration:
+
+# I’m using utf-8 text in comments, instead of ASCII like the sytle-guide oddly suggests
+Style/AsciiComments:
+  Enabled: false
+
+# I prefer a blank line before and after class declarations within a module
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+# maybe change FrozenStringLiteralComment back to true at some point
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+
+# ############################################################################
+
+# Enable some of the cops that are disabled in the default configuration:
+
+Rails:
+  Enabled: true
+
+Style/AutoResourceCleanup:
+  Enabled: true
+
+Style/CollectionMethods:
+  Enabled: true
+
+Style/FirstArrayElementLineBreak:
+  Enabled: true
+
+Style/FirstHashElementLineBreak:
+  Enabled: true
+
+Style/FirstMethodParameterLineBreak:
+  Enabled: true
+
+Style/MethodCalledOnDoEndBlock:
+  Enabled: true
+
+Style/MultilineAssignmentLayout:
+  Enabled: true
+
+Style/OptionHash:
+  Enabled: true
+
+Style/Send:
+  Enabled: true
+
+Style/StringMethods:
+  Enabled: true
+
+Style/SymbolArray:
+  Enabled: true

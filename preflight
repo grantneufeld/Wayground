@@ -8,18 +8,15 @@
 # - rspec
 # - cucumber
 # - simple_cov
-# - brakeman
 # - bundle-audit
-# - cane
+# - brakeman
 # - churn
-# - flay (+ rake task)
-# - flog
-# - rake notes
+# - flay
 # - rails_best_practices
 # - reek
-# - roodi
-# - rake stats
-# - tailor
+# - rubocop
+# - rails notes
+# - rails stats
 #
 # simple_cov needs to be configured to generate the reports/coverage/percentage.txt file,
 # which will just have the numeric percentage result.
@@ -56,38 +53,29 @@ bundle exec brakeman --quiet --output reports/brakeman.html --message-limit 255 
 echo ""
 
 # report on the code quality
-echo "Generating cane report..."
-bundle exec cane --style-measure 110 --parallel > reports/cane.txt
-echo ""
 echo "Generating churn report..."
-bundle exec churn --start_date=2013-01-01 --ignore_files="Gemfile,Gemfile.lock,config/routes.rb,db/schema.rb,preflight,spec/factories.rb,README.md" > reports/churn.txt
+bundle exec churn -c 5 -i "Gemfile, Gemfile.lock, config/routes.rb, db/schema.rb, db/structure.sql, preflight, spec/factories.rb, README.md" > reports/churn.txt
 echo ""
 echo "Generating flay reports..."
-bundle exec rake flay:app > reports/flay-app.txt
-bundle exec rake flay:spec > reports/flay-spec.txt
-bundle exec rake flay:features > reports/flay-features.txt
-echo ""
-echo "Generating flog report..."
-bundle exec flog --group --details --continue --19 app > reports/flog.txt
-echo ""
-echo "Extracting notes embedded in the code..."
-bundle exec rake notes > reports/notes.txt
+bundle exec flay -f -l app lib > reports/flay-app.txt
+bundle exec flay -f -l spec > reports/flay-spec.txt
 echo ""
 echo "Generating Rails Best Practices report..."
 bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
 echo ""
 echo "Generating reek report..."
-bundle exec reek --no-color --config config/reek.yml app/controllers app/models app/helpers app/presenters app/validators app/wayground lib > reports/reek.txt
+bundle exec reek --no-color --config config/reek.yml app/controllers app/helpers app/mailers app/models app/presenters app/validators app/wayground lib > reports/reek.txt
 echo ""
-echo "Generating roodi report..."
-bundle exec roodi "app/**/*.rb" "lib/**/*.rb" > reports/roodi.txt
+echo "Generating rubocop report..."
+bundle exec rubocop --config config/rubocop.yml --format simple --out reports/rubocop.txt
+echo ""
+
+# other information about the code
+echo "Extracting notes embedded in the code..."
+bundle exec rails notes > reports/notes.txt
 echo ""
 echo "Generating stats report..."
-bundle exec rake stats > reports/stats.txt
-echo ""
-echo "Generating tailor report..."
-bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --allow-unnecessary-double-quotes off --no-color app/**/*.rb > reports/tailor.txt
-bundle exec tailor --max-line-length 110 --max-code-lines-in-class 200 --max-code-lines-in-method 15 --allow-unnecessary-double-quotes off --no-color lib/**/*.rb >> reports/tailor.txt
+bundle exec rails stats > reports/stats.txt
 echo ""
 
 echo "Please review the reports found in the project's 'reports' directory."
