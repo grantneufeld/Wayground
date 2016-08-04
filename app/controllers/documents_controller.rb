@@ -9,7 +9,7 @@ class DocumentsController < ApplicationController
 
   def download
     @document.assign_headers(response)
-    render :text => @document.data
+    render body: @document.data
   end
 
   def index

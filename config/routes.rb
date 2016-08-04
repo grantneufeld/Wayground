@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :versions, except: [:new, :create, :edit, :update, :destroy]
   end
 
-  root to: "paths#sitepath", via: :get, defaults: { url: '/' }
+  root to: "paths#sitepath", via: :get, url: '/'
 
   # USERS
   get "signup" => "users#new", :as => :signup

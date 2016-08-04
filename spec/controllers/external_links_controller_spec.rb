@@ -36,17 +36,17 @@ describe ExternalLinksController, type: :controller do
 
   describe "GET 'index'" do
     it "returns http success" do
-      get 'index', :event_id => event.id
+      get :index, params: { event_id: event.id }
       expect(response).to be_success
     end
     it "assigns the item’s external_links as @external_links" do
       external_links = [event.external_links.first, external_link]
-      get :index, :event_id => event.id
+      get :index, params: { event_id: event.id }
       expect(assigns(:external_links)).to eq(external_links)
     end
     context 'with an event_id param' do
       it 'assigns the event as @item' do
-        get :index, event_id: event.to_param
+        get :index, params: { event_id: event.to_param }
         expect(assigns(:item)).to eq(event)
       end
     end
@@ -54,19 +54,19 @@ describe ExternalLinksController, type: :controller do
 
   describe "GET 'show'" do
     it "returns http success" do
-      get 'show', :event_id => event.id, :id => external_link.id
+      get :show, params: { event_id: event.id, id: external_link.id }
       expect(response).to be_success
     end
     it "assigns the requested external_link as @external_link" do
-      get 'show', :event_id => event.id, :id => external_link.id
+      get :show, params: { event_id: event.id, id: external_link.id }
       expect(assigns(:external_link)).to eq(external_link)
     end
     it "returns http missing if invalid id" do
-      get 'show', :event_id => event.id, :id => (external_link.id + 10)
+      get :show, params: { event_id: event.id, id: (external_link.id + 10) }
       expect(response.status).to eq 404
     end
     it "returns http missing if invalid item id" do
-      get 'show', :event_id => (event.id + 10), :id => external_link.id
+      get :show, params: { event_id: (event.id + 10), id: external_link.id }
       expect(response.status).to eq 404
     end
   end
@@ -74,23 +74,23 @@ describe ExternalLinksController, type: :controller do
   describe "GET 'new'" do
     it "fails if not sufficent authority" do
       set_logged_in_user
-      get :new, :event_id => event.id
+      get :new, params: { event_id: event.id }
       expect(response.status).to eq 403
     end
 
     it "returns http success" do
       set_logged_in_admin
-      get 'new', :event_id => event.id
+      get :new, params: { event_id: event.id }
       expect(response).to be_success
     end
     it "assigns a new ExternalLink as @external_link" do
       set_logged_in_admin
-      get :new, :event_id => event.id
+      get :new, params: { event_id: event.id }
       expect(assigns(:external_link)).to be_a_new(ExternalLink)
     end
     it 'associates the new ExternalLink with the event' do
       set_logged_in_admin
-      get :new, event_id: event.id
+      get :new, params: { event_id: event.id }
       expect( assigns(:external_link).item ).to eq event
     end
   end
@@ -98,7 +98,7 @@ describe ExternalLinksController, type: :controller do
   describe "POST 'create'" do
     it "fails if not sufficient authority" do
       set_logged_in_user
-      post :create, :event_id => event.id, :external_link => valid_attributes
+      post :create, params: { event_id: event.id, external_link: valid_attributes }
       expect(response.status).to eq 403
     end
 
@@ -106,23 +106,23 @@ describe ExternalLinksController, type: :controller do
       it "creates a new Event" do
         set_logged_in_admin
         expect {
-          post :create, :event_id => event.id, :external_link => valid_attributes
+          post :create, params: { event_id: event.id, external_link: valid_attributes }
         }.to change(event.external_links, :count).by(1)
       end
       it "assigns a newly created ExternalLink as @external_link" do
         set_logged_in_admin
-        post :create, :event_id => event.id, :external_link => valid_attributes
+        post :create, params: { event_id: event.id, external_link: valid_attributes }
         expect(assigns(:external_link)).to be_a(ExternalLink)
         expect(assigns(:external_link)).to be_persisted
       end
       it 'associates the new ExternalLink with the event' do
         set_logged_in_admin
-        post :create, event_id: event.id, external_link: valid_attributes
+        post :create, params: { event_id: event.id, external_link: valid_attributes }
         expect( assigns(:external_link).item ).to eq event
       end
       it "redirects to the created ExternalLink" do
         set_logged_in_admin
-        post :create, :event_id => event.id, :external_link => valid_attributes
+        post :create, params: { event_id: event.id, external_link: valid_attributes }
         expect(response).to redirect_to([event, event.external_links.last])
       end
     end
@@ -132,20 +132,20 @@ describe ExternalLinksController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(ExternalLink).to receive(:save).and_return(false)
-        post :create, :event_id => event.id, :external_link => {}
+        post :create, params: { event_id: event.id, external_link: {} }
         expect(assigns(:external_link)).to be_a_new(ExternalLink)
       end
       it 'associates the new ExternalLink with the event' do
         set_logged_in_admin
         allow_any_instance_of(ExternalLink).to receive(:save).and_return(false)
-        post :create, event_id: event.id, external_link: {}
+        post :create, params: { event_id: event.id, external_link: {} }
         expect( assigns(:external_link).item ).to eq event
       end
       it "re-renders the 'new' template" do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(ExternalLink).to receive(:save).and_return(false)
-        post :create, :event_id => event.id, :external_link => {}
+        post :create, params: { event_id: event.id, external_link: {} }
         expect(response).to render_template("new")
       end
     end
@@ -154,13 +154,13 @@ describe ExternalLinksController, type: :controller do
   describe "GET 'edit'" do
     it "requires the user to have authority" do
       set_logged_in_user
-      get :edit, :event_id => event.id, :id => external_link.id
+      get :edit, params: { event_id: event.id, id: external_link.id }
       expect(response.status).to eq 403
     end
 
     it "assigns the requested external_link as @external_link" do
       set_logged_in_admin
-      get :edit, :event_id => event.id, :id => external_link.id
+      get :edit, params: { event_id: event.id, id: external_link.id }
       expect(assigns(:external_link)).to eq(external_link)
     end
   end
@@ -168,7 +168,7 @@ describe ExternalLinksController, type: :controller do
   describe "PUT 'update'" do
     it "requires the user to have authority" do
       set_logged_in_user
-      patch :update, event_id: event.id, id: external_link.id, external_link: { 'these' => 'params' }
+      patch :update, params: { event_id: event.id, id: external_link.id, external_link: { 'these' => 'params' } }
       expect(response.status).to eq 403
     end
 
@@ -177,19 +177,20 @@ describe ExternalLinksController, type: :controller do
         set_logged_in_admin
         # This specifies that the ExternalLink receives the :update message
         # with whatever params are submitted in the request.
-        expect_any_instance_of(ExternalLink).to receive(:update).with('title' => 'valid_params')
-        patch :update, event_id: event.id, id: external_link.id, external_link: { 'title' => 'valid_params' }
+        expected_params = ActionController::Parameters.new('title' => 'valid_params').permit!
+        expect_any_instance_of(ExternalLink).to receive(:update).with(expected_params)
+        patch :update, params: { event_id: event.id, id: external_link.id, external_link: { 'title' => 'valid_params' } }
       end
 
       it "assigns the requested external_link as @external_link" do
         set_logged_in_admin
-        patch :update, event_id: event.id, id: external_link.id, external_link: valid_attributes
+        patch :update, params: { event_id: event.id, id: external_link.id, external_link: valid_attributes }
         expect(assigns(:external_link)).to eq(external_link)
       end
 
       it "redirects to the external_link" do
         set_logged_in_admin
-        patch :update, event_id: event.id, id: external_link.id, external_link: valid_attributes
+        patch :update, params: { event_id: event.id, id: external_link.id, external_link: valid_attributes }
         expect(response).to redirect_to([event, external_link])
       end
     end
@@ -199,7 +200,7 @@ describe ExternalLinksController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(ExternalLink).to receive(:save).and_return(false)
-        patch :update, event_id: event.id, id: external_link.id, external_link: { url: 'invalid url' }
+        patch :update, params: { event_id: event.id, id: external_link.id, external_link: { url: 'invalid url' } }
         expect(assigns(:external_link)).to eq(external_link)
       end
 
@@ -207,7 +208,7 @@ describe ExternalLinksController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(ExternalLink).to receive(:save).and_return(false)
-        patch :update, event_id: event.id, id: external_link.id, external_link: { url: 'invalid url' }
+        patch :update, params: { event_id: event.id, id: external_link.id, external_link: { url: 'invalid url' } }
         expect(response).to render_template("edit")
       end
     end
@@ -216,13 +217,13 @@ describe ExternalLinksController, type: :controller do
   describe "GET 'delete'" do
     it "requires the user to have authority" do
       set_logged_in_user
-      get :delete, :event_id => event.id, :id => external_link.id
+      get :delete, params: { event_id: event.id, id: external_link.id }
       expect(response.status).to eq 403
     end
 
     it "shows a form for confirming deletion of an external_link" do
       set_logged_in_admin
-      get :delete, :event_id => event.id, :id => external_link.id
+      get :delete, params: { event_id: event.id, id: external_link.id }
       expect(assigns(:external_link)).to eq external_link
     end
   end
@@ -230,7 +231,7 @@ describe ExternalLinksController, type: :controller do
   describe "DELETE 'destroy'" do
     it "requires the user to have authority" do
       set_logged_in_user
-      delete :destroy, :event_id => event.id, :id => external_link.id
+      delete :destroy, params: { event_id: event.id, id: external_link.id }
       expect(response.status).to eq 403
     end
 
@@ -238,14 +239,14 @@ describe ExternalLinksController, type: :controller do
       set_logged_in_admin
       delete_this = FactoryGirl.create(:external_link, :item => event)
       expect {
-        delete :destroy, :event_id => event.id, :id => delete_this.id
+        delete :destroy, params: { event_id: event.id, id: delete_this.id }
       }.to change(event.external_links, :count).by(-1)
     end
 
     it "redirects to the containing item" do
       set_logged_in_admin
       delete_this = FactoryGirl.create(:external_link, :item => event)
-      delete :destroy, :event_id => event.id, :id => delete_this.id
+      delete :destroy, params: { event_id: event.id, id: delete_this.id }
       expect(response).to redirect_to(event)
     end
   end

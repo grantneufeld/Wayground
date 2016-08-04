@@ -52,18 +52,18 @@ describe AuthoritiesController, type: :controller do
   describe "GET show" do
     it "blocks users without the :can_view authority" do
       set_logged_in_default_user
-      get :show, :id => "37"
+      get :show, params: { id: "37" }
       expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "assigns the requested authority as @authority" do
       set_logged_in_default_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
-      get :show, :id => "37"
+      get :show, params: { id: "37" }
       expect(assigns(:authority)).to be(mock_admin_authority)
     end
     it "give a 404 Missing error when a non-existent authority is requested" do
       set_logged_in_default_admin
-      get :show, :id => "12345"
+      get :show, params: { id: "12345" }
       expect(response.status).to eq 404 # "404 Missing"
     end
   end
@@ -85,24 +85,22 @@ describe AuthoritiesController, type: :controller do
   describe "POST create" do
     it "blocks users without the :can_create authority" do
       set_logged_in_default_user
-      post :create, :authority => {'these' => 'params'}
+      post :create, params: { authority: {'these' => 'params'} }
       expect(response.status).to eq 403 # "403 Forbidden"
     end
 
     describe "with valid params" do
       it "assigns a newly created authority as @authority" do
         set_logged_in_default_admin
-        allow(Authority).to receive(:new).with('area' => 'Content') {
-          mock_authority(save: true, user: default_user)
-        }
-        post :create, authority: { 'area' => 'Content' }
+        allow(Authority).to receive(:new) { mock_authority(save: true, user: default_user) }
+        post :create, params: { authority: { 'area' => 'Content' } }
         expect(assigns(:authority)).to be(mock_authority)
         expect(assigns(:user)).not_to be_nil
       end
       it "redirects to the created authority" do
         set_logged_in_default_admin
         allow(Authority).to receive(:new) { mock_authority(:save => true) }
-        post :create, :authority => {}
+        post :create, params: { authority: {} }
         expect(response).to redirect_to(authority_url(mock_authority))
       end
     end
@@ -110,7 +108,7 @@ describe AuthoritiesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved authority as @authority" do
         set_logged_in_default_admin
-        post :create, authority: { 'invalid' => 'params' }
+        post :create, params: { authority: { 'invalid' => 'params' } }
         authority = assigns(:authority)
         expect(authority.new_record?).to be_truthy
         expect(authority.errors).not_to be_nil
@@ -118,7 +116,7 @@ describe AuthoritiesController, type: :controller do
       it "re-renders the 'new' template" do
         set_logged_in_default_admin
         allow(Authority).to receive(:new) { mock_authority(:save => false) }
-        post :create, :authority => {}
+        post :create, params: { authority: {} }
         expect(response).to render_template("new")
       end
     end
@@ -127,13 +125,13 @@ describe AuthoritiesController, type: :controller do
   describe "GET edit" do
     it "blocks users without the :can_update authority" do
       set_logged_in_default_user
-      get :edit, :id => "37"
+      get :edit, params: { id: "37" }
       expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "assigns the requested authority as @authority" do
       set_logged_in_default_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
-      get :edit, :id => "37"
+      get :edit, params: { id: "37" }
       expect(assigns(:authority)).to be(mock_admin_authority)
     end
   end
@@ -141,7 +139,7 @@ describe AuthoritiesController, type: :controller do
   describe "PUT update" do
     it "blocks users without the :can_update authority" do
       set_logged_in_default_user
-      patch :update, id: '37', authority: { 'these' => 'params' }
+      patch :update, params: { id: '37', authority: { 'these' => 'params' } }
       expect(response.status).to eq 403 # "403 Forbidden"
     end
 
@@ -150,8 +148,9 @@ describe AuthoritiesController, type: :controller do
         set_logged_in_default_admin
         authority = default_admin_authority
         allow(Authority).to receive(:find).with("37") { authority }
-        expect(authority).to receive(:update).with('area' => 'global').and_return(true)
-        patch :update, id: '37', authority: { 'area' => 'global' }
+        expected_params = ActionController::Parameters.new('area' => 'global').permit!
+        expect(authority).to receive(:update).with(expected_params).and_return(true)
+        patch :update, params: { id: '37', authority: { 'area' => 'global' } }
       end
       it "assigns the requested authority as @authority" do
         set_logged_in_default_admin
@@ -159,7 +158,7 @@ describe AuthoritiesController, type: :controller do
         # don’t actually update the authority:
         allow(authority).to receive(:update).and_return(true)
         allow(Authority).to receive(:find) { authority }
-        patch :update, id: '1'
+        patch :update, params: { id: '1' }
         expect(assigns(:authority)).to be(authority)
       end
       it "redirects to the authority" do
@@ -168,7 +167,7 @@ describe AuthoritiesController, type: :controller do
         # don’t actually update the authority:
         allow(authority).to receive(:update).and_return(true)
         allow(Authority).to receive(:find) { authority }
-        patch :update, id: '1'
+        patch :update, params: { id: '1' }
         expect(response).to redirect_to(authority_url(authority))
       end
     end
@@ -177,13 +176,13 @@ describe AuthoritiesController, type: :controller do
       it "assigns the authority as @authority" do
         set_logged_in_default_admin
         allow(Authority).to receive(:find) { mock_admin_authority(update: false) }
-        patch :update, id: '1'
+        patch :update, params: { id: '1' }
         expect(assigns(:authority)).to be(mock_admin_authority)
       end
       it "re-renders the 'edit' template" do
         set_logged_in_default_admin
         allow(Authority).to receive(:find) { mock_authority(update: false) }
-        patch :update, id: '1'
+        patch :update, params: { id: '1' }
         expect(response).to render_template("edit")
       end
     end
@@ -192,13 +191,13 @@ describe AuthoritiesController, type: :controller do
   describe "GET delete" do
     it "blocks users without the :can_delete authority" do
       set_logged_in_default_user
-      get :delete, :id => "37"
+      get :delete, params: { id: "37" }
       expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "shows a form for confirming deletion of an authority" do
       set_logged_in_default_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
-      get :delete, :id => "37"
+      get :delete, params: { id: "37" }
       expect(assigns(:authority)).to be(mock_admin_authority)
     end
   end
@@ -206,19 +205,19 @@ describe AuthoritiesController, type: :controller do
   describe "DELETE destroy" do
     it "blocks users without the :can_delete authority" do
       set_logged_in_default_user
-      delete :destroy, :id => "37"
+      delete :destroy, params: { id: "37" }
       expect(response.status).to eq 403 # "403 Forbidden"
     end
     it "destroys the requested authority" do
       set_logged_in_default_admin
       allow(Authority).to receive(:find).with("37") { mock_admin_authority }
       expect(mock_admin_authority).to receive(:destroy)
-      delete :destroy, :id => "37"
+      delete :destroy, params: { id: "37" }
     end
     it "redirects to the authorities list" do
       set_logged_in_default_admin
       allow(Authority).to receive(:find) { mock_admin_authority }
-      delete :destroy, :id => "1"
+      delete :destroy, params: { id: "1" }
       expect(response).to redirect_to(authorities_url)
     end
   end

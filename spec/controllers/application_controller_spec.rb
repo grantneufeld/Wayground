@@ -76,7 +76,8 @@ describe ApplicationController, type: :controller do
   describe '#paginate' do
     it "should setup a bunch of variables" do
       controller.params ||= {}
-      controller.params.merge!({:page => '2', :max => '10'})
+      controller.params[:page] = '2'
+      controller.params[:max] = '10'
       Document.delete_all
       user = FactoryGirl.create(:document).user
       11.times { FactoryGirl.create(:document, :user => user) }
