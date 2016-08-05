@@ -70,9 +70,6 @@ describe ApplicationController, type: :controller do
   describe '#cookie_set_remember_me' do
   end
 
-  describe '#cookie_set_remember_me_permanent' do
-  end
-
   describe '#paginate' do
     it "should setup a bunch of variables" do
       controller.params ||= {}

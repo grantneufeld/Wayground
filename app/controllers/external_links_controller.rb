@@ -5,11 +5,11 @@ require 'event'
 class ExternalLinksController < ApplicationController
   before_action :set_user
   before_action :set_item
-  before_action :set_external_link, except: [:index, :new, :create]
-  before_action :requires_create_authority, only: [:new, :create]
-  before_action :requires_update_authority, only: [:edit, :update]
-  before_action :requires_delete_authority, only: [:delete, :destroy]
-  before_action :set_new_external_link, only: [:new, :create]
+  before_action :set_external_link, except: %i(index new create)
+  before_action :requires_create_authority, only: %i(new create)
+  before_action :requires_update_authority, only: %i(edit update)
+  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_new_external_link, only: %i(new create)
 
   def index
     page_metadata(title: "#{@item.descriptor}: External Links")
@@ -28,7 +28,7 @@ class ExternalLinksController < ApplicationController
     if @external_link.save
       redirect_to(@external_link.items_for_path, notice: 'The external link has been saved.')
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -41,7 +41,7 @@ class ExternalLinksController < ApplicationController
     if @external_link.update(external_link_params)
       redirect_to(@external_link.items_for_path, notice: 'The external link has been saved.')
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
@@ -62,21 +62,32 @@ class ExternalLinksController < ApplicationController
 
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
-    unless (
-      (@external_link && @external_link.has_authority_for_user_to?(@user, action)) ||
-      (!@external_link && @item && @item.has_authority_for_user_to?(@user, action)) ||
-      (@user && @external_link && @user.has_authority_for_area(@external_link.authority_area, action)) ||
-      (@user && @user.has_authority_for_area(ExternalLink.authority_area, action))
-    )
+    link_allowed = @external_link && @external_link.has_authority_for_user_to?(@user, action)
+    unless link_allowed || item_allowed(action) || link_item_allowed(action) || links_allowed(action)
       raise Wayground::AccessDenied
     end
   end
+
+  def item_allowed(action)
+    !@external_link && @item && @item.has_authority_for_user_to?(@user, action)
+  end
+
+  def link_item_allowed(action)
+    @user && @external_link && @user.has_authority_for_area(@external_link.authority_area, action)
+  end
+
+  def links_allowed(action)
+    @user && @user.has_authority_for_area(ExternalLink.authority_area, action)
+  end
+
   def requires_create_authority
     requires_authority(:can_create)
   end
+
   def requires_update_authority
     requires_authority(:can_update)
   end
+
   def requires_delete_authority
     requires_authority(:can_delete)
   end

@@ -1,12 +1,12 @@
 # Manage “static” Pages.
 class PagesController < ApplicationController
-  before_action :set_page, except: [:index, :new, :create]
-  before_action :requires_create_authority, only: [:new, :create]
-  before_action :requires_update_authority, only: [:edit, :update]
-  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_page, except: %i(index new create)
+  before_action :requires_create_authority, only: %i(new create)
+  before_action :requires_update_authority, only: %i(edit update)
+  before_action :requires_delete_authority, only: %i(delete destroy)
   before_action :set_section
-  before_action :set_new_page, only: [:new, :create]
-  before_action :set_editor, only: [:create, :update, :destroy]
+  before_action :set_new_page, only: %i(new create)
+  before_action :set_editor, only: %i(create update destroy)
 
   # GET /pages
   # GET /pages.xml
@@ -34,7 +34,7 @@ class PagesController < ApplicationController
     if @page.save
       redirect_to(@page, notice: 'Page was successfully created.')
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -50,7 +50,7 @@ class PagesController < ApplicationController
       redirect_to(@page, notice: 'Page was successfully updated.')
     else
       page_metadata(title: "Edit Page “#{@page.title}”")
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
@@ -71,19 +71,20 @@ class PagesController < ApplicationController
 
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
-    unless (
-      (@page && @page.has_authority_for_user_to?(current_user, action)) ||
-      (current_user && current_user.has_authority_for_area(Page.authority_area, action))
-    )
+    page_allowed = @page && @page.has_authority_for_user_to?(current_user, action)
+    unless page_allowed || (current_user && current_user.has_authority_for_area(Page.authority_area, action))
       raise Wayground::AccessDenied
     end
   end
+
   def requires_create_authority
     requires_authority(:can_create)
   end
+
   def requires_update_authority
     requires_authority(:can_update)
   end
+
   def requires_delete_authority
     requires_authority(:can_delete)
   end

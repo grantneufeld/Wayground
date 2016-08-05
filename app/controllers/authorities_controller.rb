@@ -1,10 +1,10 @@
 # Set authorities (permissions / access-control) for users.
 class AuthoritiesController < ApplicationController
-  before_action :requires_view_authority, only: [:index, :show]
-  before_action :requires_create_authority, only: [:new, :create]
-  before_action :requires_update_authority, only: [:edit, :update]
-  before_action :requires_delete_authority, only: [:delete, :destroy]
-  before_action :set_authority, except: [:index, :new, :create]
+  before_action :requires_view_authority, only: %i(index show)
+  before_action :requires_create_authority, only: %i(new create)
+  before_action :requires_update_authority, only: %i(edit update)
+  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_authority, except: %i(index new create)
   before_action :set_site_location, except: [:index]
 
   # GET /authorities
@@ -36,7 +36,7 @@ class AuthoritiesController < ApplicationController
     if @authority.save
       redirect_to(authority_url(@authority.to_param), notice: 'Authority was successfully created.')
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -53,7 +53,7 @@ class AuthoritiesController < ApplicationController
     if @authority.update(authority_params)
       redirect_to(@authority, notice: 'Authority was successfully updated.')
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
 

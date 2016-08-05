@@ -3,10 +3,10 @@ require 'image'
 # Access Images.
 class ImagesController < ApplicationController
   before_action :set_user
-  before_action :set_image, except: [:index, :new, :create]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_image, except: %i(index new create)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
@@ -80,10 +80,8 @@ class ImagesController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@image && @image.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Image.authority_area, action))
-    )
+    image_allowed = @image && @image.has_authority_for_user_to?(@user, action)
+    unless image_allowed || (@user && @user.has_authority_for_area(Image.authority_area, action))
       raise Wayground::AccessDenied
     end
   end
@@ -92,7 +90,7 @@ class ImagesController < ApplicationController
     params.fetch(:image, {}).permit(
       :title, :alt_text, :description, :attribution, :attribution_url,
       :license_url,
-      image_variants_attributes: [:height, :width, :format, :style, :url]
+      image_variants_attributes: %i(height width format style url)
     )
   end
 end
