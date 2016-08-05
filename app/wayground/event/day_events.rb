@@ -37,7 +37,7 @@ module Wayground
       private
 
       def determine_carryover_events
-        events.select {|event| event.is_multi_day }
+        events.select {|event| event.multi_day? }
       end
 
       def determine_carryover_multiday

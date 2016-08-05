@@ -21,7 +21,7 @@ class ImagePresenter < HtmlPresenter
   end
 
   def image_variant
-    @image_variant ||= image.get_best_variant
+    @image_variant ||= image.best_variant
   end
 
   def alt_text

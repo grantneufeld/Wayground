@@ -11,7 +11,7 @@ class SettingsController < ApplicationController
   # Setup default Settings for the system as a whole.
   # Currently, just the global_start_date.
   def initialize_defaults
-    Setting.set_defaults(
+    Setting.assign_missing_with_defaults(
       { global_start_date: Time.zone.now.to_date }.merge((params[:settings] || {}))
     )
     flash.notice = 'Settings have been initialized to defaults (where not already set).'
@@ -84,7 +84,7 @@ class SettingsController < ApplicationController
   def requires_authority(action)
     user = current_user
     setting_allowed = @setting && @setting.has_authority_for_user_to?(user, action)
-    unless setting_allowed || (user && user.has_authority_for_area(Setting.authority_area, action))
+    unless setting_allowed || (user && user.authority_for_area(Setting.authority_area, action))
       raise Wayground::AccessDenied
     end
   end

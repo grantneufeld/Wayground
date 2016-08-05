@@ -11,12 +11,16 @@ class Source < ApplicationRecord
 
   before_validation :set_defaults, on: :create
 
-  validates_inclusion_of :processor, in: %w( iCalendar IcalProcessor )
-  validates_inclusion_of :method, in: %w( get post )
+  validates :processor, inclusion: { in: %w(iCalendar IcalProcessor) }
+  validates :method, inclusion: { in: %w(get post) }
   # allow urls, or references to the testing fixture files
-  validates_format_of :url,
-    with: /\A(([a-z]+:\/+[^ \r\n\t]+)|([\/A-Za-z0-9_]+\/)?spec\/fixtures\/files\/[a-z0-9_\-]+\.[a-z0-9]+)\z/,
-    message: 'must begin with a valid URL (starting with ‘http://’ or equivalent)'
+  validates(
+    :url,
+    format: {
+      with: %r{\A(([a-z]+:/+[^ \r\n\t]+)|([/A-Za-z0-9_]+/)?spec/fixtures/files/[a-z0-9_\-]+\.[a-z0-9]+)\z},
+      message: 'must begin with a valid URL (starting with ‘http://’ or equivalent)'
+    }
+  )
   validate :validate_dates
 
   # Set default values for the Source. Should only be called once on create.
@@ -26,7 +30,7 @@ class Source < ApplicationRecord
 
   # last_update_at should not be set in the future.
   def validate_dates
-    if last_updated_at? && (last_updated_at.to_datetime > Time.now.to_datetime)
+    if last_updated_at? && (last_updated_at.to_datetime > Time.zone.now.to_datetime)
       errors.add(:last_updated_at, 'must not be in the future')
     end
   end
@@ -47,9 +51,8 @@ class Source < ApplicationRecord
 
   def run_icalendar_processor(user, approve)
     processed = Wayground::Import::IcalImporter.process_source(self, user: user, approve: approve)
-    self.last_updated_at = Time.now
-    self.save
+    self.last_updated_at = Time.zone.now
+    save
     processed
   end
-
 end

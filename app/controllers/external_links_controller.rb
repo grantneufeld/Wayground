@@ -73,11 +73,11 @@ class ExternalLinksController < ApplicationController
   end
 
   def link_item_allowed(action)
-    @user && @external_link && @user.has_authority_for_area(@external_link.authority_area, action)
+    @user && @external_link && @user.authority_for_area(@external_link.authority_area, action)
   end
 
   def links_allowed(action)
-    @user && @user.has_authority_for_area(ExternalLink.authority_area, action)
+    @user && @user.authority_for_area(ExternalLink.authority_area, action)
   end
 
   def requires_create_authority

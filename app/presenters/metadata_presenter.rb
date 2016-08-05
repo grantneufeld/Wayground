@@ -129,7 +129,7 @@ class MetadataPresenter < HtmlPresenter
       # TODO: get the best image variants, from the image, for Facebook and Twitter
       # Facebook wants a big image under 4mb
       # Twitter wants an image close to 120x120 under 1mb
-      set_image_from_variant(image.get_best_variant)
+      set_image_from_variant(image.best_variant)
     end
   end
 

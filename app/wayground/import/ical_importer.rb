@@ -147,7 +147,7 @@ module Wayground
           event.edit_comment = "Created from an iCalendar source"
         end
         approver = params[:approve_by]
-        if approver && approver.has_authority_for_area('Calendar', :can_approve)
+        if approver && approver.authority_for_area('Calendar', :can_approve)
           event.is_approved = true
         end
 

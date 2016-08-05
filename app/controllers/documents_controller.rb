@@ -66,7 +66,7 @@ class DocumentsController < ApplicationController
   def requires_authority(action)
     user = current_user
     document_allowed = @document && @document.has_authority_for_user_to?(user, action)
-    unless document_allowed || (user && user.has_authority_for_area(Document.authority_area, action))
+    unless document_allowed || (user && user.authority_for_area(Document.authority_area, action))
       raise Wayground::AccessDenied
     end
   end

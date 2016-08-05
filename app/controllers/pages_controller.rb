@@ -56,7 +56,7 @@ class PagesController < ApplicationController
 
   # GET /pages/1/delete
   def delete
-    raise Wayground::AccessDenied unless current_user.has_authority_for_area('Content', :can_delete)
+    raise Wayground::AccessDenied unless current_user.authority_for_area('Content', :can_delete)
     page_metadata(title: "Delete Page “#{@page.title}”")
   end
 
@@ -72,7 +72,7 @@ class PagesController < ApplicationController
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
     page_allowed = @page && @page.has_authority_for_user_to?(current_user, action)
-    unless page_allowed || (current_user && current_user.has_authority_for_area(Page.authority_area, action))
+    unless page_allowed || (current_user && current_user.authority_for_area(Page.authority_area, action))
       raise Wayground::AccessDenied
     end
   end
@@ -102,10 +102,9 @@ class PagesController < ApplicationController
     page_metadata(title: 'New Page')
     @page = Page.new(page_params)
     parent_id = params[:parent]
-    if parent_id.present?
-      @page.parent = Page.find(parent_id)
-      @site_breadcrumbs = @page.breadcrumbs
-    end
+    return unless parent_id.present?
+    @page.parent = Page.find(parent_id)
+    @site_breadcrumbs = @page.breadcrumbs
   end
 
   def set_editor

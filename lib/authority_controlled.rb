@@ -155,7 +155,7 @@ module AuthorityControlled
       # check for existing authorization
       authority = self.authorities.for_user(user).first
       if authority
-        authority.set_action!(action_type)
+        authority.action!(action_type)
       else
         authority = self.authorities.build(action_type => true)
         authority.user = user

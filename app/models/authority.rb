@@ -3,37 +3,31 @@ require 'user'
 # Gives authority to a user, on a given item or area, for performing specific actions.
 class Authority < ApplicationRecord
   belongs_to :user
-  belongs_to :authorized_by, :class_name => 'User'
-  belongs_to :item, :polymorphic => true
+  belongs_to :authorized_by, class_name: 'User'
+  belongs_to :item, polymorphic: true
 
-  validates_presence_of :user
-  #validates_inclusion_of :area, :in => %w( global User Authority Page Event ),
-  #  :allow_nil => true, :allow_blank => true,
-  #  :message => "{{value}} is not a recognized area"
-  validates_presence_of :area, if: Proc.new { |authority| authority.item_type.blank? }
-  validates_presence_of :item_id, if: Proc.new { |authority| authority.item_type.present? }
+  validates :user, presence: true
+  # validates(area:, inclusion: { in: %w(global User Authority Page Event),
+  #   allow_nil: true, allow_blank: true,
+  #   message: "{{value}} is not a recognized area" })
+  validates :area, presence: { if: proc { |authority| authority.item_type.blank? } }
+  validates :item_id, presence: { if: proc { |authority| authority.item_type.present? } }
 
-  scope :for_area, lambda { |area|
-    where(:area => area)
-  }
+  scope :for_area, ->(area) { where(area: area) }
   scope :for_area_or_global, lambda { |area|
     where("(authorities.area = ? OR authorities.area = 'global')", area)
   }
-  scope :for_item, lambda { |item|
-    where(:item_id => item.id, :item_type => item.class.name)
-  }
+  scope :for_item, ->(item) { where(item_id: item.id, item_type: item.class.name) }
   scope :for_item_or_area, lambda { |item|
     where(
-      "((authorities.item_id = ? AND authorities.item_type = ?)" +
+      '((authorities.item_id = ? AND authorities.item_type = ?)' \
       " OR authorities.area = ? OR authorities.area = 'global')",
       item.id, item.class.name, item.authority_area
     )
   }
-  scope :for_user, lambda { |user|
-    where(:user_id => user.id)
-  }
+  scope :for_user, ->(user) { where(user_id: user.id) }
   scope :for_action, lambda { |action|
-    raise "invalid action “#{action}”" unless action.match(/\A(can_[a-z]+|is_owner)\z/)
+    raise "invalid action “#{action}”" unless action =~ /\A(can_[a-z]+|is_owner)\z/
     where("(authorities.#{action} = ? OR authorities.is_owner = ?)", true, true)
   }
   scope :where_owner, -> { where(is_owner: true) }
@@ -41,11 +35,7 @@ class Authority < ApplicationRecord
   def self.build_from_params(params)
     authority_params = params[:authority_params] || {}
     user = User.from_string(authority_params[:user_proxy].to_s)
-    if user
-      authority = user.authorizations.build(authority_params)
-    else
-      authority = Authority.new(authority_params)
-    end
+    authority = user ? user.authorizations.build(authority_params) : Authority.new(authority_params)
     authority.authorized_by = params[:authorized_by]
     authority
   end
@@ -55,15 +45,15 @@ class Authority < ApplicationRecord
   # +action_type+:: an access_control action symbol. If +nil+, does not restrict by action.
   #   Default: +:can_view+
   def self.user_has_for_item(user, item, action_type = :can_view)
+    user_authorizations = Authority.for_user(user).for_item_or_area(item)
+    user_authorizations = user_authorizations.for_action(action_type) unless action_type.nil?
+    authority_that_gives_permission(user_authorizations, item, action_type)
+  end
+
+  # From a list of authorities, try to find an authority that gives permission,
+  # prioritizing an authority that identifies the user as the owner of the item
+  def self.authority_that_gives_permission(user_authorizations, item, action_type)
     valid_authority = nil
-    # FIXME: this could be done better
-    if action_type.nil?
-      user_authorizations = Authority.for_user(user).for_item_or_area(item)
-    else
-      user_authorizations = Authority.for_user(user).for_item_or_area(item).for_action(action_type)
-    end
-    # try to find an authority that gives permission,
-    # prioritizing an authority that identifies the user as the owner of the item
     user_authorizations.each do |authority|
       if authority.is_owner? && authority.item == item
         valid_authority = authority
@@ -82,7 +72,7 @@ class Authority < ApplicationRecord
 
   # Returns the user’s email address as a proxy string for the user, or +false+ if missing.
   def user_proxy
-    self.user && self.user.email
+    user && user.email
   end
 
   # Assigns the +user+ based on a string or User instance.
@@ -90,28 +80,28 @@ class Authority < ApplicationRecord
   # If +item+ is a string matching an user email, id, or name, sets the user.
   # If +item+ is a User instance, sets the user.
   def user_proxy=(item)
-    if item.blank?
-      self.user = nil
-    elsif item.is_a? String
-      self.user = User.from_string(item)
-    else
-      self.user = item
-    end
+    self.user =
+      if item.blank?
+        nil
+      elsif item.is_a? String
+        User.from_string(item)
+      else
+        item
+      end
   end
 
-  #def user_has_for_area(user, area, action_type = :can_view)
-  #  if action_type.nil?
-  #    Authority.for_user(user).for_area(area)
-  #  else
-  #    Authority.for_user(user).for_area(item).for_action(action_type)
-  #  end
-  #end
+  # def user_has_for_area(user, area, action_type = :can_view)
+  #   if action_type.nil?
+  #     Authority.for_user(user).for_area(area)
+  #   else
+  #     Authority.for_user(user).for_area(item).for_action(action_type)
+  #   end
+  # end
 
-  def set_action!(action_type)
-    unless self[action_type]
-      self[action_type] = true
-      self.save!
-    end
+  def action!(action_type)
+    return if self[action_type]
+    self[action_type] = true
+    save!
   end
 
   # Merge this authority into another authority (must be for the same user).
@@ -123,7 +113,7 @@ class Authority < ApplicationRecord
     raise Wayground::UserMismatch unless destination_authority.user == user
     merge_values(destination_authority)
     if destination_authority.save
-      self.destroy
+      destroy
       true
     else
       false
@@ -142,5 +132,4 @@ class Authority < ApplicationRecord
     destination_authority.can_permit ||= can_permit
     destination_authority.can_approve ||= can_approve
   end
-
 end

@@ -13,8 +13,7 @@ class Image < ApplicationRecord
   validates_associated :image_variants
 
   # prefer originals over other formats; then prefer larger over smaller dimensions
-  def get_best_variant
+  def best_variant
     image_variants.originals.largest.first
   end
-
 end

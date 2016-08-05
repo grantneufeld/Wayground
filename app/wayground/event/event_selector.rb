@@ -43,7 +43,7 @@ module Wayground
         else
           selector = ::Event.upcoming
         end
-        unless user && user.has_authority_for_area(::Event.authority_area, :can_approve)
+        unless user && user.authority_for_area(::Event.authority_area, :can_approve)
           selector = selector.approved
         end
         selector = selector.tagged(tag) if tag

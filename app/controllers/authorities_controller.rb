@@ -82,25 +82,25 @@ class AuthoritiesController < ApplicationController
   end
 
   def requires_view_authority
-    unless current_user && current_user.has_authority_for_area('Authority', :can_view)
+    unless current_user && current_user.authority_for_area('Authority', :can_view)
       raise Wayground::AccessDenied
     end
   end
 
   def requires_create_authority
-    unless current_user && current_user.has_authority_for_area('Authority', :can_create)
+    unless current_user && current_user.authority_for_area('Authority', :can_create)
       raise Wayground::AccessDenied
     end
   end
 
   def requires_update_authority
-    unless current_user && current_user.has_authority_for_area('Authority', :can_update)
+    unless current_user && current_user.authority_for_area('Authority', :can_update)
       raise Wayground::AccessDenied
     end
   end
 
   def requires_delete_authority
-    unless current_user && current_user.has_authority_for_area('Authority', :can_delete)
+    unless current_user && current_user.authority_for_area('Authority', :can_delete)
       raise Wayground::AccessDenied
     end
   end

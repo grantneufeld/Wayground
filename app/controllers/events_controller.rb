@@ -43,7 +43,7 @@ class EventsController < ApplicationController
     @event.user = @user
     if @event.save
       notice =
-        if @user.present? && @user.has_authority_for_area('Calendar', :is_owner)
+        if @user.present? && @user.authority_for_area('Calendar', :is_owner)
           'The event has been saved.'
         else
           'The event has been submitted.'
@@ -130,7 +130,7 @@ class EventsController < ApplicationController
 
   def requires_authority(action)
     event_allowed = @event && @event.has_authority_for_user_to?(@user, action)
-    unless event_allowed || (@user && @user.has_authority_for_area(Event.authority_area, action))
+    unless event_allowed || (@user && @user.authority_for_area(Event.authority_area, action))
       raise Wayground::AccessDenied
     end
   end

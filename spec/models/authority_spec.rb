@@ -134,7 +134,7 @@ describe Authority, type: :model do
     end
   end
 
-  describe "#set_action!" do
+  describe "#action!" do
   end
 
 

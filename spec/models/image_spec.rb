@@ -35,21 +35,21 @@ describe Image, type: :model do
     end
   end
 
-  describe "#get_best_variant" do
+  describe "#best_variant" do
     before(:all) do
       @image = FactoryGirl.create(:image)
     end
     context "with no variants" do
       it "should return nil" do
         @image.image_variants.delete_all
-        expect( @image.get_best_variant ).to eq nil
+        expect( @image.best_variant ).to eq nil
       end
     end
     context "with one variant" do
       it "should return the variant" do
         @image.image_variants.delete_all
         variant = @image.image_variants.create!(style: 'scaled', url: 'http://a.tld', format: 'png')
-        expect( @image.get_best_variant ).to eq variant
+        expect( @image.best_variant ).to eq variant
       end
     end
     context "with no original variants" do
@@ -62,7 +62,7 @@ describe Image, type: :model do
           height: 100, width: 100
         )
         @image.save!
-        expect( @image.get_best_variant ).to eq variant2
+        expect( @image.best_variant ).to eq variant2
       end
     end
     context "with one original variant" do
@@ -75,7 +75,7 @@ describe Image, type: :model do
           height: 10, width: 10
         )
         @image.save!
-        expect( @image.get_best_variant ).to eq original
+        expect( @image.best_variant ).to eq original
       end
     end
     context "with multiple original variants" do
@@ -88,7 +88,7 @@ describe Image, type: :model do
           height: 100, width: 100
         )
         @image.save!
-        expect( @image.get_best_variant ).to eq original2
+        expect( @image.best_variant ).to eq original2
       end
     end
   end

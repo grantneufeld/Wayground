@@ -13,10 +13,11 @@ class PathsController < ApplicationController
   def sitepath
     sitepath = params[:url].to_s
     @path = Path.find_for_path(sitepath)
-    if !@path
-      missing unless sitepath == '/'
+    if !@path && sitepath == '/'
       page_metadata(title: Wayground::Application::NAME, description: Wayground::Application::DESCRIPTION)
       render template: 'paths/default_home'
+    elsif !@path
+      missing
     elsif @path.redirect?
       redirect_to @path.redirect
     else
@@ -71,7 +72,7 @@ class PathsController < ApplicationController
   # The actions for this controller, except for viewing, require that the user is authorized.
   def requires_authority(action)
     path_allowed = @path && @path.has_authority_for_user_to?(current_user, action)
-    unless path_allowed || (current_user && current_user.has_authority_for_area(Path.authority_area, action))
+    unless path_allowed || (current_user && current_user.authority_for_area(Path.authority_area, action))
       raise Wayground::AccessDenied
     end
   end

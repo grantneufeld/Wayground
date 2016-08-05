@@ -2,22 +2,23 @@
 # Items can be most models in the system, but must respond to the `name` method.
 class SourcedItem < ApplicationRecord
   belongs_to :source
-  belongs_to :item, :polymorphic => true
+  belongs_to :item, polymorphic: true
   belongs_to :datastore
 
-  before_validation :set_date, :on => :create
+  before_validation :set_date, on: :create
 
-  validates_presence_of :source, :last_sourced_at
+  validates :source, :last_sourced_at, presence: true
   validate :validate_item_or_ignored
   validate :validate_dates
 
   # Set the last_sourced_at datetime if not set by the processor.
   def set_date
-    if source.present?
-      self.last_sourced_at ||= source.last_updated_at || Time.now
-    else
-      self.last_sourced_at ||= Time.now
-    end
+    self.last_sourced_at ||=
+      if source.present?
+        source.last_updated_at || Time.zone.now
+      else
+        Time.zone.now
+      end
   end
 
   # the SourcedItem must be either ignored, or have an item
@@ -31,10 +32,8 @@ class SourcedItem < ApplicationRecord
 
   # last_sourced_at should not be set in the future.
   def validate_dates
-    if (
-      last_sourced_at? && source.present? && source.last_updated_at? &&
-      (last_sourced_at.to_datetime > source.last_updated_at.to_datetime)
-    )
+    have_source_and_dates = last_sourced_at? && source.present? && source.last_updated_at?
+    if have_source_and_dates && (last_sourced_at.to_datetime > source.last_updated_at.to_datetime)
       errors.add(:last_sourced_at, 'must not be after the last update of the source')
     end
   end
@@ -44,9 +43,9 @@ class SourcedItem < ApplicationRecord
   def modified_locally
     self.has_local_modifications = true
   end
+
   def modified_locally!
     self.has_local_modifications = true
-    self.save!
+    save!
   end
-
 end

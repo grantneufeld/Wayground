@@ -66,7 +66,7 @@ class EventPresenter < HtmlPresenter
 
   def append_time_end_at
     event_end = event.end_at
-    if event.is_multi_day
+    if event.multi_day?
       ' to '.html_safe + TimePresenter.new(event_end).microformat_end(:plain_datetime)
     else
       '—'.html_safe + TimePresenter.new(event_end).microformat_end
@@ -76,7 +76,7 @@ class EventPresenter < HtmlPresenter
   def present_time_allday
     # TODO: change the microformat date encoding to reflect untimed day
     result = TimePresenter.new(event.start_at).microformat_hidden_start
-    if event.is_multi_day
+    if event.multi_day?
       # TODO: change the microformat date encoding to reflect untimed day
       result << TimePresenter.new(event.end_at).microformat_end(:plain_date)
     end

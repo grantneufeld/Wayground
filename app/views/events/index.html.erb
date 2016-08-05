@@ -30,7 +30,7 @@ add_submenu_item(title: 'Calendar Subscription Options',
   path: calendar_subscribe_path, attrs: { class: 'subscribe' }
 )
 
-if @user && @user.has_authority_for_area(Event.authority_area, :can_create)
+if @user && @user.authority_for_area(Event.authority_area, :can_create)
   add_submenu_item(title: 'New Event', path: new_event_path, attrs: { class: 'new' })
 end
 -%>

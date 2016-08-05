@@ -8,18 +8,16 @@ require 'user'
 class UserToken < ApplicationRecord
   belongs_to :user
 
-  validates_presence_of :user_id
-  validates_presence_of :token
+  validates :user_id, presence: true
+  validates :token, presence: true
   validate :validate_expires_in_future, on: :create
 
-  scope :expired, -> { where('expires_at <= ?', Time.now) }
-  default_scope -> { where('(expires_at IS NULL OR expires_at > ?)', Time.now) }
+  scope :expired, -> { where('expires_at <= ?', Time.zone.now) }
+  default_scope -> { where('(expires_at IS NULL OR expires_at > ?)', Time.zone.now) }
 
   def validate_expires_in_future
     expiry = expires_at
-    unless expiry.blank? || (expiry > Time.now)
-      errors.add(:expires_at, 'must be in the future')
-    end
+    errors.add(:expires_at, 'must be in the future') unless expiry.blank? || (expiry > Time.zone.now)
   end
 
   # Parse a cookie_token to find a matching, non-expired, UserToken.
@@ -34,5 +32,4 @@ class UserToken < ApplicationRecord
   def self.cleanup_expired_tokens
     unscoped.expired.delete_all
   end
-
 end

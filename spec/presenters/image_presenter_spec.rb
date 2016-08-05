@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'image_presenter'
 
 describe ImagePresenter do
@@ -70,13 +70,13 @@ describe ImagePresenter do
   end
 
   describe "#image_variant" do
-    it "should call through to the image’s get_best_variant method if not already set" do
-      expect(@image).to receive(:get_best_variant).and_return(:variant)
+    it "should call through to the image’s best_variant method if not already set" do
+      expect(@image).to receive(:best_variant).and_return(:variant)
       presenter = ImagePresenter.new(view: view_stub, image: @image)
       expect( presenter.image_variant ).to eq :variant
     end
     it "should just return the given variant when set" do
-      expect(@image).not_to receive(:get_best_variant)
+      expect(@image).not_to receive(:best_variant)
       variant = ImageVariant.new
       presenter = ImagePresenter.new(view: view_stub, image: @image, image_variant: variant)
       expect( presenter.image_variant ).to eq variant

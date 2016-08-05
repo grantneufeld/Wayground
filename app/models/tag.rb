@@ -14,26 +14,25 @@ class Tag < ApplicationRecord
   scope :tag_labels, -> { select('tag') }
   scope :grouped_with_counts, -> { group(:tag).count }
 
-  validates :tag, presence: true, uniqueness: { scope: [:item_type, :item_id] },
+  validates(
+    :tag,
+    presence: true,
+    uniqueness: { scope: %i(item_type item_id) },
     format: { with: /\A[a-z0-9]+\z/ }
+  )
   validate :title_must_match_tag
 
   def title_must_match_tag
-    if title.present? && (taggify_text(title) != tag)
-      errors.add(:title, 'must match the Tag')
-    end
+    errors.add(:title, 'must match the Tag') if title.present? && (taggify_text(title) != tag)
   end
 
   def title=(value)
     @title = value.strip
-    write_attribute(:title, @title)
-    unless @title.blank?
-      self.tag = taggify_text(@title)
-    end
+    self[:title] = @title
+    self.tag = taggify_text(@title) unless @title.blank?
   end
 
   def taggify_text(text)
     text.parameterize.gsub(/[^a-z0-9]+/i, '')
   end
-
 end
