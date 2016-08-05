@@ -18,9 +18,9 @@ describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe "#set_main_section_class" do
+  describe "#main_section_class" do
     it "should set the instance variable" do
-      helper.set_main_section_class('helper-test')
+      helper.main_section_class('helper-test')
       expect( helper.instance_variable_get(:@page_main_class) ).to eq 'helper-test'
     end
   end

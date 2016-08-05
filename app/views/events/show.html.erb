@@ -3,7 +3,7 @@ require 'event_presenter'
 
 event ||= @event
 @versioned_item = event # let the application template know we’re looking at an item with versions
-set_main_section_class 'vevent'
+main_section_class 'vevent'
 
 presenter = EventPresenter.new(view: self, event: event, user: @user)
 

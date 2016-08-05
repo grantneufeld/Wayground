@@ -23,7 +23,7 @@ describe 'calendar/month.html.erb', type: :view do
       assign(:user, nil)
     end
     it "should assign the main section class to calendar" do
-      expect(view).to receive(:set_main_section_class).with('calendar')
+      expect(view).to receive(:main_section_class).with('calendar')
       render
     end
     context 'with earlier and later events' do
