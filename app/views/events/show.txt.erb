@@ -12,8 +12,7 @@ event_start = @event.start_at
 event_end = @event.end_at
 %><%= event_start.to_s(time_format) %><%
 unless event_end.blank? || event_end == event_start
-  multi_day? = event_end.to_date != event_start.to_date
-  if multi_day?
+  if event_end.to_date != event_start.to_date
     %>
 to <%= event_end.to_s(time_format) %><%
   elsif !(is_allday)
