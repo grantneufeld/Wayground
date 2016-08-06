@@ -1,6 +1,6 @@
 COUNTRY_CODES_SHORTLIST = {
   'CA' => 'Canada'
-}
+}.freeze
 
 COUNTRY_CODES = {
   'AD' => 'Andorra',
@@ -252,4 +252,4 @@ COUNTRY_CODES = {
   'ZA' => 'South Africa',
   'ZM' => 'Zambia',
   'ZW' => 'Zimbabwe'
-}
+}.freeze

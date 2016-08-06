@@ -1,23 +1,23 @@
 Rails.application.routes.draw do
   concern :versioned do
-    resources :versions, except: [:new, :create, :edit, :update, :destroy]
+    resources :versions, except: %i(new create edit update destroy)
   end
 
-  root to: "paths#sitepath", via: :get, url: '/'
+  root to: 'paths#sitepath', via: :get, url: '/'
 
   # USERS
-  get "signup" => "users#new", :as => :signup
-  post "signup" => "users#create"
-  get "account/confirm/:confirmation_code" => "users#confirm", :as => :confirm_account
-  resource :account, :controller => 'users', :except => [:index, :new, :create, :destroy]
+  get 'signup' => 'users#new', :as => :signup
+  post 'signup' => 'users#create'
+  get 'account/confirm/:confirmation_code' => 'users#confirm', :as => :confirm_account
+  resource :account, controller: 'users', except: %i(index new create destroy)
   get 'profile/:id' => 'users#profile', :as => :profile
   # SESSIONS
-  get "signin" => "sessions#new", :as => :signin
-  post "signin" => "sessions#create"
-  get "signout" => "sessions#delete", :as => :signout
-  delete "signout" => "sessions#destroy"
+  get 'signin' => 'sessions#new', :as => :signin
+  post 'signin' => 'sessions#create'
+  get 'signout' => 'sessions#delete', :as => :signout
+  delete 'signout' => 'sessions#destroy'
   # OAUTH
-  match 'auth/:provider/callback' => 'sessions#oauth_callback', via: [:get, :post]
+  match 'auth/:provider/callback' => 'sessions#oauth_callback', via: %i(get post)
   # AUTHORITIES
   resources :authorities
   # SETTINGS
@@ -59,12 +59,12 @@ Rails.application.routes.draw do
   year_regexp = /\d{4}/
   get 'calendar' => 'calendar#index', as: :calendar
   get 'calendar/subscribe' => 'calendar#subscribe', as: :calendar_subscribe
-  get "calendar/:year/:month/:day" => 'calendar#day', as: :calendar_day,
-    constraints: { year: year_regexp, month: month_regexp, day: /0[1-9]|[1-3]\d/ }
-  get "calendar/:year/:month" => 'calendar#month', as: :calendar_month,
-    constraints: { year: year_regexp, month: month_regexp }
-  get "calendar/:year" => 'calendar#year', as: :calendar_year,
-    constraints: { year: year_regexp }
+  get 'calendar/:year/:month/:day' => 'calendar#day', as: :calendar_day,
+      constraints: { year: year_regexp, month: month_regexp, day: /0[1-9]|[1-3]\d/ }
+  get 'calendar/:year/:month' => 'calendar#month', as: :calendar_month,
+      constraints: { year: year_regexp, month: month_regexp }
+  get 'calendar/:year' => 'calendar#year', as: :calendar_year,
+      constraints: { year: year_regexp }
 
-  get '*url' => "paths#sitepath", format: false
+  get '*url' => 'paths#sitepath', format: false
 end
