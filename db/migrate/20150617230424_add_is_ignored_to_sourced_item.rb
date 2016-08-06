@@ -1,3 +1,4 @@
+# Allow SourcedItems to be remembered but ignored so they don’t get reprocessed.
 class AddIsIgnoredToSourcedItem < ActiveRecord::Migration
   def change
     add_column :sourced_items, :is_ignored, :boolean, default: false, null: false

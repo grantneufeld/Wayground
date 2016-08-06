@@ -1,9 +1,10 @@
+# A version of an item. (version history / version control)
 class CreateVersions < ActiveRecord::Migration
   def self.up
     create_table :versions do |t|
-      t.belongs_to :item, :polymorphic => true, :null => false
-      t.belongs_to :user, :null => false
-      t.datetime :edited_at, :null => false
+      t.belongs_to :item, polymorphic: true, null: false
+      t.belongs_to :user, null: false
+      t.datetime :edited_at, null: false
       t.string :edit_comment
       t.string :filename
       t.string :title
@@ -15,10 +16,10 @@ class CreateVersions < ActiveRecord::Migration
       t.date :end_on
     end
     change_table :versions do |t|
-      t.index [:item_type, :item_id, :edited_at], :name=>'item_by_date'
-      t.index [:edited_at, :item_type, :item_id], :name=>'edits_by_date'
-      t.index [:user_id, :item_type, :item_id, :edited_at], :name=>'user_by_item'
-      t.index [:user_id, :edited_at, :item_type, :item_id], :name=>'user_by_date'
+      t.index %i(item_type item_id edited_at), name: 'item_by_date'
+      t.index %i(edited_at item_type item_id), name: 'edits_by_date'
+      t.index %i(user_id item_type item_id edited_at), name: 'user_by_item'
+      t.index %i(user_id edited_at item_type item_id), name: 'user_by_date'
     end
   end
 

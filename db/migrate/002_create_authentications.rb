@@ -1,9 +1,10 @@
+# User authentications via login & password or external providers (e.g., oauth).
 class CreateAuthentications < ActiveRecord::Migration
   def self.up
     create_table :authentications do |t|
       t.belongs_to :user
-      t.string :provider, :null => false
-      t.string :uid, :null => false
+      t.string :provider, null: false
+      t.string :uid, null: false
       t.string :nickname
       t.string :name
       t.string :email
@@ -11,12 +12,11 @@ class CreateAuthentications < ActiveRecord::Migration
       t.string :url
       t.string :image_url
       t.text :description
-# user:belongs_to provider:string uid:string name:string nickname:string location:string url:string image_url:string
       t.timestamps
     end
     change_table :authentications do |t|
-      t.index [:provider, :uid], :name=>'auth', :unique=>true
-      t.index [:user_id, :provider], :name=>'user'
+      t.index %i(provider uid), name: 'auth', unique: true
+      t.index %i(user_id provider), name: 'user'
     end
   end
 

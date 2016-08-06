@@ -7,7 +7,7 @@ class CreateSettings < ActiveRecord::Migration
       t.timestamps
     end
     change_table :settings do |t|
-      t.index [:key], :name=>'key', :unique=>true
+      t.index [:key], name: 'key', unique: true
     end
   end
 
