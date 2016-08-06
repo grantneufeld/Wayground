@@ -1,23 +1,22 @@
-require 'html_presenter'
-require 'event_presenter'
+require_relative 'html_presenter'
+require_relative 'event_presenter'
 require 'date'
-require 'event'
-require 'time_presenter'
-require 'event/day_events'
-require 'event/events_by_date'
+require_relative '../models/event'
+require_relative 'time_presenter'
+require_relative '../wayground/event/day_events'
+require_relative '../wayground/event/events_by_date'
 
 # Present a calendar of events in an html grid of weeks for a month.
 # The result (a bunch of table rows) must be wrapped in a `table` (and, presumably, a `tbody`) element.
 class CalendarMonthPresenter < HtmlPresenter
   attr_accessor :view, :month, :year, :events_by_date, :user
 
-  # Initialize with params: :view, :month, :year, :events
-  def initialize(params={})
-    self.view = params[:view]
-    self.month = params[:month]
-    self.year = params[:year]
-    self.user = params[:user]
-    self.events_by_date = Wayground::Event::EventsByDate.new(params[:events])
+  def initialize(view:, year:, month:, events: [], user: nil)
+    self.view = view
+    self.year = year
+    self.month = month
+    self.user = user
+    self.events_by_date = Wayground::Event::EventsByDate.new(events)
     @carryover = []
   end
 
@@ -30,7 +29,7 @@ class CalendarMonthPresenter < HtmlPresenter
   end
 
   def present_weeks
-    view.safe_join(weeks.map {|week| present_week(week) })
+    view.safe_join(weeks.map { |week| present_week(week) })
   end
 
   def present_week(week)
@@ -41,9 +40,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_day(day)
     attrs = {}
-    if day.month != month
-      attrs[:class] = 'outside_month'
-    end
+    attrs[:class] = 'outside_month' if day.month != month
     html_tag_with_newline(:td, attrs) { present_day_elements(day) }
   end
 
@@ -52,18 +49,29 @@ class CalendarMonthPresenter < HtmlPresenter
   end
 
   def present_day_num(day)
-    day_events = events_by_date[day]
-    day_num_class = 'day'
-    day_num_class << ' empty' unless (day_events && day_events.count > 0) || @carryover.count > 0
-    if Event.count == 0 || (day < Event.earliest_date) || (day > Event.last_date)
+    # FIXME: find a zone-friendly way to do `day.to_time` in present_day_num(day)
+    if day_outside_range?(day)
       # the day is outside the range of events; don't link it
-      html_tag(:span, class: day_num_class, title: day.to_time.to_s(:simple_date)) { day.day.to_s }
+      html_tag(:span, class: day_number_class(day), title: day.to_time.to_s(:simple_date)) { day.day.to_s }
     else
       view.link_to(
         day.day, view.calendar_day_path_for_date(day),
-        class: day_num_class, title: day.to_time.to_s(:simple_date)
+        class: day_number_class(day), title: day.to_time.to_s(:simple_date)
       )
     end
+  end
+
+  # is the given day outside the range of Events in the system?
+  # TODO: cache Event values
+  def day_outside_range?(day)
+    Event.count.zero? || (day < Event.earliest_date) || (day > Event.last_date)
+  end
+
+  def day_number_class(day)
+    day_events = events_by_date[day]
+    day_num_class = 'day'
+    day_num_class << ' empty' unless (day_events && day_events.count.positive?) || @carryover.count.positive?
+    day_num_class
   end
 
   def present_day_content(day)
@@ -84,7 +92,7 @@ class CalendarMonthPresenter < HtmlPresenter
 
   def present_day_events_count(day_events)
     events_count = day_events.count
-    if events_count > 0
+    if events_count.positive?
       html_tag(:p) { "#{events_count} event#{events_count == 1 ? '' : 's'}" }
     else
       html_blank
@@ -92,7 +100,7 @@ class CalendarMonthPresenter < HtmlPresenter
   end
 
   def present_day_events(day_events)
-    if day_events.count > 0
+    if day_events.count.positive?
       html_tag(:div, class: 'date_content') { present_day_events_list(day_events.all) }
     else
       html_blank
@@ -108,13 +116,17 @@ class CalendarMonthPresenter < HtmlPresenter
   def present_event_in_list(event)
     presenter = EventPresenter.new(view: view, event: event, user: user)
     attrs = presenter.event_heading_attrs
-    link_title = event.title
-    unless event.is_allday
-      time = TimePresenter.new(event.start_at)
-      link_title = "#{time.brief}: #{link_title}"
-    end
-    event_link = view.link_to(link_title, view.event_path(event), title: link_title)
+    title = event_title_with_time(event)
+    event_link = view.link_to(title, view.event_path(event), title: title)
     html_tag_with_newline(:li, attrs) { event_link }
   end
 
+  def event_title_with_time(event)
+    if event.is_allday
+      event.title
+    else
+      time = TimePresenter.new(event.start_at)
+      "#{time.brief}: #{event.title}"
+    end
+  end
 end

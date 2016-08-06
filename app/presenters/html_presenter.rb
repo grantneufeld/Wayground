@@ -1,9 +1,8 @@
 # Common methods for presenting textual content in html format.
 # Generally used as a parent class for other presenters.
 class HtmlPresenter
-
   # Generate an html tag with a newline appended.
-  def html_tag_with_newline(tag_name, attrs_list={}, &block)
+  def html_tag_with_newline(tag_name, attrs_list = {}, &block)
     html_tag(tag_name, attrs_list, &block) + newline
   end
 
@@ -14,17 +13,19 @@ class HtmlPresenter
   # Note that the result of the content block must be an html_safe string.
   # Example usage:
   # html_tag(:p, id: 'example') { 'An example.'.html_safe } # => '<p id="example">An example.</p>'
-  def html_tag(tag_name, attrs_list={}, &block)
+  def html_tag(tag_name, attrs_list = {}, &block)
     attrs = []
     attrs_list.each do |key, value|
       # merge the strings in an array with space separator
       # e.g., {class: ['a', 'b']} becomes class="a b"
-      if value.is_a? Array
-        value = value.join(' ')
-      end
+      value = value.join(' ') if value.is_a? Array
       attrs << "#{key}=\"#{value}\"" unless value.blank?
     end
     content = yield block if block
+    render_tag(tag_name, attrs, content)
+  end
+
+  def render_tag(tag_name, attrs, content)
     tag_name_with_attrs = ([tag_name] + attrs).join(' ')
     if !content || content.empty?
       "<#{tag_name_with_attrs} />".html_safe
@@ -34,7 +35,7 @@ class HtmlPresenter
   end
 
   # present as an anchor if the url is present, otherwise as a span
-  def anchor_or_span_tag(url, attrs={}, &block)
+  def anchor_or_span_tag(url, attrs = {}, &block)
     if url.blank?
       html_tag('span', attrs, &block)
     else
@@ -43,7 +44,7 @@ class HtmlPresenter
   end
 
   # based on ERB::Util#html_escape in rails/activesupport/lib/active_support/core_ext/string/output_safety.rb
-  HTML_ESCAPE = { '&' => '&amp;', '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "'" => '&#x27;' }
+  HTML_ESCAPE = { '&' => '&amp;', '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "'" => '&#x27;' }.freeze
   def html_escape(text)
     text = text.to_s
     if text.html_safe?
@@ -66,7 +67,6 @@ class HtmlPresenter
   # Strip away details from an url to simplify it for human reading.
   def url_for_print(url)
     # strip leading `http://` (or `https://`), and trailing `/`
-    url.gsub(/^https?:\/\//, '').gsub(/[\/\.]+$/, '')
+    url.gsub(%r{^https?://}, '').gsub(%r{[/\.]+$}, '')
   end
-
 end

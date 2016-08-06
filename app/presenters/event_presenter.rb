@@ -1,16 +1,15 @@
-require 'html_presenter'
+require_relative 'html_presenter'
 require 'date'
-require 'time_presenter'
+require_relative 'time_presenter'
 
 # Present an event with microformat markup.
 class EventPresenter < HtmlPresenter
   attr_reader :view, :event, :user
 
-  # Initialize with params: :view, :event, :user
-  def initialize(params={})
-    @view = params[:view]
-    @event = params[:event]
-    @user = params[:user]
+  def initialize(view:, event:, user: nil) # params = {})
+    @view = view
+    @event = event
+    @user = user
   end
 
   def present_in_list
@@ -27,7 +26,7 @@ class EventPresenter < HtmlPresenter
     classes = []
     classes << 'cancelled'.html_safe if event.is_cancelled?
     classes << 'tentative'.html_safe if event.is_tentative?
-    (classes.size > 0) ? { class: classes } : {}
+    classes.size.positive? ? { class: classes } : {}
   end
 
   def present_status
@@ -56,11 +55,9 @@ class EventPresenter < HtmlPresenter
     end
   end
 
-  def present_time(time_format=:plain_time)
+  def present_time(time_format = :plain_time)
     result = TimePresenter.new(event.start_at).microformat_start(time_format)
-    if event.end_at?
-      result << append_time_end_at
-    end
+    result << append_time_end_at if event.end_at?
     result
   end
 
@@ -102,7 +99,7 @@ class EventPresenter < HtmlPresenter
     chunks = [
       present_minimal_location, present_description, present_organizer, present_action_menu
     ]
-    chunks.reject! { |chunk| chunk.empty? }
+    chunks.reject!(&:empty?)
     view.safe_join(chunks, newline + html_tag(:br))
   end
 
@@ -188,7 +185,7 @@ class EventPresenter < HtmlPresenter
   # city, province, country
   def present_location_region
     elements = [present_location_city, present_location_province, present_location_country]
-    elements.delete_if { |item| item.blank? }
+    elements.delete_if(&:blank?)
     view.safe_join(elements, ', '.html_safe)
   end
 
@@ -226,9 +223,10 @@ class EventPresenter < HtmlPresenter
 
   def present_organizer
     if event.organizer?
-      org = anchor_or_span_tag(html_escape(event.organizer_url), class: 'organizer') do
-        html_escape(event.organizer)
-      end
+      org =
+        anchor_or_span_tag(html_escape(event.organizer_url), class: 'organizer') do
+          html_escape(event.organizer)
+        end
       "Presented by #{org}.".html_safe
     else
       html_blank
@@ -238,10 +236,10 @@ class EventPresenter < HtmlPresenter
   def present_action_menu
     actions = [present_edit_action, present_approve_action, present_delete_action]
     actions.reject! { |action| action == '' }
-    unless actions.empty?
-      view.safe_join(actions, view.separator + newline)
-    else
+    if actions.empty?
       html_blank
+    else
+      view.safe_join(actions, view.separator + newline)
     end
   end
 
@@ -254,7 +252,7 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_approve_action
-    if !(event.is_approved?) && user && event.has_authority_for_user_to?(user, :can_approve)
+    if !event.is_approved? && user && event.has_authority_for_user_to?(user, :can_approve)
       append_approve_action_link
     else
       html_blank
@@ -262,7 +260,8 @@ class EventPresenter < HtmlPresenter
   end
 
   def append_approve_action_link
-    view.link_to('Approve', view.approve_event_path(event),
+    view.link_to(
+      'Approve', view.approve_event_path(event),
       data: { confirm: "Are you sure you want to approve the event “#{event.title}”?" },
       method: :post, class: 'action'
     )
@@ -270,7 +269,9 @@ class EventPresenter < HtmlPresenter
 
   def present_delete_action
     if user && event.has_authority_for_user_to?(user, :can_delete)
-      view.link_to('Delete', [:delete, event],
+      # FIXME: check if this will still work correctly if we remove the `.html_safe` call at the end
+      view.link_to(
+        'Delete', [:delete, event],
         data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
       ).html_safe
     else
@@ -280,9 +281,8 @@ class EventPresenter < HtmlPresenter
 
   protected
 
-  def join_chunks(chunks, separator=', ')
-    chunks.reject! { |chunk| chunk.empty? }
+  def join_chunks(chunks, separator = ', ')
+    chunks.reject!(&:empty?)
     view.safe_join(chunks, separator)
   end
-
 end

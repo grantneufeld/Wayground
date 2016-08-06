@@ -1,9 +1,10 @@
-require 'html_presenter'
+require_relative 'html_presenter'
 
 # Meta elements to go in the head element.
 class MetadataPresenter < HtmlPresenter
-  attr_reader :view, :url, :title, :description, :image_url, :image_height, :image_width,
-    :twitter_creator, :nocache
+  attr_reader(
+    :view, :url, :title, :description, :image_url, :image_height, :image_width, :twitter_creator, :nocache
+  )
 
   # Requires:
   # :view - generally passed in as `self` from a view
@@ -16,14 +17,14 @@ class MetadataPresenter < HtmlPresenter
   # :image_height, :image_width
   # :twitter_creator - the @ username of the user responsible for the current page’s content, without the "@"
   # :nocache - boolean of whether to flag that the page is not to be remotely cached
-  def initialize(params={})
+  def initialize(params = {})
     @view = params[:view]
     @graph_type = params[:type]
     @title = params[:title]
-    set_url(params)
+    self.url = params[:url]
     @description = params[:description]
-    set_image(params)
-    set_twitter_creator(params)
+    image(params)
+    self.twitter_creator = params[:twitter_creator]
     @nocache = params[:nocache]
   end
 
@@ -33,11 +34,11 @@ class MetadataPresenter < HtmlPresenter
 
   def present_metatags
     present_description +
-    present_open_graph_specific +
-    present_open_graph_common +
-    present_image +
-    present_twitter +
-    present_cache
+      present_open_graph_specific +
+      present_open_graph_common +
+      present_image +
+      present_twitter +
+      present_cache
   end
 
   def present_description
@@ -61,9 +62,9 @@ class MetadataPresenter < HtmlPresenter
   # og:site_name: name of the website
   def present_open_graph_common
     og_tag(:title, title) +
-    og_tag(:url, url) +
-    og_tag(:description, description) +
-    og_tag(:site_name, site_name)
+      og_tag(:url, url) +
+      og_tag(:description, description) +
+      og_tag(:site_name, site_name)
   end
 
   # The Open Graph image tags. Shared with Twitter Cards.
@@ -73,8 +74,8 @@ class MetadataPresenter < HtmlPresenter
   # og:image:height: in pixels
   def present_image
     og_tag(:image, image_url) +
-    og_tag('image:height', image_height) +
-    og_tag('image:width', image_width)
+      og_tag('image:height', image_height) +
+      og_tag('image:width', image_width)
   end
 
   # Twitter Card metadata tags
@@ -85,8 +86,8 @@ class MetadataPresenter < HtmlPresenter
   # twitter:creator:id: the content creator’s id number on Twitter
   def present_twitter
     twitter_tag(:card, twitter_card_type) +
-    twitter_tag(:site, twitter_site) +
-    twitter_tag(:creator, twitter_creator)
+      twitter_tag(:site, twitter_site) +
+      twitter_tag(:creator, twitter_creator)
   end
 
   def present_cache
@@ -99,53 +100,44 @@ class MetadataPresenter < HtmlPresenter
 
   protected
 
-  def set_url(params)
-    @url = params[:url]
+  def url=(url)
+    @url = url
     @url = @view.request.url if @url.blank?
   end
 
-  def set_image(params)
+  def image(params)
     @image_url = params[:image_url]
     @image_height = params[:image_height]
     @image_width = params[:image_width]
-    if @image_url.blank?
-      set_image_from_variant(params[:image_variant])
-    end
-    if @image_url.blank?
-      set_image_from_image(params[:image])
-    end
+    image_from_variant(params[:image_variant]) if @image_url.blank?
+    image_from_image(params[:image]) if @image_url.blank?
   end
 
-  def set_image_from_variant(image_variant)
-    if image_variant
-      @image_url = image_variant.url
-      @image_height = image_variant.height
-      @image_width = image_variant.width
-    end
+  def image_from_variant(image_variant)
+    return unless image_variant
+    @image_url = image_variant.url
+    @image_height = image_variant.height
+    @image_width = image_variant.width
   end
 
-  def set_image_from_image(image)
-    if image
-      # TODO: get the best image variants, from the image, for Facebook and Twitter
-      # Facebook wants a big image under 4mb
-      # Twitter wants an image close to 120x120 under 1mb
-      set_image_from_variant(image.best_variant)
-    end
+  def image_from_image(image)
+    image_from_variant(image.best_variant) if image
+    # TODO: get the best image variants, from the image, for Facebook and Twitter
+    # Facebook wants a big image under 4mb
+    # Twitter wants an image close to 120x120 under 1mb
   end
 
-  def set_twitter_creator(params)
-    @twitter_creator = params[:twitter_creator]
-    unless @twitter_creator.blank? || @twitter_creator[0] == '@'
-      @twitter_creator = "@#{@twitter_creator}"
-    end
+  def twitter_creator=(twitter_id)
+    @twitter_creator = twitter_id
+    @twitter_creator = "@#{@twitter_creator}" unless @twitter_creator.blank? || @twitter_creator[0] == '@'
   end
 
-  def is_root?
+  def root?
     @view.request.path == '/'
   end
 
   def page_title
-    if title.blank? or is_root?
+    if title.blank? || root?
       site_name
     else
       "#{title} [#{site_name}]"
@@ -153,7 +145,7 @@ class MetadataPresenter < HtmlPresenter
   end
 
   def graph_type
-    @graph_type ||= is_root? ? 'website' : 'article'
+    @graph_type ||= root? ? 'website' : 'article'
   end
 
   def site_name
@@ -171,9 +163,11 @@ class MetadataPresenter < HtmlPresenter
   def meta_tag(key, value)
     meta_tag_or_blank(name: key, content: value)
   end
+
   def og_tag(key, value)
     meta_tag_or_blank(property: "og:#{key}", content: value)
   end
+
   def twitter_tag(key, value)
     meta_tag_or_blank(name: "twitter:#{key}", value: value)
   end
