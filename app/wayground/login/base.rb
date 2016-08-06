@@ -15,7 +15,7 @@ module Wayground
     class Base
       attr_writer :user_class
 
-      def initialize(args={})
+      def initialize(args = {})
         user_class_arg = args[:user_class]
         self.user_class = user_class_arg if user_class_arg.present?
         post_initialize(args)
@@ -35,14 +35,13 @@ module Wayground
 
       # Implement in subclasses:
 
-      def post_initialize(args={})
+      def post_initialize(args = {})
         args
       end
 
       def find_user
         nil
       end
-
     end
 
   end

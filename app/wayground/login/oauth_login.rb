@@ -6,7 +6,7 @@ module Wayground
   module Login
 
     # attempt to authenticate with an Authentication assigned to a different user
-    class WrongUserForAuthentication < Exception; end
+    class WrongUserForAuthentication < RuntimeError; end
 
     # Handle logging in from OAuth authentication.
     # Requires the user_class to have an authentications association.
@@ -16,9 +16,9 @@ module Wayground
 
       protected
 
-      def post_initialize(args={})
-        self.current_user = args[:current_user]
-        self.auth = args[:auth]
+      def post_initialize(current_user: nil, auth: nil)
+        self.current_user = current_user
+        self.auth = auth
       end
 
       # possible conditions:
@@ -73,18 +73,17 @@ module Wayground
           urls['Facebook'] if urls.present?
         when 'twitter'
           "https://twitter.com/#{user_info['nickname']}"
-        else
-          nil
         end
       end
 
       def user_info
         unless @user_info
-          if provider == 'twitter'
-            @user_info = auth['info'] || {}
-          else
-            @user_info = auth['user_info'] || {}
-          end
+          @user_info =
+            if provider == 'twitter'
+              auth['info'] || {}
+            else
+              auth['user_info'] || {}
+            end
         end
         @user_info
       end
@@ -92,7 +91,6 @@ module Wayground
       def provider
         @provider ||= auth['provider']
       end
-
     end
 
   end

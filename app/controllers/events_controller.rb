@@ -15,7 +15,9 @@ class EventsController < ApplicationController
   before_action :set_editor, only: %i(create update destroy approve merge perform_merge)
 
   def index
-    selector = Wayground::Event::EventSelector.new(params.merge(user: @user))
+    selector = Wayground::Event::EventSelector.new(
+      range: params[:range] || params[:r], tag: params[:tag], user: @user
+    )
     @events = selector.events
     @range = selector.range
     @tag = selector.tag

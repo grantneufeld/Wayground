@@ -37,11 +37,10 @@ module Merger
     def merge_authorities_into(destination)
       @source.authorities.each do |authority|
         duplicate_authority = destination.authorities.where(user_id: authority.user.id).first
-        if duplicate_authority
-          # this merge will delete the authority,
-          # keeping the one for the destination
-          authority.merge_into!(duplicate_authority)
-        end
+        next unless duplicate_authority
+        # this merge will delete the authority,
+        # keeping the one for the destination
+        authority.merge_into!(duplicate_authority)
       end
       @source.authorities.update_all(item_id: destination.id)
     end
@@ -80,12 +79,10 @@ module Merger
     def merge_versions_into(destination)
       @source.versions.update_all(item_id: destination.id)
     end
-
   end
 
   # Merges two Events.
   class EventMerger < Base
-
     # Merge the field values of the source Event into the destination Event.
     # This is a “Big Ugly Method” that would probably benefit from some
     # clever coding to DRY it up. But, I’m kind of tired as I write this,
@@ -202,7 +199,6 @@ module Merger
       destination.save!
       conflicts
     end
-
   end
 
 end

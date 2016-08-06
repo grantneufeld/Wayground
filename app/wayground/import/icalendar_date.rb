@@ -6,7 +6,6 @@ module Wayground
 
     # hold the values associated with an iCalendar date/time
     class IcalendarDate
-
       def initialize(ical_datetime)
         parsed_parts = parse_ical_datetime_string(ical_datetime)
         @datetime = parsed_parts.delete(:datetime)
@@ -19,7 +18,7 @@ module Wayground
       def to_datetime
         # Thankfully, DateTime’s built-in string processor understands the format
         # used by iCalendar for writing date strings. (although not the timezone part)
-        datetime = DateTime.parse @datetime
+        datetime = DateTime.parse(@datetime)
         # defaults to UTC. Apply a timezone if one is specified in TZID.
         adjust_for_timezone(datetime)
       end
@@ -27,17 +26,17 @@ module Wayground
       protected
 
       def parse_ical_datetime_string(ical_datetime)
-        time_parts = ical_datetime.match /(?<params>.+):(?<datetime>.+)/
+        time_parts = ical_datetime.match(/(?<params>.+):(?<datetime>.+)/)
         if time_parts
           parse_time_parts(time_parts)
         else
-          {datetime: ical_datetime}
+          { datetime: ical_datetime }
         end
       end
 
       # split out the time value and other parts of the time, such as the 'TZID'
       def parse_time_parts(time_parts)
-        parsed_parts = {datetime: time_parts[:datetime]}
+        parsed_parts = { datetime: time_parts[:datetime] }
         param_strs = time_parts[:params].split(';')
         param_strs.each do |param_str|
           param_parts = param_str.match(/^(?<key>[^=]+)=(?<value>.+)$/)
@@ -62,16 +61,15 @@ module Wayground
       def utc_offset_rational(date)
         Rational(
           @timezone.period_for_utc(date).utc_total_offset, # difference from UTC in seconds
-          86400 # the number of seconds in a day (24*60*60)
+          86_400 # the number of seconds in a day (24*60*60)
         )
       end
 
-      def determine_timezone(timezone_id=nil)
+      def determine_timezone(timezone_id = nil)
         @timezone ||= TZInfo::Timezone.get(timezone_id)
       rescue TZInfo::InvalidTimezoneIdentifier
         nil
       end
-
     end
 
   end

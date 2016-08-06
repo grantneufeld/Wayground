@@ -7,14 +7,14 @@ module Wayground
   class TagList
     attr_reader :tags, :editor
 
-    def initialize(params={})
-      @tags = params[:tags] || []
-      @editor = params[:editor]
+    def initialize(tags: nil, editor: nil)
+      @tags = tags || []
+      @editor = editor
       @modified = []
     end
 
     def to_s
-      list = tags.map { |tag| tag.title }
+      list = tags.map(&:title)
       list.join ', '
     end
 
@@ -28,7 +28,7 @@ module Wayground
       remove_leftover_existing_tags
     end
 
-    #protected - The rest of the methods would be protected, except I want to access them easily in testing
+    # protected - The rest of the methods would be protected, except I want to access them easily in testing
 
     # build a list of existing tags, indexed off of the taggified tag value (not the title)
     def determine_existing_tags
@@ -57,16 +57,13 @@ module Wayground
       # to prevent trying to create duplicate tags.
       @tagged ||= []
       tag_text = Tag.new.taggify_text(title)
-      unless tag_text.blank? || @tagged.include?(tag_text)
-        @tagged << tag_text
-        ensure_tag_title(title)
-      end
+      return if tag_text.blank? || @tagged.include?(tag_text)
+      @tagged << tag_text
+      ensure_tag_title(title)
     end
 
     def ensure_tag_title(title)
-      unless update_existing_tag(title)
-        new_tag(title)
-      end
+      new_tag(title) unless update_existing_tag(title)
     end
 
     def update_existing_tag(title)
@@ -91,7 +88,7 @@ module Wayground
 
     # destroy any existing tags that weren’t in the passed in tag list string
     def remove_leftover_existing_tags
-      @existing_tags.each do |key, tag|
+      @existing_tags.each do |_key, tag|
         tags.delete(tag)
         tag.destroy
       end
@@ -99,15 +96,12 @@ module Wayground
     end
 
     def save!
-      @modified.each do |tag|
-        tag.save!
-      end
+      @modified.each(&:save!)
       @modified = []
     end
 
     # convenience methods for testing only
     attr_accessor :existing_tags, :tagged, :modified
-
   end
 
 end
