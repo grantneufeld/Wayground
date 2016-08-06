@@ -71,7 +71,7 @@ class PathsController < ApplicationController
 
   # The actions for this controller, except for viewing, require that the user is authorized.
   def requires_authority(action)
-    path_allowed = @path && @path.has_authority_for_user_to?(current_user, action)
+    path_allowed = @path && @path.authority_for_user_to?(current_user, action)
     unless path_allowed || (current_user && current_user.authority_for_area(Path.authority_area, action))
       raise Wayground::AccessDenied
     end

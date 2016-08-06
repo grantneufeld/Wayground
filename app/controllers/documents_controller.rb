@@ -65,7 +65,7 @@ class DocumentsController < ApplicationController
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
     user = current_user
-    document_allowed = @document && @document.has_authority_for_user_to?(user, action)
+    document_allowed = @document && @document.authority_for_user_to?(user, action)
     unless document_allowed || (user && user.authority_for_area(Document.authority_area, action))
       raise Wayground::AccessDenied
     end

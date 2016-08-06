@@ -131,7 +131,7 @@ class EventsController < ApplicationController
   end
 
   def requires_authority(action)
-    event_allowed = @event && @event.has_authority_for_user_to?(@user, action)
+    event_allowed = @event && @event.authority_for_user_to?(@user, action)
     unless event_allowed || (@user && @user.authority_for_area(Event.authority_area, action))
       raise Wayground::AccessDenied
     end

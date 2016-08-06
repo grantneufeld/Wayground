@@ -71,7 +71,7 @@ class PagesController < ApplicationController
 
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
-    page_allowed = @page && @page.has_authority_for_user_to?(current_user, action)
+    page_allowed = @page && @page.authority_for_user_to?(current_user, action)
     unless page_allowed || (current_user && current_user.authority_for_area(Page.authority_area, action))
       raise Wayground::AccessDenied
     end

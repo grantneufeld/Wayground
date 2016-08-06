@@ -260,7 +260,7 @@ describe SourcesController, type: :controller do
     end
 
     it "requires the user to have authority" do
-      allow(source).to receive(:has_authority_for_user_to?).and_return(false)
+      allow(source).to receive(:authority_for_user_to?).and_return(false)
       set_logged_in_user
       post :runprocessor, params: { id: '123' }
       expect(response.status).to eq 403

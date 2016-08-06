@@ -93,7 +93,7 @@ class SourcesController < ApplicationController
 
   # The actions for this controller require authorization.
   def requires_authority(action)
-    source_allowed = @source && @source.has_authority_for_user_to?(@user, action)
+    source_allowed = @source && @source.authority_for_user_to?(@user, action)
     unless source_allowed || (@user && @user.authority_for_area('Source', action))
       raise Wayground::AccessDenied
     end

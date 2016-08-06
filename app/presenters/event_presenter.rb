@@ -244,7 +244,7 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_edit_action
-    if user && event.has_authority_for_user_to?(user, :can_update)
+    if user && event.authority_for_user_to?(user, :can_update)
       view.link_to('Edit', view.edit_event_path(event), class: 'action')
     else
       html_blank
@@ -252,7 +252,7 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_approve_action
-    if !event.is_approved? && user && event.has_authority_for_user_to?(user, :can_approve)
+    if !event.is_approved? && user && event.authority_for_user_to?(user, :can_approve)
       append_approve_action_link
     else
       html_blank
@@ -268,7 +268,7 @@ class EventPresenter < HtmlPresenter
   end
 
   def present_delete_action
-    if user && event.has_authority_for_user_to?(user, :can_delete)
+    if user && event.authority_for_user_to?(user, :can_delete)
       # FIXME: check if this will still work correctly if we remove the `.html_safe` call at the end
       view.link_to(
         'Delete', [:delete, event],

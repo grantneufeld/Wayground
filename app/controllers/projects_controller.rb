@@ -62,7 +62,7 @@ class ProjectsController < ApplicationController
   end
 
   def requires_authority(action)
-    project_allowed = @project && @project.has_authority_for_user_to?(@user, action)
+    project_allowed = @project && @project.authority_for_user_to?(@user, action)
     unless project_allowed || (@user && @user.authority_for_area(Project.authority_area, action))
       raise Wayground::AccessDenied
     end

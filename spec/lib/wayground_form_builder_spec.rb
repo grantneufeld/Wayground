@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'wayground_form_builder'
 
 describe WaygroundFormBuilder, :type => :view do

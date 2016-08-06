@@ -177,7 +177,7 @@ class Document < ApplicationRecord
     )
     # set Cache-control to “private/public, max-age=?, no-transform” where max-age is in seconds
     cache_params =
-      if is_authority_restricted?
+      if authority_restricted?
         { max_age: 30.minutes, public: false }
       else
         { max_age: 1.day, public: true }

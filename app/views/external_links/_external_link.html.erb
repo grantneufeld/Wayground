@@ -3,9 +3,9 @@
 
 %><li><%= link_to external_link.title, external_link.url, class: "url #{(external_link.site)}".rstrip!, target: '_blank' %>
 <br /><%= link_to 'Details', external_link.items_for_path, class: 'action' %><%
-if external_link.has_authority_for_user_to?(user, :can_update) %>
+if external_link.authority_for_user_to?(user, :can_update) %>
 <%= link_to 'Edit', [:edit] + external_link.items_for_path, class: 'action' %><%
-  if external_link.has_authority_for_user_to?(user, :can_delete) %>
+  if external_link.authority_for_user_to?(user, :can_delete) %>
 <%= link_to 'Delete', [:delete] + external_link.items_for_path,
   data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' %><%
   end

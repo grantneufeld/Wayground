@@ -80,7 +80,7 @@ class ImagesController < ApplicationController
   end
 
   def requires_authority(action)
-    image_allowed = @image && @image.has_authority_for_user_to?(@user, action)
+    image_allowed = @image && @image.authority_for_user_to?(@user, action)
     unless image_allowed || (@user && @user.authority_for_area(Image.authority_area, action))
       raise Wayground::AccessDenied
     end

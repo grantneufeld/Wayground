@@ -17,15 +17,15 @@ end
 <%
 
 if user.present?
-  if external_link.has_authority_for_user_to?(user, :can_update)
+  if external_link.authority_for_user_to?(user, :can_update)
     add_submenu_item(title: 'Edit', path: ([:edit] + external_link.items_for_path))
   end
-  if external_link.has_authority_for_user_to?(user, :can_delete)
+  if external_link.authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete', path: ([:delete] + external_link.items_for_path),
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' }
     )
   end
-  if item.has_authority_for_user_to?(user, :can_create)
+  if item.authority_for_user_to?(user, :can_create)
     add_submenu_item(title: 'Add Link', path: ([:new] + item.items_for_path + [:external_link]))
   end
 end

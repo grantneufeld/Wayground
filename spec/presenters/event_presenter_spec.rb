@@ -791,22 +791,22 @@ describe EventPresenter do
     context 'with a user with authority' do
       let(:presenter) { $presenter = EventPresenter.new(minimum_params.merge(user: admin)) }
       it "should return a edit link" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(event).to receive(:authority_for_user_to?).and_return(true)
         expect( presenter.present_edit_action ).to match /\A<a (?:|[^>]+ )href="\/events\/123\/edit"/
       end
       it "should be html safe" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(event).to receive(:authority_for_user_to?).and_return(true)
         expect( presenter.present_edit_action.html_safe? ).to be_truthy
       end
     end
     context "with a user without edit authority for the item" do
       let(:presenter) { $presenter = EventPresenter.new(minimum_params.merge(user: user)) }
       it "should return an empty string" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(event).to receive(:authority_for_user_to?).and_return(false)
         expect( presenter.present_edit_action ).to eq ''
       end
       it "should be html safe" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(event).to receive(:authority_for_user_to?).and_return(false)
         expect( presenter.present_edit_action.html_safe? ).to be_truthy
       end
     end
@@ -824,11 +824,11 @@ describe EventPresenter do
     context 'with a user with authority' do
       let(:presenter) { $presenter = EventPresenter.new(minimum_params.merge(user: admin)) }
       it "should return an approve link" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(event).to receive(:authority_for_user_to?).and_return(true)
         expect( presenter.present_approve_action ).to match /\A<a (?:|[^>]+ )href="\/events\/123\/approve"/
       end
       it "should be html safe" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(event).to receive(:authority_for_user_to?).and_return(true)
         expect( presenter.present_approve_action.html_safe? ).to be_truthy
       end
     end
@@ -846,11 +846,11 @@ describe EventPresenter do
     context "with a user without approve authority for the item" do
       let(:presenter) { $presenter = EventPresenter.new(minimum_params.merge(user: user)) }
       it "should return an empty string" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(event).to receive(:authority_for_user_to?).and_return(false)
         expect( presenter.present_approve_action ).to eq ''
       end
       it "should be html safe" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(event).to receive(:authority_for_user_to?).and_return(false)
         expect( presenter.present_approve_action.html_safe? ).to be_truthy
       end
     end
@@ -868,12 +868,12 @@ describe EventPresenter do
     context 'with a user with authority' do
       let(:presenter) { $presenter = EventPresenter.new(minimum_params.merge(user: admin)) }
       it "should return a delete link" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(event).to receive(:authority_for_user_to?).and_return(true)
         allow(event).to receive(:id).and_return(123)
         expect( presenter.present_delete_action ).to match /\A<a (?:|[^>]+ )href="\/events\/123\/delete"/
       end
       it "should be html safe" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(event).to receive(:authority_for_user_to?).and_return(true)
         allow(event).to receive(:id).and_return(123)
         expect( presenter.present_delete_action.html_safe? ).to be_truthy
       end
@@ -881,11 +881,11 @@ describe EventPresenter do
     context "with a user without delete authority for the item" do
       let(:presenter) { $presenter = EventPresenter.new(minimum_params.merge(user: user)) }
       it "should return an empty string" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(event).to receive(:authority_for_user_to?).and_return(false)
         expect( presenter.present_delete_action ).to eq ''
       end
       it "should be html safe" do
-        allow(event).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(event).to receive(:authority_for_user_to?).and_return(false)
         expect( presenter.present_delete_action.html_safe? ).to be_truthy
       end
     end

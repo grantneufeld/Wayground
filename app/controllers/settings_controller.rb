@@ -83,7 +83,7 @@ class SettingsController < ApplicationController
 
   def requires_authority(action)
     user = current_user
-    setting_allowed = @setting && @setting.has_authority_for_user_to?(user, action)
+    setting_allowed = @setting && @setting.authority_for_user_to?(user, action)
     unless setting_allowed || (user && user.authority_for_area(Setting.authority_area, action))
       raise Wayground::AccessDenied
     end

@@ -302,7 +302,7 @@ describe User, type: :model do
     it "should create an authority" do
       Authority.where(user_id: @user.id).delete_all
       @user.set_authority_on_item(@item, :can_update)
-      expect(@item.has_authority_for_user_to?(@user, :can_update)).to be_truthy
+      expect(@item.authority_for_user_to?(@user, :can_update)).to be_truthy
     end
     it "should ammend an existing authority" do
       authority = FactoryGirl.create(:authority, user: @user, item: @item, can_view: true)

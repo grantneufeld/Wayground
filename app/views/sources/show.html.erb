@@ -16,11 +16,11 @@
 </tbody></table>
 
 <p class="actions"><%
-if @source.has_authority_for_user_to?(@user, :can_update)
+if @source.authority_for_user_to?(@user, :can_update)
   %><%= link_to 'Process', processor_source_path(@source), class: 'action' %><%= separator %>
 <%= link_to 'Edit', edit_source_path(@source), class: 'action' %><%
 end
-if @source.has_authority_for_user_to?(@user, :can_delete)
+if @source.authority_for_user_to?(@user, :can_delete)
   %><%= separator %>
 <%= link_to 'Delete', [:delete, @source], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%
 end

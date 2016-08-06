@@ -3,13 +3,13 @@
 # Forces https where supported.
 # Strips surrounding whitespace.
 class UrlCleaner
-  URL_MAP = /\A[\ \t\r\n]*
-    (?<protocol>[a-z\-]+)(?<delimiter>\:\/*)
+  URL_MAP = %r{\A[\ \t\r\n]*
+    (?<protocol>[a-z\-]+)(?<delimiter>\:/*)
     (?<user>[A-Za-z0-9_\+\-]+@)?
     (?<domain>[a-z0-9\-\.]+)(?<port>\:[0-9]+)?
     (?<path>[^\?]*)
     (?<params>\?.*)?
-    [ \t\r\n]*\z/x
+    [ \t\r\n]*\z}x
 
   # Cleanup and return an URL string.
   # expects a valid URL as a String.
@@ -34,7 +34,7 @@ class UrlCleaner
     protocol = 'https' if protocol == 'http'
     path = url_parts[:path]
     params = url_parts[:params]
-    path_match = path.match(/^(?<eventpath>\/events\/[0-9]+)/)
+    path_match = path.match(%r{^(?<eventpath>/events/[0-9]+)})
     if path_match
       # strip the path and params down to just the event
       path = "#{path_match[:eventpath]}/"
@@ -46,12 +46,11 @@ class UrlCleaner
   # For Twitter URLs, strip hash-bang and force https.
   def self.clean_twitter(url_parts)
     path = url_parts[:path]
-    path_match = path.match(/^\/\#!(?<hashbanged>.+)/)
+    path_match = path.match(%r{^/\#!(?<hashbanged>.+)})
     if path_match
       # strip the slash-hash-bang from the path
       path = path_match[:hashbanged]
     end
     "https#{url_parts[:delimiter]}#{url_parts[:domain]}#{path}#{url_parts[:params]}"
   end
-
 end

@@ -62,14 +62,14 @@ class ExternalLinksController < ApplicationController
 
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
-    link_allowed = @external_link && @external_link.has_authority_for_user_to?(@user, action)
+    link_allowed = @external_link && @external_link.authority_for_user_to?(@user, action)
     unless link_allowed || item_allowed(action) || link_item_allowed(action) || links_allowed(action)
       raise Wayground::AccessDenied
     end
   end
 
   def item_allowed(action)
-    !@external_link && @item && @item.has_authority_for_user_to?(@user, action)
+    !@external_link && @item && @item.authority_for_user_to?(@user, action)
   end
 
   def link_item_allowed(action)
