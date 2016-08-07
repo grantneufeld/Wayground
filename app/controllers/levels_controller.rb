@@ -1,11 +1,12 @@
 require 'level'
 
+# Access to Level records
 class LevelsController < ApplicationController
   before_action :set_user
-  before_action :set_level, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_level, only: %i(show edit update delete destroy)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
@@ -17,7 +18,7 @@ class LevelsController < ApplicationController
     page_metadata(title: @level.name)
   end
 
-  #def new; end
+  # def new; end
 
   def create
     if @level.save
@@ -27,7 +28,7 @@ class LevelsController < ApplicationController
     end
   end
 
-  #def edit; end
+  # def edit; end
 
   def update
     if @level.update(level_params)
@@ -65,9 +66,7 @@ class LevelsController < ApplicationController
     requires_authority(:can_create)
     page_metadata(title: 'New Level')
     @level = Level.new(level_params)
-    if params[:parent_id]
-      @level.parent = Level.from_param(params[:parent_id]).first
-    end
+    @level.parent = Level.from_param(params[:parent_id]).first if params[:parent_id]
   end
 
   def prep_edit
@@ -80,12 +79,8 @@ class LevelsController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@level && @level.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Level.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @level && @level.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Level.authority_area, action))
   end
 
   def level_params

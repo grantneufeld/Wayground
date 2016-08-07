@@ -7,10 +7,10 @@ require 'person'
 class ContactsController < ApplicationController
   before_action :set_user
   before_action :set_item
-  before_action :set_contact, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_contact, only: %i(show edit update delete destroy)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
@@ -58,25 +58,22 @@ class ContactsController < ApplicationController
   end
 
   def set_item
-    @item = nil
-    if params[:candidate_id]
-      level = Level.from_param(params[:level_id]).first
-      election = level.elections.from_param(params[:election_id]).first
-      office = level.offices.from_param(params[:ballot_id]).first
-      ballot = election.ballots.where(office_id: office.id).first
-      @item = ballot.candidates.from_param(params[:candidate_id]).first
-    end
-    if !@item && params[:person_id]
-      @item = Person.from_param(params[:person_id]).first
-    end
+    @item = item_from_candidate if params[:candidate_id]
+    @item = Person.from_param(params[:person_id]).first if !@item && params[:person_id]
     missing unless @item
+  end
+
+  def item_from_candidate
+    level = Level.from_param(params[:level_id]).first
+    election = level.elections.from_param(params[:election_id]).first
+    office = level.offices.from_param(params[:ballot_id]).first
+    ballot = election.ballots.where(office_id: office.id).first
+    ballot.candidates.from_param(params[:candidate_id]).first
   end
 
   def set_contact
     @contact = @item.contacts.find(params[:id])
-    unless @contact.is_public? && @contact.authority_for_user_to?(@user, :can_view)
-      unauthorized
-    end
+    unauthorized unless @contact.is_public? && @contact.authority_for_user_to?(@user, :can_view)
     missing unless @contact
   end
 
@@ -100,13 +97,9 @@ class ContactsController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@contact && @contact.authority_for_user_to?(@user, action)) ||
-      (!@contact && @item.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Contact.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @contact && @contact.authority_for_user_to?(@user, action)
+    authority ||= !@contact && @item.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Contact.authority_area, action))
   end
 
   def contact_params

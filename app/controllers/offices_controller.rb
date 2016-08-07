@@ -6,10 +6,10 @@ require 'level'
 class OfficesController < ApplicationController
   before_action :set_user
   before_action :set_level
-  before_action :set_office, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_office, only: %i(show edit update delete destroy)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
@@ -74,9 +74,7 @@ class OfficesController < ApplicationController
     requires_authority(:can_create)
     page_metadata(title: 'New Office')
     @office = @level.offices.build(office_params)
-    if params[:previous_id]
-      @office.previous = @level.offices.from_param(params[:previous_id]).first
-    end
+    @office.previous = @level.offices.from_param(params[:previous_id]).first if params[:previous_id]
   end
 
   def prep_edit
@@ -89,12 +87,8 @@ class OfficesController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@office && @office.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Office.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @office && @office.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Office.authority_area, action))
   end
 
   def office_params

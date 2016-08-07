@@ -1,11 +1,12 @@
 require 'person'
 
+# Access to Person records.
 class PeopleController < ApplicationController
   before_action :set_user
-  before_action :set_person, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_person, only: %i(show edit update delete destroy)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
@@ -77,12 +78,8 @@ class PeopleController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@person && @person.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Person.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @person && @person.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Person.authority_area, action))
   end
 
   def person_params

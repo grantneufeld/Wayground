@@ -7,11 +7,11 @@ require 'democracy/election_builder'
 class ElectionsController < ApplicationController
   before_action :set_user
   before_action :set_level
-  before_action :set_election, except: [:index, :new, :create]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
-  before_action :prep_generate, only: [:ballot_maker, :generate_ballots]
+  before_action :set_election, except: %i(index new create)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
+  before_action :prep_generate, only: %i(ballot_maker generate_ballots)
   before_action :set_section
 
   def index
@@ -58,8 +58,8 @@ class ElectionsController < ApplicationController
 
   def generate_ballots
     page_metadata(title: "Generate Ballots for “#{@election.descriptor}”")
-    term_start_on = Date.parse(params[:term_start_on]) rescue nil
-    term_end_on = Date.parse(params[:term_end_on]) rescue nil
+    term_start_on = try_date(params[:term_start_on])
+    term_end_on = try_date(params[:term_end_on])
     builder = Wayground::Democracy::ElectionBuilder.new(
       election: @election, term_start_on: term_start_on, term_end_on: term_end_on
     )
@@ -67,6 +67,12 @@ class ElectionsController < ApplicationController
   end
 
   protected
+
+  def try_date(param)
+    Date.parse(param)
+  rescue
+    nil
+  end
 
   def set_user
     @user = current_user
@@ -106,12 +112,8 @@ class ElectionsController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@election && @election.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Election.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @election && @election.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Election.authority_area, action))
   end
 
   def election_params

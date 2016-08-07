@@ -22,6 +22,8 @@ Metrics/AbcSize:
   Exclude:
     - 'db/migrate/**/*'
     - 'app/controllers/application_controller.rb'
+    - 'app/controllers/contacts_controller.rb'
+    - 'app/controllers/external_links_controller.rb'
     - 'app/controllers/paths_controller.rb'
     - 'app/controllers/sessions_controller.rb'
     - 'app/controllers/sources_controller.rb'
@@ -43,7 +45,9 @@ Metrics/BlockNesting:
 # These classes could use some significant refactoring.
 Metrics/ClassLength:
   Exclude:
+    - 'app/controllers/candidates_controller.rb'
     - 'app/controllers/events_controller.rb'
+    - 'app/controllers/external_links_controller.rb'
     - 'app/controllers/paths_controller.rb'
     - 'app/controllers/sources_controller.rb'
     - 'app/models/document.rb'

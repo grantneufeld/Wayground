@@ -95,22 +95,37 @@ class ExternalLinksController < ApplicationController
 
   # all actions for this controller should have an item that the external link(s) are attached to.
   def set_item
-    @item = nil
     level = Level.from_param(params[:level_id]).first if params[:level_id]
     office = level.offices.from_param(params[:ballot_id]).first if params[:ballot_id]
+    item_from_param(level, office)
+    item_from_event unless @item
+    missing unless @item
+  end
+
+  def item_from_param(level, office)
     if params[:candidate_id]
-      election = level.elections.from_param(params[:election_id]).first
-      ballot = election.ballots.where(office_id: office.id).first
-      @item = ballot.candidates.from_param(params[:candidate_id]).first
+      item_from_candidate(level, office)
     elsif params[:ballot_id]
-      election = level.elections.from_param(params[:election_id]).first
-      @item = election.ballots.where(office_id: office.id).first
+      item_from_ballot(level, office)
     elsif params[:office_id]
       @item = level.offices.from_param(params[:office_id]).first
     end
+  end
+
+  def item_from_candidate(level, office)
+    election = level.elections.from_param(params[:election_id]).first
+    ballot = election.ballots.where(office_id: office.id).first
+    @item = ballot.candidates.from_param(params[:candidate_id]).first
+  end
+
+  def item_from_ballot(level, office)
+    election = level.elections.from_param(params[:election_id]).first
+    @item = election.ballots.where(office_id: office.id).first
+  end
+
+  def item_from_event
     event_id = params[:event_id]
-    @item = Event.find(event_id) if !@item && event_id.present?
-    missing unless @item
+    @item = Event.find(event_id) if event_id.present?
   end
 
   # Most of the actions for this controller receive the id of an ExternalLink as a parameter.

@@ -7,16 +7,18 @@ class BallotsController < ApplicationController
   before_action :set_user
   before_action :set_level
   before_action :set_election
-  before_action :set_ballot, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_ballot, only: %i(show edit update delete destroy)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
     page_metadata(
       title: "Candidates for #{@level.name} #{@election.descriptor}",
-      description: "Listings of citizen and voter resources about of ballots and candidates for #{@election.descriptor} in #{@level.name}."
+      description:
+        'Listings of citizen and voter resources about of ballots and ' \
+        "candidates for #{@election.descriptor} in #{@level.name}."
     )
     @ballots = @election.ballots
   end
@@ -103,12 +105,8 @@ class BallotsController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@ballot && @ballot.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Ballot.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @ballot && @ballot.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Ballot.authority_area, action))
   end
 
   def ballot_params

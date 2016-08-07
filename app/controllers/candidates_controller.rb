@@ -8,11 +8,11 @@ class CandidatesController < ApplicationController
   before_action :set_level
   before_action :set_election
   before_action :set_ballot
-  before_action :set_candidate, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :prep_new, only: [:new, :create]
-  before_action :prep_edit, only: [:edit, :update]
-  before_action :prep_form, only: [:new, :create, :edit, :update]
-  before_action :prep_delete, only: [:delete, :destroy]
+  before_action :set_candidate, only: %i(show edit update delete destroy)
+  before_action :prep_new, only: %i(new create)
+  before_action :prep_edit, only: %i(edit update)
+  before_action :prep_form, only: %i(new create edit update)
+  before_action :prep_delete, only: %i(delete destroy)
   before_action :set_section
 
   def index
@@ -117,12 +117,8 @@ class CandidatesController < ApplicationController
   end
 
   def requires_authority(action)
-    unless (
-      (@candidate && @candidate.authority_for_user_to?(@user, action)) ||
-      (@user && @user.authority_for_area(Candidate.authority_area, action))
-    )
-      unauthorized
-    end
+    authority = @candidate && @candidate.authority_for_user_to?(@user, action)
+    unauthorized unless authority || (@user && @user.authority_for_area(Candidate.authority_area, action))
   end
 
   def candidate_params
