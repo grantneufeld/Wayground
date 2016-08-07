@@ -18,7 +18,7 @@ module Wayground
         offices_to_add_ballots_for.each do |office|
           ballot = @election.ballots.build(term_start_on: @term_start_on, term_end_on: @term_end_on)
           ballot.office = office
-          #ballot.save!
+          # ballot.save!
           new_ballots << ballot
         end
         @election.save!
@@ -28,7 +28,7 @@ module Wayground
       # protected
 
       def offices_to_add_ballots_for
-        if @election.ballots.count > 0
+        if @election.ballots.count.positive?
           # there are existing ballots, so don’t generate new ones for the same offices
           offices_without_ballots
         else
@@ -41,9 +41,7 @@ module Wayground
         offices_to_add = []
         offices_for_level.each do |office|
           ballot_count = @election.ballots.where(office_id: office.id).count
-          unless ballot_count > 0
-            offices_to_add << office
-          end
+          offices_to_add << office unless ballot_count.positive?
         end
         offices_to_add
       end
@@ -55,7 +53,6 @@ module Wayground
           @election.level.offices
         end
       end
-
     end
 
   end

@@ -22,6 +22,7 @@ module Wayground
         end
         @candidate
       end
+
       def candidate=(value)
         @candidate = value
         self.ballot = @candidate.ballot if @candidate
@@ -29,12 +30,9 @@ module Wayground
       end
 
       def person
-        if candidate
-          @candidate.person ||= Person.new(person_attributes)
-        else
-          nil
-        end
+        @candidate.person ||= Person.new(person_attributes) if candidate
       end
+
       def person=(value)
         candidate.person = value
         attrs_from_person
@@ -70,19 +68,19 @@ module Wayground
 
       def validate_dates
         if quit_on.present? && announced_on.present? && quit_on.to_date < announced_on.to_date
-          self.errors.add(:quit_on, 'must be on or after the date candidacy was announced on')
+          errors.add(:quit_on, 'must be on or after the date candidacy was announced on')
         end
       end
 
       def validate_persisted_objects
         if !candidate
-          self.errors.add(:candidate, 'failed to create record')
-        elsif !(candidate.valid?)
+          errors.add(:candidate, 'failed to create record')
+        elsif !candidate.valid?
           add_errors_from(candidate.errors.messages)
         end
-        if !(person)
-          self.errors.add(:person, 'failed to create record')
-        elsif !(person.valid?)
+        if !person
+          errors.add(:person, 'failed to create record')
+        elsif !person.valid?
           add_errors_from(person.errors.messages)
         end
       end
@@ -91,20 +89,20 @@ module Wayground
 
       def attributes=(params)
         if params
-          self.filename     = params['filename']     if params.has_key?('filename')
-          self.name         = params['name']         if params.has_key?('name')
-          self.is_rumoured  = params['is_rumoured']  if params.has_key?('is_rumoured')
-          self.is_confirmed = params['is_confirmed'] if params.has_key?('is_confirmed')
-          self.is_incumbent = params['is_incumbent'] if params.has_key?('is_incumbent')
-          self.is_leader    = params['is_leader']    if params.has_key?('is_leader')
-          self.is_acclaimed = params['is_acclaimed'] if params.has_key?('is_acclaimed')
-          self.is_elected   = params['is_elected']   if params.has_key?('is_elected')
-          self.announced_on = params['announced_on'] if params.has_key?('announced_on')
-          self.quit_on      = params['quit_on']      if params.has_key?('quit_on')
-          self.vote_count   = params['vote_count']   if params.has_key?('vote_count')
-          self.bio          = params['bio']          if params.has_key?('bio')
-          self.party_id     = params['party_id']     if params.has_key?('party_id')
-          self.filename = self.name.strip.downcase.gsub(/ +/, '_') if self.name && self.filename.blank?
+          self.filename     = params['filename']     if params.key?('filename')
+          self.name         = params['name']         if params.key?('name')
+          self.is_rumoured  = params['is_rumoured']  if params.key?('is_rumoured')
+          self.is_confirmed = params['is_confirmed'] if params.key?('is_confirmed')
+          self.is_incumbent = params['is_incumbent'] if params.key?('is_incumbent')
+          self.is_leader    = params['is_leader']    if params.key?('is_leader')
+          self.is_acclaimed = params['is_acclaimed'] if params.key?('is_acclaimed')
+          self.is_elected   = params['is_elected']   if params.key?('is_elected')
+          self.announced_on = params['announced_on'] if params.key?('announced_on')
+          self.quit_on      = params['quit_on']      if params.key?('quit_on')
+          self.vote_count   = params['vote_count']   if params.key?('vote_count')
+          self.bio          = params['bio']          if params.key?('bio')
+          self.party_id     = params['party_id']     if params.key?('party_id')
+          self.filename = name.strip.downcase.gsub(/ +/, '_') if name && filename.blank?
         end
       end
 
@@ -116,12 +114,12 @@ module Wayground
         end
       end
 
-    protected
+      protected
 
       def add_errors_from(messages)
         messages.each do |key, value|
           value.each do |msg|
-            self.errors.add(key, msg)
+            errors.add(key, msg)
           end
         end
       end
@@ -137,7 +135,7 @@ module Wayground
         self.is_elected = @candidate.is_elected
         self.announced_on ||= @candidate.announced_on
         self.quit_on ||= @candidate.quit_on
-        self.vote_count = @candidate.vote_count if !vote_count || vote_count == 0
+        self.vote_count = @candidate.vote_count if !vote_count || vote_count.zero?
         self.bio ||= (person ? person.bio : nil)
         self.party_id ||= @candidate.party_id
       end
@@ -169,7 +167,6 @@ module Wayground
       def person_attributes
         { fullname: name || @candidate.name, filename: filename || @candidate.filename, bio: bio }
       end
-
     end
 
   end
