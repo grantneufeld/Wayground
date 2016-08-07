@@ -12,8 +12,7 @@ class Contact < ApplicationRecord
   validates :item_type, presence: true
   validates :item_id, presence: true
   validates :email, email: true, allow_blank: true
-  validates :twitter, allow_blank: true,
-    format: { with: /\A[a-z0-9_\-]+\z/i, message: 'invalid Twitter id' }
+  validates :twitter, allow_blank: true, format: { with: /\A[a-z0-9_\-]+\z/i, message: 'invalid Twitter id' }
   validates :url, http_url: true, allow_blank: true
 
   scope :only_public, -> { where(is_public: true) }
@@ -29,5 +28,4 @@ class Contact < ApplicationRecord
   def items_for_path
     item.items_for_path << self
   end
-
 end

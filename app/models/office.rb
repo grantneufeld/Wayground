@@ -24,17 +24,15 @@ class Office < ApplicationRecord
     end
   end
 
-  scope :active_on, ->(active_date) do
+  scope :active_on, lambda { |active_date|
     where(
-      '(established_on IS NULL OR established_on <= :active_date)' +
+      '(established_on IS NULL OR established_on <= :active_date)' \
       ' AND (ended_on IS NULL OR ended_on >= :active_date)',
-      { active_date: active_date }
+      active_date: active_date
     )
-  end
+  }
 
-  scope :from_param, ->(param) do
-    where(filename: param)
-  end
+  scope :from_param, ->(param) { where(filename: param) }
 
   def to_param
     filename
@@ -43,5 +41,4 @@ class Office < ApplicationRecord
   def descriptor
     name
   end
-
 end

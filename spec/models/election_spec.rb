@@ -119,7 +119,7 @@ describe Election, type: :model do
     end
     describe '.upcoming' do
       it 'should return the elections that occur on or after the date today' do
-        allow(Date).to receive(:today).and_return(Date.parse('2013-12-11'))
+        allow(Time).to receive_message_chain(:zone, :today, :to_date).and_return(Date.parse('2013-12-11'))
         elections = @level_with_lots.elections.upcoming.order_by_date
         expect( elections ).to eq [@election3, @election4]
       end
@@ -128,22 +128,22 @@ describe Election, type: :model do
 
   describe '.current' do
     it 'should return the next election that ends on or after the date today' do
-      allow(Date).to receive(:today).and_return(Date.parse('2013-12-11'))
+      allow(Time).to receive_message_chain(:zone, :today, :to_date).and_return(Date.parse('2013-12-11'))
       expect( Election.current ).to eq @election3
     end
     it 'should return the last election if the date today is after any of the elections' do
-      allow(Date).to receive(:today).and_return(Date.parse('2111-11-11'))
+      allow(Time).to receive_message_chain(:zone, :today, :to_date).and_return(Date.parse('2111-11-11'))
       expect( Election.current ).to eq @election4
     end
   end
 
   describe '.current_for_level' do
     it 'should return the next election that ends on or after the date today' do
-      allow(Date).to receive(:today).and_return(Date.parse('2013-12-11'))
+      allow(Time).to receive_message_chain(:zone, :today, :to_date).and_return(Date.parse('2013-12-11'))
       expect( Election.current_for_level(@level_with_lots) ).to eq @election3
     end
     it 'should return the last election if the date today is after any of the elections' do
-      allow(Date).to receive(:today).and_return(Date.parse('2111-11-11'))
+      allow(Time).to receive_message_chain(:zone, :today, :to_date).and_return(Date.parse('2111-11-11'))
       expect( Election.current_for_level(@level_with_lots) ).to eq @election4
     end
   end

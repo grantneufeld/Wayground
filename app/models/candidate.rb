@@ -8,7 +8,7 @@ class Candidate < ApplicationRecord
   belongs_to :ballot
   belongs_to :person
   belongs_to :party
-  belongs_to :submitter, class_name: "User"
+  belongs_to :submitter, class_name: 'User'
   has_many :contacts, as: :item
   has_many :external_links, as: :item
 
@@ -19,9 +19,7 @@ class Candidate < ApplicationRecord
 
   scope :by_name, -> { order(:name) }
   scope :by_vote_count, -> { order('vote_count DESC, name') }
-  scope :from_param, ->(param) do
-    where(filename: param)
-  end
+  scope :from_param, ->(param) { where(filename: param) }
   scope :running, -> { where('quit_on IS NULL OR quit_on > NOW()') }
   scope :not_running, -> { where('quit_on IS NOT NULL AND quit_on <= NOW()') }
 
@@ -38,5 +36,4 @@ class Candidate < ApplicationRecord
   def items_for_path
     ballot.items_for_path << self
   end
-
 end

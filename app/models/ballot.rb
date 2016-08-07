@@ -29,17 +29,13 @@ class Ballot < ApplicationRecord
   def validate_office_level
     if office && election
       unless office.level == election.level
-        errors.add(:office, "must be for the same level of government as the election")
+        errors.add(:office, 'must be for the same level of government as the election')
       end
     end
   end
 
   def to_param
-    if office
-      office.filename
-    else
-      nil
-    end
+    office.filename if office
   end
 
   def running_for
@@ -59,5 +55,4 @@ class Ballot < ApplicationRecord
   def items_for_path
     election.items_for_path << self
   end
-
 end

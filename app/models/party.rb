@@ -19,9 +19,7 @@ class Party < ApplicationRecord
   validates :url, http_url: true, allow_blank: true
   validate :validate_dates
 
-  scope :from_param, ->(param) do
-    where(filename: param)
-  end
+  scope :from_param, ->(param) { where(filename: param) }
   scope :by_name, -> { order(:name) }
 
   def validate_dates
@@ -32,15 +30,18 @@ class Party < ApplicationRecord
       errors.add(:ended_on, 'must be on or after the established and registered dates')
     end
   end
+
   def registered_before_established?
     registered_on? && established_on? && registered_on < established_on
   end
+
   def established_or_registered_after_ended?
-    ended_on? && ((established_on? && ended_on < established_on) || (registered_on? && ended_on < registered_on))
+    ended_on? && (
+      (established_on? && ended_on < established_on) || (registered_on? && ended_on < registered_on)
+    )
   end
 
   def to_param
     filename
   end
-
 end

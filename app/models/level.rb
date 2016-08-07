@@ -18,9 +18,7 @@ class Level < ApplicationRecord
   validates :name, presence: true
   validates :url, http_url: true, allow_blank: true
 
-  scope :from_param, ->(param) do
-    where(filename: param)
-  end
+  scope :from_param, ->(param) { where(filename: param) }
 
   # Returns an array of parents for this level, starting with the top parent.
   def parent_chain
@@ -42,5 +40,4 @@ class Level < ApplicationRecord
   def items_for_path
     [self]
   end
-
 end
