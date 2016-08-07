@@ -34,7 +34,7 @@ describe PartiesController, type: :controller do
   describe 'GET index' do
     before(:each) do
       allow(@level).to receive(:parties).and_return([party])
-      get :index, level_id: @level.to_param
+      get :index, params: { level_id: @level.to_param }
     end
     it 'assigns all parties as @parties' do
       expect( assigns(:parties) ).to eq([party])
@@ -52,7 +52,7 @@ describe PartiesController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: party.filename, level_id: @level.to_param
+      get :show, params: { id: party.filename, level_id: @level.to_param }
     end
     it 'assigns the requested party as @party' do
       expect( assigns(:party) ).to eq(party)
@@ -70,18 +70,18 @@ describe PartiesController, type: :controller do
 
   describe 'GET new' do
     it 'fails if not logged in' do
-      get :new, level_id: @level.to_param
+      get :new, params: { level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      get :new, level_id: @level.to_param
+      get :new, params: { level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :new, level_id: @level.to_param
+        get :new, params: { level_id: @level.to_param }
       end
       it 'assigns a new party as @party' do
         expect( assigns(:party) ).to be_a_new(Party)
@@ -100,12 +100,12 @@ describe PartiesController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, party: valid_attributes, level_id: @level.to_param
+      post :create, params: { party: valid_attributes, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, party: valid_attributes, level_id: @level.to_param
+      post :create, params: { party: valid_attributes, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
@@ -115,12 +115,12 @@ describe PartiesController, type: :controller do
       end
       it 'creates a new Party' do
         expect {
-          post :create, party: valid_attributes, level_id: @level.to_param
+          post :create, params: { party: valid_attributes, level_id: @level.to_param }
         }.to change(Party, :count).by(1)
       end
       context '...' do
         before(:each) do
-          post :create, party: valid_attributes, level_id: @level.to_param
+          post :create, params: { party: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns a newly created party as @party' do
           expect( assigns(:party) ).to be_a(Party)
@@ -143,7 +143,7 @@ describe PartiesController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Party).to receive(:save).and_return(false)
-        post :create, party: {}, level_id: @level.to_param
+        post :create, params: { party: {}, level_id: @level.to_param }
       end
       it 'assigns a newly created but unsaved party as @party' do
         expect( assigns(:party) ).to be_a_new(Party)
@@ -160,14 +160,14 @@ describe PartiesController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: party.filename, level_id: @level.to_param
+      get :edit, params: { id: party.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: party.filename, level_id: @level.to_param
+        get :edit, params: { id: party.filename, level_id: @level.to_param }
       end
       it 'assigns the requested party as @party' do
         expect( assigns(:party) ).to eq(party)
@@ -187,7 +187,7 @@ describe PartiesController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: party.filename, party: {}, level_id: @level.to_param
+      patch :update, params: { id: party.filename, party: {}, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
@@ -196,13 +196,13 @@ describe PartiesController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
         expect_any_instance_of(Party).to receive(:update).with(expected_params).and_return(true)
-        patch :update, id: party.filename, party: { 'name' => 'valid params' }, level_id: @level.to_param
+        patch :update, params: { id: party.filename, party: { 'name' => 'valid params' }, level_id: @level.to_param }
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
           allow_any_instance_of(Party).to receive(:update).and_return(true)
-          patch :update, id: party.filename, party: valid_attributes, level_id: @level.to_param
+          patch :update, params: { id: party.filename, party: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns the requested party as @party' do
           expect( assigns(:party) ).to eq(party)
@@ -229,7 +229,7 @@ describe PartiesController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow(party).to receive(:save).and_return(false)
         allow_any_instance_of(Level).to receive_message_chain(:parties, :from_param).and_return([party])
-        patch :update, id: party.filename, party: {}, level_id: @level.to_param
+        patch :update, params: { id: party.filename, party: {}, level_id: @level.to_param }
       end
       it 'assigns the party as @party' do
         expect( assigns(:party) ).to eq(party)
@@ -246,7 +246,7 @@ describe PartiesController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: party.filename, level_id: @level.to_param
+      get :delete, params: { id: party.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -254,7 +254,7 @@ describe PartiesController, type: :controller do
         set_logged_in_admin
         allow(party).to receive(:destroy).and_return(party)
         allow_any_instance_of(Level).to receive_message_chain(:parties, :from_param).and_return([party])
-        get :delete, id: party.filename, level_id: @level.to_param
+        get :delete, params: { id: party.filename, level_id: @level.to_param }
       end
       it 'shows a form for confirming deletion of an party' do
         expect( assigns(:party) ).to eq party
@@ -274,7 +274,7 @@ describe PartiesController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: party.filename, level_id: @level.to_param
+      delete :destroy, params: { id: party.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -285,11 +285,11 @@ describe PartiesController, type: :controller do
       it 'destroys the requested party' do
         party
         expect {
-          delete :destroy, id: party.filename, level_id: @level.to_param
+          delete :destroy, params: { id: party.filename, level_id: @level.to_param }
         }.to change(Party, :count).by(-1)
       end
       it 'redirects to the parties list' do
-        delete :destroy, id: party.filename, level_id: @level.to_param
+        delete :destroy, params: { id: party.filename, level_id: @level.to_param }
         expect( response ).to redirect_to(level_parties_url(@level))
       end
     end

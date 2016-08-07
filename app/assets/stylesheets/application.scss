@@ -20,7 +20,7 @@
 @import "gallery.scss";
 @import "tags.scss";
 @media screen {
-  @import "democracy-screen.css.scss";
+  @import "democracy-screen.scss";
 }
 @media print {
   @import "wayground-print.scss";
@@ -29,4 +29,4 @@
   @import "aural.scss";
 }
 
-@import "democracy.css.scss";
+@import "democracy.scss";

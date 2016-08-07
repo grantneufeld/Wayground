@@ -6,7 +6,9 @@ describe OfficesController, type: :controller do
   before(:all) do
     Level.delete_all
     Office.delete_all
-    @level = FactoryGirl.create(:level, name: 'Offices Controller Level', filename: 'offices_controller_level')
+    @level = FactoryGirl.create(
+      :level, name: 'Offices Controller Level', filename: 'offices_controller_level'
+    )
     @office = FactoryGirl.create(:office, level: @level)
     Authority.delete_all
     @user_admin = User.first || FactoryGirl.create(:user, name: 'Admin User')
@@ -31,7 +33,7 @@ describe OfficesController, type: :controller do
   describe 'GET index' do
     before(:each) do
       allow(@level).to receive(:offices).and_return([office])
-      get :index, level_id: @level.to_param
+      get :index, params: { level_id: @level.to_param }
     end
     it 'assigns all offices as @offices' do
       expect( assigns(:offices) ).to eq([office])
@@ -49,7 +51,7 @@ describe OfficesController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: office.filename, level_id: @level.to_param
+      get :show, params: { id: office.filename, level_id: @level.to_param }
     end
     it 'assigns the requested office as @office' do
       expect( assigns(:office) ).to eq(office)
@@ -67,18 +69,18 @@ describe OfficesController, type: :controller do
 
   describe 'GET new' do
     it 'fails if not logged in' do
-      get :new, level_id: @level.to_param
+      get :new, params: { level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      get :new, level_id: @level.to_param
+      get :new, params: { level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :new, level_id: @level.to_param
+        get :new, params: { level_id: @level.to_param }
       end
       it 'assigns a new office as @office' do
         expect( assigns(:office) ).to be_a_new(Office)
@@ -96,7 +98,7 @@ describe OfficesController, type: :controller do
     context 'with a previous_id' do
       it 'assigns the previous as @office.previous' do
         set_logged_in_admin
-        get :new, previous_id: office.filename, level_id: @level.to_param
+        get :new, params: { previous_id: office.filename, level_id: @level.to_param }
         expect( assigns(:office).previous ).to eq office
       end
     end
@@ -104,12 +106,12 @@ describe OfficesController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, office: valid_attributes, level_id: @level.to_param
+      post :create, params: { office: valid_attributes, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, office: valid_attributes, level_id: @level.to_param
+      post :create, params: { office: valid_attributes, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
@@ -117,13 +119,13 @@ describe OfficesController, type: :controller do
       it 'creates a new Office' do
         set_logged_in_admin
         expect {
-          post :create, office: valid_attributes, level_id: @level.to_param
+          post :create, params: { office: valid_attributes, level_id: @level.to_param }
         }.to change(Office, :count).by(1)
       end
       context 'without a previous_id' do
         before(:each) do
           set_logged_in_admin
-          post :create, office: valid_attributes, level_id: @level.to_param
+          post :create, params: { office: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns a newly created office as @office' do
           expect( assigns(:office) ).to be_a(Office)
@@ -142,7 +144,10 @@ describe OfficesController, type: :controller do
       context 'with a previous_id' do
         it 'assigns the previous to the new office' do
           set_logged_in_admin
-          post :create, office: valid_attributes, previous_id: office.filename, level_id: @level.to_param
+          post(
+            :create,
+            params: { office: valid_attributes, previous_id: office.filename, level_id: @level.to_param }
+          )
           expect( assigns(:office).previous ).to eq office
         end
       end
@@ -153,7 +158,7 @@ describe OfficesController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Office).to receive(:save).and_return(false)
-        post :create, office: {}, level_id: @level.to_param
+        post :create, params: { office: {}, level_id: @level.to_param }
       end
       it 'assigns a newly created but unsaved office as @office' do
         expect( assigns(:office) ).to be_a_new(Office)
@@ -170,14 +175,14 @@ describe OfficesController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: office.filename, level_id: @level.to_param
+      get :edit, params: { id: office.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: office.filename, level_id: @level.to_param
+        get :edit, params: { id: office.filename, level_id: @level.to_param }
       end
       it 'assigns the requested office as @office' do
         expect( assigns(:office) ).to eq(office)
@@ -197,7 +202,7 @@ describe OfficesController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: office.filename, office: {}, level_id: @level.to_param
+      patch :update, params: { id: office.filename, office: {}, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
@@ -206,12 +211,15 @@ describe OfficesController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
         expect_any_instance_of(Office).to receive(:update).with(expected_params).and_return(true)
-        patch :update, id: office.filename, office: { 'name' => 'valid params' }, level_id: @level.to_param
+        patch(
+          :update,
+          params: { id: office.filename, office: { 'name' => 'valid params' }, level_id: @level.to_param }
+        )
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          patch :update, id: office.filename, office: valid_attributes, level_id: @level.to_param
+          patch :update, params: { id: office.filename, office: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns the requested office as @office' do
           expect( assigns(:office) ).to eq(office)
@@ -233,7 +241,7 @@ describe OfficesController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Office).to receive(:save).and_return(false)
-        patch :update, id: office.filename, office: {}, level_id: @level.to_param
+        patch :update, params: { id: office.filename, office: {}, level_id: @level.to_param }
       end
       it 'assigns the office as @office' do
         expect( assigns(:office) ).to eq(office)
@@ -250,13 +258,13 @@ describe OfficesController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: office.filename, level_id: @level.to_param
+      get :delete, params: { id: office.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :delete, id: office.filename, level_id: @level.to_param
+        get :delete, params: { id: office.filename, level_id: @level.to_param }
       end
       it 'shows a form for confirming deletion of an office' do
         expect( assigns(:office) ).to eq office
@@ -276,7 +284,7 @@ describe OfficesController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: office.filename, level_id: @level.to_param
+      delete :destroy, params: { id: office.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -287,11 +295,11 @@ describe OfficesController, type: :controller do
       it 'destroys the requested office' do
         office
         expect {
-          delete :destroy, id: office.filename, level_id: @level.to_param
+          delete :destroy, params: { id: office.filename, level_id: @level.to_param }
         }.to change(Office, :count).by(-1)
       end
       it 'redirects to the offices list' do
-        delete :destroy, id: office.filename, level_id: @level.to_param
+        delete :destroy, params: { id: office.filename, level_id: @level.to_param }
         expect( response ).to redirect_to(level_offices_url(@level))
       end
     end

@@ -58,7 +58,7 @@ describe CandidatesController, type: :controller do
   describe 'GET index' do
     before(:each) do
       allow(@ballot).to receive(:candidates).and_return([candidate])
-      get :index, level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+      get :index, params: { level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param }
     end
     it 'assigns all candidates as @candidates' do
       expect( assigns(:candidates) ).to eq([candidate])
@@ -76,8 +76,13 @@ describe CandidatesController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: candidate.to_param, level_id: @level.to_param,
-        election_id: @election.to_param, ballot_id: @ballot.to_param
+      get(
+        :show,
+        params: {
+          id: candidate.to_param, level_id: @level.to_param,
+          election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
     end
     it 'assigns the requested candidate as @candidate' do
       expect( assigns(:candidate) ).to eq(candidate)
@@ -95,18 +100,18 @@ describe CandidatesController, type: :controller do
 
   describe 'GET new' do
     it 'fails if not logged in' do
-      get :new, level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+      get :new, params: { level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      get :new, level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+      get :new, params: { level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :new, level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+        get :new, params: { level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param }
       end
       it 'assigns a CandidateForm as @candidate_form' do
         expect( assigns(:candidate_form) ).to be_a(Wayground::Democracy::CandidateForm)
@@ -125,14 +130,24 @@ describe CandidatesController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, wayground_democracy_candidate_form: valid_attributes, level_id: @level.to_param,
-        election_id: @election.to_param, ballot_id: @ballot.to_param
+      post(
+        :create,
+        params: {
+          wayground_democracy_candidate_form: valid_attributes, level_id: @level.to_param,
+          election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, wayground_democracy_candidate_form: valid_attributes, level_id: @level.to_param,
-        election_id: @election.to_param, ballot_id: @ballot.to_param
+      post(
+        :create,
+        params: {
+          wayground_democracy_candidate_form: valid_attributes, level_id: @level.to_param,
+          election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
 
@@ -148,17 +163,25 @@ describe CandidatesController, type: :controller do
       end
       it 'creates a new Candidate' do
         expect {
-          post(:create, wayground_democracy_candidate_form: valid_attributes, person_id: @person.to_param,
-            level_id: @level.to_param, election_id: @election.to_param,
-            ballot_id: @ballot.to_param, office_id: @create_office.to_param
+          post(
+            :create,
+            params: {
+              wayground_democracy_candidate_form: valid_attributes, person_id: @person.to_param,
+              level_id: @level.to_param, election_id: @election.to_param,
+              ballot_id: @ballot.to_param, office_id: @create_office.to_param
+            }
           )
         }.to change(Candidate, :count).by(1)
       end
       context '...' do
         before(:each) do
-          post(:create, wayground_democracy_candidate_form: valid_attributes, person_id: @person.to_param,
-            level_id: @level.to_param, election_id: @election.to_param,
-            ballot_id: @ballot.to_param, office_id: @create_office.to_param
+          post(
+            :create,
+            params: {
+              wayground_democracy_candidate_form: valid_attributes, person_id: @person.to_param,
+              level_id: @level.to_param, election_id: @election.to_param,
+              ballot_id: @ballot.to_param, office_id: @create_office.to_param
+            }
           )
         end
         it 'creates a candidate on the CandidateForm' do
@@ -183,8 +206,13 @@ describe CandidatesController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Candidate).to receive(:save).and_return(false)
-        post :create, wayground_democracy_candidate_form: {},
-          level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+        post(
+          :create,
+          params: {
+            wayground_democracy_candidate_form: {}, level_id: @level.to_param,
+            election_id: @election.to_param, ballot_id: @ballot.to_param
+          }
+        )
       end
       it 'assigns a CandidateForm as @candidate_form' do
         expect( assigns(:candidate_form) ).to be_a(Wayground::Democracy::CandidateForm)
@@ -201,16 +229,26 @@ describe CandidatesController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: candidate.to_param, level_id: @level.to_param,
-        election_id: @election.to_param, ballot_id: @ballot.to_param
+      get(
+        :edit,
+        params: {
+          id: candidate.to_param, level_id: @level.to_param,
+          election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: candidate.to_param, level_id: @level.to_param,
-          election_id: @election.to_param, ballot_id: @ballot.to_param
+        get(
+          :edit,
+          params: {
+            id: candidate.to_param, level_id: @level.to_param,
+            election_id: @election.to_param, ballot_id: @ballot.to_param
+          }
+        )
       end
       it 'assigns the requested candidate as @candidate' do
         expect( assigns(:candidate) ).to eq(candidate)
@@ -230,8 +268,13 @@ describe CandidatesController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      put :update, id: candidate.to_param, wayground_democracy_candidate_form: {},
-        level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+      put(
+        :update,
+        params: {
+          id: candidate.to_param, wayground_democracy_candidate_form: {},
+          level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
 
@@ -239,15 +282,24 @@ describe CandidatesController, type: :controller do
       it 'updates the requested candidate' do
         set_logged_in_admin
         expect_any_instance_of(Wayground::Democracy::CandidateForm).to receive(:save).and_return(true)
-        put(:update, id: candidate.to_param, wayground_democracy_candidate_form: { 'these' => 'params' },
-          level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+        put(
+          :update,
+          params: {
+            id: candidate.to_param, wayground_democracy_candidate_form: { 'these' => 'params' },
+            level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+          }
         )
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          put :update, id: candidate.to_param, wayground_democracy_candidate_form: valid_attributes,
-            level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+          put(
+            :update,
+            params: {
+              id: candidate.to_param, wayground_democracy_candidate_form: valid_attributes,
+              level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+            }
+          )
         end
         it 'assigns the requested candidate as @candidate' do
           expect( assigns(:candidate) ).to eq(candidate)
@@ -269,8 +321,13 @@ describe CandidatesController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Candidate).to receive(:save).and_return(false)
-        put :update, id: candidate.to_param, wayground_democracy_candidate_form: {},
-          level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+        put(
+          :update,
+          params: {
+            id: candidate.to_param, wayground_democracy_candidate_form: {},
+            level_id: @level.to_param, election_id: @election.to_param, ballot_id: @ballot.to_param
+          }
+        )
       end
       it 'assigns the candidate as @candidate' do
         expect( assigns(:candidate) ).to eq(candidate)
@@ -287,15 +344,25 @@ describe CandidatesController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: candidate.to_param, level_id: @level.to_param,
-        election_id: @election.to_param, ballot_id: @ballot.to_param
+      get(
+        :delete,
+        params: {
+          id: candidate.to_param, level_id: @level.to_param,
+          election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :delete, id: candidate.to_param, level_id: @level.to_param,
-          election_id: @election.to_param, ballot_id: @ballot.to_param
+        get(
+          :delete,
+          params: {
+            id: candidate.to_param, level_id: @level.to_param,
+            election_id: @election.to_param, ballot_id: @ballot.to_param
+          }
+        )
       end
       it 'shows a form for confirming deletion of an candidate' do
         expect( assigns(:candidate) ).to eq candidate
@@ -315,8 +382,13 @@ describe CandidatesController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: candidate.to_param, level_id: @level.to_param,
-        election_id: @election.to_param, ballot_id: @ballot.to_param
+      delete(
+        :destroy,
+        params: {
+          id: candidate.to_param, level_id: @level.to_param,
+          election_id: @election.to_param, ballot_id: @ballot.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -327,13 +399,23 @@ describe CandidatesController, type: :controller do
       it 'destroys the requested candidate' do
         candidate
         expect {
-          delete :destroy, id: candidate.to_param, level_id: @level.to_param,
-            election_id: @election.to_param, ballot_id: @ballot.to_param
+          delete(
+            :destroy,
+            params: {
+              id: candidate.to_param, level_id: @level.to_param,
+              election_id: @election.to_param, ballot_id: @ballot.to_param
+            }
+          )
         }.to change(Candidate, :count).by(-1)
       end
       it 'redirects to the candidates list' do
-        delete :destroy, id: candidate.to_param, level_id: @level.to_param,
-          election_id: @election.to_param, ballot_id: @ballot.to_param
+        delete(
+          :destroy,
+          params: {
+            id: candidate.to_param, level_id: @level.to_param,
+            election_id: @election.to_param, ballot_id: @ballot.to_param
+          }
+        )
         expect( response ).to redirect_to(level_election_ballot_candidates_url(@level, @election, @ballot))
       end
     end

@@ -47,7 +47,7 @@ describe LevelsController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: level.filename
+      get :show, params: { id: level.filename }
     end
     it 'assigns the requested level as @level' do
       expect( assigns(:level) ).to eq(level)
@@ -94,7 +94,7 @@ describe LevelsController, type: :controller do
     context 'with a parent_id' do
       it 'assigns the parent as @level.parent' do
         set_logged_in_admin
-        get :new, { parent_id: level.filename }
+        get :new, params: { parent_id: level.filename }
         expect( assigns(:level).parent ).to eq level
       end
     end
@@ -102,12 +102,12 @@ describe LevelsController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, level: valid_attributes
+      post :create, params: { level: valid_attributes }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, level: valid_attributes
+      post :create, params: { level: valid_attributes }
       expect( response.status ).to eq 403
     end
 
@@ -115,13 +115,13 @@ describe LevelsController, type: :controller do
       it 'creates a new Level' do
         set_logged_in_admin
         expect {
-          post :create, level: valid_attributes
+          post :create, params: { level: valid_attributes }
         }.to change(Level, :count).by(1)
       end
       context 'without a parent_id' do
         before(:each) do
           set_logged_in_admin
-          post :create, level: valid_attributes
+          post :create, params: { level: valid_attributes }
         end
         it 'assigns a newly created level as @level' do
           expect( assigns(:level) ).to be_a(Level)
@@ -140,7 +140,7 @@ describe LevelsController, type: :controller do
       context 'with a parent_id' do
         it 'assigns the parent to the new level' do
           set_logged_in_admin
-          post :create, { level: valid_attributes, parent_id: level.filename }
+          post :create, params: { level: valid_attributes, parent_id: level.filename }
           expect( assigns(:level).parent ).to eq level
         end
       end
@@ -151,7 +151,7 @@ describe LevelsController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Level).to receive(:save).and_return(false)
-        post :create, level: {}
+        post :create, params: { level: {} }
       end
       it 'assigns a newly created but unsaved level as @level' do
         expect( assigns(:level) ).to be_a_new(Level)
@@ -168,14 +168,14 @@ describe LevelsController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: level.filename
+      get :edit, params: { id: level.filename }
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: level.filename
+        get :edit, params: { id: level.filename }
       end
       it 'assigns the requested level as @level' do
         expect( assigns(:level) ).to eq(level)
@@ -195,7 +195,7 @@ describe LevelsController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: level.filename, level: {}
+      patch :update, params: { id: level.filename, level: {} }
       expect( response.status ).to eq 403
     end
 
@@ -204,12 +204,12 @@ describe LevelsController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
         expect_any_instance_of(Level).to receive(:update).with(expected_params).and_return(true)
-        patch :update, id: level.filename, level: { 'name' => 'valid params' }
+        patch :update, params: { id: level.filename, level: { 'name' => 'valid params' } }
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          patch :update, id: level.filename, level: valid_attributes
+          patch :update, params: { id: level.filename, level: valid_attributes }
         end
         it 'assigns the requested level as @level' do
           expect( assigns(:level) ).to eq(level)
@@ -231,7 +231,7 @@ describe LevelsController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Level).to receive(:save).and_return(false)
-        patch :update, id: level.filename, level: {}
+        patch :update, params: { id: level.filename, level: {} }
       end
       it 'assigns the level as @level' do
         expect( assigns(:level) ).to eq(level)
@@ -248,13 +248,13 @@ describe LevelsController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: level.filename
+      get :delete, params: { id: level.filename }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :delete, id: level.filename
+        get :delete, params: { id: level.filename }
       end
       it 'shows a form for confirming deletion of an level' do
         expect( assigns(:level) ).to eq level
@@ -274,7 +274,7 @@ describe LevelsController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: level.filename
+      delete :destroy, params: { id: level.filename }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -285,11 +285,11 @@ describe LevelsController, type: :controller do
       it 'destroys the requested level' do
         level
         expect {
-          delete :destroy, id: level.filename
+          delete :destroy, params: { id: level.filename }
         }.to change(Level, :count).by(-1)
       end
       it 'redirects to the levels list' do
-        delete :destroy, id: level.filename
+        delete :destroy, params: { id: level.filename }
         expect( response ).to redirect_to(levels_url)
       end
     end

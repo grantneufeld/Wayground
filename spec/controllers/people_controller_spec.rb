@@ -47,7 +47,7 @@ describe PeopleController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: person.filename
+      get :show, params: { id: person.filename }
     end
     it 'assigns the requested person as @person' do
       expect( assigns(:person) ).to eq(person)
@@ -95,12 +95,12 @@ describe PeopleController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, person: valid_attributes
+      post :create, params: { person: valid_attributes }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, person: valid_attributes
+      post :create, params: { person: valid_attributes }
       expect( response.status ).to eq 403
     end
 
@@ -110,12 +110,12 @@ describe PeopleController, type: :controller do
       end
       it 'creates a new Person' do
         expect {
-          post :create, person: valid_attributes
+          post :create, params: { person: valid_attributes }
         }.to change(Person, :count).by(1)
       end
       context '...' do
         before(:each) do
-          post :create, person: valid_attributes
+          post :create, params: { person: valid_attributes }
         end
         it 'assigns a newly created person as @person' do
           expect( assigns(:person) ).to be_a(Person)
@@ -138,7 +138,7 @@ describe PeopleController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Person).to receive(:save).and_return(false)
-        post :create, person: {}
+        post :create, params: { person: {} }
       end
       it 'assigns a newly created but unsaved person as @person' do
         expect( assigns(:person) ).to be_a_new(Person)
@@ -155,14 +155,14 @@ describe PeopleController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: person.filename
+      get :edit, params: { id: person.filename }
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: person.filename
+        get :edit, params: { id: person.filename }
       end
       it 'assigns the requested person as @person' do
         expect( assigns(:person) ).to eq(person)
@@ -182,7 +182,7 @@ describe PeopleController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: person.filename, person: {}
+      patch :update, params: { id: person.filename, person: {} }
       expect( response.status ).to eq 403
     end
 
@@ -191,12 +191,12 @@ describe PeopleController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('fullname' => 'valid params').permit!
         expect_any_instance_of(Person).to receive(:update).with(expected_params).and_return(true)
-        patch :update, id: person.filename, person: { 'fullname' => 'valid params' }
+        patch :update, params: { id: person.filename, person: { 'fullname' => 'valid params' } }
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          patch :update, id: person.filename, person: valid_attributes
+          patch :update, params: { id: person.filename, person: valid_attributes }
         end
         it 'assigns the requested person as @person' do
           expect( assigns(:person) ).to eq(person)
@@ -218,7 +218,7 @@ describe PeopleController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Person).to receive(:save).and_return(false)
-        patch :update, id: person.filename, person: {}
+        patch :update, params: { id: person.filename, person: {} }
       end
       it 'assigns the person as @person' do
         expect( assigns(:person) ).to eq(person)
@@ -235,13 +235,13 @@ describe PeopleController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: person.filename
+      get :delete, params: { id: person.filename }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :delete, id: person.filename
+        get :delete, params: { id: person.filename }
       end
       it 'shows a form for confirming deletion of an person' do
         expect( assigns(:person) ).to eq person
@@ -261,7 +261,7 @@ describe PeopleController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: person.filename
+      delete :destroy, params: { id: person.filename }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -272,11 +272,11 @@ describe PeopleController, type: :controller do
       it 'destroys the requested person' do
         person
         expect {
-          delete :destroy, id: person.filename
+          delete :destroy, params: { id: person.filename }
         }.to change(Person, :count).by(-1)
       end
       it 'redirects to the people list' do
-        delete :destroy, id: person.filename
+        delete :destroy, params: { id: person.filename }
         expect( response ).to redirect_to(people_url)
       end
     end

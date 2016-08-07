@@ -7,7 +7,9 @@ describe ElectionsController, type: :controller do
   before(:all) do
     Level.delete_all
     Election.delete_all
-    @level = FactoryGirl.create(:level, name: 'Elections Controller Level', filename: 'elections_controller_level')
+    @level = FactoryGirl.create(
+      :level, name: 'Elections Controller Level', filename: 'elections_controller_level'
+    )
     @election = FactoryGirl.create(:election, level: @level)
     Authority.delete_all
     @user_admin = User.first || FactoryGirl.create(:user, name: 'Admin User')
@@ -34,7 +36,7 @@ describe ElectionsController, type: :controller do
   describe 'GET index' do
     before(:each) do
       allow(@level).to receive(:elections).and_return([election])
-      get :index, level_id: @level.to_param
+      get :index, params: { level_id: @level.to_param }
     end
     it 'assigns all elections as @elections' do
       expect( assigns(:elections) ).to eq([election])
@@ -52,7 +54,7 @@ describe ElectionsController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: election.filename, level_id: @level.to_param
+      get :show, params: { id: election.filename, level_id: @level.to_param }
     end
     it 'assigns the requested election as @election' do
       expect( assigns(:election) ).to eq(election)
@@ -70,18 +72,18 @@ describe ElectionsController, type: :controller do
 
   describe 'GET new' do
     it 'fails if not logged in' do
-      get :new, level_id: @level.to_param
+      get :new, params: { level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      get :new, level_id: @level.to_param
+      get :new, params: { level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :new, level_id: @level.to_param
+        get :new, params: { level_id: @level.to_param }
       end
       it 'assigns a new election as @election' do
         expect( assigns(:election) ).to be_a_new(Election)
@@ -100,12 +102,12 @@ describe ElectionsController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, election: valid_attributes, level_id: @level.to_param
+      post :create, params: { election: valid_attributes, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, election: valid_attributes, level_id: @level.to_param
+      post :create, params: { election: valid_attributes, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
@@ -115,12 +117,12 @@ describe ElectionsController, type: :controller do
       end
       it 'creates a new Election' do
         expect {
-          post :create, election: valid_attributes, level_id: @level.to_param
+          post :create, params: { election: valid_attributes, level_id: @level.to_param }
         }.to change(Election, :count).by(1)
       end
       context '...' do
         before(:each) do
-          post :create, election: valid_attributes, level_id: @level.to_param
+          post :create, params: { election: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns a newly created election as @election' do
           expect( assigns(:election) ).to be_a(Election)
@@ -143,7 +145,7 @@ describe ElectionsController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Election).to receive(:save).and_return(false)
-        post :create, election: {}, level_id: @level.to_param
+        post :create, params: { election: {}, level_id: @level.to_param }
       end
       it 'assigns a newly created but unsaved election as @election' do
         expect( assigns(:election) ).to be_a_new(Election)
@@ -160,14 +162,14 @@ describe ElectionsController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: election.filename, level_id: @level.to_param
+      get :edit, params: { id: election.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: election.filename, level_id: @level.to_param
+        get :edit, params: { id: election.filename, level_id: @level.to_param }
       end
       it 'assigns the requested election as @election' do
         expect( assigns(:election) ).to eq(election)
@@ -187,7 +189,7 @@ describe ElectionsController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: election.filename, election: {}, level_id: @level.to_param
+      patch :update, params: { id: election.filename, election: {}, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
 
@@ -196,12 +198,19 @@ describe ElectionsController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
         expect_any_instance_of(Election).to receive(:update).with(expected_params).and_return(true)
-        patch :update, id: election.filename, election: { 'name' => 'valid params' }, level_id: @level.to_param
+        patch(
+          :update,
+          params: {
+            id: election.filename, election: { 'name' => 'valid params' }, level_id: @level.to_param
+          }
+        )
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          patch :update, id: election.filename, election: valid_attributes, level_id: @level.to_param
+          patch(
+            :update, params: { id: election.filename, election: valid_attributes, level_id: @level.to_param }
+          )
         end
         it 'assigns the requested election as @election' do
           expect( assigns(:election) ).to eq(election)
@@ -223,7 +232,7 @@ describe ElectionsController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Election).to receive(:save).and_return(false)
-        patch :update, id: election.filename, election: {}, level_id: @level.to_param
+        patch :update, params: { id: election.filename, election: {}, level_id: @level.to_param }
       end
       it 'assigns the election as @election' do
         expect( assigns(:election) ).to eq(election)
@@ -240,13 +249,13 @@ describe ElectionsController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: election.filename, level_id: @level.to_param
+      get :delete, params: { id: election.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :delete, id: election.filename, level_id: @level.to_param
+        get :delete, params: { id: election.filename, level_id: @level.to_param }
       end
       it 'shows a form for confirming deletion of an election' do
         expect( assigns(:election) ).to eq election
@@ -266,7 +275,7 @@ describe ElectionsController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: election.filename, level_id: @level.to_param
+      delete :destroy, params: { id: election.filename, level_id: @level.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -277,11 +286,11 @@ describe ElectionsController, type: :controller do
       it 'destroys the requested election' do
         election
         expect {
-          delete :destroy, id: election.filename, level_id: @level.to_param
+          delete :destroy, params: { id: election.filename, level_id: @level.to_param }
         }.to change(Election, :count).by(-1)
       end
       it 'redirects to the elections list' do
-        delete :destroy, id: election.filename, level_id: @level.to_param
+        delete :destroy, params: { id: election.filename, level_id: @level.to_param }
         expect( response ).to redirect_to(level_elections_url(@level))
       end
     end
@@ -290,13 +299,13 @@ describe ElectionsController, type: :controller do
   describe 'GET ballot_maker' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :ballot_maker, id: election.filename, level_id: @level.to_param
+      get :ballot_maker, params: { id: election.filename, level_id: @level.to_param }
       expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :ballot_maker, id: election.filename, level_id: @level.to_param
+        get :ballot_maker, params: { id: election.filename, level_id: @level.to_param }
       end
       it 'assigns the election' do
         expect(assigns(:election)).to eq election
@@ -316,7 +325,7 @@ describe ElectionsController, type: :controller do
   describe 'POST generate_ballots' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      post :generate_ballots, id: election.filename, level_id: @level.to_param
+      post :generate_ballots, params: { id: election.filename, level_id: @level.to_param }
       expect(response.status).to eq 403
     end
     context 'with authority' do
@@ -324,15 +333,15 @@ describe ElectionsController, type: :controller do
         set_logged_in_admin
       end
       it 'assigns the election' do
-        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        post :generate_ballots, params: { id: election.filename, level_id: @level.to_param }
         expect(assigns(:election)).to eq election
       end
       it 'assigns a title to the page_metadata' do
-        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        post :generate_ballots, params: { id: election.filename, level_id: @level.to_param }
         expect(assigns(:page_metadata).title).to match /Generate Ballots/
       end
       it 'assigns the site section' do
-        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        post :generate_ballots, params: { id: election.filename, level_id: @level.to_param }
         expect(assigns(:site_section)).to eq :elections
       end
       it 'uses the date parameters' do
@@ -341,7 +350,13 @@ describe ElectionsController, type: :controller do
         expect(Wayground::Democracy::ElectionBuilder).to receive(:new).with(
           election: election, term_start_on: '2001-02-03'.to_date, term_end_on: '2002-03-04'.to_date
         ).and_return(builder)
-        post :generate_ballots, id: election.filename, level_id: @level.to_param, term_start_on: '2001-02-03', term_end_on: '2002-03-04'
+        post(
+          :generate_ballots,
+          params: {
+            id: election.filename, level_id: @level.to_param,
+            term_start_on: '2001-02-03', term_end_on: '2002-03-04'
+          }
+        )
       end
       it 'assigns the ballots' do
         ballot = Ballot.new
@@ -349,11 +364,11 @@ describe ElectionsController, type: :controller do
         builder = Wayground::Democracy::ElectionBuilder.new(election: election)
         allow(builder).to receive(:generate_ballots).and_return(ballots)
         allow(Wayground::Democracy::ElectionBuilder).to receive(:new).and_return(builder)
-        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        post :generate_ballots, params: { id: election.filename, level_id: @level.to_param }
         expect(assigns(:ballots)).to eq [ballot]
       end
       it 'renders the ‘generate_ballots’ template' do
-        post :generate_ballots, id: election.filename, level_id: @level.to_param
+        post :generate_ballots, params: { id: election.filename, level_id: @level.to_param }
         expect(response).to render_template('elections/generate_ballots')
       end
     end

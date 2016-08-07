@@ -54,7 +54,7 @@ describe BallotsController, type: :controller do
   describe 'GET index' do
     before(:each) do
       allow(@election).to receive(:ballots).and_return([ballot])
-      get :index, level_id: @level.to_param, election_id: @election.to_param
+      get :index, params: { level_id: @level.to_param, election_id: @election.to_param }
     end
     it 'assigns all ballots as @ballots' do
       expect( assigns(:ballots) ).to eq([ballot])
@@ -72,7 +72,7 @@ describe BallotsController, type: :controller do
 
   describe 'GET show' do
     before(:each) do
-      get :show, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+      get :show, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
     end
     it 'assigns the requested ballot as @ballot' do
       expect( assigns(:ballot) ).to eq(ballot)
@@ -93,18 +93,18 @@ describe BallotsController, type: :controller do
 
   describe 'GET new' do
     it 'fails if not logged in' do
-      get :new, level_id: @level.to_param, election_id: @election.to_param
+      get :new, params: { level_id: @level.to_param, election_id: @election.to_param }
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      get :new, level_id: @level.to_param, election_id: @election.to_param
+      get :new, params: { level_id: @level.to_param, election_id: @election.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :new, level_id: @level.to_param, election_id: @election.to_param
+        get :new, params: { level_id: @level.to_param, election_id: @election.to_param }
       end
       it 'assigns a new ballot as @ballot' do
         expect( assigns(:ballot) ).to be_a_new(Ballot)
@@ -123,12 +123,18 @@ describe BallotsController, type: :controller do
 
   describe 'POST create' do
     it 'fails if not logged in' do
-      post :create, ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param
+      post(
+        :create,
+        params: { ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param }
+      )
       expect( response.status ).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
-      post :create, ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param
+      post(
+        :create,
+        params: { ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param }
+      )
       expect( response.status ).to eq 403
     end
 
@@ -144,15 +150,23 @@ describe BallotsController, type: :controller do
       end
       it 'creates a new Ballot' do
         expect {
-          post(:create, ballot: valid_attributes,
-            level_id: @level.to_param, election_id: @election.to_param, office_id: @create_office.to_param
+          post(
+            :create,
+            params: {
+              ballot: valid_attributes, level_id: @level.to_param,
+              election_id: @election.to_param, office_id: @create_office.to_param
+            }
           )
         }.to change(Ballot, :count).by(1)
       end
       context '...' do
         before(:each) do
-          post(:create, ballot: valid_attributes,
-            level_id: @level.to_param, election_id: @election.to_param, office_id: @create_office.to_param
+          post(
+            :create,
+            params: {
+              ballot: valid_attributes, level_id: @level.to_param,
+              election_id: @election.to_param, office_id: @create_office.to_param
+            }
           )
         end
         it 'assigns a newly created ballot as @ballot' do
@@ -176,7 +190,7 @@ describe BallotsController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Ballot).to receive(:save).and_return(false)
-        post :create, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
+        post :create, params: { ballot: {}, level_id: @level.to_param, election_id: @election.to_param }
       end
       it 'assigns a newly created but unsaved ballot as @ballot' do
         expect( assigns(:ballot) ).to be_a_new(Ballot)
@@ -193,14 +207,14 @@ describe BallotsController, type: :controller do
   describe 'GET edit' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :edit, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+      get :edit, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
       expect( response.status ).to eq 403
     end
 
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :edit, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+        get :edit, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
       end
       it 'assigns the requested ballot as @ballot' do
         expect( assigns(:ballot) ).to eq(ballot)
@@ -220,8 +234,13 @@ describe BallotsController, type: :controller do
   describe 'PUT update' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      patch :update, id: ballot.to_param, ballot: {},
-        level_id: @level.to_param, election_id: @election.to_param
+      patch(
+        :update,
+        params: {
+          id: ballot.to_param, ballot: {},
+          level_id: @level.to_param, election_id: @election.to_param
+        }
+      )
       expect( response.status ).to eq 403
     end
 
@@ -230,14 +249,24 @@ describe BallotsController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('description' => 'valid params').permit!
         expect_any_instance_of(Ballot).to receive(:update).with(expected_params).and_return(true)
-        patch :update, id: ballot.to_param, ballot: { 'description' => 'valid params' },
-          level_id: @level.to_param, election_id: @election.to_param
+        patch(
+          :update,
+          params: {
+            id: ballot.to_param, ballot: { 'description' => 'valid params' },
+            level_id: @level.to_param, election_id: @election.to_param
+          }
+        )
       end
       context 'with attributes' do
         before(:each) do
           set_logged_in_admin
-          patch :update, id: ballot.to_param, ballot: valid_attributes,
-            level_id: @level.to_param, election_id: @election.to_param
+          patch(
+            :update,
+            params: {
+              id: ballot.to_param, ballot: valid_attributes,
+              level_id: @level.to_param, election_id: @election.to_param
+            }
+          )
         end
         it 'assigns the requested ballot as @ballot' do
           expect( assigns(:ballot) ).to eq(ballot)
@@ -259,8 +288,12 @@ describe BallotsController, type: :controller do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Ballot).to receive(:save).and_return(false)
-        patch :update, id: ballot.to_param, ballot: {},
-          level_id: @level.to_param, election_id: @election.to_param
+        patch(
+          :update,
+          params: {
+            id: ballot.to_param, ballot: {}, level_id: @level.to_param, election_id: @election.to_param
+          }
+        )
       end
       it 'assigns the ballot as @ballot' do
         expect( assigns(:ballot) ).to eq(ballot)
@@ -277,13 +310,16 @@ describe BallotsController, type: :controller do
   describe 'GET delete' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      get :delete, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+      get :delete, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
       expect( response.status ).to eq 403
     end
     context 'with authority' do
       before(:each) do
         set_logged_in_admin
-        get :delete, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+        get(
+          :delete,
+          params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
+        )
       end
       it 'shows a form for confirming deletion of an ballot' do
         expect( assigns(:ballot) ).to eq ballot
@@ -303,7 +339,9 @@ describe BallotsController, type: :controller do
   describe 'DELETE destroy' do
     it 'requires the user to have authority' do
       set_logged_in_user
-      delete :destroy, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+      delete(
+        :destroy, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
+      )
       expect( response.status ).to eq 403
     end
     context 'with authority' do
@@ -314,11 +352,17 @@ describe BallotsController, type: :controller do
       it 'destroys the requested ballot' do
         ballot
         expect {
-          delete :destroy, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+          delete(
+            :destroy,
+            params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
+          )
         }.to change(Ballot, :count).by(-1)
       end
       it 'redirects to the ballots list' do
-        delete :destroy, id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param
+        delete(
+          :destroy,
+          params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
+        )
         expect( response ).to redirect_to(level_election_ballots_url(@level, @election))
       end
     end
