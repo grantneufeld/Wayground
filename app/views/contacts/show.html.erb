@@ -11,7 +11,7 @@ content_for(:head) do
 <%
 end
 
-set_main_section_class 'vcard'
+main_section_class 'vcard'
 
 %>
 <h1><%
@@ -30,17 +30,17 @@ end
 
 
 if user.present?
-  if contact.has_authority_for_user_to?(user, :can_update)
+  if contact.authority_for_user_to?(user, :can_update)
     add_submenu_item(title: "Edit",
       path: ([:edit] + contact.items_for_path)
     )
   end
-  if contact.has_authority_for_user_to?(user, :can_delete)
+  if contact.authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete', path: ([:delete] + contact.items_for_path),
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
-  if contact.has_authority_for_user_to?(@user, :can_create)
+  if contact.authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'Add Contact',
       path: ([:new] + item.items_for_path) << :contact
     )

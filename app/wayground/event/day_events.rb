@@ -25,7 +25,10 @@ module Wayground
       def all
         (events + multiday).sort_by! do |event|
           time = event.start_at
-          Time.new(2000, 1, 1, time.hour, time.min, time.sec)
+          timezone = event.timezone
+          timezone = ActiveSupport::TimeZone.new(timezone) if timezone
+          timezone ||= Time.zone
+          Time.new(2000, 1, 1, time.hour, time.min, time.sec, timezone.utc_offset)
         end
       end
 
@@ -37,15 +40,13 @@ module Wayground
       private
 
       def determine_carryover_events
-        events.select {|event| event.is_multi_day }
+        events.select(&:multi_day?)
       end
 
       def determine_carryover_multiday
-        multiday.select {|event| event.end_at.to_date > @day }
+        multiday.select { |event| event.end_at.to_date > @day }
       end
-
     end
 
   end
 end
-

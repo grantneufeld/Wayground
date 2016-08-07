@@ -194,7 +194,8 @@ describe PartiesController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested party' do
         set_logged_in_admin
-        expect_any_instance_of(Party).to receive(:update).with('name' => 'valid params').and_return(true)
+        expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
+        expect_any_instance_of(Party).to receive(:update).with(expected_params).and_return(true)
         patch :update, id: party.filename, party: { 'name' => 'valid params' }, level_id: @level.to_param
       end
       context 'with attributes' do

@@ -3,7 +3,7 @@ require 'authority_controlled'
 
 # Represents an individual person.
 # May have multiple occurrences of being a candidate or elected representative.
-class Person < ActiveRecord::Base
+class Person < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :user

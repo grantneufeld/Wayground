@@ -2,7 +2,7 @@ require 'active_record'
 require 'http_url_validator'
 
 # Meta data and collection container for a set of Image Variants.
-class Image < ActiveRecord::Base
+class Image < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Content', item_authority_flag_field: :always_viewable
 
   has_many :image_variants, dependent: :delete_all
@@ -13,8 +13,7 @@ class Image < ActiveRecord::Base
   validates_associated :image_variants
 
   # prefer originals over other formats; then prefer larger over smaller dimensions
-  def get_best_variant
+  def best_variant
     image_variants.originals.largest.first
   end
-
 end

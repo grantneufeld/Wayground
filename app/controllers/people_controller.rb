@@ -78,8 +78,8 @@ class PeopleController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@person && @person.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Person.authority_area, action))
+      (@person && @person.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Person.authority_area, action))
     )
       unauthorized
     end

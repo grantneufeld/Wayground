@@ -1,3 +1,4 @@
+# A token for a user — for things like email confirmation.
 class CreateUserTokens < ActiveRecord::Migration
   def change
     create_table :user_tokens do |t|

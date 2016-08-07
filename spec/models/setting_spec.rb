@@ -77,9 +77,9 @@ describe Setting, type: :model do
     end
   end
 
-  describe ".set_defaults" do
+  describe ".assign_missing_with_defaults" do
     it "should set setting values when no pre-existing settings for the keys" do
-      Setting.set_defaults({'abc'=>'123', 'def'=>'456'})
+      Setting.assign_missing_with_defaults({'abc'=>'123', 'def'=>'456'})
       expect(Setting['abc']).to eq '123'
       expect(Setting['def']).to eq '456'
     end
@@ -87,7 +87,7 @@ describe Setting, type: :model do
       key = 'pre-existing'
       original_value = 'already exists'
       Setting.create(:key => key, :value => original_value)
-      Setting.set_defaults({key=>'should not change'})
+      Setting.assign_missing_with_defaults({key=>'should not change'})
       expect(Setting[key]).to eq original_value
     end
   end

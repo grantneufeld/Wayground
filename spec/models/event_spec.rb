@@ -355,7 +355,7 @@ describe Event, type: :model do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
       event.user = @user_normal
       # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
+      expect( event.user.authority_for_area('Calendar', :is_owner) ).to be_falsey
       # actual tests:
       event.approve_if_authority
       expect( event.is_approved ).to be_falsey
@@ -365,7 +365,7 @@ describe Event, type: :model do
       event.user = FactoryGirl.create(:user)
       authority = FactoryGirl.create(:owner_authority, area: 'Calendar', user: event.user)
       # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_truthy
+      expect( event.user.authority_for_area('Calendar', :is_owner) ).to be_truthy
       # actual tests:
       event.approve_if_authority
       expect( event.is_approved ).to be_truthy
@@ -375,7 +375,7 @@ describe Event, type: :model do
       event.is_approved = true
       event.user = @user_normal
       # TESTING:
-      expect( event.user.has_authority_for_area('Calendar', :is_owner) ).to be_falsey
+      expect( event.user.authority_for_area('Calendar', :is_owner) ).to be_falsey
       # actual tests:
       event.approve_if_authority
       expect( event.is_approved ).to be_truthy
@@ -787,23 +787,23 @@ describe Event, type: :model do
     end
   end
 
-  describe "#is_multi_day" do
+  describe "#multi_day?" do
     let(:event) { $event = Event.new(start_at: '2004-05-06 7:08am') }
     context "with no end time" do
       it "should return false" do
-        expect( event.is_multi_day ).to be_falsey
+        expect( event.multi_day? ).to be_falsey
       end
     end
     context "with an end time on the same date as the start time" do
       it "should return false" do
         event.end_at = event.start_at + 1.hour
-        expect( event.is_multi_day ).to be_falsey
+        expect( event.multi_day? ).to be_falsey
       end
     end
     context "with an end time on a later date" do
       it "should return true" do
         event.end_at = event.start_at + 1.week
-        expect( event.is_multi_day ).to be_truthy
+        expect( event.multi_day? ).to be_truthy
       end
     end
   end

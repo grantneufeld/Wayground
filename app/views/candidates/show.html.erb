@@ -75,22 +75,22 @@ if external_links.count > 0
 end
 
 if user.present?
-  if candidate.has_authority_for_user_to?(user, :can_update)
+  if candidate.authority_for_user_to?(user, :can_update)
     add_submenu_item(title: "Edit",
       path: edit_level_election_ballot_candidate_path(level, election, ballot, candidate)
     )
   end
-  if candidate.has_authority_for_user_to?(user, :can_delete)
+  if candidate.authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete', path: [:delete, level, election, ballot, candidate],
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
-  if candidate.has_authority_for_user_to?(@user, :can_create)
+  if candidate.authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'Add Contact',
       path: new_level_election_ballot_candidate_contact_path(level, election, ballot, candidate)
     )
   end
-  if candidate.has_authority_for_user_to?(@user, :can_create)
+  if candidate.authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'Add Link',
       path: new_level_election_ballot_candidate_external_link_path(level, election, ballot, candidate)
     )

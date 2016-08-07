@@ -3,7 +3,7 @@ require 'authority_controlled'
 require 'http_url_validator'
 
 # Represents an election at a level of government.
-class Ballot < ActiveRecord::Base
+class Ballot < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :election

@@ -284,7 +284,7 @@ describe User, type: :model do
     it "should create an authority" do
       user = FactoryGirl.create(:user)
       user.set_authority_on_area('global', :can_update)
-      expect(user.has_authority_for_area('global', :can_update)).to be_truthy
+      expect(user.authority_for_area('global', :can_update)).to be_truthy
     end
     it "should ammend an existing authority" do
       user = FactoryGirl.create(:user)
@@ -302,7 +302,7 @@ describe User, type: :model do
     it "should create an authority" do
       Authority.where(user_id: @user.id).delete_all
       @user.set_authority_on_item(@item, :can_update)
-      expect(@item.has_authority_for_user_to?(@user, :can_update)).to be_truthy
+      expect(@item.authority_for_user_to?(@user, :can_update)).to be_truthy
     end
     it "should ammend an existing authority" do
       authority = FactoryGirl.create(:authority, user: @user, item: @item, can_view: true)
@@ -314,7 +314,7 @@ describe User, type: :model do
     end
   end
 
-  describe "#has_authority_for_area" do
+  describe "#authority_for_area" do
     before(:all) do
       Authority.where(user_id: @user.id).delete_all
       @auth_content = FactoryGirl.create(:authority, {user: @user, area: 'Content', is_owner: true})
@@ -322,21 +322,21 @@ describe User, type: :model do
       @auth_global = FactoryGirl.create(:authority, {user: @user, area: 'global', can_view: true})
     end
     it "should default to the view authority for the area" do
-      expect(@user.has_authority_for_area('global')).to eq @auth_global
+      expect(@user.authority_for_area('global')).to eq @auth_global
     end
     it "should return the authority for the area if the action is set to nil" do
-      expect(@user.has_authority_for_area('User', nil)).to eq @auth_user
+      expect(@user.authority_for_area('User', nil)).to eq @auth_user
     end
     it "should return the authority for the area if the user is the owner" do
-      expect(@user.has_authority_for_area('Content', :is_owner)).to eq @auth_content
-      expect(@user.has_authority_for_area('Content', :can_update)).to eq @auth_content
+      expect(@user.authority_for_area('Content', :is_owner)).to eq @auth_content
+      expect(@user.authority_for_area('Content', :can_update)).to eq @auth_content
     end
     it "should return the authority for the area if it authorizes the action" do
-      expect(@user.has_authority_for_area('User', :can_update)).to eq @auth_user
-      expect(@user.has_authority_for_area('global', :can_update)).to be_nil
+      expect(@user.authority_for_area('User', :can_update)).to eq @auth_user
+      expect(@user.authority_for_area('global', :can_update)).to be_nil
     end
     it "should return the global authority if there isn’t one for the specified area" do
-      expect(@user.has_authority_for_area('User', :can_view)).to eq @auth_global
+      expect(@user.authority_for_area('User', :can_view)).to eq @auth_global
     end
   end
 

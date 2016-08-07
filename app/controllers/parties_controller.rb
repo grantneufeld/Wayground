@@ -87,8 +87,8 @@ class PartiesController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@party && @party.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Party.authority_area, action))
+      (@party && @party.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Party.authority_area, action))
     )
       unauthorized
     end

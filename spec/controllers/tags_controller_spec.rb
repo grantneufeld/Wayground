@@ -17,7 +17,7 @@ describe TagsController, type: :controller do
 
   describe 'GET "index"' do
     it 'assigns tags_with_counts as a hash keyed on the tag string with the count of that tag as the value' do
-      get 'index'
+      get :index
       expect(assigns(:tags_with_counts)).to eq({ 'firsttag' => 1, 'secondtag' => 1 })
     end
   end
@@ -26,7 +26,7 @@ describe TagsController, type: :controller do
     it 'assigns tag as the requested Tag' do
       tag = Tag.new(tag: 'abc')
       allow(Tag).to receive(:where).with(tag: 'abc').and_return([tag])
-      get 'tag', tag: 'abc'
+      get :tag, params: { tag: 'abc' }
       expect(assigns(:tag)).to eq(tag)
     end
   end

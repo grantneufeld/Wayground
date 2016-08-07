@@ -20,7 +20,7 @@ end
 <%
 end
 
-if user && item.has_authority_for_user_to?(user, :can_create)
+if user && item.authority_for_user_to?(user, :can_create)
   add_submenu_item(title: "Add Contact for #{item.descriptor}",
     path: ([:new] + item.items_for_path) << :contact
   )

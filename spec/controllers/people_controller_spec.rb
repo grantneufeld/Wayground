@@ -189,7 +189,8 @@ describe PeopleController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested person' do
         set_logged_in_admin
-        expect_any_instance_of(Person).to receive(:update).with('fullname' => 'valid params').and_return(true)
+        expected_params = ActionController::Parameters.new('fullname' => 'valid params').permit!
+        expect_any_instance_of(Person).to receive(:update).with(expected_params).and_return(true)
         patch :update, id: person.filename, person: { 'fullname' => 'valid params' }
       end
       context 'with attributes' do

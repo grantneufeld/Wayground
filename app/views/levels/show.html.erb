@@ -2,7 +2,7 @@
 level ||= @level
 user ||= @user
 parents = level.parent_chain.reverse
-user_can_create = user.present? && user.has_authority_for_area(Level.authority_area, :can_create)
+user_can_create = user.present? && user.authority_for_area(Level.authority_area, :can_create)
 
 %><h1><%= level.name %><%
 parents.each do |parent|
@@ -76,30 +76,30 @@ end
 
 
 if user
-  if level.has_authority_for_user_to?(user, :can_update)
+  if level.authority_for_user_to?(user, :can_update)
     add_submenu_item(title: 'Edit Level', path: edit_level_path(level))
   end
-  if level.has_authority_for_user_to?(user, :can_delete)
+  if level.authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete Level',
       path: [:delete, level],
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' }
     )
   end
-  if user.has_authority_for_area(Level.authority_area, :can_create)
+  if user.authority_for_area(Level.authority_area, :can_create)
     add_submenu_item(title: 'New Level', path: new_level_path)
     add_submenu_item(title: 'New Sub-Level', path: new_level_with_parent_levels_path(level))
   end
-  if user.has_authority_for_area(Office.authority_area, :can_create)
+  if user.authority_for_area(Office.authority_area, :can_create)
     add_submenu_item(title: 'Add Office',
       path: new_level_office_path(level)
     )
   end
-  if user.has_authority_for_area(Election.authority_area, :can_create)
+  if user.authority_for_area(Election.authority_area, :can_create)
     add_submenu_item(title: 'Add Election',
       path: new_level_election_path(level)
     )
   end
-  if user.has_authority_for_area(Party.authority_area, :can_create)
+  if user.authority_for_area(Party.authority_area, :can_create)
     add_submenu_item(title: 'Add Party',
       path: new_level_party_path(level)
     )

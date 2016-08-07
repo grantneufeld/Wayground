@@ -228,7 +228,8 @@ describe BallotsController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested ballot' do
         set_logged_in_admin
-        expect_any_instance_of(Ballot).to receive(:update).with('description' => 'valid params').and_return(true)
+        expected_params = ActionController::Parameters.new('description' => 'valid params').permit!
+        expect_any_instance_of(Ballot).to receive(:update).with(expected_params).and_return(true)
         patch :update, id: ballot.to_param, ballot: { 'description' => 'valid params' },
           level_id: @level.to_param, election_id: @election.to_param
       end

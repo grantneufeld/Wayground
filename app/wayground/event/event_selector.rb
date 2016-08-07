@@ -9,10 +9,10 @@ module Wayground
 
       # TODO: support pagination of events
 
-      def initialize(parameters={})
-        self.range = parameters[:r] || parameters[:range]
-        self.tag = parameters[:tag]
-        self.user = parameters[:user]
+      def initialize(range: nil, tag: nil, user: nil)
+        self.range = range
+        self.tag = tag
+        self.user = user
       end
 
       def range=(text)
@@ -26,24 +26,20 @@ module Wayground
       end
 
       def user=(user)
-        if user.is_a? User
-          @user = user
-        else
-          @user = nil
-        end
-        @user
+        @user = user.is_a?(User) ? user : nil
       end
 
       def events
-        case range
-        when 'all'
-          selector = ::Event.all
-        when 'past'
-          selector = ::Event.past
-        else
-          selector = ::Event.upcoming
-        end
-        unless user && user.has_authority_for_area(::Event.authority_area, :can_approve)
+        selector =
+          case range
+          when 'all'
+            ::Event.all
+          when 'past'
+            ::Event.past
+          else
+            ::Event.upcoming
+          end
+        unless user && user.authority_for_area(::Event.authority_area, :can_approve)
           selector = selector.approved
         end
         selector = selector.tagged(tag) if tag
@@ -51,18 +47,18 @@ module Wayground
       end
 
       def title
-        case range
-        when 'all'
-          title_text = 'Events'
-        when 'past'
-          title_text = 'Events: Past'
-        else
-          title_text = 'Events: Upcoming'
-        end
+        title_text =
+          case range
+          when 'all'
+            'Events'
+          when 'past'
+            'Events: Past'
+          else
+            'Events: Upcoming'
+          end
         title_text += " (tagged “#{tag}”)" if tag
         title_text
       end
-
     end
 
   end

@@ -211,7 +211,8 @@ describe ContactsController, type: :controller do
         set_logged_in_admin
         # This specifies that the Contact receives the :update message
         # with whatever params are submitted in the request.
-        expect_any_instance_of(Contact).to receive(:update).with('name' => 'valid params')
+        expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
+        expect_any_instance_of(Contact).to receive(:update).with(expected_params)
         patch :update, person_id: person.to_param, id: contact.id, contact: { 'name' => 'valid params' }
       end
 

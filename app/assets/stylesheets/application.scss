@@ -1,7 +1,7 @@
 //= require_self
 @charset "UTF-8";
-@import "helpers.css.scss";
-@import "icons.css.scss";
+@import "helpers.scss";
+@import "icons.scss";
 
 // development
 // Uncomment this line to get a grid highlighting key break points for page width:
@@ -13,20 +13,20 @@
 //@media all and (min-width:641px) {html{background-color:#996;}}
 //@media all and (min-width:1025px) {html{background-color:#969;}}
 
-@import "common.css.scss";
-@import "columns.css.scss";
-@import "events.css.scss";
-@import "calendar.css.scss";
-@import "gallery.css.scss";
-@import "tags.css.scss";
+@import "common.scss";
+@import "columns.scss";
+@import "events.scss";
+@import "calendar.scss";
+@import "gallery.scss";
+@import "tags.scss";
 @media screen {
   @import "democracy-screen.css.scss";
 }
 @media print {
-  @import "wayground-print.css.scss";
+  @import "wayground-print.scss";
 }
 @media aural {
-  @import "aural.css.scss";
+  @import "aural.scss";
 }
 
 @import "democracy.css.scss";

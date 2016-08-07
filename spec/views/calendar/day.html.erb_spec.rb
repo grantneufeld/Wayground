@@ -103,7 +103,7 @@ describe 'calendar/day.html.erb', type: :view do
 
     context "with update permissions" do
       it "should show the action menu with the events" do
-        allow(@event1).to receive(:has_authority_for_user_to?).and_return(true)
+        allow(@event1).to receive(:authority_for_user_to?).and_return(true)
         allow(@event1).to receive(:is_approved?).and_return(false)
         render
         expect(rendered).to match(
@@ -115,7 +115,7 @@ describe 'calendar/day.html.erb', type: :view do
     end
     context "with no update permission" do
       it "should not show the action menu with the events" do
-        allow(@event1).to receive(:has_authority_for_user_to?).and_return(false)
+        allow(@event1).to receive(:authority_for_user_to?).and_return(false)
         render
         expect( rendered ).not_to match(
           /href="\/events\/123\/edit"|href="\/events\/123\/approve"|href="\/events\/123\/delete"/

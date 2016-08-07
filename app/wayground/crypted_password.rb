@@ -13,13 +13,11 @@ module Wayground
 
     # Checks whether the given password string matches the one that was used
     # to create the crypted password.
-    def ==(pass)
-      BCrypt::Password.new(crypted_password.to_s) == pass
+    def ==(other)
+      BCrypt::Password.new(crypted_password.to_s) == other
     end
 
-    def to_s
-      crypted_password.to_s
-    end
+    delegate :to_s, to: :crypted_password
   end
 
 end

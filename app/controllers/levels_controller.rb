@@ -81,8 +81,8 @@ class LevelsController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@level && @level.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Level.authority_area, action))
+      (@level && @level.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Level.authority_area, action))
     )
       unauthorized
     end

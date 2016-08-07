@@ -3,7 +3,7 @@ require 'event_presenter'
 
 event ||= @event
 @versioned_item = event # let the application template know we’re looking at an item with versions
-set_main_section_class 'vevent'
+main_section_class 'vevent'
 
 presenter = EventPresenter.new(view: self, event: event, user: @user)
 
@@ -58,7 +58,7 @@ if event.external_links.count > 0
   end
 end
 
-user_can_update_this_event = @user && event.has_authority_for_user_to?(@user, :can_update)
+user_can_update_this_event = @user && event.authority_for_user_to?(@user, :can_update)
 if event.tags.count > 0 || user_can_update_this_event
   content_for(:other_sections) do
     %>
@@ -85,10 +85,10 @@ end
 
 
 if @user
-  if event.has_authority_for_user_to?(@user, :can_update)
+  if event.authority_for_user_to?(@user, :can_update)
     add_submenu_item(title: 'Edit', path: edit_event_path(event), attrs: { class: 'edit' })
   end
-  if !(event.is_approved?) && event.has_authority_for_user_to?(@user, :can_approve)
+  if !(event.is_approved?) && event.authority_for_user_to?(@user, :can_approve)
     add_submenu_item(title: 'Approve', path: approve_event_path(event),
       attrs: {
         class: 'approve',
@@ -97,8 +97,8 @@ if @user
       }
     )
   end
-  if event.has_authority_for_user_to?(@user, :can_delete)
-    if event.has_authority_for_user_to?(@user, :can_update)
+  if event.authority_for_user_to?(@user, :can_delete)
+    if event.authority_for_user_to?(@user, :can_update)
       add_submenu_item(title: 'Merge', path: merge_event_path(event),
         attrs: { class: 'merge', title: 'Merge with another existing Event' }
       )
@@ -107,7 +107,7 @@ if @user
       attrs: { class: 'delete', data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
-  if event.has_authority_for_user_to?(@user, :can_create)
+  if event.authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'Add External Link', path: new_event_external_link_path(event),
       attrs: { class: 'new' }
     )
@@ -121,7 +121,7 @@ add_submenu_item(title: 'Calendar Subscription Options',
   path: calendar_subscribe_path, attrs: { class: 'subscribe' }
 )
 
-if @user && @user.has_authority_for_area(Event.authority_area, :can_create)
+if @user && @user.authority_for_area(Event.authority_area, :can_create)
   add_submenu_item(title: 'New Event', path: new_event_path, attrs: { class: 'new' })
 end
 -%>

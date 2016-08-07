@@ -56,15 +56,15 @@ end
 
 if user.present?
   actions = []
-  if party.has_authority_for_user_to?(user, :can_update)
+  if party.authority_for_user_to?(user, :can_update)
     actions << link_to('Edit', edit_level_party_path(level, party), class: 'action')
   end
-  if party.has_authority_for_user_to?(user, :can_delete)
+  if party.authority_for_user_to?(user, :can_delete)
     actions << link_to('Delete',
       [:delete, level, party], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
     )
   end
-  if user.has_authority_for_area(Party.authority_area, :can_create)
+  if user.authority_for_area(Party.authority_area, :can_create)
     actions << link_to('New Party', new_level_party_path(level), class: 'action')
   end
   if actions.size > 0

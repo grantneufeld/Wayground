@@ -1,15 +1,15 @@
 # Access Documents.
 class DocumentsController < ApplicationController
-  before_action :set_document, except: [:index, :new, :create]
-  before_action :requires_view_authority, only: [:download, :show]
-  before_action :requires_create_authority, only: [:new, :create]
-  before_action :requires_update_authority, only: [:edit, :update]
-  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_document, except: %i(index new create)
+  before_action :requires_view_authority, only: %i(download show)
+  before_action :requires_create_authority, only: %i(new create)
+  before_action :requires_update_authority, only: %i(edit update)
+  before_action :requires_delete_authority, only: %i(delete destroy)
   before_action :set_section
 
   def download
     @document.assign_headers(response)
-    render :text => @document.data
+    render body: @document.data
   end
 
   def index
@@ -34,7 +34,7 @@ class DocumentsController < ApplicationController
       redirect_to(@document, notice: 'Document was successfully created.')
     else
       page_metadata(title: 'New Document')
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -47,7 +47,7 @@ class DocumentsController < ApplicationController
       redirect_to(@document, notice: 'Document was successfully updated.')
     else
       page_metadata(title: "Edit Document #{@document.filename}")
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
@@ -64,22 +64,25 @@ class DocumentsController < ApplicationController
 
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
-    unless (
-      (@document && @document.has_authority_for_user_to?(current_user, action)) ||
-      (current_user && current_user.has_authority_for_area(Document.authority_area, action))
-    )
+    user = current_user
+    document_allowed = @document && @document.authority_for_user_to?(user, action)
+    unless document_allowed || (user && user.authority_for_area(Document.authority_area, action))
       raise Wayground::AccessDenied
     end
   end
+
   def requires_view_authority
     requires_authority(:can_view)
   end
+
   def requires_create_authority
     requires_authority(:can_create)
   end
+
   def requires_update_authority
     requires_authority(:can_update)
   end
+
   def requires_delete_authority
     requires_authority(:can_delete)
   end

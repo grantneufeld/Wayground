@@ -9,7 +9,7 @@ require 'metadata_presenter'
 # @site_section: symbol for the active section of the website. E.g.: :events
 # @site_breadcrumbs: An array of hashes {text: ?, url: ?} describing the hierarchical navigation parentage of the current item.
 # page_submenu_items: An array of hashes {title: ?, path: ?} to use to create links in the submenu for the page. Use the `add_submenu_item` method to add items.
-# @page_main_class: a name to include in the class attribute of the id="main" wrapper around the page-specific content. Set this using the `set_main_section_class` helper.
+# @page_main_class: a name to include in the class attribute of the id="main" wrapper around the page-specific content. Set this using the `main_section_class` helper.
 
 # Blocks - all are optional. Called with ‘content_for :block_name do … end’.
 #
@@ -58,12 +58,12 @@ src:url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.eot');
 src:local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.eot') format('embedded-opentype'), url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.woff') format('woff'), url('/fonts/UbuntuCondensed/UbuntuCondensed-Regular.ttf') format('truetype');
 }
 </style>
+<%= csrf_meta_tags %>
 <%= stylesheet_link_tag 'application', media: 'all' %>
 <%= javascript_include_tag 'application' %>
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
-<%= csrf_meta_tags %>
 <%= metadata_presenter.present_metatags -%>
 <%= yield :head -%>
 </head><body>

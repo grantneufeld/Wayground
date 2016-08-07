@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'event/event_selector'
 require 'event'
 require 'user'
@@ -6,17 +6,17 @@ require 'user'
 describe Wayground::Event::EventSelector do
 
   describe "initialization" do
-    context 'with an “r” parameter' do
-      it 'should accept “all” as the “r” parameter' do
-        selector = Wayground::Event::EventSelector.new({ r: 'all' })
+    context 'with a “range” parameter' do
+      it 'should accept “all” as the “range” parameter' do
+        selector = Wayground::Event::EventSelector.new(range: 'all')
         expect(selector.range).to eq 'all'
       end
-      it 'should accept “past” as the “r” parameter' do
-        selector = Wayground::Event::EventSelector.new({ r: 'all' })
+      it 'should accept “past” as the “range” parameter' do
+        selector = Wayground::Event::EventSelector.new(range: 'all')
         expect(selector.range).to eq 'all'
       end
       it 'should default to “upcoming” for the range value' do
-        selector = Wayground::Event::EventSelector.new({ r: nil })
+        selector = Wayground::Event::EventSelector.new(range: nil)
         expect(selector.range).to eq 'upcoming'
       end
     end
@@ -51,13 +51,13 @@ describe Wayground::Event::EventSelector do
   describe '#events' do
     context 'with “all” range' do
       it 'should select all events that are approved' do
-        selector = Wayground::Event::EventSelector.new({ r: 'all' })
+        selector = Wayground::Event::EventSelector.new(range: 'all')
         expect(selector.events).to eq Event.all.approved
       end
     end
     context 'with “past” range' do
       it 'should select all past events that are approved' do
-        selector = Wayground::Event::EventSelector.new({ r: 'past' })
+        selector = Wayground::Event::EventSelector.new(range: 'past')
         expect(selector.events).to eq Event.past.approved
       end
     end
@@ -85,13 +85,13 @@ describe Wayground::Event::EventSelector do
   describe '#title' do
     context 'with “all” range' do
       it 'should just be “Events”' do
-        selector = Wayground::Event::EventSelector.new({ r: 'all' })
+        selector = Wayground::Event::EventSelector.new(range: 'all')
         expect(selector.title).to eq 'Events'
       end
     end
     context 'with “past” range' do
       it 'should be “Events: Past”' do
-        selector = Wayground::Event::EventSelector.new({ r: 'past' })
+        selector = Wayground::Event::EventSelector.new(range: 'past')
         expect(selector.title).to eq 'Events: Past'
       end
     end

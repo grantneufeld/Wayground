@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'calendar_month_presenter'
 require 'event'
 require 'event/day_events'
@@ -7,80 +7,115 @@ require_relative 'view_double'
 describe CalendarMonthPresenter do
 
   let(:view) { $view = ViewDouble.new }
+  let(:year) { 2016 }
+  let(:month) { 1 }
+  let(:time) { Time.zone.parse("#{year}-#{month}-02 03:04") }
+  let(:event) { $event = Event.new(start_at: time) }
+  let(:events) { [event] }
+  let(:user) { $user = User.new }
+  let(:minimum_params) { $minimum_params = { view: view, year: year, month: month } }
+  let(:presenter) { $presenter = CalendarMonthPresenter.new(minimum_params) }
 
   describe "initialization" do
-    it "should accept a view parameter" do
-      presenter = CalendarMonthPresenter.new(view: :view, events: [])
-      expect( presenter.view ).to eq :view
+    context 'with minimum required params' do
+      it 'should take a view parameter' do
+        expect(CalendarMonthPresenter.new(minimum_params).view).to eq view
+      end
+      it 'should take a year parameter' do
+        expect(CalendarMonthPresenter.new(minimum_params).year).to eq year
+      end
+      it 'should take a month parameter' do
+        expect(CalendarMonthPresenter.new(minimum_params).month).to eq month
+      end
+      context 'with an events parameter' do
+        it 'should take an events parameter' do
+          expect(
+            CalendarMonthPresenter.new(minimum_params.merge(events: events)).events_by_date.events_by_date
+          ).to eq(time.to_date => [event])
+        end
+      end
+      context 'with a user parameter' do
+        it 'should take a user parameter' do
+          expect(CalendarMonthPresenter.new(minimum_params.merge(user: user)).user).to eq user
+        end
+      end
     end
-    it "should accept a month parameter" do
-      presenter = CalendarMonthPresenter.new(month: 12, events: [])
-      expect( presenter.month ).to eq 12
+    context 'without a view parameter' do
+      it 'should throw an ArgumentError' do
+        args = minimum_params.delete(:view)
+        expect { CalendarMonthPresenter.new(args) }.to raise_error(ArgumentError)
+      end
     end
-    it "should accept a year parameter" do
-      presenter = CalendarMonthPresenter.new(year: 2002, events: [])
-      expect( presenter.year ).to eq 2002
+    context 'without a year parameter' do
+      it 'should throw an ArgumentError' do
+        args = minimum_params.delete(:year)
+        expect { CalendarMonthPresenter.new(args) }.to raise_error(ArgumentError)
+      end
     end
-    it "should accept a user parameter" do
-      presenter = CalendarMonthPresenter.new(user: :user, events: [])
-      expect( presenter.user ).to eq :user
-    end
-    it "should accept an events parameter and turn it into an EventsByDate" do
-      time = Time.zone.parse('2000-01-02 03:04')
-      event = Event.new(start_at: time)
-      presenter = CalendarMonthPresenter.new(events: [event])
-      expect( presenter.events_by_date[time.to_date] ).to eq([event])
+    context 'without a month parameter' do
+      it 'should throw an ArgumentError' do
+        args = minimum_params.delete(:month)
+        expect { CalendarMonthPresenter.new(args) }.to raise_error(ArgumentError)
+      end
     end
   end
 
   describe "#weeks" do
-    it "should handle February in a leap year correctly" do
-      start_date = Date.new(2004, 2, 1)
-      end_date = Date.new(2004, 3, 6)
-      # offset with a nil at the start so d[1] is feb 1
-      d = [nil] + (start_date..end_date).to_a
-      expected_weeks = [
-        [d[1], d[2], d[3], d[4], d[5], d[6], d[7]],
-        [d[8], d[9], d[10], d[11], d[12], d[13], d[14]],
-        [d[15], d[16], d[17], d[18], d[19], d[20], d[21]],
-        [d[22], d[23], d[24], d[25], d[26], d[27], d[28]],
-        [d[29], d[30], d[31], d[32], d[33], d[34], d[35]]
-      ]
-      presenter = CalendarMonthPresenter.new(month: 2, year: 2004, events: [])
-      expect( presenter.weeks ).to eq expected_weeks
+    let(:month) { 2 }
+    context 'in a leap year' do
+      let(:year) { 2004 }
+      it 'should handle February in a leap year correctly' do
+        start_date = Date.new(year, 2, 1)
+        end_date = Date.new(year, 3, 6)
+        # offset with a nil at the start so d[1] is feb 1
+        d = [nil] + (start_date..end_date).to_a
+        expected_weeks = [
+          [d[1], d[2], d[3], d[4], d[5], d[6], d[7]],
+          [d[8], d[9], d[10], d[11], d[12], d[13], d[14]],
+          [d[15], d[16], d[17], d[18], d[19], d[20], d[21]],
+          [d[22], d[23], d[24], d[25], d[26], d[27], d[28]],
+          [d[29], d[30], d[31], d[32], d[33], d[34], d[35]]
+        ]
+        expect(presenter.weeks).to eq expected_weeks
+      end
     end
-    it "should handle February in a non-leap year correctly" do
-      start_date = Date.new(2010, 1, 31)
-      end_date = Date.new(2010, 3, 6)
-      d = (start_date..end_date).to_a
-      expected_weeks = [
-        [d[0], d[1], d[2], d[3], d[4], d[5], d[6]],
-        [d[7], d[8], d[9], d[10], d[11], d[12], d[13]],
-        [d[14], d[15], d[16], d[17], d[18], d[19], d[20]],
-        [d[21], d[22], d[23], d[24], d[25], d[26], d[27]],
-        [d[28], d[29], d[30], d[31], d[32], d[33], d[34]]
-      ]
-      presenter = CalendarMonthPresenter.new(month: 2, year: 2010, events: [])
-      expect( presenter.weeks ).to eq expected_weeks
+    context 'in a non-leap year' do
+      let(:year) { 2010 }
+      it 'should handle February in a non-leap year correctly' do
+        start_date = Date.new(year, 1, 31)
+        end_date = Date.new(year, 3, 6)
+        d = (start_date..end_date).to_a
+        expected_weeks = [
+          [d[0], d[1], d[2], d[3], d[4], d[5], d[6]],
+          [d[7], d[8], d[9], d[10], d[11], d[12], d[13]],
+          [d[14], d[15], d[16], d[17], d[18], d[19], d[20]],
+          [d[21], d[22], d[23], d[24], d[25], d[26], d[27]],
+          [d[28], d[29], d[30], d[31], d[32], d[33], d[34]]
+        ]
+        expect(presenter.weeks).to eq expected_weeks
+      end
     end
-    it "should handle when February 1 is a Sunday in a non-leap year correctly" do
-      start_date = Date.new(2009, 2, 1)
-      end_date = Date.new(2009, 2, 28)
-      # offset with a nil at the start so d[1] is feb 1
-      d = [nil] + (start_date..end_date).to_a
-      expected_weeks = [
-        [d[1], d[2], d[3], d[4], d[5], d[6], d[7]],
-        [d[8], d[9], d[10], d[11], d[12], d[13], d[14]],
-        [d[15], d[16], d[17], d[18], d[19], d[20], d[21]],
-        [d[22], d[23], d[24], d[25], d[26], d[27], d[28]]
-      ]
-      presenter = CalendarMonthPresenter.new(month: 2, year: 2009, events: [])
-      expect( presenter.weeks ).to eq expected_weeks
+    context 'in a non-leap year where February starts on a Sunday' do
+      let(:year) { 2009 }
+      it 'should handle when February 1 is a Sunday in a non-leap year correctly' do
+        start_date = Date.new(year, 2, 1)
+        end_date = Date.new(year, 2, 28)
+        # offset with a nil at the start so d[1] is feb 1
+        d = [nil] + (start_date..end_date).to_a
+        expected_weeks = [
+          [d[1], d[2], d[3], d[4], d[5], d[6], d[7]],
+          [d[8], d[9], d[10], d[11], d[12], d[13], d[14]],
+          [d[15], d[16], d[17], d[18], d[19], d[20], d[21]],
+          [d[22], d[23], d[24], d[25], d[26], d[27], d[28]]
+        ]
+        expect(presenter.weeks).to eq expected_weeks
+      end
     end
   end
 
   describe "#present_weeks" do
-    let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, year: 2013, month: 3, events: []) }
+    let(:year) { 2013 }
+    let(:month) { 3 }
     it "should call through to present_week 6 times" do
       expect(presenter).to receive(:present_week).exactly(6).times.and_return('present_week'.html_safe)
       expect( presenter.present_weeks ).to match /(?:present_week){6}/
@@ -92,10 +127,11 @@ describe CalendarMonthPresenter do
   end
 
   describe "#present_week" do
-    let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, events: []) }
     before(:all) do
       @week = ((Date.parse('2013-02-24'))..(Date.parse('2013-03-02'))).to_a
     end
+    let(:year) { 2013 }
+    let(:month) { 3 }
     it "should wrap the result in a tr element" do
       allow(presenter).to receive(:present_day).and_return('present_day'.html_safe)
       expect( presenter.present_week(@week) ).to match /\A<tr>.*<\/tr>[\r\n]*\z/
@@ -111,7 +147,8 @@ describe CalendarMonthPresenter do
   end
 
   describe "#present_day" do
-    let(:presenter) { $presenter = CalendarMonthPresenter.new(view: view, month: 8, events: []) }
+    let(:year) { 2006 }
+    let(:month) { 8 }
     context "in the presenter’s month" do
       before(:all) do
         @day = Date.parse '2006-08-14'
@@ -146,7 +183,7 @@ describe CalendarMonthPresenter do
 
   describe "#present_day_elements" do
     it "should call through to present_day_num and present_day_content" do
-      presenter = CalendarMonthPresenter.new(view: view, events: [])
+      presenter = CalendarMonthPresenter.new(view: view, year: 2011, month: 11, events: [])
       allow(presenter).to receive(:present_day_num).with(:day).and_return('present_day_num')
       allow(presenter).to receive(:present_day_content).with(:day).and_return('present_day_content')
       expect( presenter.present_day_elements(:day) ).to eq 'present_day_numpresent_day_content'
@@ -156,19 +193,18 @@ describe CalendarMonthPresenter do
   describe "#present_day_num" do
     context "with events" do
       before(:all) do
-        @day = Date.parse '2007-09-27'
+        @day = Time.zone.parse('2007-09-27').to_date
       end
-      before(:each) do
-        @presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2007, month: 9, events: events)
-      end
-      let(:result) { @presenter.present_day_num(@day) }
-      let(:events) { [] }
+      let(:year) { 2007 }
+      let(:month) { 9 }
+      let(:result) { presenter.present_day_num(@day) }
       context 'with an event on the day' do
         before(:each) do
           allow(Event).to receive(:earliest_date).and_return(@day)
           allow(Event).to receive(:last_date).and_return(@day)
         end
         let(:events) { [Event.new(start_at: Time.zone.parse('2007-09-27 1pm'))] }
+        let(:presenter) { CalendarMonthPresenter.new(minimum_params.merge(events: events)) }
         it 'should not include the empty class in the anchor' do
           expect(result).not_to match(/ class="(?:|[^"]* )empty(?:| [^"]*)"/)
         end
@@ -269,7 +305,7 @@ describe CalendarMonthPresenter do
     end
     context "with no events on the day" do
       before(:all) do
-        presenter = CalendarMonthPresenter.new(year: 1987, month: 2, events: [])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 1987, month: 2, events: [])
         @result = presenter.present_day_content(Date.parse('1987-02-21'))
       end
       it "should return an empty string" do
@@ -285,7 +321,7 @@ describe CalendarMonthPresenter do
     context "with an event" do
       before(:all) do
         @event = Event.new(start_at: Time.zone.parse('2013-04-17 1:23pm'))
-        presenter = CalendarMonthPresenter.new(year: 2013, month: 4, events: [@event])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2013, month: 4, events: [@event])
         @day = Date.parse '2013-04-17'
         @result = presenter.get_day_events(@day)
       end
@@ -306,7 +342,7 @@ describe CalendarMonthPresenter do
           start_at: Time.zone.parse('2003-01-02 3pm'), end_at: Time.zone.parse('2003-01-03 4pm')
         )
         @e4 = Event.new(start_at: Time.zone.parse('2003-01-03 4pm'))
-        presenter = CalendarMonthPresenter.new(year: 2003, month: 1, events: [@e1, @e2, @e3, @e4])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2003, month: 1, events: [@e1, @e2, @e3, @e4])
         @first_day_events = presenter.get_day_events(Date.parse('2003-01-01'))
         @second_day_events = presenter.get_day_events(Date.parse('2003-01-02'))
         @third_day_events = presenter.get_day_events(Date.parse('2003-01-03'))
@@ -341,8 +377,11 @@ describe CalendarMonthPresenter do
   describe "#present_day_events_count" do
     context "with events" do
       before(:all) do
-        presenter = CalendarMonthPresenter.new(events: [])
-        events = [Event.new, Event.new]
+        events = [
+          Event.new(start_at: Time.zone.parse('2001-02-03 12:00')),
+          Event.new(start_at: Time.zone.parse('2001-02-04 12:00'))
+        ]
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2001, month: 2, events: events)
         @result = presenter.present_day_events_count(events)
       end
       it "should present the count wrapped in a paragraph" do
@@ -354,15 +393,15 @@ describe CalendarMonthPresenter do
     end
     context "with a single event" do
       it "should present the count in singular form" do
-        presenter = CalendarMonthPresenter.new(events: [])
-        events = [Event.new]
+        events = [Event.new(start_at: Time.zone.parse('2002-03-04 12:00'))]
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2002, month: 3, events: events)
         @result = presenter.present_day_events_count(events)
         expect( @result ).to eq '<p>1 event</p>'
       end
     end
     context "with an empty list" do
       before(:all) do
-        presenter = CalendarMonthPresenter.new(events: [])
+        presenter = CalendarMonthPresenter.new(view: ViewDouble.new, year: 2003, month: 4, events: [])
         @result = presenter.present_day_events_count([])
       end
       it "should return an empty string" do
@@ -377,22 +416,19 @@ describe CalendarMonthPresenter do
   describe "#present_day_events" do
     context "with events" do
       let(:event) { $event = Event.new(start_at: Time.zone.parse('2007-08-09 10:11am')) }
-      let(:event_list) do
-        $event_list = Wayground::Event::DayEvents.new(events: [event])
-      end
-      let(:presenter) { $presenter = CalendarMonthPresenter.new(events: [event]) }
+      let(:event_list) { $event_list = Wayground::Event::DayEvents.new(events: events) }
+      let(:presenter) { $presenter = CalendarMonthPresenter.new(minimum_params.merge(events: events)) }
       it "should wrap the list in a div" do
-        allow(presenter).to receive(:present_day_events_list).with([event]).and_return('events')
+        allow(presenter).to receive(:present_day_events_list).with(events).and_return('events')
         expect( presenter.present_day_events(event_list) ).to eq '<div class="date_content">events</div>'
       end
       it "should return an html safe string" do
-        allow(presenter).to receive(:present_day_events_list).with([event]).and_return('events')
+        allow(presenter).to receive(:present_day_events_list).with(events).and_return('events')
         expect( presenter.present_day_events(event_list).html_safe? ).to be_truthy
       end
     end
     context "with an empty event list" do
-      before(:all) do
-        presenter = CalendarMonthPresenter.new(events: [])
+      before(:each) do
         @result = presenter.present_day_events([])
       end
       it "should return a blank string when no events in the list" do
@@ -406,48 +442,51 @@ describe CalendarMonthPresenter do
 
   describe "#present_day_events_list" do
     it "should return an html_safe string" do
-      presenter = CalendarMonthPresenter.new(view: view, events: [])
       expect( presenter.present_day_events_list([]).html_safe? ).to be_truthy
     end
     it "should return the list wrapped in an unordered list element" do
-      presenter = CalendarMonthPresenter.new(view: view, events: [])
       allow(presenter).to receive(:present_event_in_list).and_return('-'.html_safe)
-      result = presenter.present_day_events_list([Event.new])
+      result = presenter.present_day_events_list(events)
       expect( result ).to match /\A<ul>/
       expect( result ).to match /<\/ul>[\r\n]*\z/
     end
-    it "should include all of the given events" do
-      path = view.event_path(nil)
-      start_at = Time.zone.parse '2011-03-14 6:30pm'
-      events = [
-        Event.new(start_at: start_at, title: 'Event 1'),
-        Event.new(start_at: start_at, title: 'Event 2'),
-        Event.new(start_at: start_at, title: 'Event 3')
-      ]
-      presenter = CalendarMonthPresenter.new(view: view, events: events)
-      result = presenter.present_day_events_list(events)
-      expect( result ).to match(
-        /\A<ul>[\r\n]*
-        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 1<\/a><\/li>[\r\n]+
-        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 2<\/a><\/li>[\r\n]+
-        <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 3<\/a><\/li>[\r\n]*
-        <\/ul>\z/x
-      )
+    context 'with a bunch of events' do
+      let(:year) { 2011 }
+      let(:month) { 3 }
+      let(:time) { Time.zone.parse '2011-03-14 6:30pm' }
+      let(:events) do
+        $events = [
+          Event.new(start_at: time, title: 'Event 1'),
+          Event.new(start_at: time, title: 'Event 2'),
+          Event.new(start_at: time, title: 'Event 3')
+        ]
+      end
+      let(:presenter) { $presenter = CalendarMonthPresenter.new(minimum_params.merge(events: events)) }
+      it 'should include all of the given events' do
+        path = view.event_path(nil)
+        result = presenter.present_day_events_list(events)
+        expect(result).to match(
+          /\A<ul>[\r\n]*
+          <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 1<\/a><\/li>[\r\n]+
+          <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 2<\/a><\/li>[\r\n]+
+          <li><a\ href="#{path}"[^>]*>6:30pm:\ Event\ 3<\/a><\/li>[\r\n]*
+          <\/ul>\z/x
+        )
+      end
     end
   end
 
   describe "#present_event_in_list" do
     let(:title) { $title = 'Test Event' }
+    let(:year) { 2012 }
+    let(:month) { 3 }
     let(:event_common_params) do
       $event_common_params = {start_at: Time.zone.parse('2012-3-15 7pm'), title: title}
     end
     let(:event_params) { $event_params = event_common_params }
     let(:event) { $event = Event.new(event_params) }
-    let(:view) { $view = ViewDouble.new }
     let(:path) { $path = view.event_path(event) }
-    let(:presenter) do
-      $presenter = CalendarMonthPresenter.new(view: view, year: 2012, month: 3, events: [event])
-    end
+    let(:presenter) { $presenter = CalendarMonthPresenter.new(minimum_params.merge(events: events)) }
     it "should return the link wrapped in a list item element" do
       expect(
         presenter.present_event_in_list(event)

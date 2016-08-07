@@ -5,7 +5,7 @@ require 'http_url_validator'
 # Represents a level of government (such as a municipality) or electable organization (such as a co-op board).
 # May have a parent level (e.g., a municipality has a province/state as a parent,
 # a province/state has a country as a parent).
-class Level < ActiveRecord::Base
+class Level < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :parent, class_name: 'Level'

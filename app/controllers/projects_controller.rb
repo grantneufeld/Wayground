@@ -1,12 +1,12 @@
 # Access Projects.
 class ProjectsController < ApplicationController
   before_action :set_user
-  before_action :set_project, except: [:index, :new, :create]
-  before_action :requires_login, only: [:new, :create]
-  before_action :requires_update_authority, only: [:edit, :update]
-  before_action :requires_delete_authority, only: [:delete, :destroy]
+  before_action :set_project, except: %i(index new create)
+  before_action :requires_login, only: %i(new create)
+  before_action :requires_update_authority, only: %i(edit update)
+  before_action :requires_delete_authority, only: %i(delete destroy)
   before_action :set_section
-  before_action :set_new_project, only: [:new, :create]
+  before_action :set_new_project, only: %i(new create)
 
   def index
     @projects = Project.all
@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
     if @project.save
       redirect_to_project(@project, notice: 'Project was successfully created.')
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -34,7 +34,7 @@ class ProjectsController < ApplicationController
     if @project.update(project_params)
       redirect_to_project(@project, notice: 'Project was successfully updated.')
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
@@ -58,21 +58,20 @@ class ProjectsController < ApplicationController
 
   # The actions for this controller, other than viewing, require login and usually authorization.
   def requires_login
-    unless @user
-      raise Wayground::LoginRequired
-    end
+    raise Wayground::LoginRequired unless @user
   end
+
   def requires_authority(action)
-    unless (
-      (@project && @project.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Project.authority_area, action))
-    )
+    project_allowed = @project && @project.authority_for_user_to?(@user, action)
+    unless project_allowed || (@user && @user.authority_for_area(Project.authority_area, action))
       raise Wayground::AccessDenied
     end
   end
+
   def requires_update_authority
     requires_authority(:can_update)
   end
+
   def requires_delete_authority
     requires_authority(:can_delete)
   end
@@ -81,18 +80,17 @@ class ProjectsController < ApplicationController
     @user = current_user
   end
 
-  # Most of the actions for this controller receive the id of an Project as a parameter.
+  # Most of the actions for this controller receive the id or projecturl of an Project as a parameter.
   def set_project
     project_url = params[:projecturl]
-    if project_url.present?
-      if project_url.match /\A[0-9]+\z/
-        @project = Project.find(project_url.to_i)
+    @project =
+      if project_url.blank?
+        Project.find(params[:id])
+      elsif project_url =~ /\A[0-9]+\z/
+        Project.find(project_url.to_i)
       else
-        @project = Project.where(filename: project_url).first
+        Project.where(filename: project_url).first
       end
-    else
-      @project = Project.find(params[:id])
-    end
   end
 
   def set_section
@@ -109,7 +107,7 @@ class ProjectsController < ApplicationController
     params.fetch(:project, {}).permit(
       :is_visible, :is_public_content, :is_visible_member_list, :is_joinable,
       :is_members_can_invite, :is_not_unsubscribable, :is_moderated, :is_only_admin_posts,
-      :is_no_comments, :name, :filename, :description #, :editor, :edit_comment
+      :is_no_comments, :name, :filename, :description # , :editor, :edit_comment
     )
   end
 end

@@ -3,7 +3,7 @@ require 'authority_controlled'
 require 'http_url_validator'
 
 # Represents an office at a level of government (such as a councillor on a city council).
-class Office < ActiveRecord::Base
+class Office < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :level

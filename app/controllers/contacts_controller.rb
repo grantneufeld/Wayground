@@ -74,7 +74,7 @@ class ContactsController < ApplicationController
 
   def set_contact
     @contact = @item.contacts.find(params[:id])
-    unless @contact.is_public? && @contact.has_authority_for_user_to?(@user, :can_view)
+    unless @contact.is_public? && @contact.authority_for_user_to?(@user, :can_view)
       unauthorized
     end
     missing unless @contact
@@ -101,9 +101,9 @@ class ContactsController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@contact && @contact.has_authority_for_user_to?(@user, action)) ||
-      (!@contact && @item.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Contact.authority_area, action))
+      (@contact && @contact.authority_for_user_to?(@user, action)) ||
+      (!@contact && @item.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Contact.authority_area, action))
     )
       unauthorized
     end

@@ -22,5 +22,4 @@ class ColourValidator < ActiveModel::EachValidator
       maroon navy olive purple red silver teal white yellow
     )
   end
-
 end

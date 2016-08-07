@@ -5,9 +5,9 @@ module Wayground
   class CookieToken
     attr_accessor :id, :token
 
-    def initialize(params={})
-      self.id = params[:remember].id
-      self.token = params[:token]
+    def initialize(remember:, token:)
+      self.id = remember.id
+      self.token = token
     end
 
     # Return a string with the token and id of the object to remember, for use in cookies.

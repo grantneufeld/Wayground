@@ -70,13 +70,11 @@ describe ApplicationController, type: :controller do
   describe '#cookie_set_remember_me' do
   end
 
-  describe '#cookie_set_remember_me_permanent' do
-  end
-
   describe '#paginate' do
     it "should setup a bunch of variables" do
       controller.params ||= {}
-      controller.params.merge!({:page => '2', :max => '10'})
+      controller.params[:page] = '2'
+      controller.params[:max] = '10'
       Document.delete_all
       user = FactoryGirl.create(:document).user
       11.times { FactoryGirl.create(:document, :user => user) }

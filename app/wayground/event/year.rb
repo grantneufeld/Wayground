@@ -22,7 +22,6 @@ module Wayground
         end
         event_counts
       end
-
     end
 
   end

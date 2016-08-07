@@ -202,7 +202,8 @@ describe LevelsController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested level' do
         set_logged_in_admin
-        expect_any_instance_of(Level).to receive(:update).with('name' => 'valid params').and_return(true)
+        expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
+        expect_any_instance_of(Level).to receive(:update).with(expected_params).and_return(true)
         patch :update, id: level.filename, level: { 'name' => 'valid params' }
       end
       context 'with attributes' do

@@ -150,11 +150,11 @@ class ContactPresenter < HtmlPresenter
   def present_actions
     result = html_blank
     if user.present?
-      if contact.has_authority_for_user_to?(user, :can_update)
+      if contact.authority_for_user_to?(user, :can_update)
         result += view.link_to('Edit', ([:edit] + contact.items_for_path), class: 'action edit')
         result += newline
       end
-      if contact.has_authority_for_user_to?(user, :can_delete)
+      if contact.authority_for_user_to?(user, :can_delete)
         result += view.link_to('Delete',
           ([:delete] + contact.items_for_path), class: 'action delete',
           data: { confirm: 'Are you sure?' }, method: :delete

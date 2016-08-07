@@ -1,3 +1,4 @@
+# Strip extraneous columns from Versions (relying on the hash field more instead)
 class ModifyVersions < ActiveRecord::Migration
   def up
     remove_column :versions, :url if column_exists?(:versions, :url)

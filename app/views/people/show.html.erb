@@ -1,7 +1,7 @@
 <%
 person ||= @person
 user ||= @user
-user_can_create = user.present? && user.has_authority_for_area(Person.authority_area, :can_create)
+user_can_create = user.present? && user.authority_for_area(Person.authority_area, :can_create)
 
 %><h1><%= person.fullname %></h1>
 <%
@@ -18,10 +18,10 @@ end
 
 if user.present?
   actions = []
-  if person.has_authority_for_user_to?(user, :can_update)
+  if person.authority_for_user_to?(user, :can_update)
     actions << link_to('Edit', edit_person_path(person), class: 'action')
   end
-  if person.has_authority_for_user_to?(user, :can_delete)
+  if person.authority_for_user_to?(user, :can_delete)
     actions << link_to('Delete',
       [:delete, person], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action'
     )

@@ -6,12 +6,12 @@ module ApplicationHelper
   # Generate the errors report to show with a form.
   # item: the item to get the errors from
   # heading: the optional error message, shown as a heading above the list of errors
-  def show_errors(item, heading=nil)
+  def show_errors(item, heading = nil)
     render partial: 'layouts/errors', locals: { item: item, heading: heading }
   end
 
   # Set the class of the main section of the page.
-  def set_main_section_class(html_class)
+  def main_section_class(html_class)
     @page_main_class = html_class
   end
 
@@ -29,9 +29,9 @@ module ApplicationHelper
   # Generate an image tag for an icon based on a type of file (content_type).
   # content_type: the file mimetype
   # size: size, in pixels, of the icon
-  def icon_for_content_type(content_type, size = 16)
+  def icon_for_content_type(_content_type, _size = 16)
     # TODO: implement icon_for_content_type helper
-    return nil
+    nil
   end
 
   # Output a html separator element (`<span class="separator">,</span>`)
@@ -45,12 +45,12 @@ module ApplicationHelper
 
   # Convert a string to simple html based on line-breaks.
   def simple_text_to_html(text)
-    CGI.escapeHTML(text.strip). # remove leading & trailing whitespace, then escape html unsafe chars
-      gsub(/([^\r\n])(\r\n?|\n)([^\r\n])/, '\1<br />\3'). # convert single line-breaks to br elements
-      gsub(/([^\r\n])(\r\n?|\n)([^\r\n])/, '\1<br />\3'). # repeat because of my sloppy regexp
-      gsub(/[\r\n][\r\n]+/, "\n"). # mush together all linebreak types into single linebreaks
-      gsub(/^(.+)$/, '<p>\1</p>'). # convert remaining lines to paragraphs
-      html_safe # mark as safe html
+    CGI.escapeHTML(text.strip) # remove leading & trailing whitespace, then escape html unsafe chars
+       .gsub(/([^\r\n])(\r\n?|\n)([^\r\n])/, '\1<br />\3') # convert single line-breaks to br elements
+       .gsub(/([^\r\n])(\r\n?|\n)([^\r\n])/, '\1<br />\3') # repeat because of my sloppy regexp
+       .gsub(/[\r\n][\r\n]+/, "\n") # mush together all linebreak types into single linebreaks
+       .gsub(/^(.+)$/, '<p>\1</p>') # convert remaining lines to paragraphs
+       .html_safe # mark as safe html
   end
 
   # Convert a string to html, but only using line breaks (no block elements like paragraphs)
@@ -59,8 +59,7 @@ module ApplicationHelper
       # convert sequences of more than one line break to 2 br elements
       gsub(/(\r\n?(\r\n?)+|\n\n+)/, '<br /><br />').
       # convert remaining line breaks to single br elements
-      gsub(/[\r\n]+/, '<br />').
-      html_safe
+      gsub(/[\r\n]+/, '<br />').html_safe
   end
 
   # ROUTING LINK HELPERS

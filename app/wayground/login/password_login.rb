@@ -14,19 +14,16 @@ module Wayground
 
       protected
 
-      def post_initialize(args={})
-        self.username = args[:username]
-        self.password = args[:password]
+      def post_initialize(username: nil, password: nil)
+        self.username = username
+        self.password = password
       end
 
       def find_user
         user = user_class.where(user_class.login_name_attribute => username).first!
-        unless user.password_hash == password
-          user = nil
-        end
+        user = nil unless user.password_hash == password
         user
       end
-
     end
 
   end

@@ -42,19 +42,19 @@ content_for(:other_sections) do
 end
 
 if user
-  if election.has_authority_for_user_to?(user, :can_update)
+  if election.authority_for_user_to?(user, :can_update)
     add_submenu_item(title: 'Edit Election', path: edit_level_election_path(level, election))
   end
-  if election.has_authority_for_user_to?(user, :can_delete)
+  if election.authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete Election',
       path: delete_level_election_path(level, election),
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
-  if user.has_authority_for_area(Election.authority_area, :can_create)
+  if user.authority_for_area(Election.authority_area, :can_create)
     add_submenu_item(title: 'New Election', path: new_level_election_path(level))
   end
-  if user.has_authority_for_area(Ballot.authority_area, :can_create)
+  if user.authority_for_area(Ballot.authority_area, :can_create)
     add_submenu_item(title: 'Generate Ballots', path: ballot_maker_level_election_path(level, election))
     add_submenu_item(title: 'Add Ballot', path: new_level_election_ballot_path(level, election))
   end

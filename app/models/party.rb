@@ -5,7 +5,7 @@ require 'filename_validator'
 require 'http_url_validator'
 
 # Represents a political party at a level of government.
-class Party < ActiveRecord::Base
+class Party < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :level

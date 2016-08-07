@@ -32,8 +32,8 @@ module Wayground
       # accepts a hash with either:
       # :io => an IO object for the iCalendar data
       # :data => a String containing the iCalendar data
-      def initialize(params={})
-        @io = params[:io] || StringIO.new(params[:data])
+      def initialize(io: nil, data: nil)
+        @io = io || StringIO.new(data)
         @line_buffer = nil
       end
 
@@ -44,14 +44,14 @@ module Wayground
       # Read the from the io as iCalendar-format data and parse it into calendar structures.
       def parse
         calendars = []
-        line = get_next_line
+        line = next_line
         while line
           case line
           when /^BEGIN:VCALENDAR$/
             calendars << parse_vcalendar
-          #else # ignore line; don't do anything until reaching a VCALENDAR part
+            # else # ignore line; don't do anything until reaching a VCALENDAR part
           end
-          line = get_next_line
+          line = next_line
         end
         calendars
       end
@@ -62,10 +62,10 @@ module Wayground
       # Returns a hash of calendar data
       def parse_vcalendar
         calendar = {}
-        line = get_next_line
+        line = next_line
         while line && !(line =~ /^END:VCALENDAR$/)
           line_within_vcalendar(line, calendar)
-          line = get_next_line
+          line = next_line
         end
         calendar
       end
@@ -82,14 +82,15 @@ module Wayground
           calendar['VTIMEZONE'][timezone_id] = timezone
         when /^BEGIN:(.+)$/
           # ignore an unsupported sub-element (such as VTODO)
-          parse_unrecognized_element($1)
+          parse_unrecognized_element(Regexp.last_match(1))
         when /^([^:;]+);([^:]+):(.+)$/
           # record any other mutlivalue calendar attributes
-          calendar[$1] = parse_multivalue_line_chunks($2, $3)
+          calendar[Regexp.last_match(1)] =
+            parse_multivalue_line_chunks(Regexp.last_match(2), Regexp.last_match(3))
         when /^([^:]+):(.+)$/
           # just record any other calendar attributes directly
-          calendar[$1] = {value: clean_string($2)}
-        #else # ignore any lines that are not formatted correctly.
+          calendar[Regexp.last_match(1)] = { value: clean_string(Regexp.last_match(2)) }
+          # else # ignore any lines that are not formatted correctly.
         end
       end
 
@@ -99,10 +100,10 @@ module Wayground
       def parse_vevent
         event = {}
         # read through until end of file or the END:VEVENT line.
-        line = get_next_line
+        line = next_line
         while line && !(line =~ /^END:VEVENT$/)
           line_within_vevent(line, event)
-          line = get_next_line
+          line = next_line
         end
         event
       end
@@ -111,19 +112,20 @@ module Wayground
         case line
         when /^BEGIN:(.+)$/
           # ignore an unsupported sub-element (such as VALARM)
-          parse_unrecognized_element($1)
+          parse_unrecognized_element(Regexp.last_match(1))
         when /^(DT(?:|START|END|STAMP)|LAST-MODIFIED|CREATED)[:;](.+)$/
           # special case for date-times
-          event[$1] = {value: IcalendarDate.new($2).to_datetime}
+          event[Regexp.last_match(1)] = { value: IcalendarDate.new(Regexp.last_match(2)).to_datetime }
         when /^SEQUENCE:([0-9]+)$/
           # special case for sequence numbers
-          event['SEQUENCE'] = {value: ($1.to_i)}
+          event['SEQUENCE'] = { value: Regexp.last_match(1).to_i }
         when /^([^:;]+);([^:]+):(.+)$/
           # record any other multivalue event attributes
-          event[$1] = parse_multivalue_line_chunks($2, $3)
+          event[Regexp.last_match(1)] =
+            parse_multivalue_line_chunks(Regexp.last_match(2), Regexp.last_match(3))
         when /^([^:]+):(.+)$/
           # just record any other event attributes directly
-          event[$1] = {value: clean_string($2)}
+          event[Regexp.last_match(1)] = { value: clean_string(Regexp.last_match(2)) }
         end
       end
 
@@ -133,10 +135,10 @@ module Wayground
       def parse_vtimezone
         timezone = {}
         # read through until end of file or the END:VTIMEZONE line.
-        line = get_next_line
+        line = next_line
         while line && !(line =~ /^END:VTIMEZONE$/)
           line_within_vtimezone(line, timezone)
-          line = get_next_line
+          line = next_line
         end
         timezone
       end
@@ -145,10 +147,10 @@ module Wayground
         case line
         when /^BEGIN:(.+)$/
           # handle a sub-element - typically STANDARD or DAYLIGHT
-          timezone[$1] = parse_vtimezone_element($1)
+          timezone[Regexp.last_match(1)] = parse_vtimezone_element(Regexp.last_match(1))
         when /^([^:]+):(.+)$/
           # just record any other timezone attributes directly
-          timezone[$1] = {value: clean_string($2)}
+          timezone[Regexp.last_match(1)] = { value: clean_string(Regexp.last_match(2)) }
         end
       end
 
@@ -159,12 +161,10 @@ module Wayground
         element = {}
         # read through until end of file or the END:`ELEMENT_NAME` line.
         # assume there are no sub-elements
-        while (line = get_next_line) && !(line =~ /^END:#{name}$/)
+        while (line = next_line) && !(line =~ /^END:#{name}$/)
           # just record any timezone element attributes directly
           match = line.match(/^([^:]+):(.+)$/)
-          if match
-            element[match[1]] = { value: clean_string(match[2]) }
-          end
+          element[match[1]] = { value: clean_string(match[2]) } if match
         end
         element
       end
@@ -173,7 +173,7 @@ module Wayground
 
       # Handle an unrecognized sub-element by ignoring it.
       def parse_unrecognized_element(name)
-        while (line = get_next_line) && !(line =~ /^END:#{name}$/)
+        while (line = next_line) && !(line =~ /^END:#{name}$/)
           # don't do anything with the element's data
         end
       end
@@ -183,16 +183,12 @@ module Wayground
       # Read a line of iCalendar data.
       # Merges lines that have been split into multiple lines back to a single line.
       # Strips line breaks.
-      def get_next_line
+      def next_line
         line = @line_buffer || io.gets
         @line_buffer = nil
         # strip trailing line-breaks
-        if line
-          line.sub!(/[\r\n]+\z/, '')
-        end
-        if line.present?
-          line = merge_split_lines(line)
-        end
+        line.sub!(/[\r\n]+\z/, '') if line
+        line = merge_split_lines(line) if line.present?
         line
       end
 
@@ -200,7 +196,7 @@ module Wayground
 
       def merge_split_lines(line)
         @line_buffer = io.gets
-        while @line_buffer && @line_buffer.match(/\A /)
+        while @line_buffer && @line_buffer.start_with?(' ')
           # the next line is a continuation line, so unwrap it
           line += @line_buffer.sub(/[\r\n]+/, '').sub(/\A /, '')
           @line_buffer = io.gets
@@ -216,7 +212,7 @@ module Wayground
       # Convert slash-escaped characters to the actual characters.
       def clean_string(str)
         # TODO: there should be a standard “unescape” method for strings we can use here instead
-        str.gsub("\\n", "\n").gsub("\\t", "\t").gsub(/\\(.)/, '\1')
+        str.gsub('\\n', "\n").gsub('\\t', "\t").gsub(/\\(.)/, '\1')
       end
 
       # This is for handling iCalendar lines that come in the form of:
@@ -224,15 +220,14 @@ module Wayground
       # first: The “KEY=keyedvalue” part.
       # second: The “value” part.
       def parse_multivalue_line_chunks(first, second)
-        result = {value: clean_string(second)}
+        result = { value: clean_string(second) }
         pairs = first.split(';')
         pairs.each do |pair|
-          match = pair.match /^(?<key>[^=]+)=(?<value>.*)/
+          match = pair.match(/^(?<key>[^=]+)=(?<value>.*)/)
           result[match[:key]] = match[:value]
         end
         result
       end
-
     end
 
   end

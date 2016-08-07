@@ -90,8 +90,8 @@ class OfficesController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@office && @office.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Office.authority_area, action))
+      (@office && @office.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Office.authority_area, action))
     )
       unauthorized
     end

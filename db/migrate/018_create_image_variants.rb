@@ -1,3 +1,4 @@
+# Different versions of a given Image (e.g., thumbnail, original, etc.)
 class CreateImageVariants < ActiveRecord::Migration
   def change
     create_table :image_variants do |t|
@@ -9,6 +10,6 @@ class CreateImageVariants < ActiveRecord::Migration
       t.text :url, null: false
       t.timestamps
     end
-    add_index :image_variants, [:image_id, :style, :height, :width]
+    add_index :image_variants, %i(image_id style height width)
   end
 end

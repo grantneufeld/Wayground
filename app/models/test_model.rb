@@ -24,8 +24,8 @@ class TestModel
     @@generated_instances << self
   end
 
-  def ==(arg)
-    self.test_attribute == arg.is_a?(TestModel) ? arg.test_attribute : arg
+  def ==(other)
+    test_attribute == other.is_a?(TestModel) ? other.test_attribute : other
   end
 
   def testable_method

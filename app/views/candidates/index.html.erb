@@ -10,7 +10,7 @@ level ||= @level || @election.level
 end
 %></ul>
 <%
-if @user && @user.has_authority_for_area(Candidate.authority_area, :can_create)
+if @user && @user.authority_for_area(Candidate.authority_area, :can_create)
   %><p class="actions"><%= link_to 'New Candidate', new_level_election_ballot_candidate_path(level, election, @ballot), class: 'action' %></p>
 <%
 end -%>

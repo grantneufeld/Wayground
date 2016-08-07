@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'rails_helper'
+require 'event'
 require 'external_link_presenter'
 require_relative 'view_double'
 
@@ -10,18 +11,35 @@ describe ExternalLinkPresenter do
     $link.item = item
     $link
   end
-
-  let(:presenter) { $presenter = ExternalLinkPresenter.new(view: view, link: link) }
+  let(:user) { $user = User.new }
+  let(:minimum_params) { $minimum_params = { view: view, link: link } }
+  let(:presenter) { $presenter = ExternalLinkPresenter.new(minimum_params) }
 
   describe 'initialization' do
-    it 'should take a view parameter' do
-      expect( ExternalLinkPresenter.new(view: :view).view ).to eq :view
+    context 'with minimum required params' do
+      it 'should take a view parameter' do
+        expect(ExternalLinkPresenter.new(minimum_params).view).to eq view
+      end
+      it 'should take a link parameter' do
+        expect(ExternalLinkPresenter.new(minimum_params).link).to eq link
+      end
+      context 'with a user parameter' do
+        it 'should take a user parameter' do
+          expect(ExternalLinkPresenter.new(minimum_params.merge(user: user)).user).to eq user
+        end
+      end
     end
-    it 'should take a link parameter' do
-      expect( ExternalLinkPresenter.new(link: :link).link ).to eq :link
+    context 'without a view parameter' do
+      it 'should throw an ArgumentError' do
+        args = minimum_params.delete(:view)
+        expect { ExternalLinkPresenter.new(args) }.to raise_error(ArgumentError)
+      end
     end
-    it 'should take a user parameter' do
-      expect( ExternalLinkPresenter.new(user: :user).user ).to eq :user
+    context 'without a link parameter' do
+      it 'should throw an ArgumentError' do
+        args = minimum_params.delete(:link)
+        expect { ExternalLinkPresenter.new(args) }.to raise_error(ArgumentError)
+      end
     end
   end
 

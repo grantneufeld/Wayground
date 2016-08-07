@@ -18,5 +18,4 @@ class TagsController < ApplicationController
   def set_section
     @site_section = :tags
   end
-
 end

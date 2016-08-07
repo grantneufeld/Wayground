@@ -7,7 +7,7 @@
 end
 %></ul>
 <%
-if @user && @user.has_authority_for_area(Election.authority_area, :can_create)
+if @user && @user.authority_for_area(Election.authority_area, :can_create)
   %><p class="actions"><%= link_to 'New Election', new_level_election_path(@level), class: 'action' %></p>
 <%
 end -%>

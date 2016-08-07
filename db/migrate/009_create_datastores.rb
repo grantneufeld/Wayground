@@ -2,7 +2,7 @@
 class CreateDatastores < ActiveRecord::Migration
   def self.up
     create_table :datastores do |t|
-      t.binary :data, :null => false, :limit => 127.megabytes
+      t.binary :data, null: false, limit: 127.megabytes
     end
   end
 

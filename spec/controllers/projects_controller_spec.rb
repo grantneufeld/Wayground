@@ -26,7 +26,7 @@ describe ProjectsController, type: :controller do
   # Project. As you add validations to Project, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    {:name => 'Valid Attributes Name'}
+    { name: 'Valid Attributes Name' }
   end
 
   # This should return the minimal set of values that should be in the session
@@ -56,15 +56,15 @@ describe ProjectsController, type: :controller do
 
   describe "GET show" do
     it "assigns the requested project as @project" do
-      get :show, {id: @admin_project.to_param}
+      get :show, params: { id: @admin_project.to_param }
       expect( assigns(:project) ).to eq @admin_project
     end
     it "assigns the requested project from a projecturl" do
-      get :show, {projecturl: 'admin_project'}
+      get :show, params: { projecturl: 'admin_project' }
       expect( assigns(:project)).to eq @admin_project
     end
     it "assigns the requested project from a projecturl set to the id" do
-      get :show, {projecturl: @admin_project.id.to_s}
+      get :show, params: { projecturl: @admin_project.id.to_s }
       expect( assigns(:project) ).to eq @admin_project
     end
   end
@@ -87,20 +87,20 @@ describe ProjectsController, type: :controller do
       it "creates a new Project" do
         expect {
           set_logged_in_admin
-          post :create, {:project => valid_attributes}, valid_session
+          post :create, params: { project: valid_attributes }, session: valid_session
         }.to change(Project, :count).by(1)
       end
 
       it "assigns a newly created project as @project" do
         set_logged_in_admin
-        post :create, {:project => valid_attributes}, valid_session
+        post :create, params: { project: valid_attributes }, session: valid_session
         expect(assigns(:project)).to be_a(Project)
         expect(assigns(:project)).to be_persisted
       end
 
       it "redirects to the created project" do
         set_logged_in_admin
-        post :create, {:project => valid_attributes}, valid_session
+        post :create, params: { project: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Project.last)
       end
     end
@@ -110,7 +110,7 @@ describe ProjectsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
-        post :create, {:project => {}}, valid_session
+        post :create, params: { project: {} }, session: valid_session
         expect(assigns(:project)).to be_a_new(Project)
       end
 
@@ -118,7 +118,7 @@ describe ProjectsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
-        post :create, {:project => {}}, valid_session
+        post :create, params: { project: {} }, session: valid_session
         expect(response).to render_template("new")
       end
     end
@@ -127,13 +127,13 @@ describe ProjectsController, type: :controller do
   describe "GET edit" do
     it "fails if not authorized to update the project" do
       set_logged_in_user
-      get :edit, {id: @admin_project.to_param}
+      get :edit, params: { id: @admin_project.to_param }
       expect( response.status ).to eq 403
     end
 
     it "assigns the requested project as @project" do
       set_logged_in_admin
-      get :edit, {id: @admin_project.to_param}, valid_session
+      get :edit, params: { id: @admin_project.to_param }, session: valid_session
       expect( assigns(:project) ).to eq @admin_project
     end
   end
@@ -146,22 +146,23 @@ describe ProjectsController, type: :controller do
         # specifies that the Project created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Project).to receive(:update).with('name' => 'valid_params')
+        expected_params = ActionController::Parameters.new('name' => 'valid_params').permit!
+        expect_any_instance_of(Project).to receive(:update).with(expected_params)
         set_logged_in_admin
-        patch :update, { id: project.to_param, project: { 'name' => 'valid_params' } }, valid_session
+        patch :update, params: { id: project.to_param, project: { 'name' => 'valid_params' } }, session: valid_session
       end
 
       it "assigns the requested project as @project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
-        patch :update, { id: project.to_param, project: valid_attributes }, valid_session
+        patch :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
         expect(assigns(:project)).to eq(project)
       end
 
       it "redirects to the project" do
         project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
         set_logged_in_admin
-        patch :update, { id: project.to_param, project: valid_attributes }, valid_session
+        patch :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
         expect(response).to redirect_to(project_name_url(project.filename))
       end
     end
@@ -171,7 +172,7 @@ describe ProjectsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
-        patch :update, { id: @admin_project.to_param, project: {} }
+        patch :update, params: { id: @admin_project.to_param, project: {} }
         expect( assigns(:project) ).to eq @admin_project
       end
 
@@ -179,7 +180,7 @@ describe ProjectsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
-        patch :update, { id: @admin_project.to_param, project: {} }
+        patch :update, params: { id: @admin_project.to_param, project: {} }
         expect(response).to render_template("edit")
       end
     end
@@ -190,14 +191,14 @@ describe ProjectsController, type: :controller do
       project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       expect {
         set_logged_in_admin
-        delete :destroy, {:id => project.to_param}, valid_session
+        delete :destroy, params: { id: project.to_param }, session: valid_session
       }.to change(Project, :count).by(-1)
     end
 
     it "redirects to the projects list" do
       project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
       set_logged_in_admin
-      delete :destroy, {:id => project.to_param}, valid_session
+      delete :destroy, params: { id: project.to_param }, session: valid_session
       expect(response).to redirect_to(projects_url)
     end
   end

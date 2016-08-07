@@ -1,16 +1,16 @@
-require 'html_presenter'
+require_relative 'html_presenter'
 
 # Present a ExternalLink.
 class ExternalLinkPresenter < HtmlPresenter
   attr_reader :view, :link, :user
 
-  def initialize(params)
-    @view = params[:view]
-    @link = params[:link]
-    @user = params[:user]
+  def initialize(view:, link:, user: nil)
+    @view = view
+    @link = link
+    @user = user
   end
 
-  def present_link_in(tag_type=:span)
+  def present_link_in(tag_type = :span)
     html_tag(tag_type, class: link_class) do
       present_label + present_link_as_url_class
     end
@@ -56,5 +56,4 @@ class ExternalLinkPresenter < HtmlPresenter
       'vimeo' => 'Vimeo', 'youtube' => 'YouTube'
     }[link.site]
   end
-
 end

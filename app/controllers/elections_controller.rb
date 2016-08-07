@@ -107,8 +107,8 @@ class ElectionsController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@election && @election.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Election.authority_area, action))
+      (@election && @election.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Election.authority_area, action))
     )
       unauthorized
     end

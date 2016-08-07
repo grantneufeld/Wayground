@@ -4,7 +4,7 @@ require 'email_validator'
 require 'http_url_validator'
 
 # Contact information for an item (such as a Person or Candidate).
-class Contact < ActiveRecord::Base
+class Contact < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :item, polymorphic: true

@@ -19,7 +19,7 @@ item ||= @item
 
 
 if @user.present?
-  if item.has_authority_for_user_to?(@user, :can_create)
+  if item.authority_for_user_to?(@user, :can_create)
     add_submenu_item(title: 'New External Link', path: ([:new] + item.items_for_path + [:external_link]))
   end
 end -%>

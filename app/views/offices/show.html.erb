@@ -48,16 +48,16 @@ if office.ballots.count > 0
 end
 
 if user
-  if office.has_authority_for_user_to?(user, :can_update)
+  if office.authority_for_user_to?(user, :can_update)
     add_submenu_item(title: 'Edit Office', path: edit_level_office_path(level, office))
   end
-  if office.has_authority_for_user_to?(user, :can_delete)
+  if office.authority_for_user_to?(user, :can_delete)
     add_submenu_item(title: 'Delete Office',
       path: delete_level_office_path(level, office),
       attrs: { data: { confirm: 'Are you sure?' }, method: :delete }
     )
   end
-  if user.has_authority_for_area(Office.authority_area, :can_create)
+  if user.authority_for_area(Office.authority_area, :can_create)
     add_submenu_item(title: 'New Office', path: new_level_office_path(level))
     add_submenu_item(title: 'New Successor Office',
       path: new_office_with_previous_level_offices_path(level, office),

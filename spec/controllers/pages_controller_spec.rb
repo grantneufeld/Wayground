@@ -38,7 +38,7 @@ describe PagesController, type: :controller do
     it "assigns the requested page as @page" do
       set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
-      get :show, :id => "37"
+      get :show, params: { id: "37" }
       expect(assigns(:page)).to be(mock_page)
     end
   end
@@ -59,7 +59,7 @@ describe PagesController, type: :controller do
     it "assigns the parent page if given" do
       set_logged_in_default_admin
       parent_page = FactoryGirl.create(:page)
-      get :new, :parent => parent_page.id.to_s
+      get :new, params: { parent: parent_page.id.to_s }
       expect(assigns(:page).parent).to eq parent_page
     end
   end
@@ -75,8 +75,9 @@ describe PagesController, type: :controller do
         set_logged_in_default_admin
         page = default_page
         allow(page).to receive(:save).and_return(true)
-        allow(Page).to receive(:new).with('filename' => 'valid_params').and_return(page)
-        post :create, page: { 'filename' => 'valid_params' }
+        expected_params = ActionController::Parameters.new('filename' => 'valid_params').permit!
+        allow(Page).to receive(:new).with(expected_params).and_return(page)
+        post :create, params: { page: { 'filename' => 'valid_params' } }
         expect(assigns(:page)).to be(page)
       end
 
@@ -84,9 +85,11 @@ describe PagesController, type: :controller do
         set_logged_in_default_admin
         parent_page = FactoryGirl.create(:page)
         parent_page.path ||= FactoryGirl.create(:path, :item => parent_page)
-        post(:create,
-          parent: parent_page.id.to_s,
-          page: { filename: 'spec_create_with_parent', title: 'test' }
+        post(
+          :create,
+          params: {
+            parent: parent_page.id.to_s, page: { filename: 'spec_create_with_parent', title: 'test' }
+          }
         )
         expect(assigns(:page).parent).to eq parent_page
       end
@@ -96,7 +99,7 @@ describe PagesController, type: :controller do
         page = default_page
         allow(Page).to receive(:new).and_return(page)
         allow(page).to receive(:save).and_return(true)
-        post :create, :page => {}
+        post :create, params: { page: {} }
         expect(response).to redirect_to(page_url(page))
       end
     end
@@ -104,7 +107,7 @@ describe PagesController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved page as @page" do
         set_logged_in_default_admin
-        post :create, page: { 'invalid' => 'params' }
+        post :create, params: { page: { 'invalid' => 'params' } }
         page = assigns(:page)
         expect(page.new_record?).to be_truthy
         expect(page.errors).not_to be_nil
@@ -113,7 +116,7 @@ describe PagesController, type: :controller do
       it "re-renders the 'new' template" do
         set_logged_in_default_admin
         allow(Page).to receive(:new) { mock_page(:save => false) }
-        post :create, :page => {}
+        post :create, params: { page: {} }
         expect(response).to render_template("new")
       end
     end
@@ -122,14 +125,14 @@ describe PagesController, type: :controller do
   describe "GET edit" do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
-      get :edit, :id => test_page.id.to_s
+      get :edit, params: { id: test_page.id.to_s }
       expect(response.status).to eq 403
     end
 
     it "assigns the requested page as @page" do
       set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
-      get :edit, :id => "37"
+      get :edit, params: { id: "37" }
       expect(assigns(:page)).to be(mock_page)
     end
   end
@@ -137,7 +140,7 @@ describe PagesController, type: :controller do
   describe "PUT update" do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
-      patch :update, id: test_page.id.to_s
+      patch :update, params: { id: test_page.id.to_s }
       expect(response.status).to eq 403
     end
 
@@ -146,8 +149,9 @@ describe PagesController, type: :controller do
         set_logged_in_default_admin
         page = default_page
         allow(Page).to receive(:find).with(page.id.to_s) { page }
-        expect(page).to receive(:update).with('filename' => 'valid_params')
-        patch :update, id: page.id.to_s, page: { 'filename' => 'valid_params' }
+        expected_params = ActionController::Parameters.new('filename' => 'valid_params').permit!
+        expect(page).to receive(:update).with(expected_params)
+        patch :update, params: { id: page.id.to_s, page: { 'filename' => 'valid_params' } }
       end
 
       it "assigns the requested page as @page" do
@@ -155,7 +159,7 @@ describe PagesController, type: :controller do
         page = default_page
         allow(Page).to receive(:find) { page }
         allow(page).to receive(:update).and_return(true)
-        patch :update, id: page.id.to_s
+        patch :update, params: { id: page.id.to_s }
         expect(assigns(:page)).to be(page)
       end
 
@@ -164,7 +168,7 @@ describe PagesController, type: :controller do
         page = default_page
         allow(Page).to receive(:find) { page }
         allow(page).to receive(:update).and_return(true)
-        patch :update, id: page.id.to_s
+        patch :update, params: { id: page.id.to_s }
         expect(response).to redirect_to(page_url(page))
       end
     end
@@ -173,14 +177,14 @@ describe PagesController, type: :controller do
       it "assigns the page as @page" do
         set_logged_in_default_admin
         allow(Page).to receive(:find) { mock_page(update: false) }
-        patch :update, id: '1'
+        patch :update, params: { id: '1' }
         expect(assigns(:page)).to be(mock_page)
       end
 
       it "re-renders the 'edit' template" do
         set_logged_in_default_admin
         allow(Page).to receive(:find) { mock_page(update: false) }
-        patch :update, id: '1'
+        patch :update, params: { id: '1' }
         expect(response).to render_template("edit")
       end
     end
@@ -189,14 +193,14 @@ describe PagesController, type: :controller do
   describe "GET delete" do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
-      get :delete, :id => test_page.id.to_s
+      get :delete, params: { id: test_page.id.to_s }
       expect(response.status).to eq 403
     end
 
     it "shows a form for confirming deletion of a page" do
       set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
-      get :delete, :id => "37"
+      get :delete, params: { id: "37" }
       expect(assigns(:page)).to be(mock_page)
     end
   end
@@ -204,7 +208,7 @@ describe PagesController, type: :controller do
   describe "DELETE destroy" do
     it "requires the user to have authority" do
       test_page = FactoryGirl.create(:page)
-      delete :destroy, :id => test_page.id.to_s
+      delete :destroy, params: { id: test_page.id.to_s }
       expect(response.status).to eq 403
     end
 
@@ -212,13 +216,13 @@ describe PagesController, type: :controller do
       set_logged_in_default_admin
       allow(Page).to receive(:find).with("37") { mock_page }
       expect(mock_page).to receive(:destroy)
-      delete :destroy, :id => "37"
+      delete :destroy, params: { id: "37" }
     end
 
     it "redirects to the pages list" do
       set_logged_in_default_admin
       allow(Page).to receive(:find) { mock_page }
-      delete :destroy, :id => "1"
+      delete :destroy, params: { id: "1" }
       expect(response).to redirect_to(pages_url)
     end
   end

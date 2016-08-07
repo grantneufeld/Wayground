@@ -3,7 +3,7 @@ require 'image'
 require 'http_url_validator'
 
 # A specific instance (“variant”) of an image.
-class ImageVariant < ActiveRecord::Base
+class ImageVariant < ApplicationRecord
   belongs_to :image
 
   # can’t require the image to be set before initial save when using nested attribute forms

@@ -7,7 +7,7 @@ module Wayground
 
       delegate :[], to: :events_by_date
 
-      def initialize(events=[])
+      def initialize(events = [])
         @events_by_date = group_events_by_date(events)
       end
 
@@ -22,7 +22,6 @@ module Wayground
         end
         events_list
       end
-
     end
 
   end

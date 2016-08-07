@@ -1,20 +1,23 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
-require "rails"
-require "active_model/railtie"
-#require "active_job/railtie"
-require "active_record/railtie"
-require "action_controller/railtie"
-#require "action_mailer/railtie"
-require "action_view/railtie"
-require "sprockets/railtie"
-# require "rails/test_unit/railtie"
+require 'rails'
+# Pick the frameworks you want:
+require 'active_model/railtie'
+# require 'active_job/railtie'
+require 'active_record/railtie'
+require 'action_controller/railtie'
+# require 'action_mailer/railtie'
+require 'action_view/railtie'
+# require 'action_cable/engine'
+require 'sprockets/railtie'
+# require 'rails/test_unit/railtie'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module Wayground
+  # Global application configuration.
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -28,11 +31,8 @@ module Wayground
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
@@ -49,16 +49,19 @@ module Wayground
     config.action_controller.include_all_helpers = false
 
     # Website metadata:
-    NAME = 'Calgary Democracy'
-    DESCRIPTION = 'Listings of citizen and voter resources about candidates and elected government representatives in Calgary. Includes detailed candidate lists for all positions, general election info, upcoming forums, media, blogs, video links, etc.'
-    # 'Providing comprehensive, independent, access to online information about our governments and elections affecting Calgarians.'
-    TWITTER_AT = 'yycelect' # the Twitter account for the website, without the ‘@’ prefix
+    NAME = 'Calgary Democracy'.freeze
+    DESCRIPTION = 'Listings of citizen and voter resources about candidates' \
+      ' and elected government representatives in Calgary.' \
+      ' Includes detailed candidate lists for all positions, general election info,' \
+      ' upcoming forums, media, blogs, video links, etc.'.freeze
+    # 'Providing comprehensive, independent, access to online information about ' \
+    # 'our governments and elections affecting Calgarians.'
+    TWITTER_AT = 'yycelect'.freeze # the Twitter account for the website, without the ‘@’ prefix
 
     # Default location
-    DEFAULT_CITY = 'Calgary'
-    DEFAULT_PROVINCE = 'Alberta'
-    DEFAULT_COUNTRY = 'CA'
-
+    DEFAULT_CITY = 'Calgary'.freeze
+    DEFAULT_PROVINCE = 'Alberta'.freeze
+    DEFAULT_COUNTRY = 'CA'.freeze
   end
 end
 

@@ -2,7 +2,7 @@ require 'active_record'
 require 'authority_controlled'
 
 # Represents the candidacy of a Person on a Ballot.
-class Candidate < ActiveRecord::Base
+class Candidate < ApplicationRecord
   acts_as_authority_controlled authority_area: 'Democracy', item_authority_flag_field: :always_viewable
 
   belongs_to :ballot

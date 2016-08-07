@@ -15,9 +15,7 @@ module Wayground
 
     # Tests whether the given password string matches the one that was used
     # to create the crypted password.
-    def ==(pass)
-      crypted_password == pass
-    end
+    delegate :==, to: :crypted_password
 
     private
 

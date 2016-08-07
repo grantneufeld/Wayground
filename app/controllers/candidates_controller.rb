@@ -118,8 +118,8 @@ class CandidatesController < ApplicationController
 
   def requires_authority(action)
     unless (
-      (@candidate && @candidate.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Candidate.authority_area, action))
+      (@candidate && @candidate.authority_for_user_to?(@user, action)) ||
+      (@user && @user.authority_for_area(Candidate.authority_area, action))
     )
       unauthorized
     end

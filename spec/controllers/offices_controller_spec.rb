@@ -204,7 +204,8 @@ describe OfficesController, type: :controller do
     describe 'with valid params' do
       it 'updates the requested office' do
         set_logged_in_admin
-        expect_any_instance_of(Office).to receive(:update).with('name' => 'valid params').and_return(true)
+        expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
+        expect_any_instance_of(Office).to receive(:update).with(expected_params).and_return(true)
         patch :update, id: office.filename, office: { 'name' => 'valid params' }, level_id: @level.to_param
       end
       context 'with attributes' do

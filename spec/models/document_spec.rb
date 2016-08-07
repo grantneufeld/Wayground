@@ -245,6 +245,19 @@ describe Document, type: :model do
     end
     it "should set the data from the file" do
     end
+    context 'given a local file' do
+      let(:file) { @sample_file }
+      it 'should extract the filename from the path' do
+        document = Document.new
+        document.file = file
+        expect(document.filename).to eq 'sample.txt'
+      end
+      it 'should default to application/data' do
+        document = Document.new
+        document.file = file
+        expect(document.content_type).to eq 'application/data'
+      end
+    end
   end
 
   describe "#cleanup_filename" do

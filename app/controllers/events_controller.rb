@@ -5,17 +5,19 @@ require 'merger'
 # Access events.
 class EventsController < ApplicationController
   before_action :set_user
-  before_action :set_event, except: [:index, :new, :create]
-  before_action :requires_login, only: [:new, :create]
-  before_action :requires_update_authority, only: [:edit, :update, :merge, :perform_merge]
-  before_action :requires_delete_authority, only: [:delete, :destroy, :merge, :perform_merge]
-  before_action :requires_approve_authority, only: [:approve, :set_approved]
+  before_action :set_event, except: %i(index new create)
+  before_action :requires_login, only: %i(new create)
+  before_action :requires_update_authority, only: %i(edit update merge perform_merge)
+  before_action :requires_delete_authority, only: %i(delete destroy merge perform_merge)
+  before_action :requires_approve_authority, only: %i(approve set_approved)
   before_action :set_section
-  before_action :set_new_event, only: [:new, :create]
-  before_action :set_editor, only: [:create, :update, :destroy, :approve, :merge, :perform_merge]
+  before_action :set_new_event, only: %i(new create)
+  before_action :set_editor, only: %i(create update destroy approve merge perform_merge)
 
   def index
-    selector = Wayground::Event::EventSelector.new(params.merge(user: @user))
+    selector = Wayground::Event::EventSelector.new(
+      range: params[:range] || params[:r], tag: params[:tag], user: @user
+    )
     @events = selector.events
     @range = selector.range
     @tag = selector.tag
@@ -26,33 +28,31 @@ class EventsController < ApplicationController
     page_metadata(
       title: "#{@event.start_at.to_s(:simple_date)}: #{@event.title}", description: @event.description
     )
-    if @event.is_cancelled
+    if !@event.is_approved?
+      page_metadata.nocache = true
+      message = 'This event listing has not been approved by a moderator yet.'
+    elsif @event.is_cancelled
       message = 'This event has been cancelled.'
     elsif @event.is_tentative
       message = 'This event is tentative.'
     end
-    unless @event.is_approved?
-      page_metadata.nocache = true
-      message = 'This event listing has not been approved by a moderator yet.'
-    end
     flash.now.alert = message if message
   end
 
-  def new
-  end
+  def new; end
 
   def create
     @event.user = @user
-
     if @event.save
-      if @user.present? && @user.has_authority_for_area('Calendar', :is_owner)
-        notice = 'The event has been saved.'
-      else
-        notice = 'The event has been submitted.'
-      end
+      notice =
+        if @user.present? && @user.authority_for_area('Calendar', :is_owner)
+          'The event has been saved.'
+        else
+          'The event has been submitted.'
+        end
       redirect_to(@event, notice: notice)
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -66,7 +66,7 @@ class EventsController < ApplicationController
       notice = 'The event has been saved.'
       redirect_to(@event, notice: notice)
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
@@ -94,7 +94,7 @@ class EventsController < ApplicationController
 
   def approve
     if @event.is_approved?
-      redirect_to(@event, :notice => 'The event has already been approved.')
+      redirect_to(@event, notice: 'The event has already been approved.')
     else
       page_metadata(title: "Approve Event: #{@event.title}")
     end
@@ -127,24 +127,24 @@ class EventsController < ApplicationController
 
   # The actions for this controller, other than viewing, require login and usually authorization.
   def requires_login
-    unless @user
-      raise Wayground::LoginRequired
-    end
+    raise Wayground::LoginRequired unless @user
   end
+
   def requires_authority(action)
-    unless (
-      (@event && @event.has_authority_for_user_to?(@user, action)) ||
-      (@user && @user.has_authority_for_area(Event.authority_area, action))
-    )
+    event_allowed = @event && @event.authority_for_user_to?(@user, action)
+    unless event_allowed || (@user && @user.authority_for_area(Event.authority_area, action))
       raise Wayground::AccessDenied
     end
   end
+
   def requires_update_authority
     requires_authority(:can_update)
   end
+
   def requires_delete_authority
     requires_authority(:can_delete)
   end
+
   def requires_approve_authority
     requires_authority(:can_approve)
   end
