@@ -1,3 +1,4 @@
+# An election (may be for multiple offices)
 class CreateElections < ActiveRecord::Migration
   def change
     create_table :elections do |t|
@@ -10,7 +11,7 @@ class CreateElections < ActiveRecord::Migration
       t.text :url
       t.timestamps
     end
-    add_index :elections, [:level_id, :end_on]
-    add_index :elections, [:level_id, :filename]
+    add_index :elections, %i(level_id end_on)
+    add_index :elections, %i(level_id filename)
   end
 end

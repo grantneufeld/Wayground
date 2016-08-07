@@ -1,3 +1,4 @@
+# Contact information, linked to an item (typically a Person, Candidate, Party)
 class CreateContacts < ActiveRecord::Migration
   def change
     create_table :contacts do |t|
@@ -22,10 +23,10 @@ class CreateContacts < ActiveRecord::Migration
       t.string :postal
       t.timestamps
     end
-    add_index :contacts, [:item_type, :item_id, :position]
-    add_index :contacts, [:confirmed_at, :expires_at]
+    add_index :contacts, %i(item_type item_id position)
+    add_index :contacts, %i(confirmed_at expires_at)
     add_index :contacts, :name
     add_index :contacts, :email
-    add_index :contacts, [:country, :province, :city]
+    add_index :contacts, %i(country province city)
   end
 end

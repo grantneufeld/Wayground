@@ -1,3 +1,4 @@
+# An elected Office (E.g., a City Councillor, Trustee, MP, Mayor, etc.)
 class CreateOffices < ActiveRecord::Migration
   def change
     create_table :offices do |t|
@@ -13,8 +14,8 @@ class CreateOffices < ActiveRecord::Migration
       t.text :url
       t.timestamps
     end
-    add_index :offices, [:level_id, :position], name: 'offices_level_position_idx'
-    add_index :offices, [:level_id, :filename], name: 'offices_filename_idx', unique: true
+    add_index :offices, %i(level_id position), name: 'offices_level_position_idx'
+    add_index :offices, %i(level_id filename), name: 'offices_filename_idx', unique: true
     add_index :offices, [:previous_id], name: 'offices_previous_idx'
   end
 end

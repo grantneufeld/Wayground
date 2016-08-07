@@ -1,3 +1,4 @@
+# A candidate (Person) in an election.
 class CreateCandidates < ActiveRecord::Migration
   def change
     create_table :candidates do |t|
@@ -18,11 +19,11 @@ class CreateCandidates < ActiveRecord::Migration
       t.integer :vote_count, default: 0, null: false
       t.timestamps
     end
-    add_index :candidates, [:ballot_id, :person_id], unique: true
-    add_index :candidates, [:ballot_id, :name], unique: true
-    add_index :candidates, [:ballot_id, :filename], unique: true
-    add_index :candidates, [:ballot_id, :is_confirmed, :name]
-    add_index :candidates, [:ballot_id, :vote_count, :name]
+    add_index :candidates, %i(ballot_id person_id), unique: true
+    add_index :candidates, %i(ballot_id name), unique: true
+    add_index :candidates, %i(ballot_id filename), unique: true
+    add_index :candidates, %i(ballot_id is_confirmed name)
+    add_index :candidates, %i(ballot_id vote_count name)
     add_index :candidates, :submitter_id
   end
 end

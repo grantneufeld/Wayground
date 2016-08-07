@@ -1,3 +1,4 @@
+# Defines that a Person holds/held an elected Office
 class CreateOfficeHolders < ActiveRecord::Migration
   def change
     create_table :office_holders do |t|
@@ -8,8 +9,8 @@ class CreateOfficeHolders < ActiveRecord::Migration
       t.date :end_on
       t.timestamps
     end
-    add_index :office_holders, [:office_id, :person_id, :start_on]
-    add_index :office_holders, [:person_id, :office_id, :start_on]
+    add_index :office_holders, %i(office_id person_id start_on)
+    add_index :office_holders, %i(person_id office_id start_on)
     add_index :office_holders, :previous_id
   end
 end
