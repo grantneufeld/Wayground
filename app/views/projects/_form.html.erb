@@ -2,11 +2,11 @@
 <%= show_errors(project) %>
 <table><tbody>
 <tr><th><%= f.label :name %></th>
-  <td><%= f.text_field :name, :size => 60 %></td></tr>
+  <td><%= f.text_field :name, size: 60 %></td></tr>
 <tr><th><%= f.label :filename %></th>
-  <td><%= f.text_field :filename, :limit => 127, :size => 20 %></td></tr>
+  <td><%= f.text_field :filename, limit: 127, size: 20 %></td></tr>
 <tr><th><%= f.label :description %></th>
-  <td><%= f.text_area :description, :rows => 6 %></td></tr>
+  <td><%= f.text_area :description, rows: 6 %></td></tr>
 <tr class="heading"><th colspan="2"><h2>Settings</h2></th></tr>
 <tr><th></th> <td><%= f.check_box :is_visible %> <%= f.label :is_visible %></td></tr>
 <tr><th></th> <td><%= f.check_box :is_public_content %> <%= f.label :is_public_content %></td></tr>

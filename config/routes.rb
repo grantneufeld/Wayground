@@ -6,15 +6,15 @@ Rails.application.routes.draw do
   root to: 'paths#sitepath', via: :get, url: '/'
 
   # USERS
-  get 'signup' => 'users#new', :as => :signup
+  get 'signup' => 'users#new', as: :signup
   post 'signup' => 'users#create'
-  get 'account/confirm/:confirmation_code' => 'users#confirm', :as => :confirm_account
+  get 'account/confirm/:confirmation_code' => 'users#confirm', as: :confirm_account
   resource :account, controller: 'users', except: %i(index new create destroy)
-  get 'profile/:id' => 'users#profile', :as => :profile
+  get 'profile/:id' => 'users#profile', as: :profile
   # SESSIONS
-  get 'signin' => 'sessions#new', :as => :signin
+  get 'signin' => 'sessions#new', as: :signin
   post 'signin' => 'sessions#create'
-  get 'signout' => 'sessions#delete', :as => :signout
+  get 'signout' => 'sessions#delete', as: :signout
   delete 'signout' => 'sessions#destroy'
   # OAUTH
   match 'auth/:provider/callback' => 'sessions#oauth_callback', via: %i(get post)
@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   resources :paths
   resources :pages, concerns: :versioned
   resources :documents
-  get 'download/:id/*filename' => 'documents#download', :as => :download
+  get 'download/:id/*filename' => 'documents#download', as: :download
   resources :events, concerns: :versioned do
     member do
       get 'approve'

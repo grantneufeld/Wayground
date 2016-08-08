@@ -8,11 +8,11 @@
   if document.description?
     %><br /><%= document.description %>
 <% end
-%></td><td><%= link_to 'Download', "/download/#{document.id}/#{document.filename}", :class => 'action' %>
-<%= link_to 'Details', document, :class => 'action' %>
-<%= link_to 'Edit', edit_document_path(document), :class => 'action' %>
-<%= link_to 'Delete', [:delete, document], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %></td></tr>
+%></td><td><%= link_to 'Download', "/download/#{document.id}/#{document.filename}", class: 'action' %>
+<%= link_to 'Details', document, class: 'action' %>
+<%= link_to 'Edit', edit_document_path(document), class: 'action' %>
+<%= link_to 'Delete', [:delete, document], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' %></td></tr>
 <% end -%>
 </table>
 
-<p class="actions"><%= link_to 'New Document', new_document_path, :class => 'action' %></p>
+<p class="actions"><%= link_to 'New Document', new_document_path, class: 'action' %></p>

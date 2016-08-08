@@ -64,11 +64,12 @@ class UsersController < ApplicationController
     # elsif params[:id].present?
     #   if @user.admin?
     #     unless @user = User.find(params[:id])
-    #       redirect_to users_url, :status => 404,
-    #       :notice => "No such user (#{params[:id]})."
+    #       redirect_to users_url, status: 404, notice: "No such user (#{params[:id]})."
     #     end
     #   else
-    #     redirect_to root_url, status: 401, alert: "You are not authorized to access other user’s accounts."
+    #     redirect_to(
+    #       root_url, status: 401, alert: 'You are not authorized to access other user’s accounts.'
+    #     )
     #   end
     # end
   end

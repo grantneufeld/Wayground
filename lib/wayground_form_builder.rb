@@ -1,5 +1,5 @@
 # Extensions to the standard form builder.
-# Make available by calling `form_for(my_object, :builder => WaygroundFormBuilder)`.
+# Make available by calling `form_for(my_object, builder: WaygroundFormBuilder)`.
 class WaygroundFormBuilder < ActionView::Helpers::FormBuilder
   # A date text field that presents the date in plain text.
   # TODO: Integrate (optional) pop-up calendar selector.

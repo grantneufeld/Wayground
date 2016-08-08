@@ -17,7 +17,7 @@ class HtmlPresenter
     attrs = []
     attrs_list.each do |key, value|
       # merge the strings in an array with space separator
-      # e.g., {class: ['a', 'b']} becomes class="a b"
+      # e.g., { class: ['a', 'b'] } becomes class = "a b"
       value = value.join(' ') if value.is_a? Array
       attrs << "#{key}=\"#{value}\"" unless value.blank?
     end

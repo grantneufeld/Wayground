@@ -50,7 +50,7 @@ if event.external_links.count > 0
 <ul>
 <%
   event.external_links.each do |external_link|
-    %><%= render 'external_links/external_link', {user: @user, item: event, external_link: external_link} %><%
+    %><%= render 'external_links/external_link', { user: @user, item: event, external_link: external_link } %><%
   end
 %></ul>
 </section>

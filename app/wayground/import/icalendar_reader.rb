@@ -20,8 +20,8 @@ module Wayground
     #  END:VCALENDAR
     # becomes:
     #  [{
-    #    'VEVENT' => [{'UID' => {value: '123@uid'}, 'DTSTART' => {value: <#DateTime>}}],
-    #    'X-CALNAME' => {value: 'Example Calendar', 'PARAM' => 'extra'}
+    #    'VEVENT' => [{ 'UID' => { value: '123@uid' }, 'DTSTART' => { value: <#DateTime> } }],
+    #    'X-CALNAME' => { value: 'Example Calendar', 'PARAM' => 'extra' }
     #  }]
     # This is a bit ugly, and would benefit from replacing the hashes with
     # some sort of class models. But, I’m being lazy about that since this
@@ -30,8 +30,8 @@ module Wayground
       attr_reader :io, :line_buffer
 
       # accepts a hash with either:
-      # :io => an IO object for the iCalendar data
-      # :data => a String containing the iCalendar data
+      # io: an IO object for the iCalendar data
+      # data: a String containing the iCalendar data
       def initialize(io: nil, data: nil)
         @io = io || StringIO.new(data)
         @line_buffer = nil

@@ -1,5 +1,5 @@
 <h1>Delete Setting “<%= link_to @setting.title, @setting %>”?</h1>
 
-<%= form_tag(@setting, :method => :delete) do %>
+<%= form_tag(@setting, method: :delete) do %>
 <p><%= submit_tag "Delete Setting" %></p>
 <% end %>

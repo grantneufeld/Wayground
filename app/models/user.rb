@@ -157,7 +157,7 @@ class User < ApplicationRecord
     if authority
       authority.action!(action_type)
     else
-      authorizations.create!(:area => area, action_type => true)
+      authorizations.create!(area: area, action_type => true)
     end
   end
 
