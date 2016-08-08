@@ -14,8 +14,8 @@ module Wayground
     attr_accessor :remember, :token
 
     # takes hash of parameters:
-    # :remember => the thing to be remembered (e.g., a User)
-    # :token => the token used to remember it (a new one will be generated if blank)
+    # remember: the thing to be remembered (e.g., a User)
+    # token: the token used to remember it (a new one will be generated if blank)
     def initialize(remember: nil, token: nil)
       self.remember = remember
       self.token = token

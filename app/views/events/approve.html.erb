@@ -1,5 +1,5 @@
 <h1>Approve Event: “<%= link_to @event.title, @event %>”?</h1>
 
-<%= form_tag(approve_event_path(@event), :method => :post) do %>
+<%= form_tag(approve_event_path(@event), method: :post) do %>
 <p><%= submit_tag "Approve Event" %></p>
 <% end %>

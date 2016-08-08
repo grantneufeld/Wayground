@@ -1,5 +1,5 @@
 <h1>Delete <%= @authority.area %> Authority for User “<%= @authority.user.name %>”</h1>
 
-<%= form_tag(authority_path(@authority), :method => :delete) do %>
+<%= form_tag(authority_path(@authority), method: :delete) do %>
 <p><%= submit_tag "Delete Authority" %></p>
 <% end %>

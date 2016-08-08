@@ -1,5 +1,5 @@
 <h1>Delete “<%= link_to @source.name, @source %>” Source?</h1>
 
-<%= form_tag(@source, :method => :delete) do %>
+<%= form_tag(@source, method: :delete) do %>
 <p><%= submit_tag "Delete Source" %></p>
 <% end %>

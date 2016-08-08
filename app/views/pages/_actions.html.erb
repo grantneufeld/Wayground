@@ -3,23 +3,23 @@ user ||= current_user
 skip_view ||= false
 
 if !skip_view && (!(page.authority_restricted?) || (user && page.authority_for_user_to?(user, :can_view)))
-  %><%= link_to 'View', page.sitepath, :title => 'Go to the page', :class => 'action' %>
+  %><%= link_to 'View', page.sitepath, title: 'Go to the page', class: 'action' %>
 <% end
 
 if user
   if page.authority_for_user_to?(user, :can_update)
-    %><%= link_to 'Edit', edit_page_path(page), :title => 'Make changes to the page', :class => 'action' %>
+    %><%= link_to 'Edit', edit_page_path(page), title: 'Make changes to the page', class: 'action' %>
 <% end
   if page.authority_for_user_to?(user, :can_create)
-    %><%= link_to 'Add Subpage', new_page_path(:parent => page.id),
-      :title => 'Add a page under this page', :class => 'action'
+    %><%= link_to 'Add Subpage', new_page_path(parent: page.id),
+      title: 'Add a page under this page', class: 'action'
     %>
 <% end
   if page.authority_for_user_to?(user, :can_delete)
     %><%= link_to 'Delete', [:delete, page],
-      :data => {:confirm => "Are you sure you want to permanently delete the page “#{page.title}”?"},
-      :method => :delete,
-      :title => 'Permanently remove the page from the website', :class => 'action'
+      data: { confirm: "Are you sure you want to permanently delete the page “#{page.title}”?" },
+      method: :delete,
+      title: 'Permanently remove the page from the website', class: 'action'
     %>
 <% end
 end -%>

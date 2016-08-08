@@ -32,7 +32,7 @@ if path -%>
   <%= @document.description %>
 </p>
 
-<p class="actions"><%= link_to 'Download', "/download/#{@document.id}/#{@document.filename}", :class => 'action' %>
-<%= link_to 'Edit', edit_document_path(@document), :class => 'action' %>
-<%= link_to 'Delete', [:delete, @document], :data => {:confirm => 'Are you sure?'}, :method => :delete, :class => 'action' %>
-<%= link_to 'New Document', new_document_path, :class => 'action' %></p>
+<p class="actions"><%= link_to 'Download', "/download/#{@document.id}/#{@document.filename}", class: 'action' %>
+<%= link_to 'Edit', edit_document_path(@document), class: 'action' %>
+<%= link_to 'Delete', [:delete, @document], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' %>
+<%= link_to 'New Document', new_document_path, class: 'action' %></p>

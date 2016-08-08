@@ -1,6 +1,6 @@
 <%
 content_for(:head) do
-  %><link rel="alternate" href="<%= events_path(:format => 'ics') %>" type="text/calendar" title="icalendar file for events" />
+  %><link rel="alternate" href="<%= events_path(format: 'ics') %>" type="text/calendar" title="icalendar file for events" />
 <link rel="profile" href="http://microformats.org/profile/hcalendar" />
 <%
 end
@@ -19,7 +19,7 @@ end -%>
 -%>
 <%= #show_pagination_selector
 -%>
-<%= render 'events', {:events => @events, :user => @user} %>
+<%= render 'events', { events: @events, user: @user } %>
 <%
 
 add_submenu_item(title: 'Upcoming Events', path: events_path, attrs: { class: 'list' })

@@ -47,7 +47,7 @@ if user.present?
 <%
   end
   if image.authority_for_user_to?(user, :can_delete)
-    %><%= link_to 'Delete', [:delete, image], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%= separator %>
+    %><%= link_to 'Delete', [:delete, image], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' %><%= separator %>
 <%
   end
   %><%= link_to 'New Image', new_image_path, class: 'action' %></p>

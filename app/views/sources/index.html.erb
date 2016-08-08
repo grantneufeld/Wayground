@@ -15,7 +15,7 @@
 <%= link_to 'Edit', edit_source_path(source), class: 'action' %><%= separator %><%
   end
   if source.authority_for_user_to?(@user, :can_delete) %>
-<%= link_to 'Delete', [:delete, source], data: {confirm: 'Are you sure?'}, method: :delete, class: 'action' %><%
+<%= link_to 'Delete', [:delete, source], data: { confirm: 'Are you sure?' }, method: :delete, class: 'action' %><%
     end %></td></tr>
 <% end -%>
 </tbody></table>

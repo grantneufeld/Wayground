@@ -3,5 +3,5 @@
 
 %><%= @page.content.html_safe %>
 <% content_for :actions do
-  %><%= render :partial => 'pages/actions', :locals => {:page => @page, :skip_view => true} %><%
+  %><%= render partial: 'pages/actions', locals: { page: @page, skip_view: true } %><%
 end -%>

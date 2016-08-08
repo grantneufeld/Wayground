@@ -6,14 +6,14 @@
 # extensions to ActiveRecord to support setting classes up as being Authority controlled.
 ApplicationRecord.class_eval do
   # options is a hash of optional parameters:
-  # - :authority_area => A string defining the area of authority the model is to fall under.
+  # - authority_area: A string defining the area of authority the model is to fall under.
   #    Defaults to the model’s class name.
-  # - :item_authority_flag_field => A boolean field name string that is used to track
+  # - item_authority_flag_field: A boolean field name string that is used to track
   #    whether individual records on the model will require authority to view.
   #    Defaults to ‘"is_authority_controlled"’.
   #    Set to ‘:always_private’ to have all of the model’s records require authority to be viewed.
   #    Set to ‘:always_viewable’ to have all of the model’s records not require authority to be viewed.
-  # - :inherits_from => A symbol for the method name to access an object that is authority controlled.
+  # - inherits_from: A symbol for the method name to access an object that is authority controlled.
   #    E.g., Path (custom url) gets it’s authority info through it’s item (typically a Page).
   def self.acts_as_authority_controlled(
     authority_area: nil, item_authority_flag_field: nil, inherits_from: nil

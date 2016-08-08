@@ -9,7 +9,7 @@
 <div class="column col2 lastcol">
 
 <h1>Sign Up Here</h1>
-<%= form_for @user, :url => signup_path do |f| %>
+<%= form_for @user, url: signup_path do |f| %>
 <%= show_errors(@user) %>
 <table><tbody>
 <tr><th><%= f.label :email %>:</th><td><%= f.email_field :email %></td></tr>
