@@ -1,24 +1,27 @@
 source 'https://rubygems.org'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0'
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
+  "https://github.com/#{repo_name}.git"
+end
 
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.1.1'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # gem 'pg_search'
 # gem 'queue_classic', '2.0.0rc12'
-
 # Use Puma as the app server
-gem 'puma', '~> 3.0'
+gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -43,24 +46,22 @@ gem 'virtus', '>= 0.5.5'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platform: :mri
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
 end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console'
-  gem 'listen', '~> 3.0.5'
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   # code analysis tools:
   gem 'brakeman', require: false # http://brakemanscanner.org/
-  gem 'churn', require: false # https://github.com/danmayer/churn
-  gem 'flay', require: false # https://github.com/seattlerb/flay
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
-  gem 'reek', require: false # https://github.com/troessner/reek/wiki
   gem 'rubocop', require: false # https://github.com/bbatsov/rubocop
+  gem 'rubycritic', require: false # https://github.com/whitesmith/rubycritic
   # gem validation
   gem 'bundler-audit', require: false # https://github.com/postmodern/bundler-audit
 end
@@ -68,10 +69,10 @@ end
 group :test do
   # specs/testing:
   gem 'rails-controller-testing'
-  gem 'rspec-rails', '~> 3.0', require: false
   gem 'rspec-activemodel-mocks', require: false
   gem 'rspec-autotest', require: false, github: 'grantneufeld/rspec-autotest'
   gem 'rspec-html-matchers', require: false
+  gem 'rspec-rails', '~> 3.0', require: false
   # features / acceptance tests:
   gem 'cucumber', '>= 1.2.1', require: false
   gem 'cucumber-rails', '>= 1.3.0', require: false
@@ -92,3 +93,6 @@ group :test do
   gem 'database_cleaner', '>= 0.8.0', require: false
   gem 'timecop', '>= 0.5.4', require: false
 end
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

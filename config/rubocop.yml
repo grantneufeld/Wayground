@@ -1,25 +1,34 @@
 inherit_from: ../.rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Exclude:
     - '(*)/**/*'
     - 'features/**/*'
 
-# ############################################################################
-
-# Override some of the default configuration settings:
+# Exclude migrations and test files from some of the tests
 
 Style/Documentation:
   Exclude:
     - 'spec/**/*'
-    - 'test/**/*'
-# TODO:?    - 'config/**/*'
 
 # TODO: Maybe drop the use of globals from the rspec `let` calls?
 Style/GlobalVars:
   Exclude:
     - 'spec/**/*'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'db/migrate/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+
+# ############################################################################
+
+# Override some of the default configuration settings:
 
 # I like a max line length wider than the traditional 80 character limit.
 
@@ -42,7 +51,7 @@ Style/AsciiComments:
   Enabled: false
 
 # I prefer a blank line before and after class declarations within a module
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 # maybe change FrozenStringLiteralComment back to true at some point
@@ -63,19 +72,19 @@ Style/AutoResourceCleanup:
 Style/CollectionMethods:
   Enabled: true
 
-Style/FirstArrayElementLineBreak:
+Layout/FirstArrayElementLineBreak:
   Enabled: true
 
-Style/FirstHashElementLineBreak:
+Layout/FirstHashElementLineBreak:
   Enabled: true
 
-Style/FirstMethodParameterLineBreak:
+Layout/FirstMethodParameterLineBreak:
   Enabled: true
 
 Style/MethodCalledOnDoEndBlock:
   Enabled: true
 
-Style/MultilineAssignmentLayout:
+Layout/MultilineAssignmentLayout:
   Enabled: true
 
 Style/OptionHash:

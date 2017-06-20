@@ -1,5 +1,5 @@
 # An external source of information to be accessed and processed into local items.
-class CreateSources < ActiveRecord::Migration
+class CreateSources < ActiveRecord::Migration[5.1]
   def change
     create_table :sources do |t|
       t.belongs_to :container_item, polymorphic: true
@@ -16,7 +16,6 @@ class CreateSources < ActiveRecord::Migration
       t.timestamps
     end
     add_index :sources, %i(container_item_type container_item_id), name: 'container'
-    add_index :sources, [:datastore_id]
     add_index :sources, [:processor]
     add_index :sources, [:last_updated_at]
     add_index :sources, [:refresh_after_at]

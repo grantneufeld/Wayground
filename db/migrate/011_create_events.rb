@@ -1,5 +1,5 @@
 # An event.
-class CreateEvents < ActiveRecord::Migration
+class CreateEvents < ActiveRecord::Migration[5.1]
   def self.up
     create_table :events do |t|
       t.belongs_to :user
@@ -30,7 +30,6 @@ class CreateEvents < ActiveRecord::Migration
       t.timestamps
     end
     change_table :events do |t|
-      t.index [:user_id]
       t.index %i(start_at end_at is_allday is_approved is_draft is_cancelled), name: 'dates'
       t.index [:title]
     end

@@ -1,6 +1,6 @@
 # Change the :can_edit field to :can_update,
 # and add the :can_approve field.
-class ModifyAuthorities < ActiveRecord::Migration
+class ModifyAuthorities < ActiveRecord::Migration[5.1]
   def self.up
     # The original migration was modified to have these fields,
     # so this will do nothing for new installations.

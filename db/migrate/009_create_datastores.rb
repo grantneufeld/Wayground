@@ -1,5 +1,5 @@
 # Storage of raw file data.
-class CreateDatastores < ActiveRecord::Migration
+class CreateDatastores < ActiveRecord::Migration[5.1]
   def self.up
     create_table :datastores do |t|
       t.binary :data, null: false, limit: 127.megabytes

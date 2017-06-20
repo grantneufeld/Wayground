@@ -1,5 +1,5 @@
 # Configure PosgreSQL to support hash fields.
-class SetupHstore < ActiveRecord::Migration
+class SetupHstore < ActiveRecord::Migration[5.1]
   def self.up
     execute 'CREATE EXTENSION IF NOT EXISTS hstore'
   end
