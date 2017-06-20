@@ -8,15 +8,14 @@
 # - rspec
 # - cucumber
 # - simple_cov
-# - bundle-audit
 # - brakeman
-# - churn
-# - flay
+# - bundle-audit
 # - rails_best_practices
-# - reek
 # - rubocop
-# - rails notes
-# - rails stats
+# - rubycritic (reek, flay, flog)
+# * Rails Tasks
+# - notes
+# - stats
 #
 # simple_cov needs to be configured to generate the reports/coverage/percentage.txt file,
 # which will just have the numeric percentage result.
@@ -52,22 +51,15 @@ echo "Generating Brakeman report..."
 bundle exec brakeman --quiet --output reports/brakeman.html --message-limit 255 --routes --separate-models --confidence-level 1
 echo ""
 
-# report on the code quality
-echo "Generating churn report..."
-bundle exec churn -c 5 -i "Gemfile, Gemfile.lock, config/routes.rb, db/schema.rb, db/structure.sql, preflight, spec/factories.rb, README.md" > reports/churn.txt
-echo ""
-echo "Generating flay reports..."
-bundle exec flay -f -l app lib > reports/flay-app.txt
-bundle exec flay -f -l spec > reports/flay-spec.txt
-echo ""
+# reports on the code quality and activity
 echo "Generating Rails Best Practices report..."
 bundle exec rails_best_practices --format html --with-textmate --spec --features --output-file reports/rails_best_practices.html
 echo ""
-echo "Generating reek report..."
-bundle exec reek --no-color --config config/reek.yml app/controllers app/helpers app/mailers app/models app/presenters app/validators app/wayground lib > reports/reek.txt
-echo ""
 echo "Generating rubocop report..."
 bundle exec rubocop --config config/rubocop.yml --format simple --out reports/rubocop.txt
+echo ""
+echo "Generating rubycritic report (flay, flog, reek)..."
+bundle exec rubycritic --path reports/rubycritic --no-browser app bin config lib spec
 echo ""
 
 # other information about the code

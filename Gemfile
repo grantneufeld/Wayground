@@ -56,11 +56,9 @@ group :development do
 
   # code analysis tools:
   gem 'brakeman', require: false # http://brakemanscanner.org/
-  gem 'churn', require: false # https://github.com/danmayer/churn
-  gem 'flay', require: false # https://github.com/seattlerb/flay
   gem 'rails_best_practices', require: false # https://github.com/railsbp/rails_best_practices
-  gem 'reek', require: false # https://github.com/troessner/reek/wiki
   gem 'rubocop', require: false # https://github.com/bbatsov/rubocop
+  gem 'rubycritic', require: false # https://github.com/whitesmith/rubycritic
   # gem validation
   gem 'bundler-audit', require: false # https://github.com/postmodern/bundler-audit
 end

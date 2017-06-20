@@ -20,7 +20,6 @@ Lint/HandleExceptions:
 # Some methods that could do with some (potentially significant) refactoring.
 Metrics/AbcSize:
   Exclude:
-    - 'db/migrate/**/*'
     - 'app/controllers/application_controller.rb'
     - 'app/controllers/paths_controller.rb'
     - 'app/controllers/sessions_controller.rb'
