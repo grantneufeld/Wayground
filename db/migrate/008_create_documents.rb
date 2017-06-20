@@ -1,5 +1,5 @@
 # Used to store the metadata for a data file.
-class CreateDocuments < ActiveRecord::Migration
+class CreateDocuments < ActiveRecord::Migration[5.1]
   def self.up
     create_table :documents do |t|
       t.belongs_to :datastore # the actual data of the file

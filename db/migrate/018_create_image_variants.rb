@@ -1,5 +1,5 @@
 # Different versions of a given Image (e.g., thumbnail, original, etc.)
-class CreateImageVariants < ActiveRecord::Migration
+class CreateImageVariants < ActiveRecord::Migration[5.1]
   def change
     create_table :image_variants do |t|
       t.belongs_to :image, null: false

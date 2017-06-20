@@ -1,5 +1,5 @@
 # Remember the source for a given item.
-class CreateSourcedItems < ActiveRecord::Migration
+class CreateSourcedItems < ActiveRecord::Migration[5.1]
   def change
     create_table :sourced_items do |t|
       t.belongs_to :source, null: false
@@ -10,9 +10,6 @@ class CreateSourcedItems < ActiveRecord::Migration
       t.boolean :has_local_modifications, default: false, null: false
       t.timestamps
     end
-    add_index :sourced_items, :source_id
-    add_index :sourced_items, %i(item_type item_id)
-    add_index :sourced_items, [:datastore_id]
     add_index :sourced_items, :source_identifier
   end
 end

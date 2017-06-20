@@ -1,5 +1,5 @@
 # A web-link to an external resource.
-class CreateExternalLinks < ActiveRecord::Migration
+class CreateExternalLinks < ActiveRecord::Migration[5.1]
   def self.up
     create_table :external_links do |t|
       t.belongs_to :item, null: false, polymorphic: true

@@ -1,5 +1,5 @@
 # Define a permission(s) for a User for an area or specific item.
-class CreateAuthorities < ActiveRecord::Migration
+class CreateAuthorities < ActiveRecord::Migration[5.1]
   def self.up
     create_table :authorities do |t|
       t.belongs_to :user

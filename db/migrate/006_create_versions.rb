@@ -1,5 +1,5 @@
 # A version of an item. (version history / version control)
-class CreateVersions < ActiveRecord::Migration
+class CreateVersions < ActiveRecord::Migration[5.1]
   def self.up
     create_table :versions do |t|
       t.belongs_to :item, polymorphic: true, null: false

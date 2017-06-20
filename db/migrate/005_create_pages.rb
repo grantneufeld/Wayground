@@ -1,5 +1,5 @@
 # An html page on the system.
-class CreatePages < ActiveRecord::Migration
+class CreatePages < ActiveRecord::Migration[5.1]
   def self.up
     create_table :pages do |t|
       t.belongs_to :parent

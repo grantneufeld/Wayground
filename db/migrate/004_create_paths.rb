@@ -1,5 +1,5 @@
 # Define a path (relative url) to an item.
-class CreatePaths < ActiveRecord::Migration
+class CreatePaths < ActiveRecord::Migration[5.1]
   def self.up
     create_table :paths do |t|
       t.belongs_to :item, polymorphic: true

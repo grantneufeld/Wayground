@@ -1,5 +1,5 @@
 # A project (kind of like user groups on most other sites)
-class CreateProjects < ActiveRecord::Migration
+class CreateProjects < ActiveRecord::Migration[5.1]
   def self.up
     create_table :projects do |t|
       t.belongs_to :parent # Project that this Project is a subproject of

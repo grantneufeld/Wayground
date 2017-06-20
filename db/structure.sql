@@ -1,13 +1,11 @@
---
--- PostgreSQL database dump
---
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
@@ -44,12 +42,24 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: authentications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: authentications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE authentications (
-    id integer NOT NULL,
-    user_id integer,
+    id bigint NOT NULL,
+    user_id bigint,
     provider character varying NOT NULL,
     uid character varying NOT NULL,
     nickname character varying,
@@ -59,8 +69,8 @@ CREATE TABLE authentications (
     url character varying,
     image_url character varying,
     description text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -84,15 +94,15 @@ ALTER SEQUENCE authentications_id_seq OWNED BY authentications.id;
 
 
 --
--- Name: authorities; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: authorities; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE authorities (
-    id integer NOT NULL,
-    user_id integer,
-    authorized_by_id integer,
-    item_id integer,
+    id bigint NOT NULL,
+    user_id bigint,
+    authorized_by_id bigint,
     item_type character varying,
+    item_id bigint,
     area character varying(31),
     is_owner boolean,
     can_create boolean,
@@ -102,8 +112,8 @@ CREATE TABLE authorities (
     can_invite boolean,
     can_permit boolean,
     can_approve boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -127,11 +137,11 @@ ALTER SEQUENCE authorities_id_seq OWNED BY authorities.id;
 
 
 --
--- Name: datastores; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: datastores; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE datastores (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     data bytea NOT NULL
 );
 
@@ -156,22 +166,22 @@ ALTER SEQUENCE datastores_id_seq OWNED BY datastores.id;
 
 
 --
--- Name: documents; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: documents; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE documents (
-    id integer NOT NULL,
-    datastore_id integer,
-    container_path_id integer,
-    user_id integer,
+    id bigint NOT NULL,
+    datastore_id bigint,
+    container_path_id bigint,
+    user_id bigint,
     is_authority_controlled boolean DEFAULT false NOT NULL,
     filename character varying(127) NOT NULL,
     size integer NOT NULL,
     content_type character varying NOT NULL,
     charset character varying(31),
     description character varying(1023),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -195,12 +205,12 @@ ALTER SEQUENCE documents_id_seq OWNED BY documents.id;
 
 
 --
--- Name: events; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: events; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE events (
-    id integer NOT NULL,
-    user_id integer,
+    id bigint NOT NULL,
+    user_id bigint,
     start_at timestamp without time zone NOT NULL,
     end_at timestamp without time zone,
     timezone character varying(31),
@@ -223,9 +233,9 @@ CREATE TABLE events (
     province character varying(31),
     country character varying(2),
     location_url character varying(255),
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    image_id integer
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    image_id bigint
 );
 
 
@@ -249,20 +259,20 @@ ALTER SEQUENCE events_id_seq OWNED BY events.id;
 
 
 --
--- Name: external_links; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: external_links; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE external_links (
-    id integer NOT NULL,
-    item_id integer NOT NULL,
-    item_type character varying NOT NULL,
+    id bigint NOT NULL,
+    item_type character varying,
+    item_id bigint NOT NULL,
     is_source boolean DEFAULT false NOT NULL,
     "position" integer,
     site character varying(31),
     title character varying(255) NOT NULL,
     url text NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -286,19 +296,19 @@ ALTER SEQUENCE external_links_id_seq OWNED BY external_links.id;
 
 
 --
--- Name: image_variants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: image_variants; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE image_variants (
-    id integer NOT NULL,
-    image_id integer NOT NULL,
+    id bigint NOT NULL,
+    image_id bigint NOT NULL,
     height integer,
     width integer,
     format character varying(31) NOT NULL,
     style character varying(15) NOT NULL,
     url text NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -322,19 +332,19 @@ ALTER SEQUENCE image_variants_id_seq OWNED BY image_variants.id;
 
 
 --
--- Name: images; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: images; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE images (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     title text,
     alt_text character varying(127),
     description text,
     attribution character varying(127),
     attribution_url text,
     license_url text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -358,19 +368,19 @@ ALTER SEQUENCE images_id_seq OWNED BY images.id;
 
 
 --
--- Name: pages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: pages; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE pages (
-    id integer NOT NULL,
-    parent_id integer,
+    id bigint NOT NULL,
+    parent_id bigint,
     is_authority_controlled boolean DEFAULT false NOT NULL,
     filename character varying NOT NULL,
     title character varying NOT NULL,
     description text,
     content text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -394,17 +404,17 @@ ALTER SEQUENCE pages_id_seq OWNED BY pages.id;
 
 
 --
--- Name: paths; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: paths; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE paths (
-    id integer NOT NULL,
-    item_id integer,
+    id bigint NOT NULL,
     item_type character varying,
+    item_id bigint,
     sitepath text NOT NULL,
     redirect text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -428,14 +438,14 @@ ALTER SEQUENCE paths_id_seq OWNED BY paths.id;
 
 
 --
--- Name: projects; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE projects (
-    id integer NOT NULL,
-    parent_id integer,
-    creator_id integer NOT NULL,
-    owner_id integer NOT NULL,
+    id bigint NOT NULL,
+    parent_id bigint,
+    creator_id bigint NOT NULL,
+    owner_id bigint NOT NULL,
     is_visible boolean DEFAULT false NOT NULL,
     is_public_content boolean DEFAULT false NOT NULL,
     is_visible_member_list boolean DEFAULT false NOT NULL,
@@ -448,8 +458,8 @@ CREATE TABLE projects (
     filename character varying,
     name character varying NOT NULL,
     description text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -473,7 +483,7 @@ ALTER SEQUENCE projects_id_seq OWNED BY projects.id;
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE schema_migrations (
@@ -482,15 +492,15 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: settings; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE settings (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     key character varying,
     value text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -514,20 +524,20 @@ ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
 
 
 --
--- Name: sourced_items; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: sourced_items; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE sourced_items (
-    id integer NOT NULL,
-    source_id integer NOT NULL,
-    item_id integer,
+    id bigint NOT NULL,
+    source_id bigint NOT NULL,
     item_type character varying,
-    datastore_id integer,
+    item_id bigint,
+    datastore_id bigint,
     source_identifier character varying,
     last_sourced_at timestamp without time zone NOT NULL,
     has_local_modifications boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     is_ignored boolean DEFAULT false NOT NULL
 );
 
@@ -552,14 +562,14 @@ ALTER SEQUENCE sourced_items_id_seq OWNED BY sourced_items.id;
 
 
 --
--- Name: sources; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: sources; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE sources (
-    id integer NOT NULL,
-    container_item_id integer,
+    id bigint NOT NULL,
     container_item_type character varying,
-    datastore_id integer,
+    container_item_id bigint,
+    datastore_id bigint,
     processor character varying(31) NOT NULL,
     url character varying(511) NOT NULL,
     method character varying(7) DEFAULT 'get'::character varying NOT NULL,
@@ -569,8 +579,8 @@ CREATE TABLE sources (
     title character varying(127),
     description character varying(511),
     options text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -594,19 +604,19 @@ ALTER SEQUENCE sources_id_seq OWNED BY sources.id;
 
 
 --
--- Name: tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE tags (
-    id integer NOT NULL,
-    item_id integer NOT NULL,
-    item_type character varying NOT NULL,
-    user_id integer,
+    id bigint NOT NULL,
+    item_type character varying,
+    item_id bigint NOT NULL,
+    user_id bigint,
     tag character varying NOT NULL,
     title character varying,
     is_meta boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -630,17 +640,17 @@ ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
 
 
 --
--- Name: user_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: user_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE user_tokens (
-    id integer NOT NULL,
-    user_id integer NOT NULL,
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
     token character varying(127) NOT NULL,
     expires_at timestamp without time zone,
     last_used_at timestamp without time zone,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -664,11 +674,11 @@ ALTER SEQUENCE user_tokens_id_seq OWNED BY user_tokens.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE users (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     email character varying,
     password_hash character varying(128),
     name character varying,
@@ -680,8 +690,8 @@ CREATE TABLE users (
     timezone character varying(31),
     location character varying,
     about text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -705,14 +715,14 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: versions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE versions (
-    id integer NOT NULL,
-    item_id integer NOT NULL,
-    item_type character varying NOT NULL,
-    user_id integer NOT NULL,
+    id bigint NOT NULL,
+    item_type character varying,
+    item_id bigint NOT NULL,
+    user_id bigint NOT NULL,
     edited_at timestamp without time zone NOT NULL,
     edit_comment character varying,
     filename character varying,
@@ -741,133 +751,141 @@ ALTER SEQUENCE versions_id_seq OWNED BY versions.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: authentications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY authentications ALTER COLUMN id SET DEFAULT nextval('authentications_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: authorities id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY authorities ALTER COLUMN id SET DEFAULT nextval('authorities_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: datastores id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY datastores ALTER COLUMN id SET DEFAULT nextval('datastores_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY documents ALTER COLUMN id SET DEFAULT nextval('documents_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: external_links id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY external_links ALTER COLUMN id SET DEFAULT nextval('external_links_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: image_variants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY image_variants ALTER COLUMN id SET DEFAULT nextval('image_variants_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: images id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY images ALTER COLUMN id SET DEFAULT nextval('images_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: pages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY pages ALTER COLUMN id SET DEFAULT nextval('pages_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: paths id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY paths ALTER COLUMN id SET DEFAULT nextval('paths_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY settings ALTER COLUMN id SET DEFAULT nextval('settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: sourced_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY sourced_items ALTER COLUMN id SET DEFAULT nextval('sourced_items_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: sources id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY sources ALTER COLUMN id SET DEFAULT nextval('sources_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: user_tokens id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY user_tokens ALTER COLUMN id SET DEFAULT nextval('user_tokens_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
 
 
 --
--- Name: authentications_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: authentications authentications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY authentications
@@ -875,7 +893,7 @@ ALTER TABLE ONLY authentications
 
 
 --
--- Name: authorities_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: authorities authorities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY authorities
@@ -883,7 +901,7 @@ ALTER TABLE ONLY authorities
 
 
 --
--- Name: datastores_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: datastores datastores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY datastores
@@ -891,7 +909,7 @@ ALTER TABLE ONLY datastores
 
 
 --
--- Name: documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY documents
@@ -899,7 +917,7 @@ ALTER TABLE ONLY documents
 
 
 --
--- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY events
@@ -907,7 +925,7 @@ ALTER TABLE ONLY events
 
 
 --
--- Name: external_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: external_links external_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY external_links
@@ -915,7 +933,7 @@ ALTER TABLE ONLY external_links
 
 
 --
--- Name: image_variants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: image_variants image_variants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY image_variants
@@ -923,7 +941,7 @@ ALTER TABLE ONLY image_variants
 
 
 --
--- Name: images_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY images
@@ -931,7 +949,7 @@ ALTER TABLE ONLY images
 
 
 --
--- Name: pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pages pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY pages
@@ -939,7 +957,7 @@ ALTER TABLE ONLY pages
 
 
 --
--- Name: paths_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: paths paths_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY paths
@@ -947,7 +965,7 @@ ALTER TABLE ONLY paths
 
 
 --
--- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY projects
@@ -955,7 +973,15 @@ ALTER TABLE ONLY projects
 
 
 --
--- Name: settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: settings settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY settings
@@ -963,7 +989,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: sourced_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: sourced_items sourced_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY sourced_items
@@ -971,7 +997,7 @@ ALTER TABLE ONLY sourced_items
 
 
 --
--- Name: sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: sources sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY sources
@@ -979,7 +1005,7 @@ ALTER TABLE ONLY sources
 
 
 --
--- Name: tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tags
@@ -987,7 +1013,7 @@ ALTER TABLE ONLY tags
 
 
 --
--- Name: user_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: user_tokens user_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY user_tokens
@@ -995,7 +1021,7 @@ ALTER TABLE ONLY user_tokens
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -1003,7 +1029,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY versions
@@ -1011,350 +1037,483 @@ ALTER TABLE ONLY versions
 
 
 --
--- Name: area; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: area; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX area ON authorities USING btree (area, user_id);
 
 
 --
--- Name: auth; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: auth; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX auth ON authentications USING btree (provider, uid);
 
 
 --
--- Name: authorizer; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: authorizer; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX authorizer ON authorities USING btree (authorized_by_id, user_id, area);
 
 
 --
--- Name: container; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: container; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX container ON sources USING btree (container_item_type, container_item_id);
 
 
 --
--- Name: creator; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: creator; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX creator ON projects USING btree (creator_id);
 
 
 --
--- Name: data; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: data; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX data ON documents USING btree (datastore_id);
 
 
 --
--- Name: dates; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: dates; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX dates ON events USING btree (start_at, end_at, is_allday, is_approved, is_draft, is_cancelled);
 
 
 --
--- Name: edits_by_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: edits_by_date; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX edits_by_date ON versions USING btree (edited_at, item_type, item_id);
 
 
 --
--- Name: email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: email; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX email ON users USING btree (email);
 
 
 --
--- Name: file; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: file; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX file ON documents USING btree (filename);
 
 
 --
--- Name: filename; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: filename; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX filename ON users USING btree (filename);
 
 
 --
--- Name: index_events_on_title; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_authentications_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_authentications_on_user_id ON authentications USING btree (user_id);
+
+
+--
+-- Name: index_authorities_on_authorized_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_authorities_on_authorized_by_id ON authorities USING btree (authorized_by_id);
+
+
+--
+-- Name: index_authorities_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_authorities_on_item_type_and_item_id ON authorities USING btree (item_type, item_id);
+
+
+--
+-- Name: index_authorities_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_authorities_on_user_id ON authorities USING btree (user_id);
+
+
+--
+-- Name: index_documents_on_container_path_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_documents_on_container_path_id ON documents USING btree (container_path_id);
+
+
+--
+-- Name: index_documents_on_datastore_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_documents_on_datastore_id ON documents USING btree (datastore_id);
+
+
+--
+-- Name: index_documents_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_documents_on_user_id ON documents USING btree (user_id);
+
+
+--
+-- Name: index_events_on_image_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_image_id ON events USING btree (image_id);
+
+
+--
+-- Name: index_events_on_title; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_events_on_title ON events USING btree (title);
 
 
 --
--- Name: index_events_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_events_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_events_on_user_id ON events USING btree (user_id);
 
 
 --
--- Name: index_external_links_on_item_type_and_item_id_and_position; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_external_links_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_links_on_item_type_and_item_id ON external_links USING btree (item_type, item_id);
+
+
+--
+-- Name: index_external_links_on_item_type_and_item_id_and_position; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_external_links_on_item_type_and_item_id_and_position ON external_links USING btree (item_type, item_id, "position");
 
 
 --
--- Name: index_image_variants_on_image_id_and_style_and_height_and_width; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_image_variants_on_image_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_image_variants_on_image_id ON image_variants USING btree (image_id);
+
+
+--
+-- Name: index_image_variants_on_image_id_and_style_and_height_and_width; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_image_variants_on_image_id_and_style_and_height_and_width ON image_variants USING btree (image_id, style, height, width);
 
 
 --
--- Name: index_projects_on_filename; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_pages_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pages_on_parent_id ON pages USING btree (parent_id);
+
+
+--
+-- Name: index_paths_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_paths_on_item_type_and_item_id ON paths USING btree (item_type, item_id);
+
+
+--
+-- Name: index_projects_on_creator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_creator_id ON projects USING btree (creator_id);
+
+
+--
+-- Name: index_projects_on_filename; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_projects_on_filename ON projects USING btree (filename);
 
 
 --
--- Name: index_projects_on_name_and_is_visible; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_projects_on_name_and_is_visible; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_projects_on_name_and_is_visible ON projects USING btree (name, is_visible);
 
 
 --
--- Name: index_sourced_items_on_datastore_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_projects_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_owner_id ON projects USING btree (owner_id);
+
+
+--
+-- Name: index_projects_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_parent_id ON projects USING btree (parent_id);
+
+
+--
+-- Name: index_sourced_items_on_datastore_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sourced_items_on_datastore_id ON sourced_items USING btree (datastore_id);
 
 
 --
--- Name: index_sourced_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sourced_items_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sourced_items_on_item_type_and_item_id ON sourced_items USING btree (item_type, item_id);
 
 
 --
--- Name: index_sourced_items_on_source_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sourced_items_on_source_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sourced_items_on_source_id ON sourced_items USING btree (source_id);
 
 
 --
--- Name: index_sourced_items_on_source_identifier; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sourced_items_on_source_identifier; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sourced_items_on_source_identifier ON sourced_items USING btree (source_identifier);
 
 
 --
--- Name: index_sources_on_datastore_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sources_on_container_item_type_and_container_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sources_on_container_item_type_and_container_item_id ON sources USING btree (container_item_type, container_item_id);
+
+
+--
+-- Name: index_sources_on_datastore_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sources_on_datastore_id ON sources USING btree (datastore_id);
 
 
 --
--- Name: index_sources_on_last_updated_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sources_on_last_updated_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sources_on_last_updated_at ON sources USING btree (last_updated_at);
 
 
 --
--- Name: index_sources_on_processor; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sources_on_processor; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sources_on_processor ON sources USING btree (processor);
 
 
 --
--- Name: index_sources_on_refresh_after_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_sources_on_refresh_after_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_sources_on_refresh_after_at ON sources USING btree (refresh_after_at);
 
 
 --
--- Name: index_user_tokens_on_expires_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_tags_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tags_on_item_type_and_item_id ON tags USING btree (item_type, item_id);
+
+
+--
+-- Name: index_tags_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tags_on_user_id ON tags USING btree (user_id);
+
+
+--
+-- Name: index_user_tokens_on_expires_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_user_tokens_on_expires_at ON user_tokens USING btree (expires_at);
 
 
 --
--- Name: index_user_tokens_on_last_used_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_user_tokens_on_last_used_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_user_tokens_on_last_used_at ON user_tokens USING btree (last_used_at);
 
 
 --
--- Name: index_user_tokens_on_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_user_tokens_on_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_user_tokens_on_token ON user_tokens USING btree (token);
 
 
 --
--- Name: index_user_tokens_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_user_tokens_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_user_tokens_on_user_id ON user_tokens USING btree (user_id);
 
 
 --
--- Name: item; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (item_type, item_id);
+
+
+--
+-- Name: index_versions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_user_id ON versions USING btree (user_id);
+
+
+--
+-- Name: item; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX item ON authorities USING btree (item_id, item_type, user_id);
 
 
 --
--- Name: item_by_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: item_by_date; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX item_by_date ON versions USING btree (item_type, item_id, edited_at);
 
 
 --
--- Name: item_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: item_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX item_idx ON paths USING btree (item_type, item_id);
 
 
 --
--- Name: key; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: key; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX key ON settings USING btree (key);
 
 
 --
--- Name: owner; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: owner; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX owner ON projects USING btree (owner_id);
 
 
 --
--- Name: parent; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: parent; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX parent ON projects USING btree (parent_id);
 
 
 --
--- Name: path; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: path; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX path ON pages USING btree (parent_id, filename);
 
 
 --
--- Name: pathname; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: pathname; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX pathname ON documents USING btree (container_path_id, filename);
 
 
 --
--- Name: remember_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: remember_token; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX remember_token ON users USING btree (remember_token);
 
 
 --
--- Name: site; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: site; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX site ON external_links USING btree (site);
 
 
 --
--- Name: sitepath; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: sitepath; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX sitepath ON paths USING btree (sitepath);
 
 
 --
--- Name: tags_item_tag_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: tags_item_tag_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX tags_item_tag_idx ON tags USING btree (item_type, item_id, tag);
 
 
 --
--- Name: tags_tag_item_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: tags_tag_item_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX tags_tag_item_idx ON tags USING btree (tag, item_type, item_id);
 
 
 --
--- Name: tags_user_item_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: tags_user_item_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX tags_user_item_idx ON tags USING btree (user_id, item_type, item_id);
 
 
 --
--- Name: title; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: title; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX title ON external_links USING btree (title);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
-
-
---
--- Name: user; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: user; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX "user" ON authentications USING btree (user_id, provider);
 
 
 --
--- Name: user_by_date; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: user_by_date; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX user_by_date ON versions USING btree (user_id, edited_at, item_type, item_id);
 
 
 --
--- Name: user_by_item; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: user_by_item; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX user_by_item ON versions USING btree (user_id, item_type, item_id, edited_at);
 
 
 --
--- Name: user_map; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: user_map; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX user_map ON authorities USING btree (user_id, item_id, item_type, area);
 
 
 --
--- Name: userfile; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: userfile; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX userfile ON documents USING btree (user_id, filename);
@@ -1364,51 +1523,31 @@ CREATE INDEX userfile ON documents USING btree (user_id, filename);
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('1');
+INSERT INTO "schema_migrations" (version) VALUES
+('1'),
+('10'),
+('11'),
+('12'),
+('13'),
+('14'),
+('15'),
+('16'),
+('17'),
+('18'),
+('19'),
+('2'),
+('20'),
+('20150617230424'),
+('21'),
+('22'),
+('3'),
+('4'),
+('5'),
+('6'),
+('7'),
+('8'),
+('9');
 
-INSERT INTO schema_migrations (version) VALUES ('10');
-
-INSERT INTO schema_migrations (version) VALUES ('11');
-
-INSERT INTO schema_migrations (version) VALUES ('12');
-
-INSERT INTO schema_migrations (version) VALUES ('13');
-
-INSERT INTO schema_migrations (version) VALUES ('14');
-
-INSERT INTO schema_migrations (version) VALUES ('15');
-
-INSERT INTO schema_migrations (version) VALUES ('16');
-
-INSERT INTO schema_migrations (version) VALUES ('17');
-
-INSERT INTO schema_migrations (version) VALUES ('18');
-
-INSERT INTO schema_migrations (version) VALUES ('19');
-
-INSERT INTO schema_migrations (version) VALUES ('2');
-
-INSERT INTO schema_migrations (version) VALUES ('20');
-
-INSERT INTO schema_migrations (version) VALUES ('20150617230424');
-
-INSERT INTO schema_migrations (version) VALUES ('21');
-
-INSERT INTO schema_migrations (version) VALUES ('22');
-
-INSERT INTO schema_migrations (version) VALUES ('3');
-
-INSERT INTO schema_migrations (version) VALUES ('4');
-
-INSERT INTO schema_migrations (version) VALUES ('5');
-
-INSERT INTO schema_migrations (version) VALUES ('6');
-
-INSERT INTO schema_migrations (version) VALUES ('7');
-
-INSERT INTO schema_migrations (version) VALUES ('8');
-
-INSERT INTO schema_migrations (version) VALUES ('9');
 

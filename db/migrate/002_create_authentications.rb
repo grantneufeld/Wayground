@@ -1,5 +1,5 @@
 # User authentications via login & password or external providers (e.g., oauth).
-class CreateAuthentications < ActiveRecord::Migration
+class CreateAuthentications < ActiveRecord::Migration[5.1]
   def self.up
     create_table :authentications do |t|
       t.belongs_to :user
