@@ -1,6 +1,6 @@
 # Levels of government.
 # May be hierarchical (e.g., Federal -> Provincial/State -> Municipal -> Community)
-class CreateLevels < ActiveRecord::Migration
+class CreateLevels < ActiveRecord::Migration[5.1]
   def change
     create_table :levels do |t|
       t.belongs_to :parent

@@ -1,5 +1,5 @@
 # A political party for a given level of government.
-class CreateParties < ActiveRecord::Migration
+class CreateParties < ActiveRecord::Migration[5.1]
   def self.up
     create_table :parties do |t|
       t.belongs_to :level, null: false

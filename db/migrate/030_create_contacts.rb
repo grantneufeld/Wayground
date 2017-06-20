@@ -1,5 +1,5 @@
 # Contact information, linked to an item (typically a Person, Candidate, Party)
-class CreateContacts < ActiveRecord::Migration
+class CreateContacts < ActiveRecord::Migration[5.1]
   def change
     create_table :contacts do |t|
       t.belongs_to :item, polymorphic: true, null: false

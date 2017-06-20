@@ -1,5 +1,5 @@
 # Ballot for an office in an election
-class CreateBallots < ActiveRecord::Migration
+class CreateBallots < ActiveRecord::Migration[5.1]
   def change
     create_table :ballots do |t|
       t.belongs_to :election, null: false
@@ -16,6 +16,5 @@ class CreateBallots < ActiveRecord::Migration
     # only allow one ballot for a given office in a given election
     add_index :ballots, %i(election_id office_id), unique: true
     add_index :ballots, %i(election_id office_id position)
-    add_index :ballots, :office_id
   end
 end

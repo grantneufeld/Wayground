@@ -1,5 +1,5 @@
 # An election (may be for multiple offices)
-class CreateElections < ActiveRecord::Migration
+class CreateElections < ActiveRecord::Migration[5.1]
   def change
     create_table :elections do |t|
       t.belongs_to :level

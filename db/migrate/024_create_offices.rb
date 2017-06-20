@@ -1,5 +1,5 @@
 # An elected Office (E.g., a City Councillor, Trustee, MP, Mayor, etc.)
-class CreateOffices < ActiveRecord::Migration
+class CreateOffices < ActiveRecord::Migration[5.1]
   def change
     create_table :offices do |t|
       t.belongs_to :level, null: false

@@ -1,5 +1,5 @@
 # A candidate (Person) in an election.
-class CreateCandidates < ActiveRecord::Migration
+class CreateCandidates < ActiveRecord::Migration[5.1]
   def change
     create_table :candidates do |t|
       t.belongs_to :ballot, null: false
@@ -24,6 +24,5 @@ class CreateCandidates < ActiveRecord::Migration
     add_index :candidates, %i(ballot_id filename), unique: true
     add_index :candidates, %i(ballot_id is_confirmed name)
     add_index :candidates, %i(ballot_id vote_count name)
-    add_index :candidates, :submitter_id
   end
 end

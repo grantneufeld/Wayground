@@ -1,8 +1,9 @@
 # A person. May have multiple candidacies in elections. May hold multiple offices.
-class CreatePeople < ActiveRecord::Migration
+class CreatePeople < ActiveRecord::Migration[5.1]
   def self.up
     create_table :people do |t|
-      t.belongs_to :user
+      # a user record can only be associated with one person
+      t.belongs_to :user, index: { unique: true }
       t.belongs_to :submitter
       t.string :filename, null: false
       t.string :fullname, null: false
@@ -11,8 +12,6 @@ class CreatePeople < ActiveRecord::Migration
       t.timestamps
     end
     # execute 'ALTER TABLE people ADD COLUMN aliases text[]'
-    add_index :people, :user_id, unique: true # only one person record can be associated with a user
-    add_index :people, :submitter_id
     add_index :people, :filename, unique: true
     add_index :people, :fullname
     add_index :people, :aliases
