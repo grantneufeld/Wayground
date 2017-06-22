@@ -45,36 +45,36 @@ describe ExternalLinkPresenter do
 
   describe '#present_link_in' do
     it 'should default to a span element' do
-      expect( presenter.present_link_in ).to match /\A<span /
+      expect(presenter.present_link_in).to match(/\A<span /)
     end
     it 'should be html safe' do
-      expect( presenter.present_link_in.html_safe? ).to be_truthy
+      expect(presenter.present_link_in.html_safe?).to be_truthy
     end
     context 'with no site' do
       it 'should default to “website” as the tag class' do
-        expect( presenter.present_link_in ).to match(/\A<[^>]+ class="website"/)
+        expect(presenter.present_link_in).to match(/\A<[^>]+ class="website"/)
       end
       it 'should not have a label' do
-        expect( presenter.present_link_in ).not_to match(/ class="label"/)
+        expect(presenter.present_link_in).not_to match(/ class="label"/)
       end
     end
     context 'with a recognized site' do
       it 'should use the site as the tag class' do
         link.site = 'google'
-        expect( presenter.present_link_in ).to match(/\A<[^>]+ class="google"/)
+        expect(presenter.present_link_in).to match(/\A<[^>]+ class="google"/)
       end
       it 'should include a label' do
         link.site = 'google'
-        expect( presenter.present_link_in ).to match /<span class="label">Google: <\/span>/
+        expect(presenter.present_link_in).to match(%r{<span class="label">Google: </span>})
       end
       it 'should be html safe' do
         link.site = 'google'
-        expect( presenter.present_link_in.html_safe? ).to be_truthy
+        expect(presenter.present_link_in.html_safe?).to be_truthy
       end
     end
     context 'with a tag type' do
       it 'should use the given tag type' do
-        expect( presenter.present_link_in(:div) ).to match /\A<div /
+        expect(presenter.present_link_in(:div)).to match(/\A<div /)
       end
     end
     context 'loaded up' do
@@ -82,10 +82,10 @@ describe ExternalLinkPresenter do
         link.url = 'http://loaded.up/link'
         link.title = 'Loaded Up'
         link.site = 'linkedin'
-        expect( presenter.present_link_in(:li) ).to eq(
-          '<li class="linkedin">' +
-          '<span class="label">LinkedIn: </span>' +
-          '<a href="http://loaded.up/link" class="url" title="Loaded Up" target="_blank">Loaded Up</a>' +
+        expect(presenter.present_link_in(:li)).to eq(
+          '<li class="linkedin">' \
+          '<span class="label">LinkedIn: </span>' \
+          '<a href="http://loaded.up/link" class="url" title="Loaded Up" target="_blank">Loaded Up</a>' \
           '</li>'
         )
       end
@@ -95,33 +95,33 @@ describe ExternalLinkPresenter do
   describe '#present_label' do
     context 'with no site' do
       it 'should return an empty string' do
-        expect( presenter.present_label ).to eq ''
+        expect(presenter.present_label).to eq ''
       end
       it 'should be html safe' do
-        expect( presenter.present_label.html_safe? ).to be_truthy
+        expect(presenter.present_label.html_safe?).to be_truthy
       end
     end
     context 'with an unrecognized site' do
       it 'should return an empty string' do
         link.site = 'unrecognized'
-        expect( presenter.present_label ).to eq ''
+        expect(presenter.present_label).to eq ''
       end
     end
     context 'with the site set to “flickr”' do
       it 'should return a span label element' do
         link.site = 'flickr'
-        expect( presenter.present_label ).to eq '<span class="label">Flickr: </span>'
+        expect(presenter.present_label).to eq '<span class="label">Flickr: </span>'
       end
       it 'should be html safe' do
         link.site = 'flickr'
-        expect( presenter.present_label.html_safe? ).to be_truthy
+        expect(presenter.present_label.html_safe?).to be_truthy
       end
     end
   end
 
   describe '#present_link_as_url_class' do
     it 'should generate an “a” tag' do
-      expect( presenter.present_link_as_url_class ).to eq(
+      expect(presenter.present_link_as_url_class).to eq(
         '<a href="http://external.link/" class="url" title="External Link" target="_blank">External Link</a>'
       )
     end
@@ -129,49 +129,47 @@ describe ExternalLinkPresenter do
 
   describe '#present_link' do
     it 'should generate an “a” tag' do
-      expect( presenter.present_link ).to eq(
-        '<a href="http://external.link/" class="url website" title="External Link" target="_blank">' +
+      expect(presenter.present_link).to eq(
+        '<a href="http://external.link/" class="url website" title="External Link" target="_blank">' \
         'External Link</a>'
       )
     end
   end
-
 
   # protected methods
 
   describe '#label_text' do
     it 'should handle “facebook”' do
       link.site = 'facebook'
-      expect( presenter.send(:label_text) ).to eq 'Facebook'
+      expect(presenter.__send__(:label_text)).to eq 'Facebook'
     end
     it 'should handle “flickr”' do
       link.site = 'flickr'
-      expect( presenter.send(:label_text) ).to eq 'Flickr'
+      expect(presenter.__send__(:label_text)).to eq 'Flickr'
     end
     it 'should handle “google”' do
       link.site = 'google'
-      expect( presenter.send(:label_text) ).to eq 'Google'
+      expect(presenter.__send__(:label_text)).to eq 'Google'
     end
     it 'should handle “instagram”' do
       link.site = 'instagram'
-      expect( presenter.send(:label_text) ).to eq 'Instagram'
+      expect(presenter.__send__(:label_text)).to eq 'Instagram'
     end
     it 'should handle “linkedin”' do
       link.site = 'linkedin'
-      expect( presenter.send(:label_text) ).to eq 'LinkedIn'
+      expect(presenter.__send__(:label_text)).to eq 'LinkedIn'
     end
     it 'should handle “twitter”' do
       link.site = 'twitter'
-      expect( presenter.send(:label_text) ).to eq 'Twitter'
+      expect(presenter.__send__(:label_text)).to eq 'Twitter'
     end
     it 'should handle “vimeo”' do
       link.site = 'vimeo'
-      expect( presenter.send(:label_text) ).to eq 'Vimeo'
+      expect(presenter.__send__(:label_text)).to eq 'Vimeo'
     end
     it 'should handle “youtube”' do
       link.site = 'youtube'
-      expect( presenter.send(:label_text) ).to eq 'YouTube'
+      expect(presenter.__send__(:label_text)).to eq 'YouTube'
     end
   end
-
 end
