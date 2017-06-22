@@ -5,11 +5,11 @@ require 'event'
 class ExternalLinksController < ApplicationController
   before_action :set_user
   before_action :set_item
-  before_action :set_external_link, except: %i(index new create)
-  before_action :requires_create_authority, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
-  before_action :set_new_external_link, only: %i(new create)
+  before_action :set_external_link, except: %i[index new create]
+  before_action :requires_create_authority, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
+  before_action :set_new_external_link, only: %i[new create]
 
   def index
     page_metadata(title: "#{@item.descriptor}: External Links")
@@ -21,8 +21,7 @@ class ExternalLinksController < ApplicationController
     page_metadata(title: "#{@item.descriptor}: #{@external_link.title}")
   end
 
-  def new
-  end
+  def new; end
 
   def create
     if @external_link.save
@@ -63,9 +62,8 @@ class ExternalLinksController < ApplicationController
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
     link_allowed = @external_link && @external_link.authority_for_user_to?(@user, action)
-    unless link_allowed || item_allowed(action) || link_item_allowed(action) || links_allowed(action)
-      raise Wayground::AccessDenied
-    end
+    can_do = link_allowed || item_allowed(action) || link_item_allowed(action) || links_allowed(action)
+    raise Wayground::AccessDenied unless can_do
   end
 
   def item_allowed(action)

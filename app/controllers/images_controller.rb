@@ -3,10 +3,10 @@ require 'image'
 # Access Images.
 class ImagesController < ApplicationController
   before_action :set_user
-  before_action :set_image, except: %i(index new create)
-  before_action :prep_new, only: %i(new create)
-  before_action :prep_edit, only: %i(edit update)
-  before_action :prep_delete, only: %i(delete destroy)
+  before_action :set_image, except: %i[index new create]
+  before_action :prep_new, only: %i[new create]
+  before_action :prep_edit, only: %i[edit update]
+  before_action :prep_delete, only: %i[delete destroy]
   before_action :set_section
 
   def index
@@ -19,8 +19,7 @@ class ImagesController < ApplicationController
     page_metadata(title: title, description: @image.description)
   end
 
-  def new
-  end
+  def new; end
 
   def create
     if @image.save
@@ -30,8 +29,7 @@ class ImagesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @image.update(image_params)
@@ -81,16 +79,15 @@ class ImagesController < ApplicationController
 
   def requires_authority(action)
     image_allowed = @image && @image.authority_for_user_to?(@user, action)
-    unless image_allowed || (@user && @user.authority_for_area(Image.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = image_allowed || (@user && @user.authority_for_area(Image.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def image_params
     params.fetch(:image, {}).permit(
       :title, :alt_text, :description, :attribution, :attribution_url,
       :license_url,
-      image_variants_attributes: %i(height width format style url)
+      image_variants_attributes: %i[height width format style url]
     )
   end
 end

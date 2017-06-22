@@ -5,14 +5,14 @@ require 'merger'
 # Access events.
 class EventsController < ApplicationController
   before_action :set_user
-  before_action :set_event, except: %i(index new create)
-  before_action :requires_login, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update merge perform_merge)
-  before_action :requires_delete_authority, only: %i(delete destroy merge perform_merge)
-  before_action :requires_approve_authority, only: %i(approve set_approved)
+  before_action :set_event, except: %i[index new create]
+  before_action :requires_login, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update merge perform_merge]
+  before_action :requires_delete_authority, only: %i[delete destroy merge perform_merge]
+  before_action :requires_approve_authority, only: %i[approve set_approved]
   before_action :set_section
-  before_action :set_new_event, only: %i(new create)
-  before_action :set_editor, only: %i(create update destroy approve merge perform_merge)
+  before_action :set_new_event, only: %i[new create]
+  before_action :set_editor, only: %i[create update destroy approve merge perform_merge]
 
   def index
     selector = Wayground::Event::EventSelector.new(
@@ -132,9 +132,8 @@ class EventsController < ApplicationController
 
   def requires_authority(action)
     event_allowed = @event && @event.authority_for_user_to?(@user, action)
-    unless event_allowed || (@user && @user.authority_for_area(Event.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = event_allowed || (@user && @user.authority_for_area(Event.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_update_authority

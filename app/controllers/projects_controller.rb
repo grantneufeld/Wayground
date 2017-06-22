@@ -1,12 +1,12 @@
 # Access Projects.
 class ProjectsController < ApplicationController
   before_action :set_user
-  before_action :set_project, except: %i(index new create)
-  before_action :requires_login, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_project, except: %i[index new create]
+  before_action :requires_login, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
   before_action :set_section
-  before_action :set_new_project, only: %i(new create)
+  before_action :set_new_project, only: %i[new create]
 
   def index
     @projects = Project.all
@@ -16,8 +16,7 @@ class ProjectsController < ApplicationController
     page_metadata(title: @project.name, description: @project.description)
   end
 
-  def new
-  end
+  def new; end
 
   def create
     if @project.save
@@ -27,8 +26,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @project.update(project_params)
@@ -38,8 +36,7 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def delete
-  end
+  def delete; end
 
   def destroy
     @project.destroy
@@ -63,9 +60,8 @@ class ProjectsController < ApplicationController
 
   def requires_authority(action)
     project_allowed = @project && @project.authority_for_user_to?(@user, action)
-    unless project_allowed || (@user && @user.authority_for_area(Project.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = project_allowed || (@user && @user.authority_for_area(Project.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_update_authority
@@ -86,7 +82,7 @@ class ProjectsController < ApplicationController
     @project =
       if project_url.blank?
         Project.find(params[:id])
-      elsif project_url =~ /\A[0-9]+\z/
+      elsif project_url.match?(/\A[0-9]+\z/)
         Project.find(project_url.to_i)
       else
         Project.where(filename: project_url).first

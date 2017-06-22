@@ -1,10 +1,10 @@
 # Access Documents.
 class DocumentsController < ApplicationController
-  before_action :set_document, except: %i(index new create)
-  before_action :requires_view_authority, only: %i(download show)
-  before_action :requires_create_authority, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_document, except: %i[index new create]
+  before_action :requires_view_authority, only: %i[download show]
+  before_action :requires_create_authority, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
   before_action :set_section
 
   def download
@@ -66,9 +66,8 @@ class DocumentsController < ApplicationController
   def requires_authority(action)
     user = current_user
     document_allowed = @document && @document.authority_for_user_to?(user, action)
-    unless document_allowed || (user && user.authority_for_area(Document.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = document_allowed || (user && user.authority_for_area(Document.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_view_authority

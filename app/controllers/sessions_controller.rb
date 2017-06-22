@@ -4,8 +4,8 @@ require 'authentication'
 
 # Actions for the user to sign-in or sign-out (establish/clear the user session).
 class SessionsController < ApplicationController
-  before_action :cant_be_signed_in, only: %i(new create)
-  before_action :must_be_signed_in, only: %i(delete destroy)
+  before_action :cant_be_signed_in, only: %i[new create]
+  before_action :must_be_signed_in, only: %i[delete destroy]
 
   def new; end
 
@@ -13,13 +13,17 @@ class SessionsController < ApplicationController
     login = Wayground::Login::PasswordLogin.new(username: params[:email], password: params[:password])
     user = login.user
     if user
-      cookie_set_remember_me(user, params[:remember_me] == '1')
-      session[:source] = nil
-      redirect_to root_url, notice: 'You are now signed in.'
+      create_session(user)
     else
       flash.now.alert = 'Wrong email or password'
       render 'new'
     end
+  end
+
+  def create_session(user)
+    cookie_set_remember_me(user, params[:remember_me] == '1')
+    session[:source] = nil
+    redirect_to root_url, notice: 'You are now signed in.'
   end
 
   # presents a confirmation form for logging out when user isn’t able to use javascript

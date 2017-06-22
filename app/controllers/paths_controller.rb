@@ -1,32 +1,36 @@
 # Access Items and redirects by arbitrary url paths.
 class PathsController < ApplicationController
-  before_action :set_path, except: %i(sitepath index new create)
+  before_action :set_path, except: %i[sitepath index new create]
   before_action :requires_view_authority, only: [:show]
-  before_action :requires_create_authority, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
-  before_action :set_breadcrumbs, except: %i(sitepath index)
-  before_action :set_new, only: %i(new create)
-  before_action :set_edit, only: %i(edit update)
+  before_action :requires_create_authority, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
+  before_action :set_breadcrumbs, except: %i[sitepath index]
+  before_action :set_new, only: %i[new create]
+  before_action :set_edit, only: %i[edit update]
 
   # process arbitrary paths
   def sitepath
     sitepath = params[:url].to_s
     @path = Path.find_for_path(sitepath)
+    sitepath_action(sitepath)
+  rescue Wayground::AccessDenied
+    # don’t reveal to unauthorized users that an item exists if it is access controlled
+    missing
+  end
+
+  def sitepath_action(sitepath)
     if !@path && sitepath == '/'
       page_metadata(title: Wayground::Application::NAME, description: Wayground::Application::DESCRIPTION)
       render template: 'paths/default_home'
     elsif !@path
-      missing
+      raise Wayground::AccessDenied
     elsif @path.redirect?
       redirect_to @path.redirect
     else
       requires_view_authority
       render_path_item(@path.item)
     end
-  rescue Wayground::AccessDenied
-    # don’t reveal to unauthorized users that an item exists if it is access controlled
-    missing
   end
 
   def index
@@ -72,9 +76,8 @@ class PathsController < ApplicationController
   # The actions for this controller, except for viewing, require that the user is authorized.
   def requires_authority(action)
     path_allowed = @path && @path.authority_for_user_to?(current_user, action)
-    unless path_allowed || (current_user && current_user.authority_for_area(Path.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = path_allowed || (current_user && current_user.authority_for_area(Path.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_view_authority
