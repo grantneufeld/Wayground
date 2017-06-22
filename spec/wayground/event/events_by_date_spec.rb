@@ -3,22 +3,21 @@ require 'event/events_by_date'
 require 'event'
 
 describe Wayground::Event::EventsByDate do
-
-  describe "initialization" do
-    it "should accept an array of events" do
+  describe 'initialization' do
+    it 'should accept an array of events' do
       start_at = Time.zone.now
       event = Event.new(start_at: start_at)
       events = Wayground::Event::EventsByDate.new([event])
-      expect( events.events_by_date ).to eq({start_at.to_date => [event]})
+      expect(events.events_by_date).to eq(start_at.to_date => [event])
     end
-    it "should default to an empty array" do
+    it 'should default to an empty array' do
       events = Wayground::Event::EventsByDate.new
-      expect( events.events_by_date ).to eq({})
+      expect(events.events_by_date).to eq({})
     end
   end
 
-  describe "#[]" do
-    it "should return an array of the events on the given day" do
+  describe '#[]' do
+    it 'should return an array of the events on the given day' do
       time1 = 1.week.ago
       time_today = Time.zone.now
       time3 = 1.month.from_now
@@ -31,8 +30,7 @@ describe Wayground::Event::EventsByDate do
       array_of_events << Event.new(start_at: time3, title: 'Sixth')
       events_today = array_of_events[2..3]
       events = Wayground::Event::EventsByDate.new(array_of_events)
-      expect( events[time_today.to_date] ).to eq( events_today )
+      expect(events[time_today.to_date]).to eq(events_today)
     end
   end
-
 end

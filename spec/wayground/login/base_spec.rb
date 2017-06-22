@@ -7,39 +7,37 @@ require 'active_record'
 module Wayground
   module Login
     describe Wayground::Login::Base do
-
       it_behaves_like 'Login Interface', Base.new
 
-      describe "initialization" do
-        it "should accept a user_class" do
-          expect( Base.new(user_class: :test_class).user_class ).to eq :test_class
+      describe 'initialization' do
+        it 'should accept a user_class' do
+          expect(Base.new(user_class: :test_class).user_class).to eq :test_class
         end
       end
 
-      describe "#user_class" do
-        it "should default to User for the user_class" do
-          expect( Base.new.user_class ).to eq User
+      describe '#user_class' do
+        it 'should default to User for the user_class' do
+          expect(Base.new.user_class).to eq User
         end
       end
 
-      describe "#user_class=" do
-        it "should assign the given user class" do
+      describe '#user_class=' do
+        it 'should assign the given user class' do
           login = Base.new
           login.user_class = :login_user_class
-          expect( login.user_class ).to eq :login_user_class
+          expect(login.user_class).to eq :login_user_class
         end
       end
 
-      describe "#user" do
-        it "should always return nil" do
-          expect( Base.new.user ).to be_nil
+      describe '#user' do
+        it 'should always return nil' do
+          expect(Base.new.user).to be_nil
         end
-        it "should return nil on an ActiveRecord::RecordNotFound exception" do
+        it 'should return nil on an ActiveRecord::RecordNotFound exception' do
           allow_any_instance_of(Base).to receive(:find_user).and_raise(ActiveRecord::RecordNotFound)
-          expect( Base.new.user ).to be_nil
+          expect(Base.new.user).to be_nil
         end
       end
-
     end
   end
 end
