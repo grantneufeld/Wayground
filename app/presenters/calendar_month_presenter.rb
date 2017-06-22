@@ -52,12 +52,9 @@ class CalendarMonthPresenter < HtmlPresenter
     # FIXME: find a zone-friendly way to do `day.to_time` in present_day_num(day)
     if day_outside_range?(day)
       # the day is outside the range of events; don't link it
-      html_tag(:span, class: day_number_class(day), title: day.to_time.to_s(:simple_date)) { day.day.to_s }
+      html_tag(:span, day_tag_attrs(day)) { day.day.to_s }
     else
-      view.link_to(
-        day.day, view.calendar_day_path_for_date(day),
-        class: day_number_class(day), title: day.to_time.to_s(:simple_date)
-      )
+      view.link_to(day.day, view.calendar_day_path_for_date(day), day_tag_attrs(day))
     end
   end
 
@@ -65,6 +62,10 @@ class CalendarMonthPresenter < HtmlPresenter
   # TODO: cache Event values
   def day_outside_range?(day)
     Event.count.zero? || (day < Event.earliest_date) || (day > Event.last_date)
+  end
+
+  def day_tag_attrs(day)
+    { class: day_number_class(day), title: day.to_time.to_s(:simple_date) }
   end
 
   def day_number_class(day)

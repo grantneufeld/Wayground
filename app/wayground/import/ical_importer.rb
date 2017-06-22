@@ -73,10 +73,8 @@ module Wayground
 
       # Generate or update Events from the VEVENTs in an iCalendar.
       def process_icalendar(icalendar)
-        if icalendar['VEVENT']
-          icalendar['VEVENT'].each do |ievent|
-            process_event(ievent)
-          end
+        icalendar['VEVENT']&.each do |ievent|
+          process_event(ievent)
         end
         self
       end
@@ -150,7 +148,7 @@ module Wayground
         # Title (summary)
         if ievent['SUMMARY']
           title = ievent['SUMMARY'][:value]
-          title.force_encoding('UTF-8') if title.encoding.name =~ /ASCII/
+          title.force_encoding('UTF-8') if title.encoding.name.match?(/ASCII/)
           result[:title] = title
         end
         # Description
@@ -194,13 +192,13 @@ module Wayground
         # Location
         if ievent['LOCATION']
           location = ievent['LOCATION'][:value]
-          location.force_encoding('UTF-8') if location.encoding.name =~ /ASCII/
+          location.force_encoding('UTF-8') if location.encoding.name.match?(/ASCII/)
           result[:location] = location
         end
         # Organizer
         if ievent['ORGANIZER']
           organizer = ievent['ORGANIZER']['CN'] || ievent['ORGANIZER'][:value]
-          organizer.force_encoding('UTF-8') if organizer.encoding.name =~ /ASCII/
+          organizer.force_encoding('UTF-8') if organizer.encoding.name.match?(/ASCII/)
           result[:organizer] = organizer
         end
         # Dates & Times
