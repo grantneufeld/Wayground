@@ -25,7 +25,7 @@ describe 'images/edit.html.erb', type: :view do
     assign(:image, image)
   end
 
-  it "renders edit image form" do
+  it 'renders edit image form' do
     allow(image).to receive(:id).and_return(123)
     render
     assert_select 'form', action: '/images/123', method: 'patch' do
@@ -33,14 +33,16 @@ describe 'images/edit.html.erb', type: :view do
       assert_select 'input#image_alt_text', name: 'image[alt_text]', value: 'stub alt text'
       assert_select 'textarea#image_description', name: 'image[description]', value: 'Stub description.'
       assert_select 'input#image_attribution', name: 'image[attribution]', value: 'Stub Attribution'
-      assert_select('input#image_attribution_url',
+      assert_select(
+        'input#image_attribution_url',
         name: 'image[attribution_url]', type: 'url', value: 'http://stub.attribution.tld/'
       )
-      assert_select('input#image_license_url',
+      assert_select(
+        'input#image_license_url',
         name: 'image[license_url]', type: 'url', value: 'http://stub.license.tld/'
       )
-      label_prefix = "image_image_variants_attributes_0_"
-      name_prefix = "image[image_variants_attributes][0]"
+      label_prefix = 'image_image_variants_attributes_0_'
+      name_prefix = 'image[image_variants_attributes][0]'
       assert_select "input##{label_prefix}id", name: "#{name_prefix}[id]", type: 'hidden'
       assert_select(
         "input##{label_prefix}height", name: "#{name_prefix}[height]", type: 'number', value: '123'
@@ -48,10 +50,11 @@ describe 'images/edit.html.erb', type: :view do
       assert_select "input##{label_prefix}width", name: "#{name_prefix}[width]", type: 'number', value: '234'
       assert_select "input##{label_prefix}format", name: "#{name_prefix}[format]", value: 'gif'
       assert_select "select##{label_prefix}style", name: "#{name_prefix}[style]" do
-        assert_select "option", value: "original", selected: 'selected'
-        assert_select "option", value: "scaled"
+        assert_select 'option', value: 'original', selected: 'selected'
+        assert_select 'option', value: 'scaled'
       end
-      assert_select("input##{label_prefix}url",
+      assert_select(
+        "input##{label_prefix}url",
         name: "#{name_prefix}[url]", type: 'url', value: 'http://url.tld/stub.gif'
       )
       # it should add 2 blank image variants
@@ -63,12 +66,11 @@ describe 'images/edit.html.erb', type: :view do
         assert_select "input##{label_prefix}width", name: "#{name_prefix}[width]", type: 'number'
         assert_select "input##{label_prefix}format", name: "#{name_prefix}[format]"
         assert_select "select##{label_prefix}style", name: "#{name_prefix}[style]" do
-          assert_select "option", value: "original"
-          assert_select "option", value: "scaled"
+          assert_select 'option', value: 'original'
+          assert_select 'option', value: 'scaled'
         end
         assert_select "input##{label_prefix}url", name: "#{name_prefix}[url]", type: 'url'
       end
     end
   end
-
 end

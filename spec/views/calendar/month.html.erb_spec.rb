@@ -8,8 +8,8 @@ describe 'calendar/month.html.erb', type: :view do
     @date = assign(:date, Date.new(2013, 3, 1))
     User.delete_all
     @admin = FactoryGirl.create(:user, name: 'Admin User')
-    @event = FactoryGirl.create(:event,
-      start_at: Time.zone.parse('2013-03-14 6pm'), title: 'Test Event', user: @admin
+    @event = FactoryGirl.create(
+      :event, start_at: Time.zone.parse('2013-03-14 6pm'), title: 'Test Event', user: @admin
     )
     @events = assign(:events, [@event])
   end
@@ -18,11 +18,11 @@ describe 'calendar/month.html.erb', type: :view do
     allow(view).to receive(:add_submenu_item)
     rspec_stubs_strict
   end
-  context "with no user" do
+  context 'with no user' do
     before(:each) do
       assign(:user, nil)
     end
-    it "should assign the main section class to calendar" do
+    it 'should assign the main section class to calendar' do
       expect(view).to receive(:main_section_class).with('calendar')
       render
     end
@@ -30,12 +30,12 @@ describe 'calendar/month.html.erb', type: :view do
       it 'should render a link to the previous month' do
         allow(Event).to receive(:earliest_date).and_return(Date.parse('2000-01-01'))
         render
-        expect(rendered).to match /<a [^>]*href="\/calendar\/2013\/02"[^>]*>/
+        expect(rendered).to match(%r{<a [^>]*href="/calendar/2013/02"[^>]*>})
       end
       it 'should render a link to the next month' do
         allow(Event).to receive(:last_date).and_return(Date.parse('2100-01-01'))
         render
-        expect(rendered).to match /<a [^>]*href="\/calendar\/2013\/04"[^>]*>/
+        expect(rendered).to match(%r{<a [^>]*href="/calendar/2013/04"[^>]*>})
       end
     end
     context 'with no events' do
@@ -46,26 +46,26 @@ describe 'calendar/month.html.erb', type: :view do
       end
       it 'should not render a link to the previous month' do
         render
-        expect(rendered).not_to match /<a [^>]*href="\/calendar\/2013\/02"[^>]*>/
+        expect(rendered).not_to match(%r{<a [^>]*href="/calendar/2013/02"[^>]*>})
       end
       it 'should not render a link to the next month' do
         render
-        expect(rendered).not_to match /<a [^>]*href="\/calendar\/2013\/04"[^>]*>/
+        expect(rendered).not_to match(%r{<a [^>]*href="/calendar/2013/04"[^>]*>})
       end
     end
-    it "should render the calendar heading" do
+    it 'should render the calendar heading' do
       render
-      expect( rendered ).to match /<h1>March .*2013.*<\/h1>/
+      expect(rendered).to match(%r{<h1>March .*2013.*</h1>})
     end
-    it "should render the event on the 14th" do
+    it 'should render the event on the 14th' do
       render
-      expect(rendered).to have_tag('a',
-        with: { href: "/events/#{@event.id}", title: '6pm: Test Event' },
-        text: '6pm: Test Event'
+      expect(rendered).to have_tag(
+        'a',
+        with: { href: "/events/#{@event.id}", title: '6pm: Test Event' }, text: '6pm: Test Event'
       )
     end
   end
-  context "with an admin user" do
+  context 'with an admin user' do
     before(:each) do
       assign(:user, @admin)
     end
