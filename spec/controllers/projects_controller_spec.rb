@@ -6,19 +6,18 @@ require 'user_token'
 require 'rememberer'
 
 describe ProjectsController, type: :controller do
-
   before(:all) do
     Authority.delete_all
     User.delete_all
     UserToken.delete_all
     Project.delete_all
     # first user is automatically an admin
-    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
+    @user_admin = FactoryGirl.create(:user, name: 'Admin User')
     @user_admin_token = @user_admin.tokens.create(token: 'user admin token')
-    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
+    @user_normal = FactoryGirl.create(:user, name: 'Normal User')
     @user_normal_token = @user_normal.tokens.create(token: 'user normal token')
-    @admin_project = FactoryGirl.create(:project,
-      creator: @user_admin, owner: @user_admin, filename: 'admin_project'
+    @admin_project = FactoryGirl.create(
+      :project, creator: @user_admin, owner: @user_admin, filename: 'admin_project'
     )
   end
 
@@ -41,72 +40,73 @@ describe ProjectsController, type: :controller do
       remember: @user_admin, token: @user_admin_token
     ).cookie_token
   end
+
   def set_logged_in_user
     request.cookies['remember_token'] = Wayground::Rememberer.new(
       remember: @user_normal, token: @user_normal_token
     ).cookie_token
   end
 
-  describe "GET index" do
-    it "assigns all projects as @projects" do
+  describe 'GET index' do
+    it 'assigns all projects as @projects' do
       get :index
-      expect( assigns(:projects) ).to include(@admin_project)
+      expect(assigns(:projects)).to include(@admin_project)
     end
   end
 
-  describe "GET show" do
-    it "assigns the requested project as @project" do
+  describe 'GET show' do
+    it 'assigns the requested project as @project' do
       get :show, params: { id: @admin_project.to_param }
-      expect( assigns(:project) ).to eq @admin_project
+      expect(assigns(:project)).to eq @admin_project
     end
-    it "assigns the requested project from a projecturl" do
+    it 'assigns the requested project from a projecturl' do
       get :show, params: { projecturl: 'admin_project' }
-      expect( assigns(:project)).to eq @admin_project
+      expect(assigns(:project)).to eq @admin_project
     end
-    it "assigns the requested project from a projecturl set to the id" do
+    it 'assigns the requested project from a projecturl set to the id' do
       get :show, params: { projecturl: @admin_project.id.to_s }
-      expect( assigns(:project) ).to eq @admin_project
+      expect(assigns(:project)).to eq @admin_project
     end
   end
 
-  describe "GET new" do
-    it "fails if not logged in" do
+  describe 'GET new' do
+    it 'fails if not logged in' do
       get :new
       expect(response.status).to eq 401
     end
 
-    it "assigns a new project as @project" do
+    it 'assigns a new project as @project' do
       set_logged_in_admin
       get :new
       expect(assigns(:project)).to be_a_new(Project)
     end
   end
 
-  describe "POST create" do
-    context "with valid params" do
-      it "creates a new Project" do
-        expect {
-          set_logged_in_admin
-          post :create, params: { project: valid_attributes }, session: valid_session
-        }.to change(Project, :count).by(1)
+  describe 'POST create' do
+    context 'with valid params' do
+      it 'creates a new Project' do
+        set_logged_in_admin
+        expect { post(:create, params: { project: valid_attributes }, session: valid_session) }.to change(
+          Project, :count
+        ).by(1)
       end
 
-      it "assigns a newly created project as @project" do
+      it 'assigns a newly created project as @project' do
         set_logged_in_admin
         post :create, params: { project: valid_attributes }, session: valid_session
         expect(assigns(:project)).to be_a(Project)
         expect(assigns(:project)).to be_persisted
       end
 
-      it "redirects to the created project" do
+      it 'redirects to the created project' do
         set_logged_in_admin
         post :create, params: { project: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Project.last)
       end
     end
 
-    context "with invalid params" do
-      it "assigns a newly created but unsaved project as @project" do
+    context 'with invalid params' do
+      it 'assigns a newly created but unsaved project as @project' do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
@@ -119,29 +119,29 @@ describe ProjectsController, type: :controller do
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, params: { project: {} }, session: valid_session
-        expect(response).to render_template("new")
+        expect(response).to render_template('new')
       end
     end
   end
 
-  describe "GET edit" do
-    it "fails if not authorized to update the project" do
+  describe 'GET edit' do
+    it 'fails if not authorized to update the project' do
       set_logged_in_user
       get :edit, params: { id: @admin_project.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
-    it "assigns the requested project as @project" do
+    it 'assigns the requested project as @project' do
       set_logged_in_admin
       get :edit, params: { id: @admin_project.to_param }, session: valid_session
-      expect( assigns(:project) ).to eq @admin_project
+      expect(assigns(:project)).to eq @admin_project
     end
   end
 
-  describe "PUT update" do
-    context "with valid params" do
-      it "updates the requested project" do
-        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
+  describe 'PUT update' do
+    context 'with valid params' do
+      it 'updates the requested project' do
+        project = FactoryGirl.create(:project, creator: @user_admin, owner: @user_admin)
         # Assuming there are no other projects in the database, this
         # specifies that the Project created on the previous line
         # receives the :update message with whatever params are
@@ -149,31 +149,34 @@ describe ProjectsController, type: :controller do
         expected_params = ActionController::Parameters.new('name' => 'valid_params').permit!
         expect_any_instance_of(Project).to receive(:update).with(expected_params)
         set_logged_in_admin
-        patch :update, params: { id: project.to_param, project: { 'name' => 'valid_params' } }, session: valid_session
+        patch(
+          :update,
+          params: { id: project.to_param, project: { 'name' => 'valid_params' } }, session: valid_session
+        )
       end
 
-      it "assigns the requested project as @project" do
-        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
+      it 'assigns the requested project as @project' do
+        project = FactoryGirl.create(:project, creator: @user_admin, owner: @user_admin)
         set_logged_in_admin
         patch :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
         expect(assigns(:project)).to eq(project)
       end
 
-      it "redirects to the project" do
-        project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
+      it 'redirects to the project' do
+        project = FactoryGirl.create(:project, creator: @user_admin, owner: @user_admin)
         set_logged_in_admin
         patch :update, params: { id: project.to_param, project: valid_attributes }, session: valid_session
         expect(response).to redirect_to(project_name_url(project.filename))
       end
     end
 
-    context "with invalid params" do
-      it "assigns the project as @project" do
+    context 'with invalid params' do
+      it 'assigns the project as @project' do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, params: { id: @admin_project.to_param, project: {} }
-        expect( assigns(:project) ).to eq @admin_project
+        expect(assigns(:project)).to eq @admin_project
       end
 
       it "re-renders the 'edit' template" do
@@ -181,26 +184,25 @@ describe ProjectsController, type: :controller do
         allow_any_instance_of(Project).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, params: { id: @admin_project.to_param, project: {} }
-        expect(response).to render_template("edit")
+        expect(response).to render_template('edit')
       end
     end
   end
 
-  describe "DELETE destroy" do
-    it "destroys the requested project" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
-      expect {
-        set_logged_in_admin
-        delete :destroy, params: { id: project.to_param }, session: valid_session
-      }.to change(Project, :count).by(-1)
+  describe 'DELETE destroy' do
+    it 'destroys the requested project' do
+      project = FactoryGirl.create(:project, creator: @user_admin, owner: @user_admin)
+      set_logged_in_admin
+      expect { delete :destroy, params: { id: project.to_param }, session: valid_session }.to change(
+        Project, :count
+      ).by(-1)
     end
 
-    it "redirects to the projects list" do
-      project = FactoryGirl.create(:project, :creator => @user_admin, :owner => @user_admin)
+    it 'redirects to the projects list' do
+      project = FactoryGirl.create(:project, creator: @user_admin, owner: @user_admin)
       set_logged_in_admin
       delete :destroy, params: { id: project.to_param }, session: valid_session
       expect(response).to redirect_to(projects_url)
     end
   end
-
 end

@@ -20,11 +20,12 @@ describe SourcesController, type: :controller do
   def set_logged_in_admin
     allow(controller).to receive(:current_user).and_return(@user_admin)
   end
+
   def set_logged_in_user
     allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
-  def mock_source(stubs={})
+  def mock_source(stubs = {})
     @mock_source ||= mock_model(Source, stubs).as_null_object
   end
 
@@ -35,13 +36,13 @@ describe SourcesController, type: :controller do
     { processor: 'iCalendar', url: 'test://test.tld/valid.ics' }
   end
 
-  describe "GET index" do
-    it "fails if not logged in" do
+  describe 'GET index' do
+    it 'fails if not logged in' do
       get :index
       expect(response.status).to eq 403
     end
 
-    it "assigns all sources as @sources" do
+    it 'assigns all sources as @sources' do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       get :index
@@ -49,14 +50,14 @@ describe SourcesController, type: :controller do
     end
   end
 
-  describe "GET show" do
-    it "fails if not logged in" do
+  describe 'GET show' do
+    it 'fails if not logged in' do
       source = FactoryGirl.create(:source)
       get :show, params: { id: source.id }
       expect(response.status).to eq 403
     end
 
-    it "assigns the requested source as @source" do
+    it 'assigns the requested source as @source' do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       get :show, params: { id: source.id }
@@ -64,49 +65,47 @@ describe SourcesController, type: :controller do
     end
   end
 
-  describe "GET new" do
-    it "fails if not logged in" do
+  describe 'GET new' do
+    it 'fails if not logged in' do
       get :new
       expect(response.status).to eq 403
     end
 
-    it "assigns a new source as @source" do
+    it 'assigns a new source as @source' do
       set_logged_in_admin
       get :new
       expect(assigns(:source)).to be_a_new(Source)
     end
   end
 
-  describe "POST create" do
-    it "fails if not logged in" do
+  describe 'POST create' do
+    it 'fails if not logged in' do
       post :create, params: { source: valid_attributes }
       expect(response.status).to eq 403
     end
 
-    describe "with valid params" do
-      it "creates a new Source" do
+    describe 'with valid params' do
+      it 'creates a new Source' do
         set_logged_in_admin
-        expect {
-          post :create, params: { source: valid_attributes }
-        }.to change(Source, :count).by(1)
+        expect { post :create, params: { source: valid_attributes } }.to change(Source, :count).by(1)
       end
 
-      it "assigns a newly created source as @source" do
+      it 'assigns a newly created source as @source' do
         set_logged_in_admin
         post :create, params: { source: valid_attributes }
         expect(assigns(:source)).to be_a(Source)
         expect(assigns(:source)).to be_persisted
       end
 
-      it "redirects to the created source" do
+      it 'redirects to the created source' do
         set_logged_in_admin
         post :create, params: { source: valid_attributes }
         expect(response).to redirect_to(Source.last)
       end
     end
 
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved source as @source" do
+    describe 'with invalid params' do
+      it 'assigns a newly created but unsaved source as @source' do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
@@ -119,20 +118,20 @@ describe SourcesController, type: :controller do
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         post :create, params: { source: {} }
-        expect(response).to render_template("new")
+        expect(response).to render_template('new')
       end
     end
   end
 
-  describe "GET edit" do
-    it "requires the user to have authority" do
+  describe 'GET edit' do
+    it 'requires the user to have authority' do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       get :edit, params: { id: source.id }
       expect(response.status).to eq 403
     end
 
-    it "assigns the requested source as @source" do
+    it 'assigns the requested source as @source' do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       get :edit, params: { id: source.id }
@@ -140,16 +139,16 @@ describe SourcesController, type: :controller do
     end
   end
 
-  describe "PUT update" do
-    it "requires the user to have authority" do
+  describe 'PUT update' do
+    it 'requires the user to have authority' do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       patch :update, params: { id: source.id, source: { 'these' => 'params' } }
       expect(response.status).to eq 403
     end
 
-    describe "with valid params" do
-      it "updates the requested source" do
+    describe 'with valid params' do
+      it 'updates the requested source' do
         source = FactoryGirl.create(:source)
         # Assuming there are no other sources in the database, this
         # specifies that the Source created on the previous line
@@ -161,14 +160,14 @@ describe SourcesController, type: :controller do
         patch :update, params: { id: source.id, source: { 'title' => 'valid_params' } }
       end
 
-      it "assigns the requested source as @source" do
+      it 'assigns the requested source as @source' do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
         patch :update, params: { id: source.id, source: valid_attributes }
         expect(assigns(:source)).to eq(source)
       end
 
-      it "redirects to the source" do
+      it 'redirects to the source' do
         source = FactoryGirl.create(:source)
         set_logged_in_admin
         patch :update, params: { id: source.id, source: valid_attributes }
@@ -176,8 +175,8 @@ describe SourcesController, type: :controller do
       end
     end
 
-    describe "with invalid params" do
-      it "assigns the source as @source" do
+    describe 'with invalid params' do
+      it 'assigns the source as @source' do
         source = FactoryGirl.create(:source)
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Source).to receive(:save).and_return(false)
@@ -192,44 +191,42 @@ describe SourcesController, type: :controller do
         allow_any_instance_of(Source).to receive(:save).and_return(false)
         set_logged_in_admin
         patch :update, params: { id: source.id, source: {} }
-        expect(response).to render_template("edit")
+        expect(response).to render_template('edit')
       end
     end
   end
 
-  describe "GET delete" do
-    it "requires the user to have authority" do
+  describe 'GET delete' do
+    it 'requires the user to have authority' do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       get :delete, params: { id: source.id }
       expect(response.status).to eq 403
     end
 
-    it "shows a form for confirming deletion of an source" do
-      allow(Source).to receive(:find).with("37") { mock_source }
+    it 'shows a form for confirming deletion of an source' do
+      allow(Source).to receive(:find).with('37') { mock_source }
       set_logged_in_admin
-      get :delete, params: { id: "37" }
+      get :delete, params: { id: '37' }
       expect(assigns(:source)).to be(mock_source)
     end
   end
 
-  describe "DELETE destroy" do
-    it "requires the user to have authority" do
+  describe 'DELETE destroy' do
+    it 'requires the user to have authority' do
       source = FactoryGirl.create(:source)
       set_logged_in_user
       delete :destroy, params: { id: source.id }
       expect(response.status).to eq 403
     end
 
-    it "destroys the requested source" do
+    it 'destroys the requested source' do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
-      expect {
-        delete :destroy, params: { id: source.id }
-      }.to change(Source, :count).by(-1)
+      expect { delete :destroy, params: { id: source.id } }.to change(Source, :count).by(-1)
     end
 
-    it "redirects to the sources list" do
+    it 'redirects to the sources list' do
       source = FactoryGirl.create(:source)
       set_logged_in_admin
       delete :destroy, params: { id: source.id }
@@ -237,29 +234,29 @@ describe SourcesController, type: :controller do
     end
   end
 
-  describe "GET processor" do
+  describe 'GET processor' do
     let(:source) { $source = FactoryGirl.create(:source) }
 
-    it "requires the user to have authority" do
+    it 'requires the user to have authority' do
       set_logged_in_user
       get :processor, params: { id: source.id }
       expect(response.status).to eq 403
     end
 
-    it "assigns the requested source as @source" do
+    it 'assigns the requested source as @source' do
       set_logged_in_admin
       get :processor, params: { id: source.id }
       expect(assigns(:source)).to eq(source)
     end
   end
 
-  describe "POST runprocessor" do
+  describe 'POST runprocessor' do
     let(:source) { $source = Source.new(title: 'Test Source') }
     before(:each) do
       allow(Source).to receive(:find).with('123').and_return(source)
     end
 
-    it "requires the user to have authority" do
+    it 'requires the user to have authority' do
       allow(source).to receive(:authority_for_user_to?).and_return(false)
       set_logged_in_user
       post :runprocessor, params: { id: '123' }
@@ -279,7 +276,7 @@ describe SourcesController, type: :controller do
       it 'assigns the page metadata title' do
         allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
         post :runprocessor, params: { id: '123' }
-        expect(assigns(:page_metadata).title).to match /^Processed Source:.*#{source.name}/
+        expect(assigns(:page_metadata).title).to match(/^Processed Source:.*#{source.name}/)
       end
       it 'processess the requested source' do
         expect(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
@@ -297,10 +294,10 @@ describe SourcesController, type: :controller do
         allow(importer).to receive(:skipped_ievents).and_return([skipped_event])
         allow(source).to receive(:run_processor).with(@user_admin, false).and_return(importer)
         post :runprocessor, params: { id: '123' }
-        expect(flash[:notice]).to match /Processing complete/
-        expect(flash[:notice]).to match /1 items were created/
-        expect(flash[:notice]).to match /1 items were updated/
-        expect(flash[:notice]).to match /1 items were skipped/
+        expect(flash[:notice]).to match(/Processing complete/)
+        expect(flash[:notice]).to match(/1 items were created/)
+        expect(flash[:notice]).to match(/1 items were updated/)
+        expect(flash[:notice]).to match(/1 items were skipped/)
       end
       it 'assigns sourced_items' do
         new_event = Event.new
@@ -322,5 +319,4 @@ describe SourcesController, type: :controller do
       end
     end
   end
-
 end

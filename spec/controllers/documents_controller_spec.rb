@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe DocumentsController, type: :controller do
-
   before(:all) do
     Authority.delete_all
     User.delete_all
@@ -9,16 +8,16 @@ describe DocumentsController, type: :controller do
     @admin = FactoryGirl.create(:user)
     # create 11 public documents and 1 private
     @document = FactoryGirl.create(:document, user: @admin)
-    FactoryGirl.create_list(:document, 10, :user => @document.user)
+    FactoryGirl.create_list(:document, 10, user: @document.user)
     # create a document that should not be viewable without authority
-    @private_doc = FactoryGirl.create(:document, :is_authority_controlled => true)
+    @private_doc = FactoryGirl.create(:document, is_authority_controlled: true)
   end
 
-  def set_logged_in_admin(stubs={})
+  def logged_in_admin(_stubs = {})
     allow(controller).to receive(:current_user).and_return(@admin)
   end
 
-  def mock_document(stubs={})
+  def mock_document(stubs = {})
     @mock_document ||= mock_model(Document, stubs).as_null_object
   end
 
@@ -27,169 +26,167 @@ describe DocumentsController, type: :controller do
   # update the return value of this method accordingly.
   def valid_attributes
     file = Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/files/sample.txt", 'text/plain')
-    {file: file}
+    { file: file }
   end
 
-  describe "GET download" do
-    it "returns the requested document" do
+  describe 'GET download' do
+    it 'returns the requested document' do
       document = FactoryGirl.create(:document)
       get :download, params: { id: document.id.to_s, filename: document.filename }
       expect(response.status).to eq 200
       expect(response['Content-Type']).to eq(document.content_type)
       expect(response.body).to eq(document.data)
     end
-    it "reports missing when requested document doesn’t exist" do
+    it 'reports missing when requested document doesn’t exist' do
       get :download, params: { id: '0', filename: 'none' }
       expect(response.status).to eq 404
       expect(response).to render_template('missing')
     end
-    it "doesn’t care what filename is specified" do
-      document = FactoryGirl.create(:document, :filename => 'test')
+    it 'doesn’t care what filename is specified' do
+      document = FactoryGirl.create(:document, filename: 'test')
       get :download, params: { id: document.id.to_s, filename: 'madeupname.pdf' }
       expect(response.status).to eq 200
       expect(response['Content-Type']).to eq(document.content_type)
       expect(response.body).to eq(document.data)
     end
 
-    context "authority controlled document" do
+    context 'authority controlled document' do
       before(:all) do
-        @document = FactoryGirl.create(:document, :is_authority_controlled => true)
+        @document = FactoryGirl.create(:document, is_authority_controlled: true)
       end
-      it "requires the user to have authority when access controlled" do
+      it 'requires the user to have authority when access controlled' do
         get :download, params: { id: @document.id.to_s, filename: @document.filename }
         expect(response.status).to eq 403
       end
-      it "allows an authorized user to retrieve an access controlled document" do
-        set_logged_in_admin
+      it 'allows an authorized user to retrieve an access controlled document' do
+        logged_in_admin
         get :download, params: { id: @document.id.to_s, filename: @document.filename }
         expect(response.status).to eq 200
       end
     end
   end
 
-  describe "GET index" do
-    it "assigns all viewable documents as @documents" do
+  describe 'GET index' do
+    it 'assigns all viewable documents as @documents' do
       get :index, params: { max: '100' }
       expect(assigns(:documents)).not_to include @private_doc
     end
-    it "assigns the total number of viewable documents as @documents_total" do
+    it 'assigns the total number of viewable documents as @documents_total' do
       get :index, params: { max: '100' }
       expect(assigns(:source_total)).to be 11
     end
-    it "assigns the documents based on the pagination parameters" do
+    it 'assigns the documents based on the pagination parameters' do
       get :index, params: { page: '2', max: '10' }
       expect(assigns(:documents).size).to be 1
     end
   end
 
-  describe "GET show" do
-    it "requires the user to have authority" do
-      document = FactoryGirl.create(:document, :is_authority_controlled => true)
+  describe 'GET show' do
+    it 'requires the user to have authority' do
+      document = FactoryGirl.create(:document, is_authority_controlled: true)
       get :show, params: { id: document.id.to_s }
       expect(response.status).to eq 403
     end
 
-    it "assigns the requested document as @document" do
+    it 'assigns the requested document as @document' do
       document = FactoryGirl.create(:document)
       get :show, params: { id: document.id.to_s }
       expect(assigns(:document)).to eq(document)
     end
   end
 
-  describe "GET new" do
-    it "requires the user to have authority" do
+  describe 'GET new' do
+    it 'requires the user to have authority' do
       get :new
       expect(response.status).to eq 403
     end
 
-    it "assigns a new document as @document" do
-      set_logged_in_admin
+    it 'assigns a new document as @document' do
+      logged_in_admin
       get :new
       expect(assigns(:document)).to be_a_new(Document)
     end
   end
 
-  describe "POST create" do
-    context "as anonymous user" do
-      it "requires the user to have authority" do
+  describe 'POST create' do
+    context 'as anonymous user' do
+      it 'requires the user to have authority' do
         post :create, params: { document: valid_attributes }
         expect(response.status).to eq 403
       end
     end
 
-    context "as an authorized user" do
+    context 'as an authorized user' do
       before(:each) do
-        set_logged_in_admin
+        logged_in_admin
       end
 
-      context "with valid params" do
+      context 'with valid params' do
         after(:each) do
           Document.last.delete
         end
-        it "creates a new Document" do
-          expect {
-            post :create, params: { document: valid_attributes }
-          }.to change(Document, :count).by(1)
+        it 'creates a new Document' do
+          expect { post :create, params: { document: valid_attributes } }.to change(Document, :count).by(1)
         end
 
-        it "assigns a newly created document as @document" do
+        it 'assigns a newly created document as @document' do
           post :create, params: { document: valid_attributes }
           expect(assigns(:document)).to be_a(Document)
           expect(assigns(:document)).to be_persisted
         end
 
-        it "redirects to the created document" do
+        it 'redirects to the created document' do
           post :create, params: { document: valid_attributes }
           expect(response).to redirect_to(Document.last)
         end
       end
 
-      context "with invalid params" do
+      context 'with invalid params' do
         before(:each) do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Document).to receive(:save).and_return(false)
           post :create, params: { document: {} }
         end
 
-        it "assigns a newly created but unsaved document as @document" do
+        it 'assigns a newly created but unsaved document as @document' do
           expect(assigns(:document)).to be_a_new(Document)
         end
 
         it "re-renders the 'new' template" do
-          expect(response).to render_template("new")
+          expect(response).to render_template('new')
         end
       end
     end
   end
 
-  describe "GET edit" do
-    it "requires the user to have authority" do
+  describe 'GET edit' do
+    it 'requires the user to have authority' do
       get :delete, params: { id: @document.id.to_s }
       expect(response.status).to eq 403
     end
 
-    it "assigns the requested document as @document" do
-      set_logged_in_admin
+    it 'assigns the requested document as @document' do
+      logged_in_admin
       get :edit, params: { id: @document.id.to_s }
       expect(assigns(:document)).to eq(@document)
     end
   end
 
-  describe "PUT update" do
-    context "as anonymous user" do
-      it "requires the user to have authority" do
+  describe 'PUT update' do
+    context 'as anonymous user' do
+      it 'requires the user to have authority' do
         patch :update, params: { id: @document.id.to_s }
         expect(response.status).to eq 403
       end
     end
 
-    context "as an authorized user" do
+    context 'as an authorized user' do
       before(:each) do
-        set_logged_in_admin
+        logged_in_admin
       end
 
-      context "with valid params" do
-        it "updates the requested document" do
+      context 'with valid params' do
+        it 'updates the requested document' do
           # Assuming there are no other documents in the database, this
           # specifies that the document receives the :update message
           # with whatever params are submitted in the request.
@@ -198,14 +195,14 @@ describe DocumentsController, type: :controller do
           patch :update, params: { id: @document.id, document: { 'custom_filename' => 'valid_params' } }
         end
 
-        it "assigns the requested document as @document" do
+        it 'assigns the requested document as @document' do
           document = FactoryGirl.create(:document)
           patch :update, params: { id: document.id, document: valid_attributes }
           expect(assigns(:document)).to eq(document)
           document.delete
         end
 
-        it "redirects to the document" do
+        it 'redirects to the document' do
           document = FactoryGirl.create(:document)
           patch :update, params: { id: document.id, document: valid_attributes }
           expect(response).to redirect_to(document)
@@ -213,62 +210,61 @@ describe DocumentsController, type: :controller do
         end
       end
 
-      context "with invalid params" do
+      context 'with invalid params' do
         before(:each) do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Document).to receive(:save).and_return(false)
           patch :update, params: { id: @document.id.to_s, document: {} }
         end
 
-        it "assigns the document as @document" do
+        it 'assigns the document as @document' do
           expect(assigns(:document)).to eq(@document)
         end
 
         it "re-renders the 'edit' template" do
-          expect(response).to render_template("edit")
+          expect(response).to render_template('edit')
         end
       end
     end
   end
 
-  describe "GET delete" do
-    it "requires the user to have authority" do
+  describe 'GET delete' do
+    it 'requires the user to have authority' do
       get :delete, params: { id: @private_doc.id.to_s }
       expect(response.status).to eq 403
     end
 
-    it "shows a form for confirming deletion of a document" do
-      set_logged_in_admin
-      allow(Document).to receive(:find).with("37") { mock_document }
-      get :delete, params: { id: "37" }
+    it 'shows a form for confirming deletion of a document' do
+      logged_in_admin
+      allow(Document).to receive(:find).with('37') { mock_document }
+      get :delete, params: { id: '37' }
       expect(assigns(:document)).to be(mock_document)
     end
   end
 
-  describe "DELETE destroy" do
-    context "as anonymous user" do
-      it "requires the user to have authority" do
+  describe 'DELETE destroy' do
+    context 'as anonymous user' do
+      it 'requires the user to have authority' do
         delete :destroy, params: { id: @document.id.to_s }
         expect(response.status).to eq 403
       end
     end
 
-    context "as an authorized user" do
+    context 'as an authorized user' do
       before(:each) do
-        set_logged_in_admin
+        logged_in_admin
         @delete_document = FactoryGirl.create(:document)
       end
-      it "destroys the requested document" do
-        expect {
-          delete :destroy, params: { id: @delete_document.id.to_s }
-        }.to change(Document, :count).by(-1)
+      it 'destroys the requested document' do
+        expect { delete :destroy, params: { id: @delete_document.id.to_s } }.to change(
+          Document, :count
+        ).by(-1)
       end
 
-      it "redirects to the documents list" do
+      it 'redirects to the documents list' do
         delete :destroy, params: { id: @delete_document.id.to_s }
         expect(response).to redirect_to(documents_url)
       end
     end
   end
-
 end
