@@ -17,13 +17,13 @@ Style/GlobalVars:
   Exclude:
     - 'spec/**/*'
 
-Metrics/AbcSize:
-  Exclude:
-    - 'db/migrate/**/*'
+#Metrics/AbcSize:
+#  Exclude:
+#    - 'db/migrate/**/*'
 
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*'
+#Metrics/BlockLength:
+#  Exclude:
+#    - 'spec/**/*'
 
 
 # ############################################################################
