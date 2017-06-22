@@ -15,8 +15,8 @@ class CreateDocuments < ActiveRecord::Migration[5.1]
     end
     change_table :documents do |t|
       t.index [:datastore_id], name: 'data'
-      t.index %i(user_id filename), name: 'userfile'
-      t.index %i(container_path_id filename), name: 'pathname', unique: true
+      t.index %i[user_id filename], name: 'userfile'
+      t.index %i[container_path_id filename], name: 'pathname', unique: true
       t.index [:filename], name: 'file'
     end
   end

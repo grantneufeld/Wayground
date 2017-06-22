@@ -11,7 +11,7 @@ class CreatePages < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     change_table :pages do |t|
-      t.index %i(parent_id filename), name: 'path', unique: true
+      t.index %i[parent_id filename], name: 'path', unique: true
     end
   end
 

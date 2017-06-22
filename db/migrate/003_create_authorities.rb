@@ -17,10 +17,10 @@ class CreateAuthorities < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     change_table :authorities do |t|
-      t.index %i(user_id item_id item_type area), name: 'user_map', unique: true
-      t.index %i(authorized_by_id user_id area), name: 'authorizer'
-      t.index %i(item_id item_type user_id), name: 'item'
-      t.index %i(area user_id), name: 'area'
+      t.index %i[user_id item_id item_type area], name: 'user_map', unique: true
+      t.index %i[authorized_by_id user_id area], name: 'authorizer'
+      t.index %i[item_id item_type user_id], name: 'item'
+      t.index %i[area user_id], name: 'area'
     end
   end
 

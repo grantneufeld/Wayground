@@ -15,8 +15,8 @@ class CreateAuthentications < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     change_table :authentications do |t|
-      t.index %i(provider uid), name: 'auth', unique: true
-      t.index %i(user_id provider), name: 'user'
+      t.index %i[provider uid], name: 'auth', unique: true
+      t.index %i[user_id provider], name: 'user'
     end
   end
 

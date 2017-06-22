@@ -30,7 +30,7 @@ class CreateEvents < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     change_table :events do |t|
-      t.index %i(start_at end_at is_allday is_approved is_draft is_cancelled), name: 'dates'
+      t.index %i[start_at end_at is_allday is_approved is_draft is_cancelled], name: 'dates'
       t.index [:title]
     end
   end
