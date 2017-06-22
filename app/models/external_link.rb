@@ -72,17 +72,17 @@ class ExternalLink < ApplicationRecord
     attrs = []
     # id
     attributes_id = attributes[:id]
-    attrs << " id=\"#{attributes_id}\"" unless attributes_id.blank?
+    attrs << " id=\"#{attributes_id}\"" if attributes_id.present?
     # class
     classes = [attributes[:class], site].delete_if(&:blank?)
     class_str = classes.join(' ')
-    attrs << " class=\"#{class_str}\"" unless class_str.blank?
+    attrs << " class=\"#{class_str}\"" if class_str.present?
     # the element tag
     "<a href=\"#{url}\"#{attrs.join}>#{title}</a>"
   end
 
   def domain
-    return unless url.present?
+    return if url.blank?
     match = url.match %r{\A[a-z]+:/*([^:/]+)}
     match[1] if match
   end

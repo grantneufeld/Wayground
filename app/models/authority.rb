@@ -27,7 +27,7 @@ class Authority < ApplicationRecord
   }
   scope :for_user, ->(user) { where(user_id: user.id) }
   scope :for_action, lambda { |action|
-    raise "invalid action “#{action}”" unless action =~ /\A(can_[a-z]+|is_owner)\z/
+    raise "invalid action “#{action}”" unless action.match?(/\A(can_[a-z]+|is_owner)\z/)
     where("(authorities.#{action} = ? OR authorities.is_owner = ?)", true, true)
   }
   scope :where_owner, -> { where(is_owner: true) }

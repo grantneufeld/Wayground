@@ -102,9 +102,7 @@ class Document < ApplicationRecord
     "#{container_path.sitepath}/#{filename}".gsub(%r{//+}, '/') if container_path
   end
 
-  def sitepath
-    path.sitepath if path
-  end
+  delegate :sitepath, to: :path, allow_nil: true
 
   def file=(file)
     return if file.blank? || file.is_a?(String)
@@ -152,16 +150,14 @@ class Document < ApplicationRecord
   end
 
   def custom_filename=(custom)
-    self.filename = custom unless custom.blank?
+    self.filename = custom if custom.present?
   end
 
   def custom_filename
     nil
   end
 
-  def data
-    datastore.data if datastore
-  end
+  delegate :data, to: :datastore, allow_nil: true
 
   def data=(data)
     self.datastore ||= Datastore.new

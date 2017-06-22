@@ -17,7 +17,7 @@ class Tag < ApplicationRecord
   validates(
     :tag,
     presence: true,
-    uniqueness: { scope: %i(item_type item_id) },
+    uniqueness: { scope: %i[item_type item_id] },
     format: { with: /\A[a-z0-9]+\z/ }
   )
   validate :title_must_match_tag
@@ -29,7 +29,7 @@ class Tag < ApplicationRecord
   def title=(value)
     @title = value.strip
     self[:title] = @title
-    self.tag = taggify_text(@title) unless @title.blank?
+    self.tag = taggify_text(@title) if @title.present?
   end
 
   def taggify_text(text)

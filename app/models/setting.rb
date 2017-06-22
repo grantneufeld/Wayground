@@ -24,7 +24,7 @@ class Setting < ApplicationRecord
   # Key-indexed removal of settings.
   def self.destroy(key)
     setting = find_by(key: key)
-    setting.destroy if setting
+    setting&.destroy
   end
 
   # Set the values of settings, but don’t overwrite existing values if present.

@@ -50,9 +50,8 @@ class User < ApplicationRecord
   # If the timezone is set for a user, it must be valid.
   # TODO: make this some kind of helper since it shows up in both the User and Event models.
   def validate_timezone
-    if timezone.present? && !(ActiveSupport::TimeZone[timezone])
-      errors.add(:timezone, 'must be a recognized timezone name')
-    end
+    invalid_timezone = timezone.present? && !(ActiveSupport::TimeZone[timezone])
+    errors.add(:timezone, 'must be a recognized timezone name') if invalid_timezone
   end
 
   # FINDERS
@@ -64,9 +63,9 @@ class User < ApplicationRecord
   def self.from_string(str)
     if str.blank?
       nil
-    elsif str =~ /\A[0-9]+\z/
+    elsif str.match?(/\A[0-9]+\z/)
       find(str.to_i)
-    elsif str =~ /[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/
+    elsif str.match?(/[^ \r\n\t]+@[^ \r\n\t]+\.[A-Za-z0-9]+/)
       find_by(email: str)
     else
       find_by(name: str)
@@ -110,9 +109,8 @@ class User < ApplicationRecord
   # EMAIL CONFIRMATION
 
   def generate_email_confirmation_token
-    unless email_confirmed || confirmation_token.present?
-      self.confirmation_token = Digest::SHA1.hexdigest("=#{email}-#{created_at}.")
-    end
+    doesnt_need_new_token = email_confirmed || confirmation_token.present?
+    self.confirmation_token = Digest::SHA1.hexdigest("=#{email}-#{created_at}.") unless doesnt_need_new_token
   end
 
   # Set the user’s email_confirmed status, if the code matches the token,

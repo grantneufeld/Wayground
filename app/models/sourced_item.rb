@@ -33,9 +33,9 @@ class SourcedItem < ApplicationRecord
   # last_sourced_at should not be set in the future.
   def validate_dates
     have_source_and_dates = last_sourced_at? && source.present? && source.last_updated_at?
-    if have_source_and_dates && (last_sourced_at.to_datetime > source.last_updated_at.to_datetime)
-      errors.add(:last_sourced_at, 'must not be after the last update of the source')
-    end
+    date_is_in_future =
+      have_source_and_dates && (last_sourced_at.to_datetime > source.last_updated_at.to_datetime)
+    errors.add(:last_sourced_at, 'must not be after the last update of the source') if date_is_in_future
   end
 
   # Flag the item as having been modified locally.
