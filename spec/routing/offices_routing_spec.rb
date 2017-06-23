@@ -3,7 +3,6 @@ require 'offices_controller'
 
 describe OfficesController, type: :routing do
   describe 'routing' do
-
     it 'routes to #index' do
       expect(get: '/levels/def/offices').to route_to('offices#index', level_id: 'def')
     end
@@ -43,6 +42,5 @@ describe OfficesController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/levels/def/offices/abc').to route_to('offices#destroy', id: 'abc', level_id: 'def')
     end
-
   end
 end

@@ -3,7 +3,6 @@ require 'people_controller'
 
 describe PeopleController, type: :routing do
   describe 'routing' do
-
     it 'routes to #index' do
       expect(get: '/people').to route_to('people#index')
     end
@@ -34,6 +33,5 @@ describe PeopleController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/people/abc').to route_to('people#destroy', id: 'abc')
     end
-
   end
 end

@@ -3,7 +3,6 @@ require 'elections_controller'
 
 describe ElectionsController, type: :routing do
   describe 'routing' do
-
     it 'routes to #index' do
       expect(get: '/levels/def/elections').to route_to('elections#index', level_id: 'def')
     end
@@ -55,6 +54,5 @@ describe ElectionsController, type: :routing do
         'elections#generate_ballots', id: 'abc', level_id: 'def'
       )
     end
-
   end
 end

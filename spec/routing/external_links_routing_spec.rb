@@ -79,24 +79,28 @@ describe ExternalLinksController, type: :routing do
         )
       end
       it 'routes to #update' do
-        expect( patch: '/levels/1/elections/2/ballots/3/candidates/4/external_links/5' ).to route_to(
-          'external_links#update', id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
+        expect(patch: '/levels/1/elections/2/ballots/3/candidates/4/external_links/5').to route_to(
+          'external_links#update',
+          id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
         )
       end
 
       it 'routes to #delete' do
         expect(get: '/levels/1/elections/2/ballots/3/candidates/4/external_links/5/delete').to route_to(
-          'external_links#delete', id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
+          'external_links#delete',
+          id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
         )
       end
       it 'routes to #destroy via delete' do
         expect(delete: '/levels/1/elections/2/ballots/3/candidates/4/external_links/5/delete').to route_to(
-          'external_links#destroy', id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
+          'external_links#destroy',
+          id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
         )
       end
       it 'routes to #destroy' do
         expect(delete: '/levels/1/elections/2/ballots/3/candidates/4/external_links/5').to route_to(
-          'external_links#destroy', id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
+          'external_links#destroy',
+          id: '5', level_id: '1', election_id: '2', ballot_id: '3', candidate_id: '4'
         )
       end
     end
@@ -106,6 +110,5 @@ describe ExternalLinksController, type: :routing do
 
     describe 'nested under offices' do
     end
-
   end
 end

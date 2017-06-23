@@ -3,7 +3,6 @@ require 'levels_controller'
 
 describe LevelsController, type: :routing do
   describe 'routing' do
-
     it 'routes to #index' do
       expect(get: '/levels').to route_to('levels#index')
     end
@@ -37,6 +36,5 @@ describe LevelsController, type: :routing do
     it 'routes to #destroy' do
       expect(delete: '/levels/abc').to route_to('levels#destroy', id: 'abc')
     end
-
   end
 end
