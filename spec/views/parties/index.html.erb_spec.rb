@@ -9,9 +9,9 @@ describe 'parties/index.html.erb', type: :view do
   let(:party_attrs) do
     $party_attrs = {
       name: 'Stub Name', filename: 'stub_filename', url: 'http://stub.url.tld/'
-      #is_registered
-      #colour
-      #ended_on
+      # is_registered
+      # colour
+      # ended_on
     }
   end
   let(:party) do
@@ -33,5 +33,4 @@ describe 'parties/index.html.erb', type: :view do
       end
     end
   end
-
 end

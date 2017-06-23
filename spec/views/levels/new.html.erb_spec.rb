@@ -8,7 +8,7 @@ describe 'levels/new.html.erb', type: :view do
     assign(:level, level)
     render
   end
-  it "renders new level form" do
+  it 'renders new level form' do
     assert_select 'form', action: levels_path, method: 'post' do
       assert_select 'input#level_name', name: 'level[name]'
       assert_select 'input#level_filename', name: 'level[filename]'
@@ -18,7 +18,7 @@ describe 'levels/new.html.erb', type: :view do
   context 'with a parent' do
     let(:level) do
       $level = Level.new(url: 'http://with.parent/')
-      $level.parent = Level.new(name: 'Parent Level', filename: 'parent_level' )
+      $level.parent = Level.new(name: 'Parent Level', filename: 'parent_level')
       $level
     end
     before(:each) do
@@ -30,8 +30,7 @@ describe 'levels/new.html.erb', type: :view do
       end
     end
     it 'should include an input tag identifying the parent' do
-      expect( rendered ).to match /<input [^>]*name="parent_id"[^>]* value="parent_level"/
+      expect(rendered).to match(/<input [^>]*name="parent_id"[^>]* value="parent_level"/)
     end
   end
-
 end

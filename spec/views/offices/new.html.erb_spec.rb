@@ -29,7 +29,7 @@ describe 'offices/new.html.erb', type: :view do
     let(:office) do
       $office = level.offices.build(url: 'http://with.previous/')
       $office.level = level
-      $office.previous = level.offices.build(name: 'Previous Office', filename: 'previous_office' )
+      $office.previous = level.offices.build(name: 'Previous Office', filename: 'previous_office')
       $office
     end
     before(:each) do
@@ -41,8 +41,7 @@ describe 'offices/new.html.erb', type: :view do
       end
     end
     it 'should include an input tag identifying the previous' do
-      expect( rendered ).to match /<input [^>]*name="previous_id"[^>]* value="previous_office"/
+      expect(rendered).to match(/<input [^>]*name="previous_id"[^>]* value="previous_office"/)
     end
   end
-
 end

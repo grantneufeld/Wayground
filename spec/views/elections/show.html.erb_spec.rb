@@ -22,19 +22,18 @@ describe 'elections/show.html.erb', type: :view do
     render
   end
   it 'renders the name' do
-    expect( rendered ).to match /<h1(?:| [^>]*)>.*Stub Name.*<\/h1>/
+    expect(rendered).to match(%r{<h1(?:| [^>]*)>.*Stub Name.*</h1>})
   end
   it 'renders the url' do
-    expect( rendered ).to match /<a [^>]*href="#{election.url}"[^>]*>/
+    expect(rendered).to match(/<a [^>]*href="#{election.url}"[^>]*>/)
   end
   it 'renders the start_on date' do
-    expect( rendered ).to match /February 3, 2001/
+    expect(rendered).to match(/February 3, 2001/)
   end
   it 'renders the end_on date' do
-    expect( rendered ).to match /August 7, 2009/
+    expect(rendered).to match(/August 7, 2009/)
   end
   it 'renders the description' do
-    expect( rendered ).to match /Stub description./
+    expect(rendered).to match(/Stub description./)
   end
-
 end

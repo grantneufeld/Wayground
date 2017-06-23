@@ -14,12 +14,11 @@ describe 'offices/index.html.erb', type: :view do
     assign(:offices, [office, office])
     render
   end
-  it "should present a list of the offices" do
+  it 'should present a list of the offices' do
     assert_select 'ul' do
       assert_select 'li', count: 2 do
         assert_select 'a', href: '/levels/lvl/offices/stub_filename', text: 'Stub Name'
       end
     end
   end
-
 end

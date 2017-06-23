@@ -32,5 +32,4 @@ describe 'elections/edit.html.erb', type: :view do
       assert_select 'textarea#election_description', name: 'election[description]', value: 'Stub description.'
     end
   end
-
 end

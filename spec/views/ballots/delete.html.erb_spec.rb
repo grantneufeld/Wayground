@@ -28,10 +28,9 @@ describe 'ballots/delete.html.erb', type: :view do
     render
   end
 
-  it "should render the deletion form" do
+  it 'should render the deletion form' do
     assert_select 'form', action: '/levels/lvl/elections/elct/ballots/abc', method: 'delete' do
       assert_select 'input', type: 'submit', value: 'Delete Ballot'
     end
   end
-
 end

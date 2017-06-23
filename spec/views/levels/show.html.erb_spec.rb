@@ -11,11 +11,11 @@ describe 'levels/show.html.erb', type: :view do
     assign(:level, level)
     render
   end
-  it "renders the name" do
-    expect( rendered ).to match /<h1(?:| [^>]*)>.*Stub Name.*<\/h1>/
+  it 'renders the name' do
+    expect(rendered).to match(%r{<h1(?:| [^>]*)>.*Stub Name.*</h1>})
   end
-  it "renders the url" do
-    expect( rendered ).to match /<a [^>]*href="#{level.url}"[^>]*>/
+  it 'renders the url' do
+    expect(rendered).to match(/<a [^>]*href="#{level.url}"[^>]*>/)
   end
   context 'with parents' do
     let(:grandparent) { $grandparent = Level.new(name: 'Grandparent', filename: 'grandparent') }
@@ -30,8 +30,9 @@ describe 'levels/show.html.erb', type: :view do
       $level
     end
     it 'should identify the parents' do
-      expect( rendered ).to match /Stub Name, <a href="\/levels\/parent">Parent<\/a>, <a href="\/levels\/grandparent">Grandparent<\/a>/
+      expect(rendered).to match(
+        %r{Stub Name, <a href="/levels/parent">Parent</a>, <a href="/levels/grandparent">Grandparent</a>}
+      )
     end
   end
-
 end

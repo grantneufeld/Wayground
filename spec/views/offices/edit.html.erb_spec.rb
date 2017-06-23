@@ -28,10 +28,11 @@ describe 'offices/edit.html.erb', type: :view do
       assert_select 'input#office_filename', name: 'office[filename]', value: 'stub_filename'
       assert_select 'input#office_url', name: 'office[url]', type: 'url', value: 'http://stub.url.tld/'
       assert_select 'input#office_title', name: 'office[title]', type: 'title', value: 'Stub Title'
-      assert_select 'input#office_established_on', name: 'office[established_on]', type: 'date', value: '2001-02-03'
+      assert_select(
+        'input#office_established_on', name: 'office[established_on]', type: 'date', value: '2001-02-03'
+      )
       assert_select 'input#office_ended_on', name: 'office[ended_on]', type: 'date', value: '2009-08-07'
       assert_select 'textarea#office_description', name: 'office[description]', value: 'Stub description.'
     end
   end
-
 end

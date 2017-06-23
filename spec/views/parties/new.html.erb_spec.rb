@@ -29,5 +29,4 @@ describe 'parties/new.html.erb', type: :view do
       assert_select 'textarea#party_description', name: 'party[description]'
     end
   end
-
 end

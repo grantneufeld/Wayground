@@ -12,12 +12,11 @@ describe 'levels/index.html.erb', type: :view do
     assign(:levels, [level, level])
     render
   end
-  it "should present a list of the levels" do
+  it 'should present a list of the levels' do
     assert_select 'ul' do
       assert_select 'li', count: 2 do
         assert_select 'a', href: '/levels/stub_filename', text: 'Stub Name'
       end
     end
   end
-
 end

@@ -35,29 +35,50 @@ describe 'candidates/new.html.erb', type: :view do
   end
   it 'renders new candidate form' do
     assert_select 'form', action: '/levels/lvl/elections/elct/ballots/offc/candidates', method: 'put' do
-      assert_select 'input#wayground_democracy_candidate_form_filename',
+      assert_select(
+        'input#wayground_democracy_candidate_form_filename',
         name: 'wayground_democracy_candidate_form[filename]'
-      assert_select 'input#wayground_democracy_candidate_form_name',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_name',
         name: 'wayground_democracy_candidate_form[name]'
-      assert_select 'input#wayground_democracy_candidate_form_announced_on',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_announced_on',
         name: 'wayground_democracy_candidate_form[announced_on]', type: 'date'
-      assert_select 'input#wayground_democracy_candidate_form_quit_on',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_quit_on',
         name: 'wayground_democracy_candidate_form[quit_on]', type: 'date'
-      assert_select 'input#wayground_democracy_candidate_form_is_rumoured',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_rumoured',
         name: 'wayground_democracy_candidate_form[is_rumoured]', value: '1'
-      assert_select 'input#wayground_democracy_candidate_form_is_confirmed',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_confirmed',
         name: 'wayground_democracy_candidate_form[is_confirmed]', value: '1'
-      assert_select 'input#wayground_democracy_candidate_form_is_incumbent',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_incumbent',
         name: 'wayground_democracy_candidate_form[is_incumbent]', value: '1'
-      assert_select 'input#wayground_democracy_candidate_form_is_leader',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_leader',
         name: 'wayground_democracy_candidate_form[is_leader]', value: '1'
-      assert_select 'input#wayground_democracy_candidate_form_is_acclaimed',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_acclaimed',
         name: 'wayground_democracy_candidate_form[is_acclaimed]', value: '1'
-      assert_select 'input#wayground_democracy_candidate_form_is_elected',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_elected',
         name: 'wayground_democracy_candidate_form[is_elected]', value: '1'
-      assert_select 'input#wayground_democracy_candidate_form_vote_count',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_vote_count',
         name: 'wayground_democracy_candidate_form[vote_count]'
+      )
     end
   end
-
 end

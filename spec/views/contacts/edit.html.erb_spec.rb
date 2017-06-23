@@ -26,22 +26,19 @@ describe 'contacts/edit.html.erb', type: :view do
 
   it 'renders edit contact form' do
     assert_select 'form', action: '/person/prsn/contacts/123', method: 'put' do
-      assert_select 'input#contact_position',
-        name: 'contact[position]', value: '12'
-      assert_select 'input#contact_is_public',
-        name: 'contact[is_public]', value: '1', checked: 'checked'
-      assert_select 'input#contact_confirmed_at',
+      assert_select 'input#contact_position', name: 'contact[position]', value: '12'
+      assert_select 'input#contact_is_public', name: 'contact[is_public]', value: '1', checked: 'checked'
+      assert_select(
+        'input#contact_confirmed_at',
         name: 'contact[confirmed_at]', type: 'datetime', value: '2001-02-03 04:05 AM MST'
-      assert_select 'input#contact_expires_at',
+      )
+      assert_select(
+        'input#contact_expires_at',
         name: 'contact[expires_at]', type: 'datetime', value: '2002-03-04 05:06 AM MST'
-      assert_select 'input#contact_name',
-        name: 'contact[name]', value: 'Edit Name'
-      assert_select 'input#contact_organization',
-        name: 'contact[organization]', value: 'Edit Organization'
+      )
+      assert_select 'input#contact_name', name: 'contact[name]', value: 'Edit Name'
+      assert_select 'input#contact_organization', name: 'contact[organization]', value: 'Edit Organization'
       # TODO: test for the rest of the fields expected
-
-
     end
   end
-
 end

@@ -14,12 +14,11 @@ describe 'elections/index.html.erb', type: :view do
     assign(:elections, [election, election])
     render
   end
-  it "should present a list of the elections" do
+  it 'should present a list of the elections' do
     assert_select 'ul' do
       assert_select 'li', count: 2 do
         assert_select 'a', href: '/levels/lvl/elections/stub_filename', text: 'Stub Name'
       end
     end
   end
-
 end

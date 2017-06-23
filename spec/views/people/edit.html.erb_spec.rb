@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'person'
 
@@ -14,7 +13,7 @@ describe 'people/edit.html.erb', type: :view do
     assign(:person, person)
     render
   end
-  it "renders edit person form" do
+  it 'renders edit person form' do
     assert_select 'form', action: '/people/stub_filename', method: 'patch' do
       assert_select 'input#person_fullname', name: 'person[fullname]', value: 'Stub Name'
       assert_select 'input#person_aliases_string', name: 'person[aliases_string]', value: 'Alias 1, Alias 2'
@@ -22,5 +21,4 @@ describe 'people/edit.html.erb', type: :view do
       assert_select 'textarea#person_bio', name: 'person[bio]', value: 'Stub bio.'
     end
   end
-
 end

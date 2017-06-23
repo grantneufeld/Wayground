@@ -35,12 +35,17 @@ describe 'parties/edit.html.erb', type: :view do
       assert_select 'input#party_abbrev', name: 'party[abbrev]', value: 'Stub Abbrev'
       assert_select 'input#party_colour', name: 'party[colour]', value: 'aqua'
       assert_select 'input#party_url', name: 'party[url]', type: 'url', value: 'http://stub.url.tld/'
-      assert_select 'input#party_established_on', name: 'party[established_on]', type: 'date', value: '2001-02-03'
-      assert_select 'input#party_is_registered', name: 'party[is_registered]', value: '1', is_checked: 'is_checked'
-      assert_select 'input#party_registered_on', name: 'party[registered_on]', type: 'date', value: '2002-03-04'
+      assert_select(
+        'input#party_established_on', name: 'party[established_on]', type: 'date', value: '2001-02-03'
+      )
+      assert_select(
+        'input#party_is_registered', name: 'party[is_registered]', value: '1', is_checked: 'is_checked'
+      )
+      assert_select(
+        'input#party_registered_on', name: 'party[registered_on]', type: 'date', value: '2002-03-04'
+      )
       assert_select 'input#party_ended_on', name: 'party[ended_on]', type: 'date', value: '2009-08-07'
       assert_select 'textarea#party_description', name: 'party[description]', value: 'Stub description.'
     end
   end
-
 end

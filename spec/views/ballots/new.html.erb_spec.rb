@@ -40,5 +40,4 @@ describe 'ballots/new.html.erb', type: :view do
       assert_select 'textarea#ballot_description', name: 'ballot[description]'
     end
   end
-
 end

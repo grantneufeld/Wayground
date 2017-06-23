@@ -44,27 +44,26 @@ describe 'ballots/show.html.erb', type: :view do
     render
   end
   it 'renders the election name' do
-    expect( rendered ).to match /Stub Election Name/
+    expect(rendered).to match(/Stub Election Name/)
   end
   it 'renders the office name' do
-    expect( rendered ).to match /Stub Office Name/
+    expect(rendered).to match(/Stub Office Name/)
   end
   it 'renders the url' do
-    expect( rendered ).to match /<a [^>]*href="#{ballot.url}"[^>]*>/
+    expect(rendered).to match(/<a [^>]*href="#{ballot.url}"[^>]*>/)
   end
   it 'renders the term_start_on date' do
-    expect( rendered ).to match /February 3, 2001/
+    expect(rendered).to match(/February 3, 2001/)
   end
   it 'renders the term_end_on date' do
-    expect( rendered ).to match /August 7, 2009/
+    expect(rendered).to match(/August 7, 2009/)
   end
   it 'renders the description' do
-    expect( rendered ).to match /Stub description./
+    expect(rendered).to match(/Stub description./)
   end
   it 'renders the candidates' do
-    expect( rendered ).to match(
-      /<a (?:[^>]+ )?href="\/levels\/lvl\/elections\/elct\/ballots\/offc\/candidates\/cnd"[^>]*>Stub Candidate Name/
+    expect(rendered).to match(
+      %r{<a (?:[^>]+ )?href="/levels/lvl/elections/elct/ballots/offc/candidates/cnd"[^>]*>Stub Candidate Name}
     )
   end
-
 end

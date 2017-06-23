@@ -53,29 +53,50 @@ describe 'candidates/edit.html.erb', type: :view do
   end
   it 'renders edit candidate form' do
     assert_select 'form', action: '/levels/lvl/elections/elct/ballots/offc/candidates/abc', method: 'put' do
-      assert_select 'input#wayground_democracy_candidate_form_filename',
+      assert_select(
+        'input#wayground_democracy_candidate_form_filename',
         name: 'wayground_democracy_candidate_form[filename]', value: 'edit_filename'
-      assert_select 'input#wayground_democracy_candidate_form_name',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_name',
         name: 'wayground_democracy_candidate_form[name]', value: 'Edit Name'
-      assert_select 'input#wayground_democracy_candidate_form_announced_on',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_announced_on',
         name: 'wayground_democracy_candidate_form[announced_on]', type: 'date', value: '2001-02-03'
-      assert_select 'input#wayground_democracy_candidate_form_quit_on',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_quit_on',
         name: 'wayground_democracy_candidate_form[quit_on]', type: 'date', value: '2009-08-07'
-      assert_select 'input#wayground_democracy_candidate_form_is_rumoured',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_rumoured',
         name: 'wayground_democracy_candidate_form[is_rumoured]', value: '1', checked: 'checked'
-      assert_select 'input#wayground_democracy_candidate_form_is_confirmed',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_confirmed',
         name: 'wayground_democracy_candidate_form[is_confirmed]', value: '1', checked: 'checked'
-      assert_select 'input#wayground_democracy_candidate_form_is_incumbent',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_incumbent',
         name: 'wayground_democracy_candidate_form[is_incumbent]', value: '1', checked: 'checked'
-      assert_select 'input#wayground_democracy_candidate_form_is_leader',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_leader',
         name: 'wayground_democracy_candidate_form[is_leader]', value: '1', checked: 'checked'
-      assert_select 'input#wayground_democracy_candidate_form_is_acclaimed',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_acclaimed',
         name: 'wayground_democracy_candidate_form[is_acclaimed]', value: '1', checked: 'checked'
-      assert_select 'input#wayground_democracy_candidate_form_is_elected',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_is_elected',
         name: 'wayground_democracy_candidate_form[is_elected]', value: '1', checked: 'checked'
-      assert_select 'input#wayground_democracy_candidate_form_vote_count',
+      )
+      assert_select(
+        'input#wayground_democracy_candidate_form_vote_count',
         name: 'wayground_democracy_candidate_form[vote_count]', value: '1234'
+      )
     end
   end
-
 end

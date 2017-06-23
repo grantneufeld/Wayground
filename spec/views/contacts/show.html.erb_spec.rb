@@ -24,11 +24,10 @@ describe 'contacts/show.html.erb', type: :view do
   end
 
   it 'renders the name' do
-    expect( rendered ).to match /Show Name/
+    expect(rendered).to match(/Show Name/)
   end
   it 'renders a link to the url' do
-    expect( rendered ).to match /<a(?: [^>]*)? href="http:\/\/show.url\/"[^>]*>show.url/
+    expect(rendered).to match(%r{<a(?: [^>]*)? href="http://show.url/"[^>]*>show.url})
   end
   # TODO: check that the other contact fields are rendered
-
 end

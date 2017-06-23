@@ -23,35 +23,35 @@ describe 'parties/show.html.erb', type: :view do
     render
   end
   it 'renders the name' do
-    expect( rendered ).to match /<h1(?:| [^>]*)>.*Stub Name.*<\/h1>/
+    expect(rendered).to match(%r{<h1(?:| [^>]*)>.*Stub Name.*</h1>})
   end
   it 'renders the colour' do
-    expect( rendered ).to match /<h1(?:| [^>]*) style="border-color:aqua"[^>]*>/
+    expect(rendered).to match(/<h1(?:| [^>]*) style="border-color:aqua"[^>]*>/)
   end
   it 'renders the abbrev' do
-    expect( rendered ).to match /\[Stub Abbrev\]/
+    expect(rendered).to match(/\[Stub Abbrev\]/)
   end
   it 'renders the aliases' do
-    expect( rendered ).to match /Stub Alias 1, Stub Alias 2/
+    expect(rendered).to match(/Stub Alias 1, Stub Alias 2/)
   end
   it 'renders the url' do
-    expect( rendered ).to match /<a [^>]*href="#{party.url}"[^>]*>/
+    expect(rendered).to match(/<a [^>]*href="#{party.url}"[^>]*>/)
   end
   it 'renders the established_on date' do
-    expect( rendered ).to match /February 3, 2001/
+    expect(rendered).to match(/February 3, 2001/)
   end
   it 'renders the registered_on date' do
-    expect( rendered ).to match /March 4, 2002/
+    expect(rendered).to match(/March 4, 2002/)
   end
   it 'renders the ended_on date' do
-    expect( rendered ).to match /August 7, 2009/
+    expect(rendered).to match(/August 7, 2009/)
   end
   it 'renders the description' do
-    expect( rendered ).to match /Stub description./
+    expect(rendered).to match(/Stub description./)
   end
   context 'when registered' do
     it 'does not render the heading with the “party-unregistered” class' do
-      expect( rendered.match /<h1(?:| [^>]*)unregistered[^>]*>/ ).to be_falsey
+      expect(rendered.match(/<h1(?:| [^>]*)unregistered[^>]*>/)).to be_falsey
     end
   end
   context 'when not registered' do
@@ -64,7 +64,7 @@ describe 'parties/show.html.erb', type: :view do
       }
     end
     it 'renders the heading with the “party-unregistered” class' do
-      expect( rendered ).to match /<h1(?:| [^>]*) class="(?:|[^"]* )party-unregistered(?:| [^"]*)"[^>]*>/
+      expect(rendered).to match(/<h1(?:| [^>]*) class="(?:|[^"]* )party-unregistered(?:| [^"]*)"[^>]*>/)
     end
   end
 end

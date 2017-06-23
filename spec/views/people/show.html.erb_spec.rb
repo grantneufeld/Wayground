@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'person'
 
@@ -40,17 +39,18 @@ describe 'people/show.html.erb', type: :view do
     assign(:person, person)
     render
   end
-  it "renders the fullname" do
-    expect( rendered ).to match /Stub Name/
+  it 'renders the fullname' do
+    expect(rendered).to match(/Stub Name/)
   end
   it 'renders the aliases' do
-    expect( rendered ).to match /AKA, Nick/
+    expect(rendered).to match(/AKA, Nick/)
   end
-  it "renders the bio" do
-    expect( rendered ).to match />[\r\n]*#{person.bio}[\r\n]*</
+  it 'renders the bio' do
+    expect(rendered).to match(/>[\r\n]*#{person.bio}[\r\n]*</)
   end
   it 'renders the candidacies' do
-    expect( rendered ).to match /Stub Election: <a href="\/levels\/lvl\/elections\/elct\/ballots\/ofc\/candidates\/cnd">Stub Office/
+    expect(rendered).to match(
+      %r{Stub Election: <a href="/levels/lvl/elections/elct/ballots/ofc/candidates/cnd">Stub Office}
+    )
   end
-
 end

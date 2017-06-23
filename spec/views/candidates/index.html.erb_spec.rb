@@ -37,13 +37,13 @@ describe 'candidates/index.html.erb', type: :view do
     assign(:candidates, [candidate, candidate])
     render
   end
-  it "should present a list of the candidates" do
+  it 'should present a list of the candidates' do
     assert_select 'ul' do
       assert_select 'li', count: 2 do
-        assert_select 'a', href: '/levels/lvl/elections/elct/ballots/offc/candidates/stub_filename',
-          text: 'Stub Name'
+        assert_select(
+          'a', href: '/levels/lvl/elections/elct/ballots/offc/candidates/stub_filename', text: 'Stub Name'
+        )
       end
     end
   end
-
 end

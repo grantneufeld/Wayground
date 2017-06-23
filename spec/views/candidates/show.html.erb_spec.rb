@@ -51,13 +51,12 @@ describe 'candidates/show.html.erb', type: :view do
     render
   end
   it 'renders the name' do
-    expect( rendered ).to match /Stub Name/
+    expect(rendered).to match(/Stub Name/)
   end
   it 'renders the announced_on date' do
-    expect( rendered ).to match /February 3, 2001/
+    expect(rendered).to match(/February 3, 2001/)
   end
   it 'renders the quit_on date' do
-    expect( rendered ).to match /August 7, 2009/
+    expect(rendered).to match(/August 7, 2009/)
   end
-
 end

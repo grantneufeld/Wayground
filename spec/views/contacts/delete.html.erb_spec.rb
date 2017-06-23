@@ -12,10 +12,9 @@ describe 'contacts/delete.html.erb', type: :view do
     render
   end
 
-  it "should render the deletion form" do
+  it 'should render the deletion form' do
     assert_select 'form', action: '/person/prsn/contacts/123', method: 'delete' do
       assert_select 'input', type: 'submit', value: 'Delete Contact'
     end
   end
-
 end

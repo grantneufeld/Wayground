@@ -18,25 +18,27 @@ describe 'offices/show.html.erb', type: :view do
     render
   end
   it 'renders the name' do
-    expect( rendered ).to match /<h1(?:| [^>]*)>.*Stub Name.*<\/h1>/
+    expect(rendered).to match(%r{<h1(?:| [^>]*)>.*Stub Name.*</h1>})
   end
   it 'renders the url' do
-    expect( rendered ).to match /<a [^>]*href="#{office.url}"[^>]*>/
+    expect(rendered).to match(/<a [^>]*href="#{office.url}"[^>]*>/)
   end
   it 'renders the title' do
-    expect( rendered ).to match /Stub Title/
+    expect(rendered).to match(/Stub Title/)
   end
   it 'renders the established_on date' do
-    expect( rendered ).to match /February 3, 2001/
+    expect(rendered).to match(/February 3, 2001/)
   end
   it 'renders the ended_on date' do
-    expect( rendered ).to match /August 7, 2009/
+    expect(rendered).to match(/August 7, 2009/)
   end
   it 'renders the description' do
-    expect( rendered ).to match /Stub description./
+    expect(rendered).to match(/Stub description./)
   end
   context 'with previous' do
-    let(:previous_previous) { $previous_previous = level.offices.build(name: 'Previous Previous', filename: 'previous_previous') }
+    let(:previous_previous) do
+      $previous_previous = level.offices.build(name: 'Previous Previous', filename: 'previous_previous')
+    end
     let(:previous) do
       $previous = level.offices.build(name: 'Previous', filename: 'previous')
       $previous.previous = previous_previous
@@ -48,8 +50,7 @@ describe 'offices/show.html.erb', type: :view do
       $office
     end
     it 'should identify the previous' do
-      expect( rendered ).to match /Previous Office: <a href="\/levels\/lvl\/offices\/previous">Previous<\/a>/
+      expect(rendered).to match(%r{Previous Office: <a href="/levels/lvl/offices/previous">Previous</a>})
     end
   end
-
 end

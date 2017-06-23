@@ -28,7 +28,7 @@ describe 'contacts/index.html.erb', type: :view do
     render
   end
 
-  it "should present a list of the contacts" do
+  it 'should present a list of the contacts' do
     assert_select 'h2', count: 2 do
       assert_select 'a', href: '/person/prsn/contacts/123', text: 'Contact 12'
     end
@@ -36,5 +36,4 @@ describe 'contacts/index.html.erb', type: :view do
       assert_select 'a', class: 'url', href: 'http://index.url/', text: 'index.url'
     end
   end
-
 end

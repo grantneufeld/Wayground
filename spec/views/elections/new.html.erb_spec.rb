@@ -24,5 +24,4 @@ describe 'elections/new.html.erb', type: :view do
       assert_select 'textarea#election_description', name: 'election[description]'
     end
   end
-
 end

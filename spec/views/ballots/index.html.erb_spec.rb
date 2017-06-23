@@ -34,7 +34,7 @@ describe 'ballots/index.html.erb', type: :view do
     assign(:ballots, [ballot, ballot])
     render
   end
-  it "should present a list of the ballots" do
+  it 'should present a list of the ballots' do
     assert_select 'h2' do
       assert_select 'a', href: '/levels/lvl/elections/elct/ballots/offc', text: 'Stub Office'
     end
@@ -42,11 +42,10 @@ describe 'ballots/index.html.erb', type: :view do
   it 'should list the candidates on the ballots' do
     assert_select 'div.vcard' do
       assert_select 'h3.fn', count: 2 do
-        assert_select('a.url', href: '/levels/lvl/elections/elct/ballots/offc/candidates/cnd',
-          text: 'Stub Candidate'
+        assert_select(
+          'a.url', href: '/levels/lvl/elections/elct/ballots/offc/candidates/cnd', text: 'Stub Candidate'
         )
       end
     end
   end
-
 end

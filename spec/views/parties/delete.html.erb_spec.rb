@@ -17,5 +17,4 @@ describe 'parties/delete.html.erb', type: :view do
       assert_select 'input', type: 'submit', value: 'Delete Party'
     end
   end
-
 end
