@@ -7,10 +7,10 @@ require 'person'
 class ContactsController < ApplicationController
   before_action :set_user
   before_action :set_item
-  before_action :set_contact, only: %i(show edit update delete destroy)
-  before_action :prep_new, only: %i(new create)
-  before_action :prep_edit, only: %i(edit update)
-  before_action :prep_delete, only: %i(delete destroy)
+  before_action :set_contact, only: %i[show edit update delete destroy]
+  before_action :prep_new, only: %i[new create]
+  before_action :prep_edit, only: %i[edit update]
+  before_action :prep_delete, only: %i[delete destroy]
   before_action :set_section
 
   def index

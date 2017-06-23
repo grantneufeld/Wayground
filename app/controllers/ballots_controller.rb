@@ -7,10 +7,10 @@ class BallotsController < ApplicationController
   before_action :set_user
   before_action :set_level
   before_action :set_election
-  before_action :set_ballot, only: %i(show edit update delete destroy)
-  before_action :prep_new, only: %i(new create)
-  before_action :prep_edit, only: %i(edit update)
-  before_action :prep_delete, only: %i(delete destroy)
+  before_action :set_ballot, only: %i[show edit update delete destroy]
+  before_action :prep_new, only: %i[new create]
+  before_action :prep_edit, only: %i[edit update]
+  before_action :prep_delete, only: %i[delete destroy]
   before_action :set_section
 
   def index

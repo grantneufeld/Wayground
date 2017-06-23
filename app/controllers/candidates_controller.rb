@@ -8,11 +8,11 @@ class CandidatesController < ApplicationController
   before_action :set_level
   before_action :set_election
   before_action :set_ballot
-  before_action :set_candidate, only: %i(show edit update delete destroy)
-  before_action :prep_new, only: %i(new create)
-  before_action :prep_edit, only: %i(edit update)
-  before_action :prep_form, only: %i(new create edit update)
-  before_action :prep_delete, only: %i(delete destroy)
+  before_action :set_candidate, only: %i[show edit update delete destroy]
+  before_action :prep_new, only: %i[new create]
+  before_action :prep_edit, only: %i[edit update]
+  before_action :prep_form, only: %i[new create edit update]
+  before_action :prep_delete, only: %i[delete destroy]
   before_action :set_section
 
   def index
@@ -90,10 +90,7 @@ class CandidatesController < ApplicationController
     @candidate_form = Wayground::Democracy::CandidateForm.new
     @candidate_form.ballot = @ballot
     @candidate_form.attributes = candidate_params
-    if params[:person_id]
-      @person = Person.from_param(params[:person_id]).first
-      @candidate_form.person = @person
-    end
+    @candidate_form.person = @person = Person.from_param(params[:person_id]).first if params[:person_id]
   end
 
   def prep_edit

@@ -3,10 +3,10 @@ require 'level'
 # Access to Level records
 class LevelsController < ApplicationController
   before_action :set_user
-  before_action :set_level, only: %i(show edit update delete destroy)
-  before_action :prep_new, only: %i(new create)
-  before_action :prep_edit, only: %i(edit update)
-  before_action :prep_delete, only: %i(delete destroy)
+  before_action :set_level, only: %i[show edit update delete destroy]
+  before_action :prep_new, only: %i[new create]
+  before_action :prep_edit, only: %i[edit update]
+  before_action :prep_delete, only: %i[delete destroy]
   before_action :set_section
 
   def index
