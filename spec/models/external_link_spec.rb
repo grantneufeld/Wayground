@@ -289,7 +289,7 @@ describe ExternalLink, type: :model do
         candidate.ballot = ballot
         external_link = candidate.external_links.build
         external_link.item = candidate
-        expect( external_link.items_for_path ).to eq [level, election, ballot, candidate, external_link]
+        expect(external_link.items_for_path).to eq [level, election, ballot, candidate, external_link]
       end
     end
   end
