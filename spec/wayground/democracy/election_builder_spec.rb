@@ -1,35 +1,36 @@
-# encoding: utf-8
 require 'spec_helper'
 require 'democracy/election_builder'
 require 'event/events_by_date'
 require 'event'
 
 describe Wayground::Democracy::ElectionBuilder do
-
-  describe "initialization" do
+  describe 'initialization' do
     let(:election) { $election ||= Election.new }
     let(:term_start_on) { $term_start_on ||= Time.zone.now }
     let(:term_end_on) { $term_end_on ||= Time.zone.now }
-    it "should accept an election" do
+    it 'should accept an election' do
       builder = Wayground::Democracy::ElectionBuilder.new(election: election)
-      expect( builder.election ).to eq(election)
+      expect(builder.election).to eq(election)
     end
-    it "should accept a term_start_on" do
+    it 'should accept a term_start_on' do
       builder = Wayground::Democracy::ElectionBuilder.new(term_start_on: term_start_on)
-      expect( builder.term_start_on ).to eq(term_start_on)
+      expect(builder.term_start_on).to eq(term_start_on)
     end
-    it "should accept a term_end_on" do
+    it 'should accept a term_end_on' do
       builder = Wayground::Democracy::ElectionBuilder.new(term_end_on: term_end_on)
-      expect( builder.term_end_on ).to eq(term_end_on)
+      expect(builder.term_end_on).to eq(term_end_on)
     end
   end
 
   describe '#generate_ballots' do
     it 'should create ballots for an election' do
       level = FactoryGirl.create(:level)
-      office1 = FactoryGirl.create(:office, level: level)
-      office2 = FactoryGirl.create(:office, level: level)
-      office3 = FactoryGirl.create(:office, level: level)
+      # office1
+      FactoryGirl.create(:office, level: level)
+      # office2
+      FactoryGirl.create(:office, level: level)
+      # office3
+      FactoryGirl.create(:office, level: level)
       election = FactoryGirl.create(:election, level: level)
       builder = Wayground::Democracy::ElectionBuilder.new(election: election)
       new_ballots = []
@@ -70,7 +71,7 @@ describe Wayground::Democracy::ElectionBuilder do
       allow(election).to receive_message_chain(:ballots, :where).with(office_id: 1) { [] }
       allow(election).to receive_message_chain(:ballots, :where).with(office_id: 2) { [:ballot] }
       builder = Wayground::Democracy::ElectionBuilder.new(election: election)
-      expect( builder.offices_without_ballots ).to eq [office1]
+      expect(builder.offices_without_ballots).to eq [office1]
     end
   end
 
@@ -78,9 +79,13 @@ describe Wayground::Democracy::ElectionBuilder do
     context 'with a term_start_on date' do
       it 'should just get the offices association from the election’s level association' do
         election = double('election')
-        allow(election).to receive_message_chain(:level, :offices, :active_on).with(:term_start_on) { :active_offices }
-        builder = Wayground::Democracy::ElectionBuilder.new(election: election, term_start_on: :term_start_on)
-        expect( builder.offices_for_level ).to eq :active_offices
+        allow(election).to receive_message_chain(
+          :level, :offices, :active_on
+        ).with(:term_start_on) { :active_offices }
+        builder = Wayground::Democracy::ElectionBuilder.new(
+          election: election, term_start_on: :term_start_on
+        )
+        expect(builder.offices_for_level).to eq :active_offices
       end
     end
     context 'with no term_start_on date' do
@@ -88,9 +93,8 @@ describe Wayground::Democracy::ElectionBuilder do
         election = double('election')
         allow(election).to receive_message_chain(:level, :offices) { :offices }
         builder = Wayground::Democracy::ElectionBuilder.new(election: election)
-        expect( builder.offices_for_level ).to eq :offices
+        expect(builder.offices_for_level).to eq :offices
       end
     end
   end
-
 end
