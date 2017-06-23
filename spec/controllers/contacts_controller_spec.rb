@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe ContactsController, type: :controller do
-
   before(:all) do
     Contact.destroy_all
     Person.destroy_all
@@ -27,9 +26,10 @@ describe ContactsController, type: :controller do
     @candidate = FactoryGirl.create(:candidate, ballot: @ballot, party: nil)
   end
 
-  def set_logged_in_admin
+  def logged_in_admin
     allow(controller).to receive(:current_user).and_return(@user_admin)
   end
+
   def set_logged_in_user
     allow(controller).to receive(:current_user).and_return(@user_normal)
   end
@@ -51,17 +51,17 @@ describe ContactsController, type: :controller do
   describe 'GET “index”' do
     it 'returns http success' do
       get :index, params: { person_id: person.to_param }
-      expect( response ).to be_success
+      expect(response).to be_success
     end
     it 'assigns the item’s contacts as @contacts' do
       contacts = [person.contacts.first, contact]
       get :index, params: { person_id: person.to_param }
-      expect( assigns(:contacts) ).to eq(contacts)
+      expect(assigns(:contacts)).to eq(contacts)
     end
     context 'with an person_id param' do
       it 'assigns the person as @item' do
         get :index, params: { person_id: person.to_param }
-        expect( assigns(:item) ).to eq(person)
+        expect(assigns(:item)).to eq(person)
       end
     end
     context 'with a candidate_id param' do
@@ -73,7 +73,7 @@ describe ContactsController, type: :controller do
             election_id: election.to_param, level_id: level.to_param
           }
         )
-        expect( assigns(:item) ).to eq(candidate)
+        expect(assigns(:item)).to eq(candidate)
       end
     end
   end
@@ -81,30 +81,30 @@ describe ContactsController, type: :controller do
   describe 'GET “show”' do
     it 'returns http success' do
       get :show, params: { person_id: person.to_param, id: contact.id }
-      expect( response ).to be_success
+      expect(response).to be_success
     end
     it 'assigns the requested contact as @contact' do
       get :show, params: { person_id: person.to_param, id: contact.id }
-      expect( assigns(:contact) ).to eq(contact)
+      expect(assigns(:contact)).to eq(contact)
     end
     it 'returns http missing if invalid id' do
       get :show, params: { person_id: person.to_param, id: (contact.id + 1000) }
-      expect( response.status ).to eq 404
+      expect(response.status).to eq 404
     end
     it 'returns http missing if invalid item id' do
       get :show, params: { person_id: (person.id + 1000), id: contact.id }
-      expect( response.status ).to eq 404
+      expect(response.status).to eq 404
     end
     context 'with a private contact' do
       it 'returns http unauthorized if the user does not have access' do
         set_logged_in_user
         get :show, params: { person_id: person.to_param, id: private_contact.id }
-        expect( response.status ).to eq 403
+        expect(response.status).to eq 403
       end
       it 'assigns the requested private contact as @contact if the user has access' do
-        set_logged_in_admin
+        logged_in_admin
         get :show, params: { person_id: person.to_param, id: private_contact.id }
-        expect( assigns(:contact) ).to eq(private_contact)
+        expect(assigns(:contact)).to eq(private_contact)
       end
     end
   end
@@ -113,23 +113,23 @@ describe ContactsController, type: :controller do
     it 'fails if not sufficent authority' do
       set_logged_in_user
       get :new, params: { person_id: person.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     it 'returns http success' do
-      set_logged_in_admin
+      logged_in_admin
       get :new, params: { person_id: person.to_param }
-      expect( response ).to be_success
+      expect(response).to be_success
     end
     it 'assigns a new Contact as @contact' do
-      set_logged_in_admin
+      logged_in_admin
       get :new, params: { person_id: person.to_param }
-      expect( assigns(:contact) ).to be_a_new(Contact)
+      expect(assigns(:contact)).to be_a_new(Contact)
     end
     it 'associates the new Contact with the person' do
-      set_logged_in_admin
+      logged_in_admin
       get :new, params: { person_id: person.to_param }
-      expect( assigns(:contact).item ).to eq person
+      expect(assigns(:contact).item).to eq person
     end
   end
 
@@ -137,54 +137,53 @@ describe ContactsController, type: :controller do
     it 'fails if not sufficient authority' do
       set_logged_in_user
       post :create, params: { person_id: person.to_param, contact: valid_attributes }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     context 'with valid params' do
-      it 'creates a new Event' do
-        set_logged_in_admin
-        expect {
-          post :create, params: { person_id: person.to_param, contact: valid_attributes }
-        }.to change(person.contacts, :count).by(1)
+      it 'creates a new Contact' do
+        logged_in_admin
+        contact_params = { person_id: person.to_param, contact: valid_attributes }
+        expect { post :create, params: contact_params }.to change(person.contacts, :count).by(1)
       end
       it 'assigns a newly created Contact as @contact' do
-        set_logged_in_admin
+        logged_in_admin
         post :create, params: { person_id: person.to_param, contact: valid_attributes }
-        expect( assigns(:contact) ).to be_a(Contact)
-        expect( assigns(:contact) ).to be_persisted
+        expect(assigns(:contact)).to be_a(Contact)
+        expect(assigns(:contact)).to be_persisted
       end
       it 'associates the new Contact with the person' do
-        set_logged_in_admin
+        logged_in_admin
         post :create, params: { person_id: person.to_param, contact: valid_attributes }
-        expect( assigns(:contact).item ).to eq person
+        expect(assigns(:contact).item).to eq person
       end
       it 'redirects to the created Contact' do
-        set_logged_in_admin
+        logged_in_admin
         post :create, params: { person_id: person.to_param, contact: valid_attributes }
-        expect( response ).to redirect_to([person, person.contacts.last])
+        expect(response).to redirect_to([person, person.contacts.last])
       end
     end
 
     context 'with invalid params' do
       it 'assigns a newly created but unsaved Contact as @contact' do
-        set_logged_in_admin
+        logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Contact).to receive(:save).and_return(false)
         post :create, params: { person_id: person.to_param, contact: {} }
-        expect( assigns(:contact) ).to be_a_new(Contact)
+        expect(assigns(:contact)).to be_a_new(Contact)
       end
       it 'associates the new Contact with the person' do
-        set_logged_in_admin
+        logged_in_admin
         allow_any_instance_of(Contact).to receive(:save).and_return(false)
         post :create, params: { person_id: person.to_param, contact: {} }
-        expect( assigns(:contact).item ).to eq person
+        expect(assigns(:contact).item).to eq person
       end
       it 're-renders the “new” template' do
-        set_logged_in_admin
+        logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Contact).to receive(:save).and_return(false)
         post :create, params: { person_id: person.to_param, contact: {} }
-        expect( response ).to render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -193,13 +192,13 @@ describe ContactsController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :edit, params: { person_id: person.to_param, id: contact.id }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     it 'assigns the requested contact as @contact' do
-      set_logged_in_admin
+      logged_in_admin
       get :edit, params: { person_id: person.to_param, id: contact.id }
-      expect( assigns(:contact) ).to eq(contact)
+      expect(assigns(:contact)).to eq(contact)
     end
   end
 
@@ -207,12 +206,12 @@ describe ContactsController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       patch :update, params: { person_id: person.to_param, id: contact.id, contact: { 'these' => 'params' } }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
       it 'updates the requested contact' do
-        set_logged_in_admin
+        logged_in_admin
         # This specifies that the Contact receives the :update message
         # with whatever params are submitted in the request.
         expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
@@ -224,33 +223,33 @@ describe ContactsController, type: :controller do
       end
 
       it 'assigns the requested contact as @contact' do
-        set_logged_in_admin
+        logged_in_admin
         patch :update, params: { person_id: person.to_param, id: contact.id, contact: valid_attributes }
-        expect( assigns(:contact) ).to eq(contact)
+        expect(assigns(:contact)).to eq(contact)
       end
 
       it 'redirects to the contact' do
-        set_logged_in_admin
+        logged_in_admin
         patch :update, params: { person_id: person.to_param, id: contact.id, contact: valid_attributes }
-        expect( response ).to redirect_to([person, contact])
+        expect(response).to redirect_to([person, contact])
       end
     end
 
     describe 'with invalid params' do
       it 'assigns the contact as @contact' do
-        set_logged_in_admin
+        logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Contact).to receive(:save).and_return(false)
         patch :update, params: { person_id: person.to_param, id: contact.id, contact: { url: 'invalid url' } }
-        expect( assigns(:contact) ).to eq(contact)
+        expect(assigns(:contact)).to eq(contact)
       end
 
       it 're-renders the “edit” template' do
-        set_logged_in_admin
+        logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Contact).to receive(:save).and_return(false)
         patch :update, params: { person_id: person.to_param, id: contact.id, contact: { url: 'invalid url' } }
-        expect( response ).to render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
   end
@@ -259,13 +258,13 @@ describe ContactsController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :delete, params: { person_id: person.to_param, id: contact.id }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     it 'shows a form for confirming deletion of an contact' do
-      set_logged_in_admin
+      logged_in_admin
       get :delete, params: { person_id: person.to_param, id: contact.id }
-      expect( assigns(:contact) ).to eq contact
+      expect(assigns(:contact)).to eq contact
     end
   end
 
@@ -273,23 +272,22 @@ describe ContactsController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       delete :destroy, params: { person_id: person.to_param, id: contact.id }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     it 'destroys the requested contact' do
-      set_logged_in_admin
+      logged_in_admin
       delete_this = FactoryGirl.create(:contact, item: person)
-      expect {
-        delete :destroy, params: { person_id: person.to_param, id: delete_this.id }
-      }.to change(person.contacts, :count).by(-1)
+      expect { delete :destroy, params: { person_id: person.to_param, id: delete_this.id } }.to change(
+        person.contacts, :count
+      ).by(-1)
     end
 
     it 'redirects to the containing item' do
-      set_logged_in_admin
+      logged_in_admin
       delete_this = FactoryGirl.create(:contact, item: person)
       delete :destroy, params: { person_id: person.to_param, id: delete_this.id }
-      expect( response ).to redirect_to(person)
+      expect(response).to redirect_to(person)
     end
   end
-
 end

@@ -2,11 +2,12 @@ require 'rails_helper'
 require 'parties_controller'
 
 describe PartiesController, type: :controller do
-
   before(:all) do
     Level.delete_all
     Party.delete_all
-    @level = FactoryGirl.create(:level, name: 'Parties Controller Level', filename: 'parties_controller_level')
+    @level = FactoryGirl.create(
+      :level, name: 'Parties Controller Level', filename: 'parties_controller_level'
+    )
     @party = FactoryGirl.create(:party, level: @level)
     Authority.delete_all
     @user_admin = User.first || FactoryGirl.create(:user, name: 'Admin User')
@@ -18,6 +19,7 @@ describe PartiesController, type: :controller do
   def set_logged_in_admin
     allow(controller).to receive(:current_user).and_return(@user_admin)
   end
+
   def set_logged_in_user
     allow(controller).to receive(:current_user).and_return(@user_normal)
   end
@@ -37,16 +39,16 @@ describe PartiesController, type: :controller do
       get :index, params: { level_id: @level.to_param }
     end
     it 'assigns all parties as @parties' do
-      expect( assigns(:parties) ).to eq([party])
+      expect(assigns(:parties)).to eq([party])
     end
     it 'assigns a title to the page_metadata' do
-      expect( assigns(:page_metadata).title ).to match /Parties/
+      expect(assigns(:page_metadata).title).to match(/Parties/)
     end
     it 'renders the ‘index’ template' do
-      expect( response ).to render_template('parties/index')
+      expect(response).to render_template('parties/index')
     end
     it 'assigns the site section' do
-      expect( assigns(:site_section) ).to eq :parties
+      expect(assigns(:site_section)).to eq :parties
     end
   end
 
@@ -55,28 +57,28 @@ describe PartiesController, type: :controller do
       get :show, params: { id: party.filename, level_id: @level.to_param }
     end
     it 'assigns the requested party as @party' do
-      expect( assigns(:party) ).to eq(party)
+      expect(assigns(:party)).to eq(party)
     end
     it 'assigns a title to the page_metadata' do
-      expect( assigns(:page_metadata).title ).to match /Party/
+      expect(assigns(:page_metadata).title).to match(/Party/)
     end
     it 'renders the ‘show’ template' do
-      expect( response ).to render_template('parties/show')
+      expect(response).to render_template('parties/show')
     end
     it 'assigns the site section' do
-      expect( assigns(:site_section) ).to eq :parties
+      expect(assigns(:site_section)).to eq :parties
     end
   end
 
   describe 'GET new' do
     it 'fails if not logged in' do
       get :new, params: { level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
       get :new, params: { level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
@@ -84,16 +86,16 @@ describe PartiesController, type: :controller do
         get :new, params: { level_id: @level.to_param }
       end
       it 'assigns a new party as @party' do
-        expect( assigns(:party) ).to be_a_new(Party)
+        expect(assigns(:party)).to be_a_new(Party)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Party/
+        expect(assigns(:page_metadata).title).to match(/Party/)
       end
       it 'renders the ‘new’ template' do
-        expect( response ).to render_template('parties/new')
+        expect(response).to render_template('parties/new')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :parties
+        expect(assigns(:site_section)).to eq :parties
       end
     end
   end
@@ -101,12 +103,12 @@ describe PartiesController, type: :controller do
   describe 'POST create' do
     it 'fails if not logged in' do
       post :create, params: { party: valid_attributes, level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
       post :create, params: { party: valid_attributes, level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
@@ -114,26 +116,26 @@ describe PartiesController, type: :controller do
         set_logged_in_admin
       end
       it 'creates a new Party' do
-        expect {
-          post :create, params: { party: valid_attributes, level_id: @level.to_param }
-        }.to change(Party, :count).by(1)
+        expect { post :create, params: { party: valid_attributes, level_id: @level.to_param } }.to change(
+          Party, :count
+        ).by(1)
       end
       context '...' do
         before(:each) do
           post :create, params: { party: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns a newly created party as @party' do
-          expect( assigns(:party) ).to be_a(Party)
-          expect( assigns(:party) ).to be_persisted
+          expect(assigns(:party)).to be_a(Party)
+          expect(assigns(:party)).to be_persisted
         end
         it 'notifies the user that the party was saved' do
-          expect( request.flash[:notice] ).to eq 'The party has been saved.'
+          expect(request.flash[:notice]).to eq 'The party has been saved.'
         end
         it 'redirects to the created party' do
-          expect( response ).to redirect_to([@level, assigns(:party)])
+          expect(response).to redirect_to([@level, assigns(:party)])
         end
         it 'assigns the site section' do
-          expect( assigns(:site_section) ).to eq :parties
+          expect(assigns(:site_section)).to eq :parties
         end
       end
     end
@@ -146,13 +148,13 @@ describe PartiesController, type: :controller do
         post :create, params: { party: {}, level_id: @level.to_param }
       end
       it 'assigns a newly created but unsaved party as @party' do
-        expect( assigns(:party) ).to be_a_new(Party)
+        expect(assigns(:party)).to be_a_new(Party)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Party/
+        expect(assigns(:page_metadata).title).to match(/Party/)
       end
       it 're-renders the ‘new’ template' do
-        expect( response ).to render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -161,7 +163,7 @@ describe PartiesController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :edit, params: { id: party.filename, level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     context 'with authority' do
@@ -170,16 +172,16 @@ describe PartiesController, type: :controller do
         get :edit, params: { id: party.filename, level_id: @level.to_param }
       end
       it 'assigns the requested party as @party' do
-        expect( assigns(:party) ).to eq(party)
+        expect(assigns(:party)).to eq(party)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Party/
+        expect(assigns(:page_metadata).title).to match(/Party/)
       end
       it 'renders the ‘edit’ template' do
-        expect( response ).to render_template('parties/edit')
+        expect(response).to render_template('parties/edit')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :parties
+        expect(assigns(:site_section)).to eq :parties
       end
     end
   end
@@ -188,7 +190,7 @@ describe PartiesController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       patch :update, params: { id: party.filename, party: {}, level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
@@ -196,7 +198,10 @@ describe PartiesController, type: :controller do
         set_logged_in_admin
         expected_params = ActionController::Parameters.new('name' => 'valid params').permit!
         expect_any_instance_of(Party).to receive(:update).with(expected_params).and_return(true)
-        patch :update, params: { id: party.filename, party: { 'name' => 'valid params' }, level_id: @level.to_param }
+        patch(
+          :update,
+          params: { id: party.filename, party: { 'name' => 'valid params' }, level_id: @level.to_param }
+        )
       end
       context 'with attributes' do
         before(:each) do
@@ -205,16 +210,16 @@ describe PartiesController, type: :controller do
           patch :update, params: { id: party.filename, party: valid_attributes, level_id: @level.to_param }
         end
         it 'assigns the requested party as @party' do
-          expect( assigns(:party) ).to eq(party)
+          expect(assigns(:party)).to eq(party)
         end
         it 'notifies the user that the party was saved' do
-          expect( request.flash[:notice] ).to eq 'The party has been saved.'
+          expect(request.flash[:notice]).to eq 'The party has been saved.'
         end
         it 'redirects to the party' do
-          expect( response ).to redirect_to([@level, assigns(:party)])
+          expect(response).to redirect_to([@level, assigns(:party)])
         end
         it 'assigns the site section' do
-          expect( assigns(:site_section) ).to eq :parties
+          expect(assigns(:site_section)).to eq :parties
         end
       end
     end
@@ -232,13 +237,13 @@ describe PartiesController, type: :controller do
         patch :update, params: { id: party.filename, party: {}, level_id: @level.to_param }
       end
       it 'assigns the party as @party' do
-        expect( assigns(:party) ).to eq(party)
+        expect(assigns(:party)).to eq(party)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Party/
+        expect(assigns(:page_metadata).title).to match(/Party/)
       end
       it 're-renders the ‘edit’ template' do
-        expect( response ).to render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
   end
@@ -247,7 +252,7 @@ describe PartiesController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :delete, params: { id: party.filename, level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
@@ -257,16 +262,16 @@ describe PartiesController, type: :controller do
         get :delete, params: { id: party.filename, level_id: @level.to_param }
       end
       it 'shows a form for confirming deletion of an party' do
-        expect( assigns(:party) ).to eq party
+        expect(assigns(:party)).to eq party
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Party/
+        expect(assigns(:page_metadata).title).to match(/Party/)
       end
       it 'renders the ‘delete’ template' do
-        expect( response ).to render_template('parties/delete')
+        expect(response).to render_template('parties/delete')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :parties
+        expect(assigns(:site_section)).to eq :parties
       end
     end
   end
@@ -275,7 +280,7 @@ describe PartiesController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       delete :destroy, params: { id: party.filename, level_id: @level.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       let(:party) { $party = FactoryGirl.create(:party, level: @level) }
@@ -284,15 +289,14 @@ describe PartiesController, type: :controller do
       end
       it 'destroys the requested party' do
         party
-        expect {
-          delete :destroy, params: { id: party.filename, level_id: @level.to_param }
-        }.to change(Party, :count).by(-1)
+        expect { delete :destroy, params: { id: party.filename, level_id: @level.to_param } }.to change(
+          Party, :count
+        ).by(-1)
       end
       it 'redirects to the parties list' do
         delete :destroy, params: { id: party.filename, level_id: @level.to_param }
-        expect( response ).to redirect_to(level_parties_url(@level))
+        expect(response).to redirect_to(level_parties_url(@level))
       end
     end
   end
-
 end

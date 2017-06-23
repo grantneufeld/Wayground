@@ -67,7 +67,7 @@ describe ExternalLinksController, type: :controller do
       end
     end
     context 'with a candidate_id param' do
-      it "assigns the candidate as @item" do
+      it 'assigns the candidate as @item' do
         get(
           :index,
           params: {

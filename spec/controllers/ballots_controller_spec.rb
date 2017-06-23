@@ -9,7 +9,6 @@ require 'candidate'
 require 'authority'
 
 describe BallotsController, type: :controller do
-
   before(:all) do
     Level.delete_all
     Election.delete_all
@@ -17,14 +16,14 @@ describe BallotsController, type: :controller do
     Ballot.delete_all
     Candidate.delete_all
     Person.delete_all
-    @level = FactoryGirl.create(:level,
-      name: 'Ballots Controller Level', filename: 'ballots_controller_level'
+    @level = FactoryGirl.create(
+      :level, name: 'Ballots Controller Level', filename: 'ballots_controller_level'
     )
-    @election = FactoryGirl.create(:election,
-      level: @level, name: 'Ballots Controller Election', filename: 'ballots_controller_election'
+    @election = FactoryGirl.create(
+      :election, level: @level, name: 'Ballots Controller Election', filename: 'ballots_controller_election'
     )
-    @office = FactoryGirl.create(:office,
-      level: @level, name: 'Ballots Controller Office', filename: 'ballots_controller_office'
+    @office = FactoryGirl.create(
+      :office, level: @level, name: 'Ballots Controller Office', filename: 'ballots_controller_office'
     )
     @ballot = FactoryGirl.create(:ballot, election: @election, office: @office)
     @candidate = FactoryGirl.create(:candidate, ballot: @ballot)
@@ -38,6 +37,7 @@ describe BallotsController, type: :controller do
   def set_logged_in_admin
     allow(controller).to receive(:current_user).and_return(@user_admin)
   end
+
   def set_logged_in_user
     allow(controller).to receive(:current_user).and_return(@user_normal)
   end
@@ -57,16 +57,16 @@ describe BallotsController, type: :controller do
       get :index, params: { level_id: @level.to_param, election_id: @election.to_param }
     end
     it 'assigns all ballots as @ballots' do
-      expect( assigns(:ballots) ).to eq([ballot])
+      expect(assigns(:ballots)).to eq([ballot])
     end
     it 'assigns a title to the page_metadata' do
-      expect( assigns(:page_metadata).title ).to match /Ballots/
+      expect(assigns(:page_metadata).title).to match(/Ballots/)
     end
     it 'renders the ‘index’ template' do
-      expect( response ).to render_template('ballots/index')
+      expect(response).to render_template('ballots/index')
     end
     it 'assigns the site section' do
-      expect( assigns(:site_section) ).to eq :ballots
+      expect(assigns(:site_section)).to eq :ballots
     end
   end
 
@@ -75,31 +75,31 @@ describe BallotsController, type: :controller do
       get :show, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
     end
     it 'assigns the requested ballot as @ballot' do
-      expect( assigns(:ballot) ).to eq(ballot)
+      expect(assigns(:ballot)).to eq(ballot)
     end
     it 'assigns a title to the page_metadata' do
-      expect( assigns(:page_metadata).title ).to match /Ballot/
+      expect(assigns(:page_metadata).title).to match(/Ballot/)
     end
     it 'renders the ‘show’ template' do
-      expect( response ).to render_template('ballots/show')
+      expect(response).to render_template('ballots/show')
     end
     it 'assigns the site section' do
-      expect( assigns(:site_section) ).to eq :ballots
+      expect(assigns(:site_section)).to eq :ballots
     end
     it 'assigns a list of candidates as @candidates' do
-      expect( assigns(:candidates).to_a ).to eq [@candidate]
+      expect(assigns(:candidates).to_a).to eq [@candidate]
     end
   end
 
   describe 'GET new' do
     it 'fails if not logged in' do
       get :new, params: { level_id: @level.to_param, election_id: @election.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
       get :new, params: { level_id: @level.to_param, election_id: @election.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
@@ -107,16 +107,16 @@ describe BallotsController, type: :controller do
         get :new, params: { level_id: @level.to_param, election_id: @election.to_param }
       end
       it 'assigns a new ballot as @ballot' do
-        expect( assigns(:ballot) ).to be_a_new(Ballot)
+        expect(assigns(:ballot)).to be_a_new(Ballot)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Ballot/
+        expect(assigns(:page_metadata).title).to match(/Ballot/)
       end
       it 'renders the ‘new’ template' do
-        expect( response ).to render_template('ballots/new')
+        expect(response).to render_template('ballots/new')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :ballots
+        expect(assigns(:site_section)).to eq :ballots
       end
     end
   end
@@ -127,7 +127,7 @@ describe BallotsController, type: :controller do
         :create,
         params: { ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param }
       )
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
@@ -135,7 +135,7 @@ describe BallotsController, type: :controller do
         :create,
         params: { ballot: valid_attributes, level_id: @level.to_param, election_id: @election.to_param }
       )
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
@@ -146,18 +146,14 @@ describe BallotsController, type: :controller do
         set_logged_in_admin
       end
       after(:each) do
-        assigns(:ballot).delete if assigns(:ballot)
+        assigns(:ballot)&.delete
       end
       it 'creates a new Ballot' do
-        expect {
-          post(
-            :create,
-            params: {
-              ballot: valid_attributes, level_id: @level.to_param,
-              election_id: @election.to_param, office_id: @create_office.to_param
-            }
-          )
-        }.to change(Ballot, :count).by(1)
+        ballot_params = {
+          ballot: valid_attributes, level_id: @level.to_param,
+          election_id: @election.to_param, office_id: @create_office.to_param
+        }
+        expect { post(:create, params: ballot_params) }.to change(Ballot, :count).by(1)
       end
       context '...' do
         before(:each) do
@@ -170,17 +166,17 @@ describe BallotsController, type: :controller do
           )
         end
         it 'assigns a newly created ballot as @ballot' do
-          expect( assigns(:ballot) ).to be_a(Ballot)
-          expect( assigns(:ballot) ).to be_persisted
+          expect(assigns(:ballot)).to be_a(Ballot)
+          expect(assigns(:ballot)).to be_persisted
         end
         it 'notifies the user that the ballot was saved' do
-          expect( request.flash[:notice] ).to eq 'The ballot has been saved.'
+          expect(request.flash[:notice]).to eq 'The ballot has been saved.'
         end
         it 'redirects to the created ballot' do
-          expect( response ).to redirect_to([@level, @election, assigns(:ballot)])
+          expect(response).to redirect_to([@level, @election, assigns(:ballot)])
         end
         it 'assigns the site section' do
-          expect( assigns(:site_section) ).to eq :ballots
+          expect(assigns(:site_section)).to eq :ballots
         end
       end
     end
@@ -193,13 +189,13 @@ describe BallotsController, type: :controller do
         post :create, params: { ballot: {}, level_id: @level.to_param, election_id: @election.to_param }
       end
       it 'assigns a newly created but unsaved ballot as @ballot' do
-        expect( assigns(:ballot) ).to be_a_new(Ballot)
+        expect(assigns(:ballot)).to be_a_new(Ballot)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Ballot/
+        expect(assigns(:page_metadata).title).to match(/Ballot/)
       end
       it 're-renders the ‘new’ template' do
-        expect( response ).to render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -208,7 +204,7 @@ describe BallotsController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :edit, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     context 'with authority' do
@@ -217,16 +213,16 @@ describe BallotsController, type: :controller do
         get :edit, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
       end
       it 'assigns the requested ballot as @ballot' do
-        expect( assigns(:ballot) ).to eq(ballot)
+        expect(assigns(:ballot)).to eq(ballot)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Ballot/
+        expect(assigns(:page_metadata).title).to match(/Ballot/)
       end
       it 'renders the ‘edit’ template' do
-        expect( response ).to render_template('ballots/edit')
+        expect(response).to render_template('ballots/edit')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :ballots
+        expect(assigns(:site_section)).to eq :ballots
       end
     end
   end
@@ -241,7 +237,7 @@ describe BallotsController, type: :controller do
           level_id: @level.to_param, election_id: @election.to_param
         }
       )
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
@@ -269,16 +265,16 @@ describe BallotsController, type: :controller do
           )
         end
         it 'assigns the requested ballot as @ballot' do
-          expect( assigns(:ballot) ).to eq(ballot)
+          expect(assigns(:ballot)).to eq(ballot)
         end
         it 'notifies the user that the ballot was saved' do
-          expect( request.flash[:notice] ).to eq 'The ballot has been saved.'
+          expect(request.flash[:notice]).to eq 'The ballot has been saved.'
         end
         it 'redirects to the ballot' do
-          expect( response ).to redirect_to([@level, @election, assigns(:ballot)])
+          expect(response).to redirect_to([@level, @election, assigns(:ballot)])
         end
         it 'assigns the site section' do
-          expect( assigns(:site_section) ).to eq :ballots
+          expect(assigns(:site_section)).to eq :ballots
         end
       end
     end
@@ -296,13 +292,13 @@ describe BallotsController, type: :controller do
         )
       end
       it 'assigns the ballot as @ballot' do
-        expect( assigns(:ballot) ).to eq(ballot)
+        expect(assigns(:ballot)).to eq(ballot)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Ballot/
+        expect(assigns(:page_metadata).title).to match(/Ballot/)
       end
       it 're-renders the ‘edit’ template' do
-        expect( response ).to render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
   end
@@ -311,7 +307,7 @@ describe BallotsController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :delete, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
@@ -322,16 +318,16 @@ describe BallotsController, type: :controller do
         )
       end
       it 'shows a form for confirming deletion of an ballot' do
-        expect( assigns(:ballot) ).to eq ballot
+        expect(assigns(:ballot)).to eq ballot
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Ballot/
+        expect(assigns(:page_metadata).title).to match(/Ballot/)
       end
       it 'renders the ‘delete’ template' do
-        expect( response ).to render_template('ballots/delete')
+        expect(response).to render_template('ballots/delete')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :ballots
+        expect(assigns(:site_section)).to eq :ballots
       end
     end
   end
@@ -342,7 +338,7 @@ describe BallotsController, type: :controller do
       delete(
         :destroy, params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
       )
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       let(:ballot) { $ballot = FactoryGirl.create(:ballot, election: @election) }
@@ -350,22 +346,16 @@ describe BallotsController, type: :controller do
         set_logged_in_admin
       end
       it 'destroys the requested ballot' do
-        ballot
-        expect {
-          delete(
-            :destroy,
-            params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
-          )
-        }.to change(Ballot, :count).by(-1)
+        ballot_params = { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
+        expect { delete(:destroy, params: ballot_params) }.to change(Ballot, :count).by(-1)
       end
       it 'redirects to the ballots list' do
         delete(
           :destroy,
           params: { id: ballot.to_param, level_id: @level.to_param, election_id: @election.to_param }
         )
-        expect( response ).to redirect_to(level_election_ballots_url(@level, @election))
+        expect(response).to redirect_to(level_election_ballots_url(@level, @election))
       end
     end
   end
-
 end

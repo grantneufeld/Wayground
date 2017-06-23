@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'people_controller'
 
 describe PeopleController, type: :controller do
-
   before(:all) do
     Person.delete_all
     @person = FactoryGirl.create(:person)
@@ -16,6 +15,7 @@ describe PeopleController, type: :controller do
   def set_logged_in_admin
     allow(controller).to receive(:current_user).and_return(@user_admin)
   end
+
   def set_logged_in_user
     allow(controller).to receive(:current_user).and_return(@user_normal)
   end
@@ -32,16 +32,16 @@ describe PeopleController, type: :controller do
       get :index
     end
     it 'assigns all people as @people' do
-      expect( assigns(:people) ).to eq([person])
+      expect(assigns(:people)).to eq([person])
     end
     it 'assigns a title to the page_metadata' do
-      expect( assigns(:page_metadata).title ).to match /People/
+      expect(assigns(:page_metadata).title).to match(/People/)
     end
     it 'renders the ‘index’ template' do
-      expect( response ).to render_template('people/index')
+      expect(response).to render_template('people/index')
     end
     it 'assigns the site section' do
-      expect( assigns(:site_section) ).to eq :people
+      expect(assigns(:site_section)).to eq :people
     end
   end
 
@@ -50,28 +50,28 @@ describe PeopleController, type: :controller do
       get :show, params: { id: person.filename }
     end
     it 'assigns the requested person as @person' do
-      expect( assigns(:person) ).to eq(person)
+      expect(assigns(:person)).to eq(person)
     end
     it 'assigns a title to the page_metadata' do
-      expect( assigns(:page_metadata).title ).to match /Person/
+      expect(assigns(:page_metadata).title).to match(/Person/)
     end
     it 'renders the ‘show’ template' do
-      expect( response ).to render_template('people/show')
+      expect(response).to render_template('people/show')
     end
     it 'assigns the site section' do
-      expect( assigns(:site_section) ).to eq :people
+      expect(assigns(:site_section)).to eq :people
     end
   end
 
   describe 'GET new' do
     it 'fails if not logged in' do
       get :new
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
       get :new
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
@@ -79,16 +79,16 @@ describe PeopleController, type: :controller do
         get :new
       end
       it 'assigns a new person as @person' do
-        expect( assigns(:person) ).to be_a_new(Person)
+        expect(assigns(:person)).to be_a_new(Person)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Person/
+        expect(assigns(:page_metadata).title).to match(/Person/)
       end
       it 'renders the ‘new’ template' do
-        expect( response ).to render_template('people/new')
+        expect(response).to render_template('people/new')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :people
+        expect(assigns(:site_section)).to eq :people
       end
     end
   end
@@ -96,12 +96,12 @@ describe PeopleController, type: :controller do
   describe 'POST create' do
     it 'fails if not logged in' do
       post :create, params: { person: valid_attributes }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     it 'fails if not admin' do
       set_logged_in_user
       post :create, params: { person: valid_attributes }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
@@ -109,26 +109,24 @@ describe PeopleController, type: :controller do
         set_logged_in_admin
       end
       it 'creates a new Person' do
-        expect {
-          post :create, params: { person: valid_attributes }
-        }.to change(Person, :count).by(1)
+        expect { post :create, params: { person: valid_attributes } }.to change(Person, :count).by(1)
       end
       context '...' do
         before(:each) do
           post :create, params: { person: valid_attributes }
         end
         it 'assigns a newly created person as @person' do
-          expect( assigns(:person) ).to be_a(Person)
-          expect( assigns(:person) ).to be_persisted
+          expect(assigns(:person)).to be_a(Person)
+          expect(assigns(:person)).to be_persisted
         end
         it 'notifies the user that the person was saved' do
-          expect( request.flash[:notice] ).to eq 'The person has been saved.'
+          expect(request.flash[:notice]).to eq 'The person has been saved.'
         end
         it 'redirects to the created person' do
-          expect( response ).to redirect_to(assigns(:person))
+          expect(response).to redirect_to(assigns(:person))
         end
         it 'assigns the site section' do
-          expect( assigns(:site_section) ).to eq :people
+          expect(assigns(:site_section)).to eq :people
         end
       end
     end
@@ -141,13 +139,13 @@ describe PeopleController, type: :controller do
         post :create, params: { person: {} }
       end
       it 'assigns a newly created but unsaved person as @person' do
-        expect( assigns(:person) ).to be_a_new(Person)
+        expect(assigns(:person)).to be_a_new(Person)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Person/
+        expect(assigns(:page_metadata).title).to match(/Person/)
       end
       it 're-renders the ‘new’ template' do
-        expect( response ).to render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -156,7 +154,7 @@ describe PeopleController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :edit, params: { id: person.filename }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     context 'with authority' do
@@ -165,16 +163,16 @@ describe PeopleController, type: :controller do
         get :edit, params: { id: person.filename }
       end
       it 'assigns the requested person as @person' do
-        expect( assigns(:person) ).to eq(person)
+        expect(assigns(:person)).to eq(person)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Person/
+        expect(assigns(:page_metadata).title).to match(/Person/)
       end
       it 'renders the ‘edit’ template' do
-        expect( response ).to render_template('people/edit')
+        expect(response).to render_template('people/edit')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :people
+        expect(assigns(:site_section)).to eq :people
       end
     end
   end
@@ -183,7 +181,7 @@ describe PeopleController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       patch :update, params: { id: person.filename, person: {} }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
 
     describe 'with valid params' do
@@ -199,16 +197,16 @@ describe PeopleController, type: :controller do
           patch :update, params: { id: person.filename, person: valid_attributes }
         end
         it 'assigns the requested person as @person' do
-          expect( assigns(:person) ).to eq(person)
+          expect(assigns(:person)).to eq(person)
         end
         it 'notifies the user that the person was saved' do
-          expect( request.flash[:notice] ).to eq 'The person has been saved.'
+          expect(request.flash[:notice]).to eq 'The person has been saved.'
         end
         it 'redirects to the person' do
-          expect( response ).to redirect_to(assigns(:person))
+          expect(response).to redirect_to(assigns(:person))
         end
         it 'assigns the site section' do
-          expect( assigns(:site_section) ).to eq :people
+          expect(assigns(:site_section)).to eq :people
         end
       end
     end
@@ -221,13 +219,13 @@ describe PeopleController, type: :controller do
         patch :update, params: { id: person.filename, person: {} }
       end
       it 'assigns the person as @person' do
-        expect( assigns(:person) ).to eq(person)
+        expect(assigns(:person)).to eq(person)
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Person/
+        expect(assigns(:page_metadata).title).to match(/Person/)
       end
       it 're-renders the ‘edit’ template' do
-        expect( response ).to render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
   end
@@ -236,7 +234,7 @@ describe PeopleController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       get :delete, params: { id: person.filename }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       before(:each) do
@@ -244,16 +242,16 @@ describe PeopleController, type: :controller do
         get :delete, params: { id: person.filename }
       end
       it 'shows a form for confirming deletion of an person' do
-        expect( assigns(:person) ).to eq person
+        expect(assigns(:person)).to eq person
       end
       it 'assigns a title to the page_metadata' do
-        expect( assigns(:page_metadata).title ).to match /Person/
+        expect(assigns(:page_metadata).title).to match(/Person/)
       end
       it 'renders the ‘delete’ template' do
-        expect( response ).to render_template('people/delete')
+        expect(response).to render_template('people/delete')
       end
       it 'assigns the site section' do
-        expect( assigns(:site_section) ).to eq :people
+        expect(assigns(:site_section)).to eq :people
       end
     end
   end
@@ -262,7 +260,7 @@ describe PeopleController, type: :controller do
     it 'requires the user to have authority' do
       set_logged_in_user
       delete :destroy, params: { id: person.filename }
-      expect( response.status ).to eq 403
+      expect(response.status).to eq 403
     end
     context 'with authority' do
       let(:person) { $person = FactoryGirl.create(:person) }
@@ -271,15 +269,12 @@ describe PeopleController, type: :controller do
       end
       it 'destroys the requested person' do
         person
-        expect {
-          delete :destroy, params: { id: person.filename }
-        }.to change(Person, :count).by(-1)
+        expect { delete :destroy, params: { id: person.filename } }.to change(Person, :count).by(-1)
       end
       it 'redirects to the people list' do
         delete :destroy, params: { id: person.filename }
-        expect( response ).to redirect_to(people_url)
+        expect(response).to redirect_to(people_url)
       end
     end
   end
-
 end
