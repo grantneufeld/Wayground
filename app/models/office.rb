@@ -19,9 +19,8 @@ class Office < ApplicationRecord
   validate :validate_dates
 
   def validate_dates
-    if ended_on? && established_on? && ended_on < established_on
-      errors.add(:ended_on, 'must be on or after the established date')
-    end
+    end_before_established = ended_on? && established_on? && ended_on < established_on
+    errors.add(:ended_on, 'must be on or after the established date') if end_before_established
   end
 
   scope :active_on, lambda { |active_date|

@@ -180,8 +180,11 @@ Style/GuardClause:
     - 'app/models/document.rb'
     - 'app/models/event.rb'
     - 'app/models/external_link.rb'
+    - 'app/models/office_holder.rb'
+    - 'app/presenters/contact_presenter.rb'
     - 'app/validators/colour_validator.rb'
     - 'app/validators/http_url_validator.rb'
+    - 'app/wayground/democracy/candidate_form.rb'
     - 'spec/controllers/application_controller_spec.rb'
     - 'spec/controllers/sessions_controller_spec.rb'
 

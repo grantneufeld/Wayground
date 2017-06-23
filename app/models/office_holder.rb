@@ -17,11 +17,11 @@ class OfficeHolder < ApplicationRecord
   validate :validate_dates
 
   def validate_previous_office_holder
-    if previous
-      errors.add(:previous, 'cannot be an office holder for a different office') if previous.office != office
-      if previous.start_on > start_on
-        errors.add(:previous, 'cannot be an office holder that starts on a later date')
-      end
+    if previous.present?
+      different_office = previous.office != office
+      errors.add(:previous, 'cannot be an office holder for a different office') if different_office
+      start_before_prev = previous.start_on > start_on
+      errors.add(:previous, 'cannot be an office holder that starts on a later date') if start_before_prev
     end
   end
 

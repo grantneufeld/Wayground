@@ -23,12 +23,10 @@ class Party < ApplicationRecord
   scope :by_name, -> { order(:name) }
 
   def validate_dates
-    if registered_before_established?
-      errors.add(:registered_on, 'must be on or after the date established on')
-    end
-    if established_or_registered_after_ended?
-      errors.add(:ended_on, 'must be on or after the established and registered dates')
-    end
+    message = 'must be on or after the date established on'
+    errors.add(:registered_on, message) if registered_before_established?
+    message = 'must be on or after the established and registered dates'
+    errors.add(:ended_on, message) if established_or_registered_after_ended?
   end
 
   def registered_before_established?

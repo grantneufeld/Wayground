@@ -21,21 +21,17 @@ class Ballot < ApplicationRecord
   default_scope { order(:position) }
 
   def validate_dates
-    if term_end_on? && term_start_on? && term_end_on < term_start_on
-      errors.add(:term_end_on, 'must be on or after the term start date')
-    end
+    end_before_start_date = term_end_on? && term_start_on? && term_end_on < term_start_on
+    errors.add(:term_end_on, 'must be on or after the term start date') if end_before_start_date
   end
 
   def validate_office_level
-    if office && election
-      unless office.level == election.level
-        errors.add(:office, 'must be for the same level of government as the election')
-      end
-    end
+    level_mismatch = office && election && (office.level != election.level)
+    errors.add(:office, 'must be for the same level of government as the election') if level_mismatch
   end
 
   def to_param
-    office.filename if office
+    office&.filename
   end
 
   def running_for

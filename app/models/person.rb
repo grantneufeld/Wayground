@@ -23,7 +23,7 @@ class Person < ApplicationRecord
   end
 
   def aliases_string
-    aliases.join(', ') if aliases
+    aliases&.join(', ')
   end
 
   def aliases_string=(value)

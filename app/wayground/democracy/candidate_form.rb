@@ -67,9 +67,10 @@ module Wayground
       # :person_id, uniqueness: { scope: :ballot_id }
 
       def validate_dates
-        if quit_on.present? && announced_on.present? && quit_on.to_date < announced_on.to_date
-          errors.add(:quit_on, 'must be on or after the date candidacy was announced on')
-        end
+        has_dates = quit_on.present? && announced_on.present?
+        quit_before_announced = has_dates && quit_on.to_date < announced_on.to_date
+        message = 'must be on or after the date candidacy was announced on'
+        errors.add(:quit_on, message) if quit_before_announced
       end
 
       def validate_persisted_objects

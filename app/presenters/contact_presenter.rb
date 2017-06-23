@@ -30,7 +30,7 @@ class ContactPresenter < HtmlPresenter
   end
 
   def present_url
-    return html_blank unless contact.url.present?
+    return html_blank if contact.url.blank?
     html_tag_with_newline(:span, class: 'home', title: 'Website') do
       html_tag(:span, class: 'label') { 'Website: '.html_safe } +
         view.link_to(url_for_print(contact.url), contact.url, class: 'url')
@@ -38,7 +38,7 @@ class ContactPresenter < HtmlPresenter
   end
 
   def present_email
-    return html_blank unless contact.email.present?
+    return html_blank if contact.email.blank?
     html_tag_with_newline(:span, class: 'emailadr', title: 'Email') do
       html_tag(:span, class: 'label') { 'Email: '.html_safe } +
         view.link_to(contact.email, "mailto:#{contact.email}", class: 'email')
@@ -46,7 +46,7 @@ class ContactPresenter < HtmlPresenter
   end
 
   def present_phone
-    return html_blank unless contact.phone.present?
+    return html_blank if contact.phone.blank?
     html_tag_with_newline(:span, class: 'phone', title: 'Phone') do
       html_tag(:span, class: 'label') { 'Phone: '.html_safe } +
         html_tag(:span, class: 'tel') { contact.phone }
@@ -54,7 +54,7 @@ class ContactPresenter < HtmlPresenter
   end
 
   def present_phone2
-    return html_blank unless contact.phone2.present?
+    return html_blank if contact.phone2.blank?
     html_tag_with_newline(:span, class: 'phone', title: 'Phone') do
       html_tag(:span, class: 'label') { 'Phone: '.html_safe } +
         html_tag(:span, class: 'tel') { contact.phone2 }
@@ -62,7 +62,7 @@ class ContactPresenter < HtmlPresenter
   end
 
   def present_fax
-    return html_blank unless contact.fax.present?
+    return html_blank if contact.fax.blank?
     html_tag_with_newline(:span, class: 'fax tel', title: 'Fax') do
       html_tag(:span, class: 'label type') { 'Fax: '.html_safe } +
         html_tag(:span, class: 'value') { contact.fax }
@@ -105,7 +105,7 @@ class ContactPresenter < HtmlPresenter
   end
 
   def present_twitter
-    return html_blank unless contact.twitter.present?
+    return html_blank if contact.twitter.blank?
     html_tag_with_newline(:span, class: 'twitter', title: 'Twitter') do
       html_tag(:span, class: 'label') { 'Twitter: '.html_safe } +
         view.link_to("@#{contact.twitter}", "https://twitter.com/#{contact.twitter}", class: 'url')
@@ -143,9 +143,9 @@ class ContactPresenter < HtmlPresenter
     html_tag(:span, class: 'adr') do
       parts = []
       part = present_street_address
-      parts << part unless part.blank?
+      parts << part if part.present?
       part = present_locality
-      parts << part unless part.blank?
+      parts << part if part.present?
       view.safe_join(parts, separator)
     end
   end
@@ -168,9 +168,8 @@ class ContactPresenter < HtmlPresenter
   end
 
   def edit_action
-    if contact.authority_for_user_to?(user, :can_update)
-      view.link_to('Edit', ([:edit] + contact.items_for_path), class: 'action edit') + newline
-    end
+    can_update = contact.authority_for_user_to?(user, :can_update)
+    view.link_to('Edit', ([:edit] + contact.items_for_path), class: 'action edit') + newline if can_update
   end
 
   def delete_action

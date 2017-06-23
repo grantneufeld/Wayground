@@ -56,14 +56,15 @@ class PartyPresenter < HtmlPresenter
   end
 
   def output_dates(dates, separator)
-    if dates.size.positive?
-      separator =
-        if separator
-          html_escape(separator)
-        else
-          newline + html_tag(:br)
-        end
-      html_tag_with_newline(:p) { view.safe_join(dates, separator) }
+    has_dates = dates.size.positive?
+    html_tag_with_newline(:p) { view.safe_join(dates, separator_or_default(separator)) } if has_dates
+  end
+
+  def separator_or_default(separator)
+    if separator
+      html_escape(separator)
+    else
+      newline + html_tag(:br)
     end
   end
 end
