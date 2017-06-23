@@ -11,7 +11,7 @@ class CreateElections < ActiveRecord::Migration[5.1]
       t.text :url
       t.timestamps
     end
-    add_index :elections, %i(level_id end_on)
-    add_index :elections, %i(level_id filename)
+    add_index :elections, %i[level_id end_on]
+    add_index :elections, %i[level_id filename]
   end
 end

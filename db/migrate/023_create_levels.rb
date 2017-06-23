@@ -9,7 +9,7 @@ class CreateLevels < ActiveRecord::Migration[5.1]
       t.text :url
       t.timestamps
     end
-    add_index :levels, %i(parent_id filename), name: 'levels_parent_idx'
+    add_index :levels, %i[parent_id filename], name: 'levels_parent_idx'
     add_index :levels, [:filename], name: 'levels_filename_idx', unique: true
   end
 end

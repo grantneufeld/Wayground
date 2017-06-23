@@ -19,10 +19,10 @@ class CreateCandidates < ActiveRecord::Migration[5.1]
       t.integer :vote_count, default: 0, null: false
       t.timestamps
     end
-    add_index :candidates, %i(ballot_id person_id), unique: true
-    add_index :candidates, %i(ballot_id name), unique: true
-    add_index :candidates, %i(ballot_id filename), unique: true
-    add_index :candidates, %i(ballot_id is_confirmed name)
-    add_index :candidates, %i(ballot_id vote_count name)
+    add_index :candidates, %i[ballot_id person_id], unique: true
+    add_index :candidates, %i[ballot_id name], unique: true
+    add_index :candidates, %i[ballot_id filename], unique: true
+    add_index :candidates, %i[ballot_id is_confirmed name]
+    add_index :candidates, %i[ballot_id vote_count name]
   end
 end

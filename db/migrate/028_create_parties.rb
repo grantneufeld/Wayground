@@ -17,9 +17,9 @@ class CreateParties < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     execute 'ALTER TABLE parties ADD COLUMN aliases text[]'
-    add_index :parties, %i(level_id filename), unique: true
-    add_index :parties, %i(level_id name), unique: true
-    add_index :parties, %i(level_id abbrev), unique: true
+    add_index :parties, %i[level_id filename], unique: true
+    add_index :parties, %i[level_id name], unique: true
+    add_index :parties, %i[level_id abbrev], unique: true
   end
 
   def self.down

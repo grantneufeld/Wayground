@@ -23,10 +23,10 @@ class CreateContacts < ActiveRecord::Migration[5.1]
       t.string :postal
       t.timestamps
     end
-    add_index :contacts, %i(item_type item_id position)
-    add_index :contacts, %i(confirmed_at expires_at)
+    add_index :contacts, %i[item_type item_id position]
+    add_index :contacts, %i[confirmed_at expires_at]
     add_index :contacts, :name
     add_index :contacts, :email
-    add_index :contacts, %i(country province city)
+    add_index :contacts, %i[country province city]
   end
 end

@@ -9,7 +9,7 @@ class CreateOfficeHolders < ActiveRecord::Migration[5.1]
       t.date :end_on
       t.timestamps
     end
-    add_index :office_holders, %i(office_id person_id start_on)
-    add_index :office_holders, %i(person_id office_id start_on)
+    add_index :office_holders, %i[office_id person_id start_on]
+    add_index :office_holders, %i[person_id office_id start_on]
   end
 end

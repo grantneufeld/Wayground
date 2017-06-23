@@ -14,7 +14,7 @@ class CreateBallots < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     # only allow one ballot for a given office in a given election
-    add_index :ballots, %i(election_id office_id), unique: true
-    add_index :ballots, %i(election_id office_id position)
+    add_index :ballots, %i[election_id office_id], unique: true
+    add_index :ballots, %i[election_id office_id position]
   end
 end

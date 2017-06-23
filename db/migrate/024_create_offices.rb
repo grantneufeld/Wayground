@@ -14,8 +14,8 @@ class CreateOffices < ActiveRecord::Migration[5.1]
       t.text :url
       t.timestamps
     end
-    add_index :offices, %i(level_id position), name: 'offices_level_position_idx'
-    add_index :offices, %i(level_id filename), name: 'offices_filename_idx', unique: true
+    add_index :offices, %i[level_id position], name: 'offices_level_position_idx'
+    add_index :offices, %i[level_id filename], name: 'offices_filename_idx', unique: true
     add_index :offices, [:previous_id], name: 'offices_previous_idx'
   end
 end
