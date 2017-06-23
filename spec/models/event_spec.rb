@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Event, type: :model do
-
   before(:all) do
     Authority.delete_all
     User.delete_all
@@ -12,196 +11,188 @@ describe Event, type: :model do
 
   let(:source) { $source = FactoryGirl.create(:source) }
 
-  describe "acts_as_authority_controlled" do
-    it "should be in the “Calendar” area" do
-      expect( Event.authority_area ).to eq 'Calendar'
+  describe 'acts_as_authority_controlled' do
+    it 'should be in the “Calendar” area' do
+      expect(Event.authority_area).to eq 'Calendar'
     end
   end
 
-  describe "attr_accessor" do
-    it "should provide an editor accessor" do
+  describe 'attr_accessor' do
+    it 'should provide an editor accessor' do
       event = Event.new
       event.editor = 'test'
-      expect( event.editor ).to eq 'test'
+      expect(event.editor).to eq 'test'
     end
-    it "should provide an edit_comment accessor" do
+    it 'should provide an edit_comment accessor' do
       event = Event.new
       event.edit_comment = 'test'
-      expect( event.edit_comment ).to eq 'test'
+      expect(event.edit_comment).to eq 'test'
     end
   end
 
-  describe "validation" do
-    describe "of start_at" do
-      it "should fail if start_at is not set" do
+  describe 'validation' do
+    describe 'of start_at' do
+      it 'should fail if start_at is not set' do
         event = Event.new(title: 'missing start_at')
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of end_at" do
-      it "should pass if end_at is equal to start_at" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'end_at = start_at',
-          end_at: '2012-01-01 01:01:01'
+    describe 'of end_at' do
+      it 'should pass if end_at is equal to start_at' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'end_at = start_at', end_at: '2012-01-01 01:01:01'
         )
-        expect( event.valid? ).to be_truthy
+        expect(event.valid?).to be_truthy
       end
-      it "should fail if end_at is less than start_at" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'end_at < start_at',
-          end_at: '2012-01-01 01:01:00'
+      it 'should fail if end_at is less than start_at' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'end_at < start_at', end_at: '2012-01-01 01:01:00'
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of timezone" do
-      it "should pass if timezone is nil" do
+    describe 'of timezone' do
+      it 'should pass if timezone is nil' do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'not a timezone', timezone: nil)
-        expect( event.valid? ).to be_truthy
+        expect(event.valid?).to be_truthy
       end
-      it "should pass if timezone is blank" do
+      it 'should pass if timezone is blank' do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'not a timezone', timezone: '')
-        expect( event.valid? ).to be_truthy
+        expect(event.valid?).to be_truthy
       end
-      it "should pass if timezone is one of the recognized timezones" do
+      it 'should pass if timezone is one of the recognized timezones' do
         event = Event.new(start_at: '2012-01-01 01:01:01', title: 'UTC timezone', timezone: 'UTC')
-        expect( event.valid? ).to be_truthy
+        expect(event.valid?).to be_truthy
       end
-      it "should fail if the string is present but not a timezone" do
+      it 'should fail if the string is present but not a timezone' do
         event = Event.new(
           start_at: '2012-01-01 01:01:01', title: 'not a timezone', timezone: 'invalid timezone'
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of is_approved" do
-      it "should fail if both is_approved and is_draft are true" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'is_approved and is_draft',
-          is_draft: true
+    describe 'of is_approved' do
+      it 'should fail if both is_approved and is_draft are true' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'is_approved and is_draft', is_draft: true
         )
         event.is_approved = true
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of title" do
-      it "should fail if title is not set" do
+    describe 'of title' do
+      it 'should fail if title is not set' do
         event = Event.new(start_at: '2012-01-01 01:01:01')
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
-      it "should fail if title is blank" do
+      it 'should fail if title is blank' do
         event = Event.new(title: '', start_at: '2012-01-01 01:01:01')
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
-      it "should fail if title is too long" do
+      it 'should fail if title is too long' do
         event = Event.new(title: ('A' * 256), start_at: '2012-01-01 01:01:01')
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of description" do
-      it "should pass if description is the maximum length" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'max length description',
-          description: ('A' * 511)
+    describe 'of description' do
+      it 'should pass if description is the maximum length' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'max length description', description: ('A' * 511)
         )
-        expect( event.valid? ).to be_truthy
+        expect(event.valid?).to be_truthy
       end
-      it "should fail if description is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long description',
-          description: ('A' * 512)
+      it 'should fail if description is too long' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'too long description', description: ('A' * 512)
         )
-        expect( event.valid? ).to be_falsey
-      end
-    end
-    describe "of content" do
-      it "should fail if content is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long content',
-          content: ('A' * 8192)
-        )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of organizer" do
-      it "should fail if organizer is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long organizer',
-          organizer: ('A' * 256)
+    describe 'of content' do
+      it 'should fail if content is too long' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'too long content', content: ('A' * 8192)
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of organizer_url" do
-      it "should fail if organizer_url is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long organizer_url',
-          organizer_url: ('A' * 256)
+    describe 'of organizer' do
+      it 'should fail if organizer is too long' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'too long organizer', organizer: ('A' * 256)
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of location" do
-      it "should fail if location is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long location',
-          location: ('A' * 256)
+    describe 'of organizer_url' do
+      it 'should fail if organizer_url is too long' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'too long organizer_url', organizer_url: ('A' * 256)
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of address" do
-      it "should fail if address is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long address',
-          address: ('A' * 256)
+    describe 'of location' do
+      it 'should fail if location is too long' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'too long location', location: ('A' * 256)
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of city" do
-      it "should fail if city is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long city',
-          city: ('A' * 256)
-        )
-        expect( event.valid? ).to be_falsey
+    describe 'of address' do
+      it 'should fail if address is too long' do
+        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long address', address: ('A' * 256))
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of province" do
-      it "should fail if province is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long province',
-          province: ('A' * 32)
-        )
-        expect( event.valid? ).to be_falsey
+    describe 'of city' do
+      it 'should fail if city is too long' do
+        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long city', city: ('A' * 256))
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of country" do
-      it "should fail if country is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long country',
-          country: ('A' * 3)
-        )
-        expect( event.valid? ).to be_falsey
+    describe 'of province' do
+      it 'should fail if province is too long' do
+        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long province', province: ('A' * 32))
+        expect(event.valid?).to be_falsey
       end
     end
-    describe "of location_url" do
-      it "should fail if location_url is too long" do
-        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long location_url',
-          location_url: ('A' * 256)
+    describe 'of country' do
+      it 'should fail if country is too long' do
+        event = Event.new(start_at: '2012-01-01 01:01:01', title: 'too long country', country: ('A' * 3))
+        expect(event.valid?).to be_falsey
+      end
+    end
+    describe 'of location_url' do
+      it 'should fail if location_url is too long' do
+        event = Event.new(
+          start_at: '2012-01-01 01:01:01', title: 'too long location_url', location_url: ('A' * 256)
         )
-        expect( event.valid? ).to be_falsey
+        expect(event.valid?).to be_falsey
       end
     end
   end
 
-  #describe "updating as a sourced item" do
+  # describe "updating as a sourced item" do
   #  it "should set the has_local_modifications flag on any SourcedItems" do
   #    # TODO: test for setting has_local_modifications on sourced items when updating an Event
   #  end
-  #end
+  # end
 
-  describe "scopes" do
-    describe "default_scope" do
-      it "should order by start date & time by default" do
+  describe 'scopes' do
+    describe 'default_scope' do
+      it 'should order by start date & time by default' do
         Event.delete_all
         event2 = FactoryGirl.create(:event, start_at: '2002-02-02 02:02:02')
         event4 = FactoryGirl.create(:event, start_at: '2004-04-04 04:04:04')
         event3 = FactoryGirl.create(:event, start_at: '2003-03-03 03:03:03')
         event1 = FactoryGirl.create(:event, start_at: '2001-01-01 01:01:01')
-        expect( Event.all ).to eq [event1, event2, event3, event4]
+        expect(Event.all).to eq [event1, event2, event3, event4]
       end
     end
-    describe ".approved" do
-      it "should return only events where is_approved" do
+    describe '.approved' do
+      it 'should return only events where is_approved' do
         Event.delete_all
         event1 = FactoryGirl.build(:event)
         event1.is_approved = true
@@ -212,11 +203,11 @@ describe Event, type: :model do
         event3 = FactoryGirl.build(:event)
         event3.is_approved = true
         event3.save!
-        expect( Event.approved ).to eq [event1, event3]
+        expect(Event.approved).to eq [event1, event3]
       end
     end
-    describe ".upcoming" do
-      it "should return only events that are active on, or after, the current current date & time" do
+    describe '.upcoming' do
+      it 'should return only events that are active on, or after, the current current date & time' do
         Event.delete_all
         # create some past events
         FactoryGirl.create(:event, start_at: 1.day.ago)
@@ -230,11 +221,11 @@ describe Event, type: :model do
         event3 = FactoryGirl.create(:event, start_at: 1.hour.from_now)
         event4 = FactoryGirl.create(:event, start_at: 2.days.from_now)
         event5 = FactoryGirl.create(:event, start_at: 3.months.from_now)
-        expect( Event.upcoming ).to eq [event1, event2, event3, event4, event5]
+        expect(Event.upcoming).to eq [event1, event2, event3, event4, event5]
       end
     end
-    describe ".past" do
-      it "should return only events that ended before the current date & time" do
+    describe '.past' do
+      it 'should return only events that ended before the current date & time' do
         Event.delete_all
         # past events
         event1 = FactoryGirl.create(:event, start_at: 2.weeks.ago)
@@ -245,29 +236,29 @@ describe Event, type: :model do
         FactoryGirl.create(:event, start_at: Time.current.advance(minutes: 1))
         # create a future event
         FactoryGirl.create(:event, start_at: 1.day.from_now)
-        expect( Event.past ).to eq [event1, event2]
+        expect(Event.past).to eq [event1, event2]
       end
     end
-    context "with dates in the year 2000" do
+    context 'with dates in the year 2000' do
       before(:all) do
         Event.delete_all
         @event1 = FactoryGirl.create(:event, start_at: '2000-01-01 23:59:59', title: '2000 day 1')
         @event2 = FactoryGirl.create(:event, start_at: '2000-01-02 00:00:00', title: '2000 day 2')
         @event3 = FactoryGirl.create(:event, start_at: '2000-01-03 23:59:59', title: '2000 day 3')
         @event4 = FactoryGirl.create(:event, start_at: '2000-01-04 00:00:00', title: '2000 day 4')
-        @event4_2 = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:59', title: '2000 day 4, #2')
+        @event4two = FactoryGirl.create(:event, start_at: '2000-01-04 23:59:59', title: '2000 day 4, #2')
         @event5 = FactoryGirl.create(:event, start_at: '2000-01-05 00:00:00', title: '2000 day 5')
       end
-      describe ".falls_between_dates" do
-        it "should return the events that occur within the specified period" do
+      describe '.falls_between_dates' do
+        it 'should return the events that occur within the specified period' do
           result = Event.falls_between_dates('2000-01-02'.to_date, '2000-01-03'.to_date)
-          expect( result.sort ).to eq( [@event2, @event3].sort )
+          expect(result.sort).to eq([@event2, @event3].sort)
         end
       end
-      describe ".falls_on_date" do
-        it "should return the events that occur on the specified date" do
+      describe '.falls_on_date' do
+        it 'should return the events that occur on the specified date' do
           result = Event.falls_on_date('2000-01-04'.to_date)
-          expect( result.sort ).to eq( [@event4, @event4_2].sort )
+          expect(result.sort).to eq([@event4, @event4two].sort)
         end
       end
     end
@@ -275,7 +266,7 @@ describe Event, type: :model do
       it 'should return events that are tagged with the given tag' do
         Tag.delete_all
         event1 = Event.order(:id).first || FactoryGirl.create(:event)
-        event2 = Event.order(:id).offset(1).first || FactoryGirl.create(:event)
+        Event.order(:id).offset(1).first || FactoryGirl.create(:event) # event2
         event3 = Event.order(:id).offset(2).first || FactoryGirl.create(:event)
         event1.tag_list = 'Given, Tag'
         event1.editor = @user_admin
@@ -283,70 +274,68 @@ describe Event, type: :model do
         event3.tag_list = 'Tag, Given'
         event3.editor = @user_admin
         event3.save!
-        expect( Event.tagged('given').order(:id) ).to eq [event1, event3]
+        expect(Event.tagged('given').order(:id)).to eq [event1, event3]
       end
     end
   end
 
-  describe "initialize" do
-    it "should set the city, province and country" do
+  describe 'initialize' do
+    it 'should set the city, province and country' do
       event = Event.new
-      expect( [event.city, event.province, event.country] ).to eq ['Calgary', 'Alberta', 'CA']
+      expect([event.city, event.province, event.country]).to eq %w[Calgary Alberta CA]
     end
-    it "should not set any location defaults if city is set" do
+    it 'should not set any location defaults if city is set' do
       event = Event.new(city: 'Test')
-      expect( [event.city, event.province, event.country] ).to eq ['Test', nil, nil]
+      expect([event.city, event.province, event.country]).to eq ['Test', nil, nil]
     end
-    it "should not set any location defaults if city is set" do
+    it 'should not set any location defaults if city is set' do
       event = Event.new(province: 'Test')
-      expect( [event.city, event.province, event.country] ).to eq [nil, 'Test', nil]
+      expect([event.city, event.province, event.country]).to eq [nil, 'Test', nil]
     end
-    it "should not set any location defaults if country is set" do
+    it 'should not set any location defaults if country is set' do
       event = Event.new(country: 'Test')
-      expect( [event.city, event.province, event.country] ).to eq [nil, nil, 'Test']
+      expect([event.city, event.province, event.country]).to eq [nil, nil, 'Test']
     end
   end
 
   # CALLBACKS
 
-  describe "#set_timezone" do
-    it "should set the timezone based on the user" do
+  describe '#set_timezone' do
+    it 'should set the timezone based on the user' do
       tz_str = 'Central Time (US & Canada)'
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'user’s timezone')
       event.user = FactoryGirl.build(:user, timezone: tz_str)
       event.set_timezone
-      expect( event.timezone ).to eq tz_str
+      expect(event.timezone).to eq tz_str
     end
-    it "should set the timezone to the system default if no user" do
+    it 'should set the timezone to the system default if no user' do
       default_tz = Time.zone_default
       tz_str = 'Pacific Time (US & Canada)'
       Time.zone_default = ActiveSupport::TimeZone[tz_str]
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'system default timezone')
       event.set_timezone
-      expect( event.timezone ).to eq tz_str
+      expect(event.timezone).to eq tz_str
       Time.zone_default = default_tz
     end
-    it "should not override an existing timezone" do
-      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'preset timezone',
-        timezone: 'Saskatchewan'
-      )
+    it 'should not override an existing timezone' do
+      event = Event.new(start_at: '2012-01-01 01:01:01', title: 'preset timezone', timezone: 'Saskatchewan')
       event.user = FactoryGirl.build(:user, timezone: 'UTC')
       event.set_timezone
-      expect( event.timezone ).to eq 'Saskatchewan'
+      expect(event.timezone).to eq 'Saskatchewan'
     end
-    it "should be automatically called on create" do
+    it 'should be automatically called on create' do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'auto-set timezone on create')
       event.editor = @user_admin
       event.save!
-      expect( event.timezone.present? ).to be_truthy
+      expect(event.timezone.present?).to be_truthy
     end
-    it "should not be called on update" do
+    it 'should not be called on update' do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'no timezone on update')
       event.editor = @user_admin
       event.save!
       event.timezone = nil
       event.save!
-      expect( event.timezone.present? ).to be_falsey
+      expect(event.timezone.present?).to be_falsey
     end
   end
 
@@ -355,47 +344,47 @@ describe Event, type: :model do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
       event.user = @user_normal
       # TESTING:
-      expect( event.user.authority_for_area('Calendar', :is_owner) ).to be_falsey
+      expect(event.user.authority_for_area('Calendar', :is_owner)).to be_falsey
       # actual tests:
       event.approve_if_authority
-      expect( event.is_approved ).to be_falsey
+      expect(event.is_approved).to be_falsey
     end
     it 'should set is_approved to true when user has authority' do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'admin created event')
       event.user = FactoryGirl.create(:user)
-      authority = FactoryGirl.create(:owner_authority, area: 'Calendar', user: event.user)
+      FactoryGirl.create(:owner_authority, area: 'Calendar', user: event.user)
       # TESTING:
-      expect( event.user.authority_for_area('Calendar', :is_owner) ).to be_truthy
+      expect(event.user.authority_for_area('Calendar', :is_owner)).to be_truthy
       # actual tests:
       event.approve_if_authority
-      expect( event.is_approved ).to be_truthy
+      expect(event.is_approved).to be_truthy
     end
     it 'should not change is_approved if already true' do
       event = Event.new(start_at: '2012-01-01 01:01:01', title: 'already approved')
       event.is_approved = true
       event.user = @user_normal
       # TESTING:
-      expect( event.user.authority_for_area('Calendar', :is_owner) ).to be_falsey
+      expect(event.user.authority_for_area('Calendar', :is_owner)).to be_falsey
       # actual tests:
       event.approve_if_authority
-      expect( event.is_approved ).to be_truthy
+      expect(event.is_approved).to be_truthy
     end
   end
 
-  describe "#flag_as_modified_for_sourcing" do
+  describe '#flag_as_modified_for_sourcing' do
     let(:event) { $event = FactoryGirl.create(:event) }
-    let(:sourced_item) {
+    let(:sourced_item) do
       $sourced_item = FactoryGirl.create(:sourced_item, item: event, source: source)
-    }
+    end
 
-    it "should be called when updating an Event" do
+    it 'should be called when updating an Event' do
       sourced_item.has_local_modifications = false
       sourced_item.save!
       event.update(title: 'Updated')
       sourced_item.reload
-      expect( sourced_item.has_local_modifications? ).to be_truthy
+      expect(sourced_item.has_local_modifications?).to be_truthy
     end
-    it "should set the has_local_modifications for all sourced_items" do
+    it 'should set the has_local_modifications for all sourced_items' do
       sourced_item.has_local_modifications = false
       sourced_item.save!
       source2 = FactoryGirl.create(:source)
@@ -403,52 +392,50 @@ describe Event, type: :model do
       sourced_item2.source = source2
       sourced_item2.save!
       # should not have updated event yet
-      expect( sourced_item.has_local_modifications? ).to be_falsey
-      expect( sourced_item2.has_local_modifications? ).to be_falsey
+      expect(sourced_item.has_local_modifications?).to be_falsey
+      expect(sourced_item2.has_local_modifications?).to be_falsey
       # “update” the event
       event.flag_as_modified_for_sourcing
-      expect( event.sourced_items[0].has_local_modifications? ).to be_truthy
-      expect( event.sourced_items[1].has_local_modifications? ).to be_truthy
+      expect(event.sourced_items[0].has_local_modifications?).to be_truthy
+      expect(event.sourced_items[1].has_local_modifications?).to be_truthy
     end
-    it "should not touch the sourced_items when is_sourcing is set true" do
+    it 'should not touch the sourced_items when is_sourcing is set true' do
       sourced_item.has_local_modifications = false
       sourced_item.save!
       event.is_sourcing = true
       event.flag_as_modified_for_sourcing
-      expect( event.sourced_items[0].has_local_modifications? ).to be_falsey
+      expect(event.sourced_items[0].has_local_modifications?).to be_falsey
     end
   end
 
-  describe "#add_version" do
+  describe '#add_version' do
     before(:all) do
       @versioned_event = FactoryGirl.create(:event, editor: @user_admin, edit_comment: 'add version specs')
     end
-    it "should add a Version" do
+    it 'should add a Version' do
       @versioned_event.editor = @user_admin
       allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
-      expect { @versioned_event.add_version }.to change{ @versioned_event.versions.count }.by(1)
+      expect { @versioned_event.add_version }.to change { @versioned_event.versions.count }.by(1)
     end
-    it "should not add a Version when there have been no changes" do
+    it 'should not add a Version when there have been no changes' do
       @versioned_event.editor = @user_admin
       @versioned_event.edit_comment = 'saving without changes'
       allow_any_instance_of(Version).to receive(:diff_with).and_return({})
-      expect { @versioned_event.add_version }.to change{ @versioned_event.versions.count }.by(0)
+      expect { @versioned_event.add_version }.to change { @versioned_event.versions.count }.by(0)
     end
-    it "should fail if editor has not been set" do
+    it 'should fail if editor has not been set' do
       @versioned_event.editor = nil
       allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
       expect { @versioned_event.add_version }.to raise_error(ActiveRecord::RecordInvalid)
     end
-    it "should be called after an event is created" do
+    it 'should be called after an event is created' do
       event = FactoryGirl.build(:event, editor: @user_admin, edit_comment: 'add_version after save')
-      expect { event.save! }.to change{ event.versions.count }.by(1)
+      expect { event.save! }.to change { event.versions.count }.by(1)
     end
-    it "should be called after an event is updated" do
+    it 'should be called after an event is updated' do
       event = FactoryGirl.create(:event, editor: @user_admin, edit_comment: 'add_version after update')
       allow_any_instance_of(Version).to receive(:diff_with).and_return(title: 'Different')
-      expect {
-        event.update(title: 'updated version')
-      }.to change{ event.versions.count }.by(1)
+      expect { event.update(title: 'updated version') }.to change { event.versions.count }.by(1)
     end
   end
 
@@ -463,11 +450,10 @@ describe Event, type: :model do
     end
   end
 
-
   # VERSIONS
 
   describe '#new_version' do
-    it "should build a new Version for the event" do
+    it 'should build a new Version for the event' do
       values1 = {
         'timezone' => 'Central Time (US & Canada)', 'is_allday' => 'true', 'is_draft' => 'false'
       }
@@ -491,12 +477,12 @@ describe Event, type: :model do
       event.updated_at = updated_at
       event.save!
       version = event.new_version
-      expect( version.item ).to eq event
-      expect( version.user ).to eq @user_admin
-      expect( version.edited_at ).to eq updated_at
-      expect( version.edit_comment ).to eq 'Edit Comment'
-      expect( version.title ).to eq 'Title'
-      expect( version.values ).to eq values1.merge('is_approved' => 'true').merge(values2)
+      expect(version.item).to eq event
+      expect(version.user).to eq @user_admin
+      expect(version.edited_at).to eq updated_at
+      expect(version.edit_comment).to eq 'Edit Comment'
+      expect(version.title).to eq 'Title'
+      expect(version.values).to eq values1.merge('is_approved' => 'true').merge(values2)
     end
   end
 
@@ -505,174 +491,174 @@ describe Event, type: :model do
 
   # SETTERS
 
-  describe "#title=" do
-    it "should set the title attribute" do
+  describe '#title=' do
+    it 'should set the title attribute' do
       event = Event.new
       event.title = 'test'
-      expect( event.title ).to eq 'test'
+      expect(event.title).to eq 'test'
     end
-    it "should clear the title attribute when nil is given" do
+    it 'should clear the title attribute when nil is given' do
       event = Event.new(title: 'Test')
       event.title = nil
-      expect( event.title ).to be_nil
+      expect(event.title).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.title = " A  Messy \t String\t"
-      expect( event.title ).to eq 'A Messy String'
+      expect(event.title).to eq 'A Messy String'
     end
   end
-  describe "#description=" do
-    it "should set the description attribute" do
+  describe '#description=' do
+    it 'should set the description attribute' do
       event = Event.new
       event.description = 'test'
-      expect( event.description ).to eq 'test'
+      expect(event.description).to eq 'test'
     end
-    it "should clear the description attribute when nil is given" do
+    it 'should clear the description attribute when nil is given' do
       event = Event.new(description: 'Test')
       event.description = nil
-      expect( event.description ).to be_nil
+      expect(event.description).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.description = " A  Messy \t String\t"
-      expect( event.description ).to eq 'A Messy String'
+      expect(event.description).to eq 'A Messy String'
     end
   end
-  describe "#content=" do
-    it "should set the content attribute" do
+  describe '#content=' do
+    it 'should set the content attribute' do
       event = Event.new
       event.content = 'test'
-      expect( event.content ).to eq 'test'
+      expect(event.content).to eq 'test'
     end
-    it "should clear the content attribute when nil is given" do
+    it 'should clear the content attribute when nil is given' do
       event = Event.new(content: 'Test')
       event.content = nil
-      expect( event.content ).to be_nil
+      expect(event.content).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.content = " A  Messy \t String\t"
-      expect( event.content ).to eq 'A Messy String'
+      expect(event.content).to eq 'A Messy String'
     end
   end
-  describe "#organizer=" do
-    it "should set the organizer attribute" do
+  describe '#organizer=' do
+    it 'should set the organizer attribute' do
       event = Event.new
       event.organizer = 'test'
-      expect( event.organizer ).to eq 'test'
+      expect(event.organizer).to eq 'test'
     end
-    it "should clear the organizer attribute when nil is given" do
+    it 'should clear the organizer attribute when nil is given' do
       event = Event.new(organizer: 'Test')
       event.organizer = nil
-      expect( event.organizer ).to be_nil
+      expect(event.organizer).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.organizer = " A  Messy \t String\t"
-      expect( event.organizer ).to eq 'A Messy String'
+      expect(event.organizer).to eq 'A Messy String'
     end
   end
-  describe "#organizer_url=" do
-    it "should set the organizer_url attribute" do
+  describe '#organizer_url=' do
+    it 'should set the organizer_url attribute' do
       event = Event.new
       event.organizer_url = 'test'
-      expect( event.organizer_url ).to eq 'test'
+      expect(event.organizer_url).to eq 'test'
     end
-    it "should clear the organizer_url attribute when nil is given" do
+    it 'should clear the organizer_url attribute when nil is given' do
       event = Event.new(organizer_url: 'Test')
       event.organizer_url = nil
-      expect( event.organizer_url ).to be_nil
+      expect(event.organizer_url).to be_nil
     end
-    it "should try to clean up the url passed in" do
+    it 'should try to clean up the url passed in' do
       event = Event.new
       event.organizer_url = 'http://twitter.com/#!/wayground'
-      expect( event.organizer_url ).to eq 'https://twitter.com/wayground'
+      expect(event.organizer_url).to eq 'https://twitter.com/wayground'
     end
   end
-  describe "#location=" do
-    it "should set the location attribute" do
+  describe '#location=' do
+    it 'should set the location attribute' do
       event = Event.new
       event.location = 'test'
-      expect( event.location ).to eq 'test'
+      expect(event.location).to eq 'test'
     end
-    it "should clear the location attribute when nil is given" do
+    it 'should clear the location attribute when nil is given' do
       event = Event.new(location: 'Test')
       event.location = nil
-      expect( event.location ).to be_nil
+      expect(event.location).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.location = " A  Messy \t String\t"
-      expect( event.location ).to eq 'A Messy String'
+      expect(event.location).to eq 'A Messy String'
     end
   end
-  describe "#address=" do
-    it "should set the address attribute" do
+  describe '#address=' do
+    it 'should set the address attribute' do
       event = Event.new
       event.address = 'test'
-      expect( event.address ).to eq 'test'
+      expect(event.address).to eq 'test'
     end
-    it "should clear the address attribute when nil is given" do
+    it 'should clear the address attribute when nil is given' do
       event = Event.new(address: 'Test')
       event.address = nil
-      expect( event.address ).to be_nil
+      expect(event.address).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.address = " A  Messy \t String\t"
-      expect( event.address ).to eq 'A Messy String'
+      expect(event.address).to eq 'A Messy String'
     end
   end
-  describe "#city=" do
-    it "should set the city attribute" do
+  describe '#city=' do
+    it 'should set the city attribute' do
       event = Event.new
       event.city = 'test'
-      expect( event.city ).to eq 'test'
+      expect(event.city).to eq 'test'
     end
-    it "should clear the city attribute when nil is given" do
+    it 'should clear the city attribute when nil is given' do
       event = Event.new(city: 'Test')
       event.city = nil
-      expect( event.city ).to be_nil
+      expect(event.city).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.city = " A  Messy \t String\t"
-      expect( event.city ).to eq 'A Messy String'
+      expect(event.city).to eq 'A Messy String'
     end
   end
-  describe "#province=" do
-    it "should set the province attribute" do
+  describe '#province=' do
+    it 'should set the province attribute' do
       event = Event.new
       event.province = 'test'
-      expect( event.province ).to eq 'test'
+      expect(event.province).to eq 'test'
     end
-    it "should clear the province attribute when nil is given" do
+    it 'should clear the province attribute when nil is given' do
       event = Event.new(province: 'Test')
       event.province = nil
-      expect( event.province ).to be_nil
+      expect(event.province).to be_nil
     end
-    it "should try to clean up the string passed in" do
+    it 'should try to clean up the string passed in' do
       event = Event.new
       event.province = " A  Messy \t String\t"
-      expect( event.province ).to eq 'A Messy String'
+      expect(event.province).to eq 'A Messy String'
     end
   end
-  describe "#location_url=" do
-    it "should set the location_url attribute" do
+  describe '#location_url=' do
+    it 'should set the location_url attribute' do
       event = Event.new
       event.location_url = 'test'
-      expect( event.location_url ).to eq 'test'
+      expect(event.location_url).to eq 'test'
     end
-    it "should clear the location_url attribute when nil is given" do
+    it 'should clear the location_url attribute when nil is given' do
       event = Event.new(location_url: 'Test')
       event.location_url = nil
-      expect( event.location_url ).to be_nil
+      expect(event.location_url).to be_nil
     end
-    it "should try to clean up the url passed in" do
+    it 'should try to clean up the url passed in' do
       event = Event.new
       event.location_url = 'http://twitter.com/#!/wayground'
-      expect( event.location_url ).to eq 'https://twitter.com/wayground'
+      expect(event.location_url).to eq 'https://twitter.com/wayground'
     end
   end
 
@@ -682,14 +668,14 @@ describe Event, type: :model do
     context 'with no tags' do
       it 'should return an empty string' do
         event = Event.new
-        expect( event.tag_list.to_s ).to eq ''
+        expect(event.tag_list.to_s).to eq ''
       end
     end
     context 'with a single tag' do
       it 'should return the tag title' do
         event = Event.new
         event.tags.build(title: 'Test Tag')
-        expect( event.tag_list.to_s ).to eq 'Test Tag'
+        expect(event.tag_list.to_s).to eq 'Test Tag'
       end
     end
     context 'with multiple tags' do
@@ -698,7 +684,7 @@ describe Event, type: :model do
         event.tags.build(title: 'Tag A')
         event.tags.build(title: 'Tag B')
         event.tags.build(title: 'Tag C')
-        expect( event.tag_list.to_s ).to eq 'Tag A, Tag B, Tag C'
+        expect(event.tag_list.to_s).to eq 'Tag A, Tag B, Tag C'
       end
     end
   end
@@ -708,17 +694,17 @@ describe Event, type: :model do
       it 'should add a single-tag when given a string with no commas' do
         event = Event.new
         event.tag_list = 'Single Tag'
-        expect( event.tag_list.to_s ).to eq 'Single Tag'
+        expect(event.tag_list.to_s).to eq 'Single Tag'
       end
       it 'should add multiple tags when give a string with multiple commas' do
         event = Event.new
         event.tag_list = 'Tag 1, Tag 2, Tag 3'
-        expect( event.tag_list.to_s ).to eq 'Tag 1, Tag 2, Tag 3'
+        expect(event.tag_list.to_s).to eq 'Tag 1, Tag 2, Tag 3'
       end
       it 'should strip surrounding quotes and white-space' do
         event = Event.new
         event.tag_list = " 'Tag 1 ' ,  \" Tag 2\",' Tag 3'"
-        expect( event.tag_list.to_s ).to eq 'Tag 1, Tag 2, Tag 3'
+        expect(event.tag_list.to_s).to eq 'Tag 1, Tag 2, Tag 3'
       end
     end
     context 'with pre-existing tags' do
@@ -732,7 +718,7 @@ describe Event, type: :model do
         @event.tag_list = 'Keep 1, New Tag'
         @event.save!
         @event.reload
-        expect( @event.tag_list.to_s ).to eq 'Keep 1, New Tag'
+        expect(@event.tag_list.to_s).to eq 'Keep 1, New Tag'
       end
       it 'should change the title on tags that match with different titles' do
         Tag.delete_all
@@ -741,7 +727,7 @@ describe Event, type: :model do
         @event.tag_list = 'change1, change2'
         @event.save!
         @event.reload
-        expect( @event.tag_list.to_s ).to eq 'change1, change2'
+        expect(@event.tag_list.to_s).to eq 'change1, change2'
       end
     end
   end
@@ -754,7 +740,7 @@ describe Event, type: :model do
   describe '.earliest_date' do
     it 'should return the date of the earliest event' do
       date_string = '1900-01-01 1:00 am'
-      FactoryGirl.create(:event, start_at: date_string )
+      FactoryGirl.create(:event, start_at: date_string)
       FactoryGirl.create(:event) if Event.count < 2
       earliest_event_date = Event.earliest_date
       expect(earliest_event_date).to eq date_string.to_date
@@ -772,7 +758,7 @@ describe Event, type: :model do
   describe '.last_date' do
     it 'should return the date of the last event' do
       date_string = '2300-12-31 11:00 pm'
-      FactoryGirl.create(:event, start_at: date_string )
+      FactoryGirl.create(:event, start_at: date_string)
       FactoryGirl.create(:event) if Event.count < 2
       last_event_date = Event.last_date
       expect(last_event_date).to eq date_string.to_date
@@ -787,62 +773,62 @@ describe Event, type: :model do
     end
   end
 
-  describe "#multi_day?" do
+  describe '#multi_day?' do
     let(:event) { $event = Event.new(start_at: '2004-05-06 7:08am') }
-    context "with no end time" do
-      it "should return false" do
-        expect( event.multi_day? ).to be_falsey
+    context 'with no end time' do
+      it 'should return false' do
+        expect(event.multi_day?).to be_falsey
       end
     end
-    context "with an end time on the same date as the start time" do
-      it "should return false" do
+    context 'with an end time on the same date as the start time' do
+      it 'should return false' do
         event.end_at = event.start_at + 1.hour
-        expect( event.multi_day? ).to be_falsey
+        expect(event.multi_day?).to be_falsey
       end
     end
-    context "with an end time on a later date" do
-      it "should return true" do
+    context 'with an end time on a later date' do
+      it 'should return true' do
         event.end_at = event.start_at + 1.week
-        expect( event.multi_day? ).to be_truthy
+        expect(event.multi_day?).to be_truthy
       end
     end
   end
 
-  describe "#approve_by" do
+  describe '#approve_by' do
     let(:event) { $event = FactoryGirl.create(:event, is_approved: false) }
-    it "should return true if already approved" do
+    it 'should return true if already approved' do
       event.is_approved = true
-      expect( event.approve_by(nil) ).to be_truthy
+      expect(event.approve_by(nil)).to be_truthy
     end
-    context "with an authorized user" do
-      it "should set is_approved" do
+    context 'with an authorized user' do
+      it 'should set is_approved' do
         event.approve_by(@user_admin)
-        expect( event.is_approved? ).to be_truthy
+        expect(event.is_approved?).to be_truthy
       end
-      it "should save the event" do
+      it 'should save the event' do
         event.approve_by(@user_admin)
-        expect( event.changed? ).to be_falsey
+        expect(event.changed?).to be_falsey
       end
     end
-    it "should return false if user is nil" do
-      expect( event.approve_by(nil) ).to be_falsey
+    it 'should return false if user is nil' do
+      expect(event.approve_by(nil)).to be_falsey
     end
-    it "should return false if user is unauthorized" do
-      expect( event.approve_by(@user_normal) ).to be_falsey
+    it 'should return false if user is unauthorized' do
+      expect(event.approve_by(@user_normal)).to be_falsey
     end
-    it "should not set the locally modified flag on shared items" do
+    it 'should not set the locally modified flag on shared items' do
       sourced_at = 1.hour.ago
       sourced_item = event.sourced_items.build(last_sourced_at: sourced_at)
       sourced_item.source = FactoryGirl.create(:source, last_updated_at: sourced_at)
       sourced_item.save
       event.approve_by(@user_admin)
-      expect( event.sourced_items.first.has_local_modifications? ).to be_falsey
+      expect(event.sourced_items.first.has_local_modifications?).to be_falsey
     end
   end
 
   # icalendar source processing
 
-  describe "#update_from_icalendar" do
+  describe '#update_from_icalendar' do
     let(:start_time) { $start_time = 25.hours.ago }
     let(:end_time) { $end_time = 24.hours.ago }
     let(:changed_ievent) do
@@ -858,8 +844,8 @@ describe Event, type: :model do
         'UID' => { value: '123@spec' }
       }
     end
-    context "with no local changes to the event" do
-      it "should overwrite any changed information" do
+    context 'with no local changes to the event' do
+      it 'should overwrite any changed information' do
         # make a slightly different ievent
         event = Event.new
         # update the event using the different ievent
@@ -867,21 +853,20 @@ describe Event, type: :model do
         event_values = [
           event.description, event.start_at, event.end_at, event.location, event.organizer, event.title
         ]
-        expect( event_values ).to eq([
-          'Changed description.', start_time, end_time,
-          'Change Place', 'Change Org', 'Changed Summary'
-        ])
+        expect(event_values).to eq(
+          ['Changed description.', start_time, end_time, 'Change Place', 'Change Org', 'Changed Summary']
+        )
       end
-      it "should accept an editor" do
+      it 'should accept an editor' do
         # TODO: text passing an editor to Event#update_from_icalendar
-        #pending
+        # pending
       end
     end
-    context "with local changes to the event" do
+    context 'with local changes to the event' do
       # TODO: handle processing an update for an event with local changes
-      it "should return false" do
+      it 'should return false' do
         # set the last arg to true (has_local_modifications)
-        expect( Event.new.update_from_icalendar(changed_ievent, has_local_modifications: true) ).to be_falsey
+        expect(Event.new.update_from_icalendar(changed_ievent, has_local_modifications: true)).to be_falsey
       end
     end
   end
@@ -889,15 +874,14 @@ describe Event, type: :model do
   describe '#descriptor' do
     it 'should return the title' do
       event = Event.new(title: 'Test Event')
-      expect( event.descriptor ).to eq 'Test Event'
+      expect(event.descriptor).to eq 'Test Event'
     end
   end
 
   describe '#items_for_path' do
     it 'should return an array of just the event' do
       event = Event.new
-      expect( event.items_for_path ).to eq [event]
+      expect(event.items_for_path).to eq [event]
     end
   end
-
 end

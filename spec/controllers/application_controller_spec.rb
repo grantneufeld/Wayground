@@ -6,25 +6,24 @@ require 'document'
 require 'active_record'
 
 describe ApplicationController, type: :controller do
-
   describe '#current_user' do
-    # use controller.send(:current_user) to access the protected method
-    it "should return nil when user is not signed-in" do
+    # use controller.__send__(:current_user) to access the protected method
+    it 'should return nil when user is not signed-in' do
       request.cookies['remember_token'] = nil
-      expect(controller.send(:current_user)).to be_nil
+      expect(controller.__send__(:current_user)).to be_nil
     end
-    it "should return the user when signed-in" do
+    it 'should return the user when signed-in' do
       user = User.new
       user_token = UserToken.new
       user_token.user = user
       allow(UserToken).to receive(:from_cookie_token).with('test/123').and_return(user_token)
       request.cookies['remember_token'] = 'test/123'
-      expect( controller.send(:current_user) ).to be user
+      expect(controller.__send__(:current_user)).to be user
     end
-    it "should clear the remember token cookie if user not found" do
+    it 'should clear the remember token cookie if user not found' do
       allow(User).to receive(:find).with(987).and_raise(ActiveRecord::RecordNotFound)
       request.cookies['remember_token'] = 'test/987'
-      expect(controller.send(:current_user)).to be_nil
+      expect(controller.__send__(:current_user)).to be_nil
     end
   end
 
@@ -46,8 +45,8 @@ describe ApplicationController, type: :controller do
     end
     it 'should add the given item to the submenu items' do
       item = { title: 'Test Submenu Item', path: 'submenu', attrs: { submenu: 'test' } }
-      controller.send(:add_submenu_item, item)
-      expect( controller.send(:page_submenu_items) ).to eq [item]
+      controller.__send__(:add_submenu_item, item)
+      expect(controller.__send__(:page_submenu_items)).to eq [item]
     end
   end
 
@@ -56,14 +55,14 @@ describe ApplicationController, type: :controller do
       reset_submenu_items(controller)
     end
     it 'should default to an empty array' do
-      expect( controller.send(:page_submenu_items) ).to eq []
+      expect(controller.__send__(:page_submenu_items)).to eq []
     end
     it 'should return an array of the submenu items that have been added' do
       item1 = { title: 'One', path: '1', attrs: { test: 'one' } }
       item2 = { title: 'Two', path: '2', attrs: { other: 'two' } }
-      controller.send(:add_submenu_item, item1)
-      controller.send(:add_submenu_item, item2)
-      expect( controller.send(:page_submenu_items) ).to eq [item1, item2]
+      controller.__send__(:add_submenu_item, item1)
+      controller.__send__(:add_submenu_item, item2)
+      expect(controller.__send__(:page_submenu_items)).to eq [item1, item2]
     end
   end
 
@@ -71,14 +70,14 @@ describe ApplicationController, type: :controller do
   end
 
   describe '#paginate' do
-    it "should setup a bunch of variables" do
+    it 'should setup a bunch of variables' do
       controller.params ||= {}
       controller.params[:page] = '2'
       controller.params[:max] = '10'
       Document.delete_all
       user = FactoryGirl.create(:document).user
-      11.times { FactoryGirl.create(:document, :user => user) }
-      controller.send(:paginate, Document)
+      11.times { FactoryGirl.create(:document, user: user) }
+      controller.__send__(:paginate, Document)
       expect(assigns[:default_max]).to eq 20
       expect(assigns[:max]).to eq 10
       expect(assigns[:pagenum]).to eq 2
@@ -86,9 +85,7 @@ describe ApplicationController, type: :controller do
       expect(assigns[:selected_total]).to eq 2
     end
   end
-
 end
-
 
 # HELPERS
 

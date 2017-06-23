@@ -2,10 +2,9 @@ require 'spec_helper'
 require 'tag_list'
 
 describe Wayground::TagList do
-
-  describe "#initialize" do
-    it "should accept a tags param" do
-      expect( Wayground::TagList.new(tags: :tags).tags ).to eq :tags
+  describe '#initialize' do
+    it 'should accept a tags param' do
+      expect(Wayground::TagList.new(tags: :tags).tags).to eq :tags
     end
   end
 
@@ -13,13 +12,13 @@ describe Wayground::TagList do
     context 'with no tags' do
       it 'should return an empty string' do
         list = Wayground::TagList.new
-        expect( list.to_s ).to eq ''
+        expect(list.to_s).to eq ''
       end
     end
     context 'with a single tag' do
       it 'should return the tag title' do
         list = Wayground::TagList.new(tags: [Tag.new(title: 'Test Tag')])
-        expect( list.to_s ).to eq 'Test Tag'
+        expect(list.to_s).to eq 'Test Tag'
       end
     end
     context 'with multiple tags' do
@@ -29,7 +28,7 @@ describe Wayground::TagList do
         tags << Tag.new(title: 'Tag B')
         tags << Tag.new(title: 'Tag C')
         list = Wayground::TagList.new(tags: tags)
-        expect( list.to_s ).to eq 'Tag A, Tag B, Tag C'
+        expect(list.to_s).to eq 'Tag A, Tag B, Tag C'
       end
     end
   end
@@ -50,7 +49,7 @@ describe Wayground::TagList do
       item.tag_list = 'A,"C"'
       item.save!
       item.reload
-      expect( Wayground::TagList.new(tags: item.tags).to_s ).to eq 'A, C'
+      expect(Wayground::TagList.new(tags: item.tags).to_s).to eq 'A, C'
     end
   end
 
@@ -59,7 +58,7 @@ describe Wayground::TagList do
       it 'should return an empty hash' do
         tags = []
         list = Wayground::TagList.new(tags: tags)
-        expect( list.determine_existing_tags ).to eq({})
+        expect(list.determine_existing_tags).to eq({})
       end
     end
     context 'with some tags' do
@@ -69,7 +68,7 @@ describe Wayground::TagList do
         tagc = Tag.new(title: 'Tag C')
         tags = [taga, tagb, tagc]
         list = Wayground::TagList.new(tags: tags)
-        expect( list.determine_existing_tags ).to eq({ 'taga' => taga, 'tagb' => tagb, 'tagc' => tagc })
+        expect(list.determine_existing_tags).to eq('taga' => taga, 'tagb' => tagb, 'tagc' => tagc)
       end
     end
   end
@@ -86,13 +85,13 @@ describe Wayground::TagList do
 
   describe '#tag_titles_from_string' do
     it 'should strip leading quotes and spaces' do
-      expect( Wayground::TagList.new.tag_titles_from_string(" '\" text") ).to eq ['text']
+      expect(Wayground::TagList.new.tag_titles_from_string(" '\" text")).to eq ['text']
     end
     it 'should strip trailing quotes and spaces' do
-      expect( Wayground::TagList.new.tag_titles_from_string("text\" ' ") ).to eq ['text']
+      expect(Wayground::TagList.new.tag_titles_from_string("text\" ' ")).to eq ['text']
     end
     it 'should split on commas, stripping adjacent quotes and spaces' do
-      expect( Wayground::TagList.new.tag_titles_from_string("a\",'b , c ' ,d") ).to eq ['a', 'b', 'c', 'd']
+      expect(Wayground::TagList.new.tag_titles_from_string("a\",'b , c ' ,d")).to eq %w[a b c d]
     end
   end
 
@@ -100,7 +99,7 @@ describe Wayground::TagList do
     it 'should ignore blank titles' do
       list = Wayground::TagList.new
       list.include_tag_title(' "-.!" ')
-      expect( list.tagged ).to eq []
+      expect(list.tagged).to eq []
     end
     it 'should call through to ensure_tag_title' do
       list = Wayground::TagList.new
@@ -109,10 +108,10 @@ describe Wayground::TagList do
     end
     it 'should not create duplicates' do
       list = Wayground::TagList.new
-      list.tagged = ['a', 'b']
+      list.tagged = %w[a b]
       list.include_tag_title('A')
       list.include_tag_title('B')
-      expect( list.tagged ).to eq ['a', 'b']
+      expect(list.tagged).to eq %w[a b]
     end
   end
 
@@ -136,7 +135,7 @@ describe Wayground::TagList do
         tags = []
         list = Wayground::TagList.new(tags: tags)
         list.determine_existing_tags
-        expect( list.update_existing_tag('Not Present') ).to be_nil
+        expect(list.update_existing_tag('Not Present')).to be_nil
       end
     end
     context 'with a matching existing tag with the same title' do
@@ -153,11 +152,11 @@ describe Wayground::TagList do
         @list.update_existing_tag('same title')
       end
       it 'should return the tag' do
-        expect( @list.update_existing_tag('same title') ).to eq @tag
+        expect(@list.update_existing_tag('same title')).to eq @tag
       end
       it 'should remove the tag from the list of existing tags being tracked' do
         @list.update_existing_tag('same title')
-        expect( @list.existing_tags ).to eq({})
+        expect(@list.existing_tags).to eq({})
       end
     end
     context 'with a matching existing tag with a different title' do
@@ -167,29 +166,29 @@ describe Wayground::TagList do
         list = Wayground::TagList.new(tags: tags)
         list.determine_existing_tags
         list.update_existing_tag('different title')
-        expect( tag.title ).to eq 'different title'
+        expect(tag.title).to eq 'different title'
       end
     end
   end
 
   describe '#new_tag' do
     it 'should use the given title for the new tag' do
-      list = Wayground::TagList.new(tags: Event.new.tags )
+      list = Wayground::TagList.new(tags: Event.new.tags)
       tag = list.new_tag('New Tag')
-      expect( tag.tag ).to eq 'newtag'
+      expect(tag.tag).to eq 'newtag'
     end
     it 'should assign the editor as the user for the new tag' do
       user = User.new
       list = Wayground::TagList.new(tags: Event.new.tags, editor: user)
       tag = list.new_tag('Tag With Editor')
-      expect( tag.user ).to eq user
+      expect(tag.user).to eq user
     end
     it 'should associate the event as the item for the new tag' do
       user = User.new
       event = Event.first || FactoryGirl.create(:event)
       list = Wayground::TagList.new(tags: event.tags, editor: user)
       tag = list.new_tag('Tag On Item')
-      expect( tag.item ).to eq event
+      expect(tag.item).to eq event
     end
   end
 
@@ -205,5 +204,4 @@ describe Wayground::TagList do
       list.remove_leftover_existing_tags
     end
   end
-
 end

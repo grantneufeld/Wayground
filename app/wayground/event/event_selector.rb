@@ -17,7 +17,7 @@ module Wayground
 
       def range=(text)
         @range = text
-        @range = 'upcoming' unless %w(all past upcoming).include?(@range)
+        @range = 'upcoming' unless %w[all past upcoming].include?(@range)
       end
 
       def tag=(text)

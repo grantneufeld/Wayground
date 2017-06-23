@@ -1,12 +1,12 @@
 # Manage “static” Pages.
 class PagesController < ApplicationController
-  before_action :set_page, except: %i(index new create)
-  before_action :requires_create_authority, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_page, except: %i[index new create]
+  before_action :requires_create_authority, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
   before_action :set_section
-  before_action :set_new_page, only: %i(new create)
-  before_action :set_editor, only: %i(create update destroy)
+  before_action :set_new_page, only: %i[new create]
+  before_action :set_editor, only: %i[create update destroy]
 
   # GET /pages
   # GET /pages.xml
@@ -25,8 +25,7 @@ class PagesController < ApplicationController
 
   # GET /pages/new
   # GET /pages/new.xml
-  def new
-  end
+  def new; end
 
   # POST /pages
   # POST /pages.xml
@@ -72,9 +71,8 @@ class PagesController < ApplicationController
   # The actions for this controller, other than viewing, require authorization.
   def requires_authority(action)
     page_allowed = @page && @page.authority_for_user_to?(current_user, action)
-    unless page_allowed || (current_user && current_user.authority_for_area(Page.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = page_allowed || (current_user && current_user.authority_for_area(Page.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_create_authority
@@ -102,7 +100,7 @@ class PagesController < ApplicationController
     page_metadata(title: 'New Page')
     @page = Page.new(page_params)
     parent_id = params[:parent]
-    return unless parent_id.present?
+    return if parent_id.blank?
     @page.parent = Page.find(parent_id)
     @site_breadcrumbs = @page.breadcrumbs
   end

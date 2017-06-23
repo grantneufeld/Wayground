@@ -11,6 +11,5 @@ class ModifyAuthorities < ActiveRecord::Migration[5.1]
     end
   end
 
-  def self.down
-  end
+  def self.down; end
 end

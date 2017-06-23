@@ -5,8 +5,10 @@ require 'active_model/validator'
 # Used in ActiveModel/ActiveRecord field validations.
 class ColourValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    unless value && value.match(hex_color_regex) || css_color_names.include?(value)
-      record.errors[attribute] << (options[:message] || 'is not a recognized colour name or hex code')
+    valid_color = value && (value.match(hex_color_regex) || css_color_names.include?(value))
+    unless valid_color
+      message = options[:message] || 'is not a recognized colour name or hex code'
+      record.errors[attribute] << message
     end
   end
 
@@ -17,9 +19,9 @@ class ColourValidator < ActiveModel::EachValidator
   end
 
   def css_color_names
-    %w(
+    %w[
       aqua black blue cyan fuchsia gray green lime magenta
       maroon navy olive purple red silver teal white yellow
-    )
+    ]
   end
 end

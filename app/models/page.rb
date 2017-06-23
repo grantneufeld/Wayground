@@ -60,7 +60,5 @@ class Page < ApplicationRecord
     end
   end
 
-  def sitepath
-    path.sitepath if path
-  end
+  delegate :sitepath, to: :path
 end

@@ -49,7 +49,7 @@ ApplicationRecord.class_eval do
       # use the field name defined by item_authority_flag_field if present,
       # otherwise, use the default field name: is_authority_controlled
       method_name = item_authority_flag_field
-      method_name = 'is_authority_controlled' unless method_name.present?
+      method_name = 'is_authority_controlled' if method_name.blank?
       class_eval "
         def authority_restricted?
           self.#{method_name}

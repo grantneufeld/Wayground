@@ -24,20 +24,20 @@ describe 'images/index.html.erb', type: :view do
     assign(:images, [@image, @image])
   end
 
-  it "should present a gallery of the images" do
+  it 'should present a gallery of the images' do
     allow(@image).to receive(:id).and_return(123)
     render
     assert_select 'div', class: 'gallery' do
       assert_select 'p', class: 'image', count: 2 do
         assert_select 'a', href: '/images/123', title: 'Stub Title' do
-          assert_select('img',
+          assert_select(
+            'img',
             src: 'http://url.tld/stub.gif', height: '123', width: '234',
             alt: 'stub alt text', title: 'Stub Title'
-            )
+          )
         end
       end
       assert_select 'span', class: 'tail'
     end
   end
-
 end

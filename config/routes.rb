@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   concern :versioned do
-    resources :versions, except: %i(new create edit update destroy)
+    resources :versions, except: %i[new create edit update destroy]
   end
 
   root to: 'paths#sitepath', via: :get, url: '/'
@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # get 'signup' => 'users#new', as: :signup
   # post 'signup' => 'users#create'
   # get 'account/confirm/:confirmation_code' => 'users#confirm', as: :confirm_account
-  resource :account, controller: 'users', except: %i(index new create destroy)
+  resource :account, controller: 'users', except: %i[index new create destroy]
   get 'profile/:id' => 'users#profile', as: :profile
   # SESSIONS
   get 'signin' => 'sessions#new', as: :signin
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'signout' => 'sessions#delete', as: :signout
   delete 'signout' => 'sessions#destroy'
   # OAUTH
-  match 'auth/:provider/callback' => 'sessions#oauth_callback', via: %i(get post)
+  match 'auth/:provider/callback' => 'sessions#oauth_callback', via: %i[get post]
   # AUTHORITIES
   resources :authorities
   # SETTINGS

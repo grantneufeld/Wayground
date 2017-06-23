@@ -3,13 +3,13 @@ class SourcesController < ApplicationController
   include ActionView::Helpers::OutputSafetyHelper
 
   before_action :set_user
-  before_action :set_source, except: %i(index new create)
-  before_action :requires_view_authority, only: %i(index show)
-  before_action :requires_create_authority, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update processor runprocessor)
-  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_source, except: %i[index new create]
+  before_action :requires_view_authority, only: %i[index show]
+  before_action :requires_create_authority, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update processor runprocessor]
+  before_action :requires_delete_authority, only: %i[delete destroy]
   before_action :set_section
-  before_action :set_new_source, only: %i(new create)
+  before_action :set_new_source, only: %i[new create]
 
   def index
     page_metadata(title: 'Sources')
@@ -60,8 +60,7 @@ class SourcesController < ApplicationController
     page_metadata(title: "Processed Source: #{@source.name}")
     processor = @source.run_processor(@user, params[:approve] == 'all')
     flash.now.notice = safe_join(runprocessor_messages(processor), '<br />'.html_safe)
-    @sourced_items = runprocessor_items(processor).map { |item| item.sourced_items.first }
-    @sourced_items.compact!
+    runprocessor_sourced_items(processor)
     render template: 'sources/show'
   end
 
@@ -76,6 +75,11 @@ class SourcesController < ApplicationController
     skipped_ievents_size = processor.skipped_ievents.size
     messages << "#{skipped_ievents_size} items were skipped." if skipped_ievents_size.positive?
     messages
+  end
+
+  def runprocessor_sourced_items(processor)
+    @sourced_items = runprocessor_items(processor).map { |item| item.sourced_items.first }
+    @sourced_items.compact!
   end
 
   def runprocessor_items(processor)
@@ -94,9 +98,8 @@ class SourcesController < ApplicationController
   # The actions for this controller require authorization.
   def requires_authority(action)
     source_allowed = @source && @source.authority_for_user_to?(@user, action)
-    unless source_allowed || (@user && @user.authority_for_area('Source', action))
-      raise Wayground::AccessDenied
-    end
+    can_do = source_allowed || (@user && @user.authority_for_area('Source', action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_view_authority

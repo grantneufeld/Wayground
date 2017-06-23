@@ -10,10 +10,10 @@ describe 'layouts/_pagination_selector.html.erb', type: :view do
     assign(:selected_total, 10)
   end
 
-  it "renders a sequence of page links" do
+  it 'renders a sequence of page links' do
     render
-    expect(rendered).to match /First/
-    expect(rendered).to match /5/
-    expect(rendered).to match /Last/
+    expect(rendered).to match(/First/)
+    expect(rendered).to match(/5/)
+    expect(rendered).to match(/Last/)
   end
 end

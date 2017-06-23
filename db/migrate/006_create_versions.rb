@@ -16,10 +16,10 @@ class CreateVersions < ActiveRecord::Migration[5.1]
       t.date :end_on
     end
     change_table :versions do |t|
-      t.index %i(item_type item_id edited_at), name: 'item_by_date'
-      t.index %i(edited_at item_type item_id), name: 'edits_by_date'
-      t.index %i(user_id item_type item_id edited_at), name: 'user_by_item'
-      t.index %i(user_id edited_at item_type item_id), name: 'user_by_date'
+      t.index %i[item_type item_id edited_at], name: 'item_by_date'
+      t.index %i[edited_at item_type item_id], name: 'edits_by_date'
+      t.index %i[user_id item_type item_id edited_at], name: 'user_by_item'
+      t.index %i[user_id edited_at item_type item_id], name: 'user_by_date'
     end
   end
 

@@ -1,12 +1,12 @@
 # Administer site-wide Settings.
 class SettingsController < ApplicationController
-  before_action :set_setting, except: %i(initialize_defaults index new create)
-  before_action :requires_view_authority, only: %i(index show)
-  before_action :requires_create_authority, only: %i(initialize_defaults new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
+  before_action :set_setting, except: %i[initialize_defaults index new create]
+  before_action :requires_view_authority, only: %i[index show]
+  before_action :requires_create_authority, only: %i[initialize_defaults new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
   before_action :set_section
-  before_action :set_new_setting, only: %i(new create)
+  before_action :set_new_setting, only: %i[new create]
 
   # Setup default Settings for the system as a whole.
   # Currently, just the global_start_date.
@@ -33,8 +33,7 @@ class SettingsController < ApplicationController
 
   # GET /settings/new
   # GET /settings/new.xml
-  def new
-  end
+  def new; end
 
   # POST /settings
   # POST /settings.xml
@@ -84,9 +83,8 @@ class SettingsController < ApplicationController
   def requires_authority(action)
     user = current_user
     setting_allowed = @setting && @setting.authority_for_user_to?(user, action)
-    unless setting_allowed || (user && user.authority_for_area(Setting.authority_area, action))
-      raise Wayground::AccessDenied
-    end
+    can_do = setting_allowed || (user && user.authority_for_area(Setting.authority_area, action))
+    raise Wayground::AccessDenied unless can_do
   end
 
   def requires_view_authority

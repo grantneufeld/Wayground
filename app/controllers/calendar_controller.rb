@@ -6,8 +6,8 @@ require 'event/year'
 # Present calendar views of events.
 class CalendarController < ApplicationController
   before_action :set_user, except: [:index]
-  before_action :require_year, only: %i(year month day)
-  before_action :require_month, only: %i(month day)
+  before_action :require_year, only: %i[year month day]
+  before_action :require_month, only: %i[month day]
   before_action :require_day, only: [:day]
   before_action :set_section, except: [:index]
 

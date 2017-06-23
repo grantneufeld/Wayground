@@ -9,13 +9,13 @@ class CreatePaths < ActiveRecord::Migration[5.1]
     end
     # for MySQL because it can’t deal with indexing text columns
     # unless a constraint is explicitly defined
-    if connection.class.name =~ /.*MySQL.*/i
+    if connection.class.name.match?(/.*MySQL.*/i)
       say 'creating paths.sitepath index for MySQL'
       execute 'ALTER TABLE paths ADD UNIQUE (sitepath(255));'
     end
     change_table :paths do |t|
-      t.index [:sitepath], name: 'sitepath', unique: true unless connection.class.name =~ /.*MySQL.*/i
-      t.index %i(item_type item_id), name: 'item_idx'
+      t.index [:sitepath], name: 'sitepath', unique: true unless connection.class.name.match?(/.*MySQL.*/i)
+      t.index %i[item_type item_id], name: 'item_idx'
     end
   end
 

@@ -63,7 +63,7 @@ module Wayground
       def parse_vcalendar
         calendar = {}
         line = next_line
-        while line && !(line =~ /^END:VCALENDAR$/)
+        while line && line !~ /^END:VCALENDAR$/
           line_within_vcalendar(line, calendar)
           line = next_line
         end
@@ -101,7 +101,7 @@ module Wayground
         event = {}
         # read through until end of file or the END:VEVENT line.
         line = next_line
-        while line && !(line =~ /^END:VEVENT$/)
+        while line && line !~ /^END:VEVENT$/
           line_within_vevent(line, event)
           line = next_line
         end
@@ -136,7 +136,7 @@ module Wayground
         timezone = {}
         # read through until end of file or the END:VTIMEZONE line.
         line = next_line
-        while line && !(line =~ /^END:VTIMEZONE$/)
+        while line && line !~ /^END:VTIMEZONE$/
           line_within_vtimezone(line, timezone)
           line = next_line
         end
@@ -161,7 +161,7 @@ module Wayground
         element = {}
         # read through until end of file or the END:`ELEMENT_NAME` line.
         # assume there are no sub-elements
-        while (line = next_line) && !(line =~ /^END:#{name}$/)
+        while (line = next_line) && line !~ /^END:#{name}$/
           # just record any timezone element attributes directly
           match = line.match(/^([^:]+):(.+)$/)
           element[match[1]] = { value: clean_string(match[2]) } if match
@@ -173,7 +173,7 @@ module Wayground
 
       # Handle an unrecognized sub-element by ignoring it.
       def parse_unrecognized_element(name)
-        while (line = next_line) && !(line =~ /^END:#{name}$/)
+        while (line = next_line) && line !~ /^END:#{name}$/
           # don't do anything with the element's data
         end
       end
@@ -187,7 +187,7 @@ module Wayground
         line = @line_buffer || io.gets
         @line_buffer = nil
         # strip trailing line-breaks
-        line.sub!(/[\r\n]+\z/, '') if line
+        line&.sub!(/[\r\n]+\z/, '')
         line = merge_split_lines(line) if line.present?
         line
       end

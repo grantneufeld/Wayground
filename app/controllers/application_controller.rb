@@ -77,10 +77,7 @@ class ApplicationController < ActionController::Base
   # @source_total: The total number of items available from the source, without pagination.
   # @selected_total: The number of items being displayed on the page.
   def paginate(source)
-    @default_max ||= 20
-    @max = params[:max]
-    @max = @max.to_i if @max
-    @max ||= @default_max
+    set_paginate_max
     @pagenum = pagenum_from_param(params[:page])
     @source_total = source.count
     items = source.limit(@max).offset((@pagenum - 1) * @max)
@@ -107,5 +104,12 @@ class ApplicationController < ActionController::Base
     end
     pagenum ||= 1
     pagenum
+  end
+
+  def set_paginate_max
+    @default_max ||= 20
+    @max = params[:max]
+    @max = @max.to_i if @max
+    @max ||= @default_max
   end
 end

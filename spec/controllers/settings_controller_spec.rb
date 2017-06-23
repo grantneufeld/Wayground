@@ -2,7 +2,6 @@ require 'rails_helper'
 
 # Most of this is based on the rspec scaffold generated tests.
 describe SettingsController, type: :controller do
-
   # This should return the minimal set of attributes required to create a valid
   # Setting. As you add validations to Setting, be sure to
   # update the return value of this method accordingly.
@@ -21,44 +20,45 @@ describe SettingsController, type: :controller do
     Authority.delete_all
     User.delete_all
     # first user is automatically an admin
-    @user_admin = FactoryGirl.create(:user, :name => 'Admin User')
-    @user_normal = FactoryGirl.create(:user, :name => 'Normal User')
+    @user_admin = FactoryGirl.create(:user, name: 'Admin User')
+    @user_normal = FactoryGirl.create(:user, name: 'Normal User')
   end
 
   def set_logged_in_admin
     allow(controller).to receive(:current_user).and_return(@user_admin)
   end
+
   def set_logged_in_user
     allow(controller).to receive(:current_user).and_return(@user_normal)
   end
 
-  describe "GET initialize_defaults" do
-    it "requires the user to have authority" do
+  describe 'GET initialize_defaults' do
+    it 'requires the user to have authority' do
       set_logged_in_user
       get :initialize_defaults
       expect(response.status).to eq 403
     end
-    it "initializes the default settings" do
+    it 'initializes the default settings' do
       Setting.delete_all
       set_logged_in_admin
       get :initialize_defaults
-      expect(Setting[:global_start_date]).to eq(Time.now.to_date.to_s)
+      expect(Setting[:global_start_date]).to eq(Time.zone.now.to_date.to_s)
     end
-    it "redirects to the settings index" do
+    it 'redirects to the settings index' do
       set_logged_in_admin
       get :initialize_defaults
       expect(response).to redirect_to(settings_url)
     end
   end
 
-  describe "GET index" do
-    it "requires the user to have authority" do
+  describe 'GET index' do
+    it 'requires the user to have authority' do
       set_logged_in_user
-      setting = Setting.create! valid_attributes
+      Setting.create! valid_attributes
       get :index
       expect(response.status).to eq 403
     end
-    it "assigns all settings as @settings" do
+    it 'assigns all settings as @settings' do
       set_logged_in_admin
       setting = Setting.create! valid_attributes
       get :index
@@ -66,48 +66,48 @@ describe SettingsController, type: :controller do
     end
   end
 
-  describe "GET show" do
+  describe 'GET show' do
     let(:setting) { FactoryGirl.create(:setting) }
-    it "assigns the requested setting as @setting" do
+    it 'assigns the requested setting as @setting' do
       set_logged_in_admin
       get :show, params: { id: setting.to_param }, session: valid_session
       expect(assigns(:setting)).to eq(setting)
     end
   end
 
-  describe "GET new" do
-    it "assigns a new setting as @setting" do
+  describe 'GET new' do
+    it 'assigns a new setting as @setting' do
       set_logged_in_admin
       get :new, params: {}, session: valid_session
       expect(assigns(:setting)).to be_a_new(Setting)
     end
   end
 
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Setting" do
+  describe 'POST create' do
+    describe 'with valid params' do
+      it 'creates a new Setting' do
         set_logged_in_admin
-        expect {
-          post :create, params: { setting: valid_attributes }, session: valid_session
-        }.to change(Setting, :count).by(1)
+        expect { post :create, params: { setting: valid_attributes }, session: valid_session }.to change(
+          Setting, :count
+        ).by(1)
       end
 
-      it "assigns a newly created setting as @setting" do
+      it 'assigns a newly created setting as @setting' do
         set_logged_in_admin
         post :create, params: { setting: valid_attributes }, session: valid_session
         expect(assigns(:setting)).to be_a(Setting)
         expect(assigns(:setting)).to be_persisted
       end
 
-      it "redirects to the created setting" do
+      it 'redirects to the created setting' do
         set_logged_in_admin
         post :create, params: { setting: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Setting.last)
       end
     end
 
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved setting as @setting" do
+    describe 'with invalid params' do
+      it 'assigns a newly created but unsaved setting as @setting' do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
@@ -120,24 +120,24 @@ describe SettingsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
         post :create, params: { setting: {} }, session: valid_session
-        expect(response).to render_template("new")
+        expect(response).to render_template('new')
       end
     end
   end
 
-  describe "GET edit" do
+  describe 'GET edit' do
     let(:setting) { FactoryGirl.create(:setting) }
-    it "assigns the requested setting as @setting" do
+    it 'assigns the requested setting as @setting' do
       set_logged_in_admin
       get :edit, params: { id: setting.to_param }, session: valid_session
       expect(assigns(:setting)).to eq(setting)
     end
   end
 
-  describe "PUT update" do
+  describe 'PUT update' do
     let(:setting) { FactoryGirl.create(:setting) }
-    describe "with valid params" do
-      it "updates the requested setting" do
+    describe 'with valid params' do
+      it 'updates the requested setting' do
         set_logged_in_admin
         # Assuming there are no other settings in the database, this
         # specifies that the Setting created on the previous line
@@ -145,24 +145,27 @@ describe SettingsController, type: :controller do
         # submitted in the request.
         expected_params = ActionController::Parameters.new('value' => 'valid_params').permit!
         expect_any_instance_of(Setting).to receive(:update).with(expected_params)
-        patch :update, params: { id: setting.to_param, setting: { 'value' => 'valid_params' } }, session: valid_session
+        patch(
+          :update,
+          params: { id: setting.to_param, setting: { 'value' => 'valid_params' } }, session: valid_session
+        )
       end
 
-      it "assigns the requested setting as @setting" do
+      it 'assigns the requested setting as @setting' do
         set_logged_in_admin
         patch :update, params: { id: setting.to_param, setting: valid_attributes }, session: valid_session
         expect(assigns(:setting)).to eq(setting)
       end
 
-      it "redirects to the setting" do
+      it 'redirects to the setting' do
         set_logged_in_admin
         patch :update, params: { id: setting.to_param, setting: valid_attributes }, session: valid_session
         expect(response).to redirect_to(setting)
       end
     end
 
-    describe "with invalid params" do
-      it "assigns the setting as @setting" do
+    describe 'with invalid params' do
+      it 'assigns the setting as @setting' do
         set_logged_in_admin
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
@@ -175,35 +178,34 @@ describe SettingsController, type: :controller do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(Setting).to receive(:save).and_return(false)
         patch :update, params: { id: setting.to_param, setting: {} }, session: valid_session
-        expect(response).to render_template("edit")
+        expect(response).to render_template('edit')
       end
     end
   end
 
-  describe "GET delete" do
+  describe 'GET delete' do
     let(:setting) { FactoryGirl.create(:setting) }
-    it "assigns the requested setting as @setting" do
+    it 'assigns the requested setting as @setting' do
       set_logged_in_admin
       get :delete, params: { id: setting.to_param }, session: valid_session
       expect(assigns(:setting)).to eq(setting)
     end
   end
 
-  describe "DELETE destroy" do
+  describe 'DELETE destroy' do
     let(:setting) { FactoryGirl.create(:setting) }
-    it "destroys the requested setting" do
+    it 'destroys the requested setting' do
       set_logged_in_admin
       setting # make sure it's loaded before the next block so the count will actually count it
-      expect {
-        delete :destroy, params: { id: setting.to_param }, session: valid_session
-      }.to change(Setting, :count).by(-1)
+      expect { delete :destroy, params: { id: setting.to_param }, session: valid_session }.to change(
+        Setting, :count
+      ).by(-1)
     end
 
-    it "redirects to the settings list" do
+    it 'redirects to the settings list' do
       set_logged_in_admin
       delete :destroy, params: { id: setting.to_param }, session: valid_session
       expect(response).to redirect_to(settings_url)
     end
   end
-
 end

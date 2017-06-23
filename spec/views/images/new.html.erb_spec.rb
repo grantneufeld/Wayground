@@ -8,7 +8,7 @@ describe 'images/new.html.erb', type: :view do
     assign(:image, image)
   end
 
-  it "renders new image form" do
+  it 'renders new image form' do
     render
     assert_select 'form', action: images_path, method: 'patch' do
       assert_select 'input#image_title', name: 'image[title]'
@@ -26,12 +26,11 @@ describe 'images/new.html.erb', type: :view do
         assert_select "input##{label_prefix}width", name: "#{name_prefix}[width]", type: 'number'
         assert_select "input##{label_prefix}format", name: "#{name_prefix}[format]"
         assert_select "select##{label_prefix}style", name: "#{name_prefix}[style]" do
-          assert_select "option", value: "original"
-          assert_select "option", value: "scaled"
+          assert_select 'option', value: 'original'
+          assert_select 'option', value: 'scaled'
         end
         assert_select "input##{label_prefix}url", name: "#{name_prefix}[url]", type: 'url'
       end
     end
   end
-
 end

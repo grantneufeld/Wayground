@@ -42,7 +42,7 @@ unless ARGV.any? { |a| a =~ /^gems/ } # Don't load anything when running the gem
       end
 
       desc 'Run all features'
-      task all: %i(ok wip)
+      task all: %i[ok wip]
     end
     desc 'Alias for cucumber:ok'
     task cucumber: 'cucumber:ok'

@@ -2,10 +2,9 @@ require 'rails_helper'
 require 'image_presenter'
 
 describe ImagePresenter do
-
   def view_stub
     view = double('View')
-    #allow(view).to receive_message_chain(:request, :path) { path }
+    # allow(view).to receive_message_chain(:request, :path) { path }
     view
   end
 
@@ -24,85 +23,84 @@ describe ImagePresenter do
     @image.save!
   end
 
-  describe "initialization" do
-    it "should take a view parameter" do
+  describe 'initialization' do
+    it 'should take a view parameter' do
       presenter = ImagePresenter.new(view: :view)
-      expect( presenter.view ).to eq :view
+      expect(presenter.view).to eq :view
     end
-    it "should take an image parameter" do
+    it 'should take an image parameter' do
       presenter = ImagePresenter.new(image: @image)
-      expect( presenter.image ).to eq @image
+      expect(presenter.image).to eq @image
     end
-    it "should take an image_variant parameter" do
+    it 'should take an image_variant parameter' do
       variant = ImageVariant.new
       presenter = ImagePresenter.new(image_variant: variant, image: @image)
-      expect( presenter.image_variant ).to eq variant
+      expect(presenter.image_variant).to eq variant
     end
-    it "should take a height parameter" do
-      presenter = ImagePresenter.new(height: 12345)
-      expect( presenter.height ).to eq 12345
+    it 'should take a height parameter' do
+      presenter = ImagePresenter.new(height: 12_345)
+      expect(presenter.height).to eq 12_345
     end
-    it "should take a width parameter" do
-      presenter = ImagePresenter.new(width: 23456)
-      expect( presenter.width ).to eq 23456
+    it 'should take a width parameter' do
+      presenter = ImagePresenter.new(width: 23_456)
+      expect(presenter.width).to eq 23_456
     end
   end
 
-  describe "#present" do
-    context "with an image variant param" do
-      it "should use the image variant values" do
+  describe '#present' do
+    context 'with an image variant param' do
+      it 'should use the image variant values' do
         presenter = ImagePresenter.new(view: view_stub, image: @image, image_variant: @scaled)
-        expect( presenter.present ).to eq(
-          "<img src=\"http://present.tld/scaled.jpg\" height=\"123\" width=\"234\" " +
-          "alt=\"present alt\" title=\"Present Title\" />"
+        expect(presenter.present).to eq(
+          '<img src="http://present.tld/scaled.jpg" height="123" width="234" ' \
+          'alt="present alt" title="Present Title" />'
         )
       end
     end
-    context "with height and width params" do
-      it "should override the height and width" do
+    context 'with height and width params' do
+      it 'should override the height and width' do
         presenter = ImagePresenter.new(view: view_stub, image: @image, height: 345, width: 456)
-        expect( presenter.present ).to eq(
-          "<img src=\"http://present.tld/original.png\" height=\"345\" width=\"456\" " +
-          "alt=\"present alt\" title=\"Present Title\" />"
+        expect(presenter.present).to eq(
+          '<img src="http://present.tld/original.png" height="345" width="456" ' \
+          'alt="present alt" title="Present Title" />'
         )
       end
     end
   end
 
-  describe "#image_variant" do
-    it "should call through to the image’s best_variant method if not already set" do
+  describe '#image_variant' do
+    it 'should call through to the image’s best_variant method if not already set' do
       expect(@image).to receive(:best_variant).and_return(:variant)
       presenter = ImagePresenter.new(view: view_stub, image: @image)
-      expect( presenter.image_variant ).to eq :variant
+      expect(presenter.image_variant).to eq :variant
     end
-    it "should just return the given variant when set" do
+    it 'should just return the given variant when set' do
       expect(@image).not_to receive(:best_variant)
       variant = ImageVariant.new
       presenter = ImagePresenter.new(view: view_stub, image: @image, image_variant: variant)
-      expect( presenter.image_variant ).to eq variant
+      expect(presenter.image_variant).to eq variant
     end
   end
 
-  describe "#alt_text" do
-    it "should return nil when not given an image" do
+  describe '#alt_text' do
+    it 'should return nil when not given an image' do
       presenter = ImagePresenter.new(view: view_stub)
-      expect( presenter.alt_text ).to be_nil
+      expect(presenter.alt_text).to be_nil
     end
-    it "should return the alt text from the given image" do
+    it 'should return the alt text from the given image' do
       presenter = ImagePresenter.new(view: view_stub, image: @image)
-      expect( presenter.alt_text ).to eq 'present alt'
+      expect(presenter.alt_text).to eq 'present alt'
     end
   end
 
-  describe "#title" do
-    it "should return nil when not given an image" do
+  describe '#title' do
+    it 'should return nil when not given an image' do
       presenter = ImagePresenter.new(view: view_stub)
-      expect( presenter.title ).to be_nil
+      expect(presenter.title).to be_nil
     end
-    it "should return the title from the given image" do
+    it 'should return the title from the given image' do
       presenter = ImagePresenter.new(view: view_stub, image: @image)
-      expect( presenter.title ).to eq 'Present Title'
+      expect(presenter.title).to eq 'Present Title'
     end
   end
-
 end

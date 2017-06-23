@@ -1,10 +1,10 @@
 # Set authorities (permissions / access-control) for users.
 class AuthoritiesController < ApplicationController
-  before_action :requires_view_authority, only: %i(index show)
-  before_action :requires_create_authority, only: %i(new create)
-  before_action :requires_update_authority, only: %i(edit update)
-  before_action :requires_delete_authority, only: %i(delete destroy)
-  before_action :set_authority, except: %i(index new create)
+  before_action :requires_view_authority, only: %i[index show]
+  before_action :requires_create_authority, only: %i[new create]
+  before_action :requires_update_authority, only: %i[edit update]
+  before_action :requires_delete_authority, only: %i[delete destroy]
+  before_action :set_authority, except: %i[index new create]
   before_action :set_site_location, except: [:index]
 
   # GET /authorities
@@ -82,27 +82,23 @@ class AuthoritiesController < ApplicationController
   end
 
   def requires_view_authority
-    unless current_user && current_user.authority_for_area('Authority', :can_view)
-      raise Wayground::AccessDenied
-    end
+    can_view = current_user && current_user.authority_for_area('Authority', :can_view)
+    raise Wayground::AccessDenied unless can_view
   end
 
   def requires_create_authority
-    unless current_user && current_user.authority_for_area('Authority', :can_create)
-      raise Wayground::AccessDenied
-    end
+    can_create = current_user && current_user.authority_for_area('Authority', :can_create)
+    raise Wayground::AccessDenied unless can_create
   end
 
   def requires_update_authority
-    unless current_user && current_user.authority_for_area('Authority', :can_update)
-      raise Wayground::AccessDenied
-    end
+    can_update = current_user && current_user.authority_for_area('Authority', :can_update)
+    raise Wayground::AccessDenied unless can_update
   end
 
   def requires_delete_authority
-    unless current_user && current_user.authority_for_area('Authority', :can_delete)
-      raise Wayground::AccessDenied
-    end
+    can_delete = current_user && current_user.authority_for_area('Authority', :can_delete)
+    raise Wayground::AccessDenied unless can_delete
   end
 
   def authority_params

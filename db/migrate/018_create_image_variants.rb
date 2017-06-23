@@ -10,6 +10,6 @@ class CreateImageVariants < ActiveRecord::Migration[5.1]
       t.text :url, null: false
       t.timestamps
     end
-    add_index :image_variants, %i(image_id style height width)
+    add_index :image_variants, %i[image_id style height width]
   end
 end

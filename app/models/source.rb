@@ -11,8 +11,8 @@ class Source < ApplicationRecord
 
   before_validation :set_defaults, on: :create
 
-  validates :processor, inclusion: { in: %w(iCalendar IcalProcessor) }
-  validates :method, inclusion: { in: %w(get post) }
+  validates :processor, inclusion: { in: %w[iCalendar IcalProcessor] }
+  validates :method, inclusion: { in: %w[get post] }
   # allow urls, or references to the testing fixture files
   validates(
     :url,
@@ -30,9 +30,8 @@ class Source < ApplicationRecord
 
   # last_update_at should not be set in the future.
   def validate_dates
-    if last_updated_at? && (last_updated_at.to_datetime > Time.zone.now.to_datetime)
-      errors.add(:last_updated_at, 'must not be in the future')
-    end
+    update_at_is_in_future = last_updated_at? && (last_updated_at.to_datetime > Time.zone.now.to_datetime)
+    errors.add(:last_updated_at, 'must not be in the future') if update_at_is_in_future
   end
 
   # Get a human readable string to describe the Source.
@@ -46,7 +45,7 @@ class Source < ApplicationRecord
 
   # Run the processor defined by this Source.
   def run_processor(user = nil, approve = false)
-    run_icalendar_processor(user, approve) if %w(iCalendar IcalProcessor).include?(processor)
+    run_icalendar_processor(user, approve) if %w[iCalendar IcalProcessor].include?(processor)
   end
 
   def run_icalendar_processor(user, approve)

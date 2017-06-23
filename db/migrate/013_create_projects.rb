@@ -24,7 +24,7 @@ class CreateProjects < ActiveRecord::Migration[5.1]
       t.index [:creator_id], name: 'creator'
       t.index [:owner_id], name: 'owner'
       t.index [:filename]
-      t.index %i(name is_visible)
+      t.index %i[name is_visible]
     end
   end
 

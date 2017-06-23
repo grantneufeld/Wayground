@@ -1,7 +1,6 @@
 require 'factory_girl'
 
 FactoryGirl.define do
-
   # GLOBAL SEQUENCES
   # These are global sequences that can be used across factories to avoid name collisions.
   # For example, to get a unique email address in a given factory, call:
@@ -19,7 +18,7 @@ FactoryGirl.define do
 
   factory :authentication do
     user
-    provider        'twitter'
+    provider 'twitter'
     sequence(:uid) { |n| "#{format('%04d', n)}#{rand(9999)}" }
     sequence(:name) { |n| "Auth User#{n}" }
   end
@@ -42,7 +41,7 @@ FactoryGirl.define do
   factory :document do
     user
     sequence(:filename) { |n| "factory_document_#{n}.txt" }
-    #size {4} # should be auto-set by Document model, based on self.data
+    # size {4} # should be auto-set by Document model, based on self.data
     content_type 'text/plain'
     description  'This is a factory-generated Document.'
     data         'data'
@@ -52,7 +51,7 @@ FactoryGirl.define do
     sequence(:start_at) { |n| n.days.from_now.to_datetime.to_s(:db) }
     sequence(:title)    { |n| "Factory Event #{n}" }
     editor
-    is_approved         true
+    is_approved true
     factory :event_future do
       # new events are in the future by default
     end
@@ -98,7 +97,7 @@ FactoryGirl.define do
     sequence(:sitepath) { |n| "/sitepath/factory_sitepath_#{n}" }
   end
   factory :item_path, parent: :path do
-    item { create(:page, path: self)  }
+    item { create(:page, path: self) }
   end
   factory :redirect_path, parent: :path do
     redirect '/'
@@ -122,7 +121,7 @@ FactoryGirl.define do
     processor 'iCalendar'
     url       'test://factory.tld/factory.ics'
     # FIXME: change `Source#method` to `Source#http_method` to avoid method name collisions
-    #method    'get'
+    # method    'get'
     sequence(:title) { |n| "Factory Source #{n}" }
   end
 
@@ -133,12 +132,12 @@ FactoryGirl.define do
     sequence(:source_identifier) { |n| "#{n}@sourced_item.factory" }
   end
 
-  factory :user, aliases: [:creator, :editor, :owner] do
+  factory :user, aliases: %i[creator editor owner] do
     email
-    password              "password"
-    password_confirmation "password"
+    password              'password'
+    password_confirmation 'password'
   end
-  factory :email_confirmed_user, parent: :user do |user|
+  factory :email_confirmed_user, parent: :user do |_user|
     email_confirmed true
   end
 
@@ -151,7 +150,7 @@ FactoryGirl.define do
   # item must be supplied
   factory :version do
     user
-    edited_at { (rand(100).hours.ago) }
+    edited_at { rand(100).hours.ago }
     title     'Factory Version'
     values    'abc' => 'def', 'ghi' => 'jkl'
   end
@@ -253,5 +252,4 @@ FactoryGirl.define do
     sequence(:aliases) { |n| ["Alias #{n}", "Nickname #{n}"] }
     bio 'Biography of a person.'
   end
-
 end

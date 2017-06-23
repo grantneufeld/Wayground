@@ -2,16 +2,15 @@ require 'spec_helper'
 require_relative '../../app/wayground/merger'
 
 describe Merger::Base do
-
-  describe "initialization" do
-    it "should accept a source" do
+  describe 'initialization' do
+    it 'should accept a source' do
       source = double('source')
       expect(Merger::Base.new(source).source).to eq source
     end
   end
 
-  describe "#merge_into!" do
-    it "should call all the merge into methods, delete the source, and return the conflicts" do
+  describe '#merge_into!' do
+    it 'should call all the merge into methods, delete the source, and return the conflicts' do
       source = double('source')
       expect(source).to receive(:delete)
       dest = double('destination')
@@ -26,21 +25,21 @@ describe Merger::Base do
     end
   end
 
-  describe "#merge_fields_into" do
-    it "should save the changes to the destination" do
+  describe '#merge_fields_into' do
+    it 'should save the changes to the destination' do
       dest = double('destination')
       expect(dest).to receive(:save!)
       Merger::Base.new(nil).merge_fields_into(dest)
     end
-    it "should return a hash" do
+    it 'should return a hash' do
       dest = double('destination')
       allow(dest).to receive(:save!)
       expect(Merger::Base.new(nil).merge_fields_into(dest)).to eq({})
     end
   end
 
-  describe "#merge_authorities_into" do
-    it "should move over any non-duplate authorities" do
+  describe '#merge_authorities_into' do
+    it 'should move over any non-duplate authorities' do
       # set up the source
       source = double('source')
       authorities = []
@@ -57,7 +56,7 @@ describe Merger::Base do
       merger.merge_authorities_into(dest)
     end
 
-    it "should merge the details of any duplicate authorities" do
+    it 'should merge the details of any duplicate authorities' do
       # set up the source
       user = double('user')
       allow(user).to receive(:id).and_return(234)
@@ -86,8 +85,8 @@ describe Merger::Base do
     end
   end
 
-  describe "#merge_external_links_into" do
-    it "should move over any non-duplate external links" do
+  describe '#merge_external_links_into' do
+    it 'should move over any non-duplate external links' do
       # set up the source
       source = double('source')
       links = []
@@ -104,7 +103,7 @@ describe Merger::Base do
       merger.merge_external_links_into(dest)
     end
 
-    it "should delete any duplicate external links on the source" do
+    it 'should delete any duplicate external links on the source' do
       # set up the source
       source = double('source')
       source_link = double('link')
@@ -176,8 +175,8 @@ describe Merger::Base do
     end
   end
 
-  describe "#merge_sourced_items_into" do
-    it "should reassign sourced_items to the other event with local modifications flag set" do
+  describe '#merge_sourced_items_into' do
+    it 'should reassign sourced_items to the other event with local modifications flag set' do
       # set up the source
       source = double('source')
       sourced_items = []
@@ -195,8 +194,8 @@ describe Merger::Base do
     end
   end
 
-  describe "#merge_versions_into" do
-    it "should reassign versions to the destination" do
+  describe '#merge_versions_into' do
+    it 'should reassign versions to the destination' do
       # set up the source
       source = double('source')
       versions = []
@@ -216,10 +215,10 @@ describe Merger::Base do
 end
 
 describe Merger::EventMerger do
-  describe "#merge_fields_into" do
+  describe '#merge_fields_into' do
     # TODO: DRY up the EventMerger#merge_fields_into method since it’s a bit unwieldy and repetitious
 
-    it "should set the field values on the destination when the destination is blank" do
+    it 'should set the field values on the destination when the destination is blank' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -311,7 +310,7 @@ describe Merger::EventMerger do
       merger.merge_fields_into(dest)
     end
 
-    it "should return conflicts where there are differing values in both the source and destination" do
+    it 'should return conflicts where there are differing values in both the source and destination' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -395,7 +394,7 @@ describe Merger::EventMerger do
       )
     end
 
-    it "should do nothing when the source value matches the destination value" do
+    it 'should do nothing when the source value matches the destination value' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -459,7 +458,7 @@ describe Merger::EventMerger do
       expect(merger.merge_fields_into(dest)).to eq({})
     end
 
-    it "should leave the flag fields false if both source and destination are false" do
+    it 'should leave the flag fields false if both source and destination are false' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -511,7 +510,7 @@ describe Merger::EventMerger do
       merger.merge_fields_into(dest)
     end
 
-    it "should set the flag fields when source is true and destination is false" do
+    it 'should set the flag fields when source is true and destination is false' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -552,18 +551,18 @@ describe Merger::EventMerger do
       allow(dest).to receive(:is_featured).and_return(nil)
       expect(dest).to receive(:is_featured=).with(:is_featured)
       # and-equals flags
-      #allow(source).to receive(:is_tentative).and_return(:is_tentative)
+      # allow(source).to receive(:is_tentative).and_return(:is_tentative)
       allow(dest).to receive(:is_tentative).and_return(nil)
-      expect(dest).not_to receive(:is_tentative=) #.with(:is_tentative)
-      #allow(source).to receive(:is_draft).and_return(:is_draft)
+      expect(dest).not_to receive(:is_tentative=) # .with(:is_tentative)
+      # allow(source).to receive(:is_draft).and_return(:is_draft)
       allow(dest).to receive(:is_draft).and_return(nil)
-      expect(dest).not_to receive(:is_draft=) #.with(:is_draft)
+      expect(dest).not_to receive(:is_draft=) # .with(:is_draft)
       # Do the merger operation
       merger = Merger::EventMerger.new(source)
       merger.merge_fields_into(dest)
     end
 
-    it "should set the flag fields true if source is false and destination is true" do
+    it 'should set the flag fields true if source is false and destination is true' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -609,7 +608,7 @@ describe Merger::EventMerger do
       merger.merge_fields_into(dest)
     end
 
-    it "should leave the flag fields true if source is true and destination is true" do
+    it 'should leave the flag fields true if source is true and destination is true' do
       source = double('source')
       dest = double('destination')
       allow(dest).to receive(:save!)
@@ -655,7 +654,7 @@ describe Merger::EventMerger do
       merger.merge_fields_into(dest)
     end
 
-    it "should save the changes to the destination" do
+    it 'should save the changes to the destination' do
       source = double('source')
       dest = double('destination')
       # ignore the fields
@@ -689,7 +688,5 @@ describe Merger::EventMerger do
       merger = Merger::EventMerger.new(source)
       merger.merge_fields_into(dest)
     end
-
   end
-
 end

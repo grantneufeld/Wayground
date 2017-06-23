@@ -106,9 +106,9 @@ class Event < ApplicationRecord
 
   # An event cannot end before it begins.
   def validate_end_at_not_before_start_at
-    unless start_at.blank? || end_at.blank? || (start_at.to_datetime <= end_at.to_datetime)
-      errors.add(:end_at, 'must be after the start date and time')
-    end
+    have_both_dates = start_at.present? && end_at.present?
+    end_before_start = have_both_dates && start_at.to_datetime > end_at.to_datetime
+    errors.add(:end_at, 'must be after the start date and time') if end_before_start
   end
 
   # An event cannot be both a draft and approved at the same time.
@@ -118,9 +118,8 @@ class Event < ApplicationRecord
 
   # If the timezone is set for an event, it must be valid
   def validate_timezone
-    if timezone.present? && !(ActiveSupport::TimeZone[timezone])
-      errors.add(:timezone, 'must be a recognized timezone name')
-    end
+    timezone_invalid = timezone.present? && !(ActiveSupport::TimeZone[timezone])
+    errors.add(:timezone, 'must be a recognized timezone name') if timezone_invalid
   end
 
   # BEFORE/AFTER CALLBACKS

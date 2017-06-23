@@ -4,8 +4,7 @@ require 'event'
 require 'user'
 
 describe Wayground::Event::EventSelector do
-
-  describe "initialization" do
+  describe 'initialization' do
     context 'with a “range” parameter' do
       it 'should accept “all” as the “range” parameter' do
         selector = Wayground::Event::EventSelector.new(range: 'all')
@@ -22,27 +21,27 @@ describe Wayground::Event::EventSelector do
     end
     context 'with a “tag” parameter' do
       it 'should accept an arbitrary string as the “tag” parameter' do
-        selector = Wayground::Event::EventSelector.new({ tag: 'sometag' })
+        selector = Wayground::Event::EventSelector.new(tag: 'sometag')
         expect(selector.tag).to eq 'sometag'
       end
       it 'should default to nil for the tag value' do
-        selector = Wayground::Event::EventSelector.new({ tag: nil })
+        selector = Wayground::Event::EventSelector.new(tag: nil)
         expect(selector.tag).to eq nil
       end
     end
     context 'with a “user” parameter' do
       it 'should accept a User object as the “user” parameter' do
         user = User.new
-        selector = Wayground::Event::EventSelector.new({ user: user })
+        selector = Wayground::Event::EventSelector.new(user: user)
         expect(selector.user).to eq user
       end
       it 'should not accept an ID value as the “user” parameter' do
         user = User.first || FactoryGirl.create(:user)
-        selector = Wayground::Event::EventSelector.new({ user: user.id })
+        selector = Wayground::Event::EventSelector.new(user: user.id)
         expect(selector.user).to eq nil
       end
       it 'should default to nil for the user value' do
-        selector = Wayground::Event::EventSelector.new({ user: nil })
+        selector = Wayground::Event::EventSelector.new(user: nil)
         expect(selector.user).to eq nil
       end
     end
@@ -70,13 +69,13 @@ describe Wayground::Event::EventSelector do
     context 'with an admin user' do
       it 'should not restrict the events to approved ones' do
         user = User.first || FactoryGirl.create(:user)
-        selector = Wayground::Event::EventSelector.new({ user: user })
+        selector = Wayground::Event::EventSelector.new(user: user)
         expect(selector.events).to eq Event.upcoming
       end
     end
     context 'with a tag' do
       it 'should select all upcoming events that are approved and tagged with “a tag”' do
-        selector = Wayground::Event::EventSelector.new({ tag: 'a tag' })
+        selector = Wayground::Event::EventSelector.new(tag: 'a tag')
         expect(selector.events).to eq Event.upcoming.approved.tagged('a tag')
       end
     end
@@ -103,10 +102,9 @@ describe Wayground::Event::EventSelector do
     end
     context 'with a tag' do
       it 'should identify the tag at the end of the title' do
-        selector = Wayground::Event::EventSelector.new({ tag: 'a tag' })
-        expect(selector.title).to match /\(tagged “a tag”\)\z/
+        selector = Wayground::Event::EventSelector.new(tag: 'a tag')
+        expect(selector.title).to match(/\(tagged “a tag”\)\z/)
       end
     end
   end
-
 end

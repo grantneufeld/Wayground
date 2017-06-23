@@ -19,7 +19,7 @@ class HtmlPresenter
       # merge the strings in an array with space separator
       # e.g., { class: ['a', 'b'] } becomes class = "a b"
       value = value.join(' ') if value.is_a? Array
-      attrs << "#{key}=\"#{value}\"" unless value.blank?
+      attrs << "#{key}=\"#{value}\"" if value.present?
     end
     content = yield block if block
     render_tag(tag_name, attrs, content)
@@ -27,7 +27,7 @@ class HtmlPresenter
 
   def render_tag(tag_name, attrs, content)
     tag_name_with_attrs = ([tag_name] + attrs).join(' ')
-    if !content || content.empty?
+    if content.blank?
       "<#{tag_name_with_attrs} />".html_safe
     else
       "<#{tag_name_with_attrs}>#{content}</#{tag_name}>".html_safe
