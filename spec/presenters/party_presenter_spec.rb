@@ -23,29 +23,29 @@ describe PartyPresenter do
 
   describe 'initialization' do
     it 'should take a view parameter' do
-      expect( PartyPresenter.new(view: :view).view ).to eq :view
+      expect(PartyPresenter.new(view: :view).view).to eq :view
     end
     it 'should take an party parameter' do
-      expect( PartyPresenter.new(party: :party).party ).to eq :party
+      expect(PartyPresenter.new(party: :party).party).to eq :party
     end
     it 'should take a user parameter' do
-      expect( PartyPresenter.new(user: :user).user ).to eq :user
+      expect(PartyPresenter.new(user: :user).user).to eq :user
     end
   end
 
   describe '#present_as_list_item' do
     it 'should wrap the result in a “li” element' do
       result = presenter.present_as_list_item
-      expect( result ).to match /\A<li[^>]*>/
-      expect( result ).to match /<\/li>\z/
+      expect(result).to match(/\A<li[^>]*>/)
+      expect(result).to match(%r{</li>\z})
     end
     it 'should be html safe' do
-      expect( presenter.present_as_list_item.html_safe? ).to be_truthy
+      expect(presenter.present_as_list_item.html_safe?).to be_truthy
     end
     context 'with an ended_on date' do
-      let(:party_extra_attrs) { $party_extra_attrs = {ended_on: '2009-08-07'.to_date} }
+      let(:party_extra_attrs) { $party_extra_attrs = { ended_on: '2009-08-07'.to_date } }
       it 'should include the ended on date with a line break element' do
-        expect( presenter.present_as_list_item ).to match /[\r\n]<br \/>August 7, 2009/
+        expect(presenter.present_as_list_item).to match(%r{[\r\n]<br />August 7, 2009})
       end
     end
   end
@@ -53,80 +53,82 @@ describe PartyPresenter do
   describe '#present_heading' do
     it 'should wrap the result in an h1 element' do
       result = presenter.present_heading
-      expect( result ).to match /\A<h1[^>]*>/
-      expect( result ).to match /<\/h1>[\r\n]*\z/
+      expect(result).to match(/\A<h1[^>]*>/)
+      expect(result).to match(%r{</h1>[\r\n]*\z})
     end
     it 'should include “party-label” in the class of the h1 element' do
-      expect( presenter.present_heading ).to match(
+      expect(presenter.present_heading).to match(
         /<h1 (?:|[^>]* )class="(?:|[^"]* )party-label(?:| [^"]*)"/
       )
     end
     it 'should set the border-color to the colour for the h1 element' do
-      expect( presenter.present_heading ).to match(
+      expect(presenter.present_heading).to match(
         /<h1 (?:|[^>]* )style="border-color:aqua"/
       )
     end
     it 'should include the linked party name' do
-      expect( presenter.present_heading ).to match(
-        /<a href="\/levels\/test_level\/parties\/test_party">Test Party<\/a>/
+      expect(presenter.present_heading).to match(
+        %r{<a href="/levels/test_level/parties/test_party">Test Party</a>}
       )
     end
     it 'should include the abbreviation' do
-      expect( presenter.present_heading ).to match 'TP'
+      expect(presenter.present_heading).to match('TP')
     end
     context 'with true passed as parameter' do
       it 'should not link the party name' do
         result = presenter.present_heading(true)
         expect(result).not_to match(
-          /<a href="\/levels\/test_level\/parties\/test_party">Test Party<\/a>/
+          %r{<a href="/levels/test_level/parties/test_party">Test Party</a>}
         )
         expect(result).to match(/Test Party/)
       end
     end
     context 'with a registered party' do
-      let(:party_extra_attrs) { $party_extra_attrs = {is_registered: true} }
+      let(:party_extra_attrs) { $party_extra_attrs = { is_registered: true } }
       it 'should not include “party-unregistered” in the class of the h1 element' do
-        expect( presenter.present_heading.match(
-          /<h1 (?:|[^>] )class="(?:|[^"]* )party-unregistered(?:| [^"]*)"/
-        )).to be_falsey
+        expect(
+          presenter.present_heading.match(
+            /<h1 (?:|[^>] )class="(?:|[^"]* )party-unregistered(?:| [^"]*)"/
+          )
+        ).to be_falsey
       end
     end
     context 'with an unregistered party' do
-      let(:party_extra_attrs) { $party_extra_attrs = {is_registered: false} }
+      let(:party_extra_attrs) { $party_extra_attrs = { is_registered: false } }
       it 'should not include “party-unregistered” in the class of the h1 element' do
-        expect( presenter.present_heading ).to match(
+        expect(presenter.present_heading).to match(
           /<h1 (?:|[^>] )class="(?:|[^"]* )party-unregistered(?:| [^"]*)"/
         )
       end
     end
     it 'should be html safe' do
-      expect( presenter.present_heading.html_safe? ).to be_truthy
+      expect(presenter.present_heading.html_safe?).to be_truthy
     end
   end
 
   describe '#present_dates' do
     context 'with no dates' do
       let(:party_extra_attrs) do
-        $party_extra_attrs = {established_on: nil, registered_on: nil, ended_on: nil}
+        $party_extra_attrs = { established_on: nil, registered_on: nil, ended_on: nil }
       end
       it 'should return nil' do
-        expect( presenter.present_dates ).to be_nil
+        expect(presenter.present_dates).to be_nil
       end
     end
     context 'with just one date' do
       let(:party_extra_attrs) do
-        $party_extra_attrs = {established_on: '2003-04-05'.to_date, registered_on: nil, ended_on: nil}
+        $party_extra_attrs = { established_on: '2003-04-05'.to_date, registered_on: nil, ended_on: nil }
       end
       it 'should wrap the result in an h1 element' do
         result = presenter.present_dates
-        expect( result ).to match /\A<p>/
-        expect( result ).to match /<\/p>[\r\n]*\z/
+        expect(result).to match(/\A<p>/)
+        expect(result).to match(%r{</p>[\r\n]*\z})
       end
       it 'should return the plain date' do
-        expect( presenter.present_dates ).to match /Established on April 5, 2003\./
+        expect(presenter.present_dates).to match(/Established on April 5, 2003\./)
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_truthy
+        expect(presenter.present_dates.html_safe?).to be_truthy
       end
     end
     context 'with all 3 dates' do
@@ -138,28 +140,27 @@ describe PartyPresenter do
       end
       it 'should wrap the result in an h1 element' do
         result = presenter.present_dates
-        expect( result ).to match /\A<p>/
-        expect( result ).to match /<\/p>[\r\n]*\z/
+        expect(result).to match(/\A<p>/)
+        expect(result).to match(%r{</p>[\r\n]*\z})
       end
       it 'should return the plain dates, separated by line break elements' do
-        expect( presenter.present_dates ).to match(
-          /Established on May 6, 2004\.\n<br \/>Registered on June 7, 2005\.\n<br \/>Ended on July 8, 2006\./
+        expect(presenter.present_dates).to match(
+          %r{Established on May 6, 2004\.\n<br />Registered on June 7, 2005\.\n<br />Ended on July 8, 2006\.}
         )
       end
       it 'should be html safe' do
-        expect( presenter.present_dates.html_safe? ).to be_truthy
+        expect(presenter.present_dates.html_safe?).to be_truthy
       end
       context 'with a custom separator' do
         it 'should return the plain dates, separated by the custom separator' do
-          expect( presenter.present_dates(':') ).to match(
+          expect(presenter.present_dates(':')).to match(
             /Established on May 6, 2004\.:Registered on June 7, 2005\.:Ended on July 8, 2006\./
           )
         end
         it 'should be html safe' do
-          expect( presenter.present_dates.html_safe? ).to be_truthy
+          expect(presenter.present_dates.html_safe?).to be_truthy
         end
       end
     end
   end
-
 end
