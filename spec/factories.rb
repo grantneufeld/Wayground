@@ -170,8 +170,8 @@ FactoryGirl.define do
   factory :candidate do
     ballot
     person
-    #party
-    #association :submitter, factory: :user
+    # party
+    # association :submitter, factory: :user
     sequence(:filename) { |n| "candidate#{n}" }
     sequence(:name) { |n| "Candidate #{n}" }
     is_rumoured false
