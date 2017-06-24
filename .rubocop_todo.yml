@@ -183,3 +183,7 @@ Style/OptionHash:
     - 'spec/validators/email_validator_spec.rb'
     - 'spec/validators/filename_validator_spec.rb'
     - 'spec/validators/http_url_validator_spec.rb'
+
+Style/TrivialAccessors:
+  Exclude:
+    - 'spec/feature_helper.rb'
