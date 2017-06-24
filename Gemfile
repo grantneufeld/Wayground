@@ -91,6 +91,7 @@ group :test do
   gem 'capybara', require: false
   gem 'chronic', '>= 0.8.0', require: false
   gem 'database_cleaner', '>= 0.8.0', require: false
+  gem 'html_validation', require: false # relies on the tidy command-line tool to validate html
   gem 'timecop', '>= 0.5.4', require: false
 end
 
