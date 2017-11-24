@@ -16,8 +16,23 @@ def merge_parts(items)
   items.join("\n")
 end
 
+# sort out the links to identify well known ones (e.g., facebook, linkedin, etc.)
+def link_sort(external_links)
+  links = {}
+  leftovers = []
+  external_links.each do |link|
+    site = link.site
+    if !links[site] && %i[facebook instagram linkedin youtube].include?(site)
+      links[site] = link
+    else
+      leftovers << link.url
+    end
+  end
+  links[:external_links] = leftovers
+  links
+end
 
-%>Section ID,Ballot ID,Ballot Name,Candidate,Party,Website,Email,Twitter,Phone,Office,Links
+%>Section ID,Ballot ID,Ballot name,candidate,party,website,email,twitter,phone,office,facebook,instagram,linkedin,youtube,links
 <%
 
 section = nil
@@ -33,6 +48,7 @@ section_counter = 0
     contact = candidate.contacts.only_public.first || Contact.new
     party = candidate.party
     party_name = party ? party.name : ''
+    links = link_sort(candidate.external_links)
     %><%= ballot_prefix
     %>,<%= csvize(candidate.name)
     %>,<%= csvize(party_name)
@@ -41,12 +57,16 @@ section_counter = 0
     %>,<%= contact.twitter.present? ? csvize("@#{contact.twitter}") : ''
     %>,<%= csvize(merge_parts([contact.phone, contact.phone2]))
     %>,<%= csvize(merge_parts([contact.address1, contact.address2]))
+    %>,<%= csvize(links['facebook'])
+    %>,<%= csvize(links['instagram'])
+    %>,<%= csvize(links['linkedin'])
+    %>,<%= csvize(links['youtube'])
     %>,<%
-    links = []
-    candidate.external_links.each do |link|
-      links << link.url
-    end
-    %><%= csvize(merge_parts(links)) %>
+    # links = []
+    # candidate.external_links.each do |link|
+    #   links << link.url
+    # end
+    %><%= csvize(merge_parts(links[:external_links])) %>
 <%
   end
 end
