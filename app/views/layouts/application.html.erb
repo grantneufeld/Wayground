@@ -24,8 +24,6 @@ metadata_presenter = MetadataPresenter.new(metadata)
 %><!DOCTYPE html>
 <html lang="en" xmlns:og="http://ogp.me/ns#"><head><meta charset="utf-8">
 <%= metadata_presenter.present_title %>
-<link rel="icon" href="/favicon.png" type="image/x-icon" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style type="text/css" media="screen,print">
 @font-face {
 font-family:'FontAwesome'; font-weight:normal; font-style:normal;
@@ -61,12 +59,15 @@ src:local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('/fonts/Ubu
 <%= csrf_meta_tags %>
 <%= stylesheet_link_tag 'application', media: 'all' %>
 <%= javascript_include_tag 'application' %>
+<link rel="icon" href="/favicon.png" type="image/png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
 <%= metadata_presenter.present_metatags -%>
 <%= yield :head -%>
-</head><body>
+</head>
+<body>
 
 <header role="banner">
 <%
@@ -189,7 +190,7 @@ end
 
 %>
 <section id="main" class="<%= @page_main_class %>" role="main">
-<%= yield %>
+<%= yield -%>
 </section>
 
 <%
